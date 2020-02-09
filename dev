@@ -1,0 +1,52 @@
+#!/usr/bin/env bash
+
+COMPOSE="docker-compose"
+
+function run {
+  set -x && $COMPOSE exec "$@"
+}
+function start {
+  set -x && $COMPOSE run --rm "$@"
+}
+
+# If we pass any arguments...
+if [ $# -gt 0 ];then
+    # If "art" is used, pass-thru to "artisan"
+    if [ "$1" == "art" ]; then
+      shift 1
+      run api \
+        php artisan "$@"
+
+    # If "bash" is used, pass-thru to "artisan"
+    elif [ "$1" == "bash" ]; then
+      shift 1
+      run api \
+        bash "$@"
+
+    # If "composer" is used, pass-thru to "composer"
+    elif [ "$1" == "composer" ]; then
+      shift 1
+      run api \
+        composer "$@"
+
+    # If "test" is used, run unit tests,
+    # pass-thru any extra arguments to php-unit
+    elif [ "$1" == "test" ]; then
+      shift 1
+      run api \
+        ./vendor/bin/phpunit "$@"
+
+    # If "db" is used, run mysql
+    elif [ "$1" == "db" ] || [ "$1" == "mysql" ]; then
+      shift 1
+      run db \
+        mysql -u docker -d nawhas "$@"
+
+    # Else, pass-thru args to docker-compose
+    else
+        $COMPOSE "$@"
+    fi
+
+else
+    $COMPOSE ps
+fi

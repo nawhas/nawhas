@@ -1,0 +1,80 @@
+version: '3'
+
+networks:
+  nawhas:
+
+volumes:
+  mariadb:
+
+services:
+  api:
+    image: szainmehdi/php:7.4-dev
+    container_name: nawhas_api
+    working_dir: /var/www/api
+    environment:
+      - XDEBUG_ENABLE=true
+      - XDEBUG_REMOTE_PORT=9001
+      - XDEBUG_IDE_KEY=PHPSTORM
+      - XDEBUG_REMOTE_HOST=host.docker.internal
+    volumes:
+      - ./api:/var/www/api
+    ports:
+      - "9000:9000"
+    networks:
+      - nawhas
+    depends_on:
+      - mysql
+  ingress:
+    image: nginx:stable-alpine
+    container_name: nawhas_ingress
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./docker/nginx/certs:/etc/nginx/certs
+      - ./docker/nginx/ingress.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - api_nginx
+      - web_nginx
+    networks:
+      - nawhas
+  api_nginx:
+    image: nginx:stable-alpine
+    container_name: nawhas_api_nginx
+    working_dir: /var/www/api/public
+    volumes:
+      - ./api/public:/var/www/api/public
+      - ./docker/nginx/api.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - api
+      - mysql
+    networks:
+      - nawhas
+  web_nginx:
+    image: nginx:stable-alpine
+    container_name: nawhas_web_nginx
+    working_dir: /var/www/web/public
+    volumes:
+      - ./web/dist:/var/www/web/public
+      - ./docker/nginx/web.conf:/etc/nginx/conf.d/default.conf
+    networks:
+      - nawhas
+  mysql:
+    image: mariadb:10
+    container_name: nawhas_db
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "3306:3306"
+    volumes:
+      - mariadb:/var/lib/mysql
+    environment:
+      - MYSQL_DATABASE=nawhas
+      - MYSQL_USER=docker
+      - MYSQL_PASSWORD=secret
+      - MYSQL_ROOT_PASSWORD=secret
+    networks:
+      - nawhas
+
+
+
