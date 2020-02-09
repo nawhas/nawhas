@@ -67,3 +67,5 @@ openssl req \
 rm openssl.cnf
 
 sudo security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain "$CERTS_PATH/$HOSTNAME.crt"
+
+openssl x509 -in "$CERTS_PATH/$HOSTNAME.crt" -out "$CERTS_PATH/$HOSTNAME.pem" -outform PEM
