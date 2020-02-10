@@ -34,6 +34,16 @@ Route::prefix('v1')->group(function() {
     Route::prefix('reciters/{reciter}/albums')->group(function () {
         Route::get('/', [AlbumsController::class, 'index']);
         // Route::post('/', [RecitersController::class, 'store']);
+        Route::get('/{albums}', [AlbumsController::class, 'show']);
+        // Route::post('/{reciter}', [RecitersController::class, 'update']);
+        // Route::patch('/{reciter}', [RecitersController::class, 'update']);
+        // Route::delete('/{reciter}', [RecitersController::class, 'destroy']);
+    });
+
+    // Album Tracks
+    Route::prefix('reciters/{reciter}/albums/{album}')->group(function () {
+        Route::get('/', [AlbumsController::class, 'index']);
+        // Route::post('/', [RecitersController::class, 'store']);
         Route::get('/{reciter}', [RecitersController::class, 'show']);
         // Route::post('/{reciter}', [RecitersController::class, 'update']);
         // Route::patch('/{reciter}', [RecitersController::class, 'update']);
