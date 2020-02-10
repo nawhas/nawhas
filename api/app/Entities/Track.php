@@ -5,10 +5,11 @@ declare(strict_types=1);
 namespace App\Entities;
 
 use App\Entities\Behaviors\HasTimestamps;
+use App\Entities\Contracts\TimestampedEntity;
 use Ramsey\Uuid\{Uuid, UuidInterface};
 use Zain\LaravelDoctrine\Jetpack\Serializer\SerializesAttributes;
 
-class Track implements Entity
+class Track implements Entity, TimestampedEntity
 {
     use HasTimestamps;
     use SerializesAttributes;

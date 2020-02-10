@@ -4,6 +4,7 @@ namespace App\Database\Doctrine;
 
 use App\Entities\Entity;
 use Doctrine\ORM\EntityManagerInterface as DoctrineEntityManager;
+use Doctrine\Persistence\ObjectRepository;
 
 class EntityManager
 {
@@ -19,5 +20,10 @@ class EntityManager
         foreach ($entities as $entity) {
             $this->em->persist($entity);
         }
+    }
+
+    public function repository(string $entity): ObjectRepository
+    {
+        return $this->em->getRepository($entity);
     }
 }
