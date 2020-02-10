@@ -1,5 +1,7 @@
 <?php
 
+use App\Database\Doctrine\Types\UuidBinaryOrderedTimeType;
+
 return [
 
     /*
@@ -108,6 +110,7 @@ return [
     |--------------------------------------------------------------------------
     */
     'custom_types' => [
+        UuidBinaryOrderedTimeType::NAME => UuidBinaryOrderedTimeType::class,
     ],
     /*
     |--------------------------------------------------------------------------

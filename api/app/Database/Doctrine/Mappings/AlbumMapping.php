@@ -6,7 +6,6 @@ namespace App\Database\Doctrine\Mappings;
 
 use App\Entities\Album;
 use App\Entities\Reciter;
-use App\Entities\Track;
 use LaravelDoctrine\Fluent\{EntityMapping,Fluent};
 
 class AlbumMapping extends EntityMapping
@@ -20,6 +19,7 @@ class AlbumMapping extends EntityMapping
     {
         $map->uuidPrimaryKey();
         $map->belongsTo(Reciter::class, 'reciter');
+        $map->string('title');
         $map->unsignedSmallInteger('year');
         $map->string('artwork')->nullable();
         $map->timestamps();

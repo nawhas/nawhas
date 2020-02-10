@@ -1,6 +1,7 @@
 <?php
 
 use Ramsey\Uuid\Doctrine\UuidBinaryOrderedTimeType;
+use Ramsey\Uuid\Doctrine\UuidType;
 use Zain\LaravelDoctrine\Jetpack\Providers\GeneratorServiceProvider;
 
 return [
@@ -63,8 +64,8 @@ return [
          * @see \Zain\LaravelDoctrine\Jetpack\Providers\FluentServiceProvider::registerCustomMacros()
          */
         'uuid_type' => [
-            'name' => UuidBinaryOrderedTimeType::NAME,
-            'class' => UuidBinaryOrderedTimeType::class,
+            'name' => UuidType::NAME,
+            'class' => UuidType::class,
         ]
     ],
 ];

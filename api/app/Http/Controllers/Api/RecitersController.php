@@ -29,8 +29,9 @@ class RecitersController extends Controller
         return $this->respondWithPaginator($reciters);
     }
 
-    public function show(Reciter $reciter): JsonResponse
+    public function show(string $id): JsonResponse
     {
+        $reciter = $this->repository->findOrFail($id);
         return $this->respondWithItem($reciter);
     }
 }
