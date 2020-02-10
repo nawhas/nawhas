@@ -4,6 +4,7 @@ namespace App\Exceptions;
 
 use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class Handler extends ExceptionHandler
 {
@@ -25,6 +26,18 @@ class Handler extends ExceptionHandler
         'password',
         'password_confirmation',
     ];
+
+    protected function prepareException(Exception $e)
+    {
+        $e = parent::prepareException($e);
+
+        if ($e instanceof EntityNotFoundException) {
+            return new NotFoundHttpException($e->getMessage(), $e);
+        }
+
+        return $e;
+    }
+
 
     /**
      * Report or log an exception.

@@ -19,5 +19,13 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::prefix('v1')->group(function() {
-    Route::get('reciters', [RecitersController::class, 'index']);
+    // reciter routes
+    Route::prefix('reciters')->group(function () {
+        Route::get('/', [RecitersController::class, 'index']);
+        Route::post('/', [RecitersController::class, 'store']);
+        Route::get('/{reciter}', [RecitersController::class, 'show']);
+        Route::post('/{reciter}', [RecitersController::class, 'update']);
+        Route::patch('/{reciter}', [RecitersController::class, 'update']);
+        Route::delete('/{reciter}', [RecitersController::class, 'destroy']);
+    });
 });

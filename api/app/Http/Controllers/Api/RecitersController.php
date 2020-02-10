@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Api;
 
+use App\Entities\Reciter;
 use App\Http\Controllers\Controller;
 use App\Http\Transformers\ReciterTransformer;
 use App\Repositories\Pagination\PaginationState;
@@ -26,5 +27,10 @@ class RecitersController extends Controller
         $state = PaginationState::make($request->get('page', 1), $request->get('per_page', 10));
         $reciters = $this->repository->paginateAll($state);
         return $this->respondWithPaginator($reciters);
+    }
+
+    public function show(Reciter $reciter): JsonResponse
+    {
+        return $this->respondWithItem($reciter);
     }
 }
