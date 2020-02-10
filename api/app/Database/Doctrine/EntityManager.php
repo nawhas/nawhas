@@ -1,0 +1,23 @@
+<?php declare(strict_types=1);
+
+namespace App\Database\Doctrine;
+
+use App\Entities\Entity;
+use Doctrine\ORM\EntityManagerInterface as DoctrineEntityManager;
+
+class EntityManager
+{
+    private DoctrineEntityManager $em;
+
+    public function __construct(DoctrineEntityManager $em)
+    {
+        $this->em = $em;
+    }
+
+    public function persist(Entity ...$entities): void
+    {
+        foreach ($entities as $entity) {
+            $this->em->persist($entity);
+        }
+    }
+}

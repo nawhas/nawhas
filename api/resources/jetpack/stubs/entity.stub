@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace DummyNamespace;
 
-use Illuminate\Contracts\Support\{Arrayable, Jsonable};
-use JsonSerializable;
+use App\Entities\{Entity, Behaviors\HasTimestamps};
 use Ramsey\Uuid\{Uuid, UuidInterface};
 use Zain\LaravelDoctrine\Jetpack\Serializer\SerializesAttributes;
 
-class DummyClass implements Arrayable, Jsonable, JsonSerializable
+class DummyClass implements Entity
 {
+    use HasTimestamps;
     use SerializesAttributes;
 
     private UuidInterface $id;

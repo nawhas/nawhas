@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace DummyNamespace;
 
 use TargetNs\TargetCls;
-use LaravelDoctrine\Fluent\{SomeMapper,Fluent};
+use LaravelDoctrine\Fluent\{SomeMapper, Fluent};
 
 class DummyClass extends SomeMapper
 {

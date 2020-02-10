@@ -1,0 +1,25 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Database\Doctrine\Mappings;
+
+use App\Entities\Reciter;
+use LaravelDoctrine\Fluent\{EntityMapping,Fluent};
+
+class ReciterMapping extends EntityMapping
+{
+    public function mapFor()
+    {
+        return Reciter::class;
+    }
+
+    public function map(Fluent $map)
+    {
+        $map->uuidPrimaryKey();
+        $map->string('name');
+        $map->text('description')->nullable();
+        $map->string('avatar')->nullable();
+        $map->timestamps();
+    }
+}
