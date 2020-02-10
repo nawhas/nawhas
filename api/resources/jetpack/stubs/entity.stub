@@ -1,0 +1,27 @@
+<?php
+
+declare(strict_types=1);
+
+namespace DummyNamespace;
+
+use Illuminate\Contracts\Support\{Arrayable, Jsonable};
+use JsonSerializable;
+use Ramsey\Uuid\{Uuid, UuidInterface};
+use Zain\LaravelDoctrine\Jetpack\Serializer\SerializesAttributes;
+
+class DummyClass implements Arrayable, Jsonable, JsonSerializable
+{
+    use SerializesAttributes;
+
+    private UuidInterface $id;
+
+    public function __construct()
+    {
+        $this->id = Uuid::uuid1();
+    }
+
+    public function getId(): string
+    {
+        return $this->id->toString();
+    }
+}
