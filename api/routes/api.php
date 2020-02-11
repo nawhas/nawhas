@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AlbumsController;
+use App\Http\Controllers\Api\PopularEntitiesController;
 use App\Http\Controllers\Api\RecitersController;
 use App\Http\Controllers\Api\TracksController;
 use Illuminate\Http\Request;
@@ -49,5 +50,12 @@ Route::prefix('v1')->group(function() {
         // Route::post('/{reciter}', [RecitersController::class, 'update']);
         // Route::patch('/{reciter}', [RecitersController::class, 'update']);
         // Route::delete('/{reciter}', [RecitersController::class, 'destroy']);
+    });
+
+    // Popular Routes
+    Route::prefix('popular')->group(function () {
+        Route::get('/reciters', [PopularEntitiesController::class, 'reciters']);
+        Route::get('/albums', [PopularEntitiesController::class, 'albums']);
+        Route::get('/tracks', [PopularEntitiesController::class, 'tracks']);
     });
 });
