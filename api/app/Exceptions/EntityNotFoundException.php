@@ -8,8 +8,12 @@ use RuntimeException;
 
 class EntityNotFoundException extends RuntimeException
 {
-    public function __construct(string $entity, $id)
+    public function __construct(string $entity, $id = null)
     {
-        parent::__construct("$entity not found with identifier $id");
+        $message = "$entity not found";
+        if ($id) {
+            $message .= " with identifier $id";
+        }
+        parent::__construct($message);
     }
 }

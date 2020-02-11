@@ -8,6 +8,7 @@ use App\Entities\Album;
 use App\Entities\Reciter;
 use App\Http\Controllers\Controller;
 use App\Http\Transformers\AlbumTransformer;
+use App\Queries\AlbumQuery;
 use App\Repositories\Pagination\PaginationState;
 use App\Repositories\AlbumRepository;
 use Illuminate\Http\JsonResponse;
@@ -32,7 +33,11 @@ class AlbumsController extends Controller
 
     public function show(Reciter $reciter, string $albumId): JsonResponse
     {
-        $album = $this->repository->findForReciter($reciter, $albumId);
+        $album = AlbumQuery::make()
+            ->whereReciter($reciter)
+            ->whereIdentifier($albumId)
+            ->firstOrFail();
+
         return $this->respondWithItem($album);
     }
 }
