@@ -6,9 +6,15 @@ namespace App\Queries;
 
 use App\Entities\Contracts\Entity;
 use App\Exceptions\EntityNotFoundException;
+use App\Support\Pagination\PaginationState;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\NoResultException;
+use Doctrine\ORM\Query as DoctrineQuery;
 use Doctrine\ORM\QueryBuilder;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use LaravelDoctrine\ORM\Pagination\PaginatorAdapter;
 
 abstract class Query
 {
@@ -27,7 +33,9 @@ abstract class Query
     {
         /** @var EntityManager $em */
         $em = app(EntityManager::class);
-        $queryBuilder = $em->getRepository(static::entity())->createQueryBuilder(static::QUERY_ALIAS);
+        $queryBuilder = $em->getRepository(static::entity())
+            ->createQueryBuilder(static::QUERY_ALIAS);
+
         return new static($queryBuilder);
     }
 
@@ -46,7 +54,7 @@ abstract class Query
         return array_shift($result);
     }
 
-    public function firstOrFail(): Entity
+    public function get(): Entity
     {
         $entity = $this->first();
 
@@ -57,15 +65,23 @@ abstract class Query
         return $entity;
     }
 
-    public function get(): Entity
+    public function all(): Collection
     {
-        $entity = $this->builder->getQuery()->getResult();
+        return $this->builder->getQuery()->getResult();
+    }
 
-        if ($entity === null) {
-            throw new EntityNotFoundException($this->entity());
-        }
+    public function build(): DoctrineQuery
+    {
+        return $this->builder->getQuery();
+    }
 
-        return $entity;
+    public function paginate(PaginationState $state): LengthAwarePaginator
+    {
+        return PaginatorAdapter::fromParams(
+            $this->builder->getQuery(),
+            $state->getLimit(),
+            $state->getPage()
+        )->make();
     }
 
     abstract protected static function entity(): string;

@@ -8,8 +8,8 @@ use Doctrine\Common\Collections\Collection;
 
 /**
  * @method Album|null first()
- * @method Album firstOrFail()
- * @method Collection|Album[] get()
+ * @method Album get()
+ * @method Collection|Album[] all()
  */
 class AlbumQuery extends Query
 {

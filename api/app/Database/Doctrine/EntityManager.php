@@ -4,6 +4,7 @@ namespace App\Database\Doctrine;
 
 use App\Entities\Contracts\Entity;
 use Doctrine\ORM\EntityManagerInterface as DoctrineEntityManager;
+use Doctrine\ORM\EntityRepository;
 use Doctrine\Persistence\ObjectRepository;
 
 class EntityManager
@@ -22,8 +23,11 @@ class EntityManager
         }
     }
 
-    public function repository(string $entity): ObjectRepository
+    public function repository(string $entity): EntityRepository
     {
-        return $this->em->getRepository($entity);
+        /** @var EntityRepository $repo */
+        $repo = $this->em->getRepository($entity);
+
+        return $repo;
     }
 }

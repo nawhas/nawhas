@@ -4,17 +4,18 @@ declare(strict_types=1);
 
 namespace App\Repositories;
 
-use App\Entities\Album;
-use App\Entities\Reciter;
-use App\Repositories\Pagination\PaginatedRepository;
-use App\Repositories\Pagination\PaginationState;
+use App\Entities\{Album, Reciter};
+use App\Queries\AlbumQuery;
+use App\Support\Pagination\PaginationState;
+use Doctrine\Common\Collections\Collection;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
-interface AlbumRepository extends PaginatedRepository
+interface AlbumRepository
 {
     public function find(string $id): ?Album;
-    public function findOrFail(string $id): Album;
-    public function paginateForReciter(Reciter $reciter, PaginationState $state): LengthAwarePaginator;
-    public function findForReciter(Reciter $reciter, string $id): ?Album;
-    public function findOrFailForReciter(Reciter $reciter, string $id): Album;
+    public function get(string $id): Album;
+    public function getByReciter(Reciter $reciter, string $id): Album;
+    public function allByReciter(Reciter $reciter): Collection;
+    public function paginateAllByReciter(Reciter $reciter, PaginationState $state): LengthAwarePaginator;
+    public function query(): AlbumQuery;
 }
