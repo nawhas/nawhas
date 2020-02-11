@@ -16,7 +16,7 @@ class TestDataSeeder extends Seeder
     public function run(EntityManager $em)
     {
         $reciter = new Reciter('Nadeem Sarwar', 'Top Reciter');
-        $album = new Album($reciter, 'Ya Hussain', 2019);
+        $album = new Album($reciter, 'Ya Hussain', '2019');
         $track = new Track($album, 'Ya Ali Ya Hussain');
 
         $em->persist($reciter, $album, $track);

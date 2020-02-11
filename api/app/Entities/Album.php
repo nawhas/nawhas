@@ -18,10 +18,10 @@ class Album implements Entity, TimestampedEntity
     private UuidInterface $id;
     private Reciter $reciter;
     private string $title;
-    private int $year;
+    private string $year;
     private ?string $artwork = null;
 
-    public function __construct(Reciter $reciter, string $title, int $year, ?string $artwork = null)
+    public function __construct(Reciter $reciter, string $title, string $year, ?string $artwork = null)
     {
         $this->id = Uuid::uuid1();
         $this->reciter = $reciter;
@@ -40,7 +40,7 @@ class Album implements Entity, TimestampedEntity
         return $this->reciter;
     }
 
-    public function getYear(): int
+    public function getYear(): string
     {
         return $this->year;
     }

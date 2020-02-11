@@ -22,10 +22,12 @@ class TrackQuery extends Query
         return $this;
     }
 
-    public function whereIdentifier(string $id): self
+    public function whereIdentifier($identifier): self
     {
-        $this->builder->andWhere('t.id = :id')
-            ->setParameter('id', $id);
+        $this->builder->andWhere($this->builder->expr()->orX(
+            $this->builder->expr()->eq('t.id', ':identifier'),
+            $this->builder->expr()->eq('t.slug', ':identifier')
+        ))->setParameter(':identifier', $identifier);
 
         return $this;
     }

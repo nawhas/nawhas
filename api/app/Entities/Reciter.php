@@ -7,6 +7,7 @@ namespace App\Entities;
 use App\Entities\Behaviors\HasTimestamps;
 use App\Entities\Contracts\Entity;
 use App\Entities\Contracts\TimestampedEntity;
+use Illuminate\Support\Str;
 use Ramsey\Uuid\{Uuid, UuidInterface};
 use Zain\LaravelDoctrine\Jetpack\Serializer\SerializesAttributes;
 
@@ -17,6 +18,7 @@ class Reciter implements Entity, TimestampedEntity
 
     private UuidInterface $id;
     private string $name;
+    private string $slug;
     private ?string $description = null;
     private ?string $avatar = null;
 
@@ -24,6 +26,7 @@ class Reciter implements Entity, TimestampedEntity
     {
         $this->id = Uuid::uuid1();
         $this->name = $name;
+        $this->slug = Str::slug($name);
         $this->description = $description;
         $this->avatar = $avatar;
     }
@@ -36,6 +39,11 @@ class Reciter implements Entity, TimestampedEntity
     public function getName(): string
     {
         return $this->name;
+    }
+
+    public function getSlug(): string
+    {
+        return $this->slug;
     }
 
     public function getDescription(): ?string

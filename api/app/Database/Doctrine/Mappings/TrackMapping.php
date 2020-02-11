@@ -22,6 +22,8 @@ class TrackMapping extends EntityMapping
         $map->belongsTo(Album::class, 'album');
         $map->belongsTo(Reciter::class, 'reciter');
         $map->string('title');
+        $map->string('slug')->length(191);
+        $map->unique(['album_id', 'slug'])->name('unique_album_track_slug');
         $map->timestamps();
     }
 }

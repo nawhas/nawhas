@@ -9,6 +9,7 @@ use App\Exceptions\EntityNotFoundException;
 use App\Queries\ReciterQuery;
 use App\Repositories\ReciterRepository;
 use App\Support\Pagination\PaginationState;
+use Doctrine\Common\Collections\Criteria;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class DoctrineReciterRepository extends DoctrineRepository implements ReciterRepository
@@ -17,7 +18,7 @@ class DoctrineReciterRepository extends DoctrineRepository implements ReciterRep
 
     public function find(string $id): ?Reciter
     {
-        return $this->repo->find($id);
+        return $this->query()->whereIdentifier($id)->first();
     }
 
     public function get(string $id): Reciter

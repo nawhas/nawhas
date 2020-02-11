@@ -20,7 +20,7 @@ class AlbumMapping extends EntityMapping
         $map->uuidPrimaryKey();
         $map->belongsTo(Reciter::class, 'reciter');
         $map->string('title');
-        $map->unsignedSmallInteger('year');
+        $map->string('year')->length(10);
         $map->string('artwork')->nullable();
         $map->timestamps();
     }
