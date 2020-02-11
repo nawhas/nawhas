@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace DummyNamespace;
 
-use App\Entities\{Entity, Behaviors\HasTimestamps};
+use App\Entities\Behaviors\HasTimestamps;
+use App\Entities\Contracts\{Entity, TimestampedEntity};
 use Ramsey\Uuid\{Uuid, UuidInterface};
 use Zain\LaravelDoctrine\Jetpack\Serializer\SerializesAttributes;
 
-class DummyClass implements Entity
+class DummyClass implements Entity, TimestampedEntity
 {
     use HasTimestamps;
     use SerializesAttributes;
