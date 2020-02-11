@@ -1,8 +1,6 @@
 <template>
-  <div id="app" :class="'app--' + $vuetify.breakpoint.name">
-<!--    <vue-progress-bar></vue-progress-bar>-->
+    <!--<vue-progress-bar></vue-progress-bar>-->
     <router-view></router-view>
-  </div>
 </template>
 
 <script lang="ts">
