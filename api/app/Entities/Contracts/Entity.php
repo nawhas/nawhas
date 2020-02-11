@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace App\Entities;
+namespace App\Entities\Contracts;
 
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Contracts\Support\Jsonable;

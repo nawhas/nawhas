@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Queries;
 
-use App\Entities\Entity;
+use App\Entities\Contracts\Entity;
 use App\Exceptions\EntityNotFoundException;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\NoResultException;

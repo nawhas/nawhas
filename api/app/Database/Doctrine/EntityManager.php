@@ -2,7 +2,7 @@
 
 namespace App\Database\Doctrine;
 
-use App\Entities\Entity;
+use App\Entities\Contracts\Entity;
 use Doctrine\ORM\EntityManagerInterface as DoctrineEntityManager;
 use Doctrine\Persistence\ObjectRepository;
 
