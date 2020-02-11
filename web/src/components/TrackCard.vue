@@ -2,11 +2,11 @@
   <div @click="goToTrack()">
     <v-card class="track-card" :style="{ 'background-color': background }">
       <div class="track-card__text" :style="{ 'color': textColor }">
-        <div class="track-card__name body-2" :title="name">
-          {{ name }}
+        <div class="track-card__name body-2" :title="title">
+          {{ title }}
         </div>
-        <div class="track-card__album caption" :title="album.name">
-          {{ album.name }}
+        <div class="track-card__album caption" :title="album.title">
+          {{ album.title }}
         </div>
         <div class="track-card__reciter-year caption" :title="reciterYear">
           {{ reciterYear }}
@@ -14,7 +14,7 @@
       </div>
       <div class="track-card__album-art">
         <div class="track-card__album-art-gradient" :style="{background: gradient}"></div>
-        <img crossorigin ref="artwork" :src="album.artwork" :alt="name"/>
+        <img crossorigin ref="artwork" :src="artwork" :alt="title"/>
       </div>
     </v-card>
   </div>
@@ -25,7 +25,7 @@ import Vibrant from 'node-vibrant';
 
 export default {
   name: 'track-card',
-  props: ['name', 'slug', 'album', 'reciter', 'showReciter'],
+  props: ['title', 'slug', 'album', 'reciter', 'showReciter'],
   mounted() {
     this.setBackgroundFromImage();
   },
@@ -51,6 +51,9 @@ export default {
     };
   },
   computed: {
+    artwork() {
+      return this.album.artwork || '/img/default-album-image.png';
+    },
     reciterYear() {
       if (this.showReciter) {
         return `${this.reciter.name} • ${this.album.year}`;

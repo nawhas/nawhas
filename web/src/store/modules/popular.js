@@ -38,7 +38,7 @@ const actions = {
     });
   },
   async fetchPopularTracks({ commit }, options = {}) {
-    const response = await client.get('/v1/popular/tracks', options);
+    const response = await client.get('/v1/popular/tracks?include=album,reciter', options);
     commit('FETCH_POPULAR_TRACKS', {
       data: response.data.data,
     });
