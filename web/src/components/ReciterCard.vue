@@ -3,16 +3,14 @@
     <v-card :class="classObject" :style="{ 'background-color': background }">
       <div class="reciter-card__avatar">
         <v-avatar size="48px">
-          <img crossorigin ref="avatarElement" :src="avatar" :alt="name">
+          <img crossorigin ref="avatarElement" :src="image" :alt="name">
         </v-avatar>
       </div>
       <div class="reciter-card__text" :style="{ 'color': textColor }">
         <div class="reciter-card__name body-2" :title="name">
           {{ name }}
         </div>
-        <div class="reciter-card__albums caption" :title="albumCount + ' Albums'">
-          {{ albumCount }} Albums
-        </div>
+
       </div>
     </v-card>
   </div>
@@ -24,7 +22,7 @@ import Vibrant from 'node-vibrant';
 export default {
   name: 'reciter-card',
   props: [
-    'id', 'name', 'slug', 'albumCount', 'avatar', 'createdAt', 'updatedAt', 'featured',
+    'id', 'name', 'slug', 'avatar', 'createdAt', 'updatedAt', 'featured',
   ],
   mounted() {
     if (this.featured !== undefined) {
@@ -63,6 +61,9 @@ export default {
     };
   },
   computed: {
+    image() {
+      return this.avatar || '/img/default-reciter-avatar.png';
+    },
     classObject() {
       return {
         'reciter-card': true,
@@ -77,9 +78,9 @@ export default {
 .reciter-card {
   padding: 16px;
   display: flex;
-  /*align-items center;*/
+  align-items: center;
   cursor: pointer;
-  /*will-change: box-shadow background-color;*/
+  will-change: box-shadow, background-color;
   // transition: background-color $transition, box-shadow $transition;
   // elevation(0);
 
