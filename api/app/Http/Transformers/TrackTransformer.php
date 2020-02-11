@@ -16,6 +16,7 @@ class TrackTransformer extends Transformer
             'reciterId' => $track->getReciter()->getId(),
             'albumId' => $track->getAlbum()->getId(),
             'title' => $track->getTitle(),
+            'slug' => $track->getSlug(),
             'year' => $track->getAlbum()->getYear(),
             $this->timestamps($track),
         ];
