@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\Api\AlbumsController;
+use App\Http\Controllers\Api\RecitersController;
+use App\Http\Controllers\Api\TracksController;
 use Illuminate\Http\Request;
 
 /*
@@ -15,4 +18,36 @@ use Illuminate\Http\Request;
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
+});
+
+Route::prefix('v1')->group(function() {
+    // Reciters
+    Route::prefix('reciters')->group(function () {
+        Route::get('/', [RecitersController::class, 'index']);
+        // Route::post('/', [RecitersController::class, 'store']);
+        Route::get('/{reciter}', [RecitersController::class, 'show']);
+        // Route::post('/{reciter}', [RecitersController::class, 'update']);
+        // Route::patch('/{reciter}', [RecitersController::class, 'update']);
+        // Route::delete('/{reciter}', [RecitersController::class, 'destroy']);
+    });
+
+    // Reciter Albums
+    Route::prefix('reciters/{reciter}/albums')->group(function () {
+        Route::get('/', [AlbumsController::class, 'index']);
+        // Route::post('/', [RecitersController::class, 'store']);
+        Route::get('/{album}', [AlbumsController::class, 'show']);
+        // Route::post('/{reciter}', [RecitersController::class, 'update']);
+        // Route::patch('/{reciter}', [RecitersController::class, 'update']);
+        // Route::delete('/{reciter}', [RecitersController::class, 'destroy']);
+    });
+
+    // Album Tracks
+    Route::prefix('reciters/{reciter}/albums/{album}/tracks')->group(function () {
+        Route::get('/', [TracksController::class, 'index']);
+        // Route::post('/', [RecitersController::class, 'store']);
+        Route::get('/{track}', [TracksController::class, 'show']);
+        // Route::post('/{reciter}', [RecitersController::class, 'update']);
+        // Route::patch('/{reciter}', [RecitersController::class, 'update']);
+        // Route::delete('/{reciter}', [RecitersController::class, 'destroy']);
+    });
 });

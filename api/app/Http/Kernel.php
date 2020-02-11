@@ -20,6 +20,7 @@ class Kernel extends HttpKernel
         \App\Http\Middleware\TrimStrings::class,
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
         \Spatie\Cors\Cors::class,
+        \Zain\LaravelDoctrine\Jetpack\Middleware\FlushEntityManager::class,
     ];
 
     /**
@@ -41,7 +42,8 @@ class Kernel extends HttpKernel
         'api' => [
             \Laravel\Airlock\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
             'throttle:60,1',
-            \Illuminate\Routing\Middleware\SubstituteBindings::class,
+            // TODO - Make this work with lower precedence than the explicit binding
+             \App\Http\Middleware\SubstituteDoctrineBindings::class,
         ],
     ];
 
