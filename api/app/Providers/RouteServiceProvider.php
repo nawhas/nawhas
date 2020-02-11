@@ -2,8 +2,14 @@
 
 namespace App\Providers;
 
+use App\Entities\Album;
+use App\Entities\Reciter;
+use App\Repositories\AlbumRepository;
+use App\Repositories\ReciterRepository;
+use App\Repositories\TrackRepository;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
-use Illuminate\Support\Facades\Route;
+use Illuminate\Routing\Route;
+use Illuminate\Support\Facades\Route as Router;
 
 class RouteServiceProvider extends ServiceProvider
 {
@@ -30,9 +36,41 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
-
         parent::boot();
+        $this->bindEntities();
+    }
+
+    public function bindEntities(): void
+    {
+        Router::bind('reciter', function ($id, Route $route) {
+            /** @var ReciterRepository $repo */
+            $repo = $this->app->make(ReciterRepository::class);
+            return $repo->get($id);
+        });
+
+        Router::bind('album', function ($id, Route $route) {
+            /** @var AlbumRepository $repo */
+            $repo = $this->app->make(AlbumRepository::class);
+
+            $reciter = $route->parameter('reciter');
+            if ($reciter instanceof Reciter) {
+                return $repo->getByReciter($reciter, $id);
+            }
+
+            return $repo->get($id);
+        });
+
+        Router::bind('track', function ($id, Route $route) {
+            /** @var TrackRepository $repo */
+            $repo = $this->app->make(TrackRepository::class);
+
+            $album = $route->parameter('album');
+            if ($album instanceof Album) {
+                return $repo->getFromAlbum($album, $id);
+            }
+
+            return $repo->get($id);
+        });
     }
 
     /**
@@ -58,7 +96,7 @@ class RouteServiceProvider extends ServiceProvider
      */
     protected function mapWebRoutes()
     {
-        Route::middleware('web')
+        Router::middleware('web')
              ->namespace($this->namespace)
              ->group(base_path('routes/web.php'));
     }
@@ -72,7 +110,7 @@ class RouteServiceProvider extends ServiceProvider
      */
     protected function mapApiRoutes()
     {
-        Route::middleware('api')
+        Router::middleware('api')
              ->namespace($this->namespace)
              ->group(base_path('routes/api.php'));
     }

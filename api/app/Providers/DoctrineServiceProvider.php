@@ -7,7 +7,9 @@ namespace App\Providers;
 use App\Repositories\AlbumRepository;
 use App\Repositories\Doctrine\DoctrineAlbumRepository;
 use App\Repositories\Doctrine\DoctrineReciterRepository;
+use App\Repositories\Doctrine\DoctrineTrackRepository;
 use App\Repositories\ReciterRepository;
+use App\Repositories\TrackRepository;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Support\ServiceProvider;
 
@@ -28,5 +30,6 @@ class DoctrineServiceProvider extends ServiceProvider
     {
         $this->app->bind(ReciterRepository::class, DoctrineReciterRepository::class);
         $this->app->bind(AlbumRepository::class, DoctrineAlbumRepository::class);
+        $this->app->bind(TrackRepository::class, DoctrineTrackRepository::class);
     }
 }

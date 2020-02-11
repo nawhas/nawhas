@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Queries;
 
 use App\Entities\Reciter;
-use Doctrine\Common\Collections\Collection;
+use Illuminate\Support\Collection;
 
 /**
  * @method Reciter get()

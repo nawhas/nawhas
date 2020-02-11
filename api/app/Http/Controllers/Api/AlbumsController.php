@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Api;
 
+use App\Entities\Album;
 use App\Entities\Reciter;
 use App\Http\Controllers\Controller;
 use App\Http\Transformers\AlbumTransformer;
@@ -32,10 +33,8 @@ class AlbumsController extends Controller
         return $this->respondWithPaginator($albums);
     }
 
-    public function show(Reciter $reciter, string $albumId): JsonResponse
+    public function show(Reciter $reciter, Album $album): JsonResponse
     {
-        $album = $this->repository->getByReciter($reciter, $albumId);
-
         return $this->respondWithItem($album);
     }
 }

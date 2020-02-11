@@ -5,8 +5,7 @@ declare(strict_types=1);
 namespace App\Entities;
 
 use App\Entities\Behaviors\HasTimestamps;
-use App\Entities\Contracts\Entity;
-use App\Entities\Contracts\TimestampedEntity;
+use App\Entities\Contracts\{Entity, TimestampedEntity};
 use Ramsey\Uuid\{Uuid, UuidInterface};
 use Zain\LaravelDoctrine\Jetpack\Serializer\SerializesAttributes;
 

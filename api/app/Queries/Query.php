@@ -7,7 +7,7 @@ namespace App\Queries;
 use App\Entities\Contracts\Entity;
 use App\Exceptions\EntityNotFoundException;
 use App\Support\Pagination\PaginationState;
-use Doctrine\Common\Collections\Collection;
+use Illuminate\Support\Collection;
 use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\NoResultException;
@@ -67,7 +67,7 @@ abstract class Query
 
     public function all(): Collection
     {
-        return $this->builder->getQuery()->getResult();
+        return collect($this->builder->getQuery()->getResult());
     }
 
     public function build(): DoctrineQuery

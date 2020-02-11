@@ -6,7 +6,7 @@ namespace App\Queries;
 
 use App\Entities\Album;
 use App\Entities\Reciter;
-use Doctrine\Common\Collections\Collection;
+use Illuminate\Support\Collection;
 
 /**
  * @method Album|null first()
