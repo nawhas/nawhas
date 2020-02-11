@@ -18,6 +18,7 @@ class ReciterMapping extends EntityMapping
     {
         $map->uuidPrimaryKey();
         $map->string('name');
+        $map->string('slug')->length(191)->unique();
         $map->text('description')->nullable();
         $map->string('avatar')->nullable();
         $map->timestamps();

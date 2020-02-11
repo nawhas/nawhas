@@ -22,14 +22,6 @@ class TrackQuery extends Query
         return $this;
     }
 
-    public function whereIdentifier(string $id): self
-    {
-        $this->builder->andWhere('t.id = :id')
-            ->setParameter('id', $id);
-
-        return $this;
-    }
-
     protected static function entity(): string
     {
         return Track::class;
