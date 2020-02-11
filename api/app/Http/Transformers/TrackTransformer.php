@@ -9,6 +9,8 @@ use League\Fractal\Resource\Item;
 
 class TrackTransformer extends Transformer
 {
+    protected $availableIncludes = ['reciter', 'album'];
+
     public function toArray(Track $track): array
     {
         return [
