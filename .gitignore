@@ -1,1 +1,4 @@
 .idea
+node_modules
+.dev.swp
+yarn.lock
