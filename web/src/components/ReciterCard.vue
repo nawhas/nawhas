@@ -34,7 +34,7 @@ export default {
   },
   methods: {
     goToReciter() {
-      this.$router.push(`/reciters/${this.slug}`);
+      this.$router.push({ name: 'reciters.show', params: { reciter: this.slug }})
     },
     setBackgroundFromImage(image) {
       Vibrant.from(image.src).getPalette().then((palette) => {

@@ -15,6 +15,16 @@ const routes = [
         name: 'Home',
         component: Home,
       },
+      {
+        path: 'reciters',
+        name: 'reciters.index',
+        component: () => import(/* webpackChunkName: "reciters" */'@/views/public/reciters/Index.vue'),
+      },
+      {
+        path: 'reciters/:reciter',
+        name: 'reciters.show',
+        component: () => import(/* webpackChunkName: "reciter" */'@/views/public/reciters/Show.vue'),
+      },
     ],
   },
   {
