@@ -26,7 +26,7 @@ class PaginationState
 
     public static function fromRequest(Request $request): self
     {
-        return new self($request->get('page', 1), $request->get('per_page', self::DEFAULT_LIMIT));
+        return new self((int)$request->get('page', 1), (int)$request->get('per_page', self::DEFAULT_LIMIT));
     }
 
     public function getLimit(): int
