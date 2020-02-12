@@ -3,11 +3,14 @@
     <v-card :class="classObject" :style="{ 'background-color': background }">
       <div class="reciter-card__avatar">
         <v-avatar size="48px">
-          <img crossorigin ref="avatarElement" :src="image" :alt="name" />
+          <img crossorigin ref="avatarElement" :src="image" :alt="name">
         </v-avatar>
       </div>
       <div class="reciter-card__text" :style="{ 'color': textColor }">
-        <div class="reciter-card__name body-2" :title="name">{{ name }}</div>
+        <div class="reciter-card__name body-2" :title="name">
+          {{ name }}
+        </div>
+
       </div>
     </v-card>
   </div>
@@ -18,7 +21,9 @@ import Vibrant from 'node-vibrant';
 
 export default {
   name: 'reciter-card',
-  props: ['id', 'name', 'slug', 'avatar', 'createdAt', 'updatedAt', 'featured'],
+  props: [
+    'id', 'name', 'slug', 'avatar', 'createdAt', 'updatedAt', 'featured',
+  ],
   mounted() {
     if (this.featured !== undefined) {
       const image = this.$refs.avatarElement;
@@ -29,22 +34,17 @@ export default {
   },
   methods: {
     goToReciter() {
-      this.$router.push({
-        name: 'reciters.show',
-        params: { reciter: this.slug },
-      });
+      this.$router.push({ name: 'reciters.show', params: { reciter: this.slug }})
     },
     setBackgroundFromImage(image) {
-      Vibrant.from(image.src)
-        .getPalette()
-        .then((palette) => {
-          const swatch = palette.DarkVibrant;
-          if (!swatch) {
-            return;
-          }
-          this.background = swatch.getHex();
-          this.textColor = swatch.getBodyTextColor();
-        });
+      Vibrant.from(image.src).getPalette().then((palette) => {
+        const swatch = palette.DarkVibrant;
+        if (!swatch) {
+          return;
+        }
+        this.background = swatch.getHex();
+        this.textColor = swatch.getBodyTextColor();
+      });
     },
   },
   data() {
@@ -104,7 +104,7 @@ export default {
     overflow: hidden;
 
     .reciter-card__name {
-      //      white-space nowrap;
+//      white-space nowrap;
       text-overflow: ellipsis;
       overflow: hidden;
       width: auto;
