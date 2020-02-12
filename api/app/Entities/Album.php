@@ -7,6 +7,8 @@ namespace App\Entities;
 use App\Entities\Behaviors\HasTimestamps;
 use App\Entities\Contracts\Entity;
 use App\Entities\Contracts\TimestampedEntity;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Ramsey\Uuid\{Uuid, UuidInterface};
 use Zain\LaravelDoctrine\Jetpack\Serializer\SerializesAttributes;
 
@@ -19,6 +21,7 @@ class Album implements Entity, TimestampedEntity
     private Reciter $reciter;
     private string $title;
     private string $year;
+    private Collection $tracks;
     private ?string $artwork = null;
 
     public function __construct(Reciter $reciter, string $title, string $year, ?string $artwork = null)
@@ -28,6 +31,7 @@ class Album implements Entity, TimestampedEntity
         $this->title = $title;
         $this->year = $year;
         $this->artwork = $artwork;
+        $this->tracks = new ArrayCollection();
     }
 
     public function getId(): string
@@ -53,5 +57,13 @@ class Album implements Entity, TimestampedEntity
     public function getArtwork(): ?string
     {
         return $this->artwork;
+    }
+
+    /**
+     * @return Collection|Track[]
+     */
+    public function getTracks(): Collection
+    {
+        return $this->tracks;
     }
 }

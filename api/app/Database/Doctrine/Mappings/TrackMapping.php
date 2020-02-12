@@ -19,7 +19,7 @@ class TrackMapping extends EntityMapping
     public function map(Fluent $map)
     {
         $map->uuidPrimaryKey();
-        $map->belongsTo(Album::class, 'album');
+        $map->belongsTo(Album::class, 'album')->inversedBy('tracks');
         $map->belongsTo(Reciter::class, 'reciter');
         $map->string('title');
         $map->string('slug')->length(191);
