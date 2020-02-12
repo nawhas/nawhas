@@ -1,6 +1,5 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import Home from '@/views/Home.vue';
 import Public from '@/layouts/Public.vue';
 
 Vue.use(VueRouter);
@@ -13,7 +12,7 @@ const routes = [
       {
         path: '',
         name: 'Home',
-        component: Home,
+        component: () => import(/* webpackChunkName: "home" */'@/views/Home.vue'),
       },
       {
         path: 'reciters',
@@ -24,6 +23,11 @@ const routes = [
         path: 'reciters/:reciter',
         name: 'reciters.show',
         component: () => import(/* webpackChunkName: "reciter" */'@/views/public/reciters/Show.vue'),
+      },
+      {
+        path: 'reciters/:reciter/albums/:album/tracks/:track',
+        name: 'tracks.show',
+        component: () => import(/* webpackChunkName: "tracks" */'./views/public/tracks/Show.vue'),
       },
     ],
   },
