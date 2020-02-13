@@ -21,7 +21,7 @@ class TrackMapping extends EntityMapping
     {
         $map->uuidPrimaryKey();
         $map->belongsTo(Album::class, 'album')->inversedBy('tracks');
-        $map->oneToOne(Lyrics::class, 'lyrics');
+        $map->oneToOne(Lyrics::class, 'lyrics')->cascadePersist();
         $map->string('title');
         $map->string('slug')->length(191);
         $map->unique(['album_id', 'slug'])->name('unique_album_track_slug');

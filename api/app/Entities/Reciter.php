@@ -51,6 +51,11 @@ class Reciter implements Entity, TimestampedEntity
         return $this->description;
     }
 
+    public function setDescription(?string $description): void
+    {
+        $this->description = $description;
+    }
+
     public function getAvatar(): ?string
     {
         return $this->avatar;

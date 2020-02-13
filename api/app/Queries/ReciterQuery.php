@@ -24,6 +24,14 @@ class ReciterQuery extends Query
         return $this;
     }
 
+    public function whereName(string $name): self
+    {
+        $this->builder->andWhere('t.name = :name')
+            ->setParameter('name', $name);
+
+        return $this;
+    }
+
     protected static function entity(): string
     {
         return Reciter::class;
