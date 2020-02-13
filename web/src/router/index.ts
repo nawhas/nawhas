@@ -27,7 +27,7 @@ const routes = [
       {
         path: 'reciters/:reciter/albums/:album/tracks/:track',
         name: 'tracks.show',
-        component: () => import(/* webpackChunkName: "tracks" */'./views/public/tracks/Show.vue'),
+        component: () => import(/* webpackChunkName: "tracks" */'@/views/public/tracks/Show.vue'),
       },
     ],
   },
