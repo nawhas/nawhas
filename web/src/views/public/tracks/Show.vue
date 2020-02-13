@@ -68,9 +68,7 @@
                 <p>There is no video available</p>
               </section>
             </v-card>
-            <v-card class="track-page-content__card track-page-content__card--album">
-              More
-            </v-card>
+            <v-card class="track-page-content__card track-page-content__card--album">More</v-card>
           </v-flex>
         </v-layout>
       </v-container>
@@ -78,7 +76,7 @@
   </div>
 </template>
 
-<script lang="ts">
+<script>
 import { mapGetters } from 'vuex';
 import Vibrant from 'node-vibrant';
 import store from '@/store';
@@ -113,7 +111,7 @@ export default {
       }
       Vibrant.from(this.album.artwork)
         .getPalette()
-        .then(palette => {
+        .then((palette) => {
           const swatch = palette.DarkMuted;
           if (!swatch) {
             return;
@@ -211,7 +209,7 @@ export default {
       .lyrics__empty {
         display: flex;
         justify-content: center;
-        color: rgba(0,0,0,0.3);
+        color: rgba(0, 0, 0, 0.3);
         font-size: 20px;
         height: 400px;
         font-weight: 300;
@@ -231,11 +229,11 @@ export default {
     width: 100%;
     height: 220px;
     margin-bottom: -220px;
-    background: linear-gradient(to bottom right, #E90500, #FA6000);
+    background: linear-gradient(to bottom right, #e90500, #fa6000);
   }
 
   .reciter-hero__content {
-     padding: 80px 120px 24px 120px;
+    padding: 80px 120px 24px 120px;
   }
 
   .reciter-hero__avatar {

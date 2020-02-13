@@ -90,8 +90,6 @@ export default {
 </script>
 
 <style lang="scss">
-@import '../../node_modules/vuetify/src/styles/settings/_elevations.scss';
-
 .album {
   margin-top: 90px;
   .album__header {

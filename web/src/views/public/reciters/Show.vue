@@ -92,7 +92,7 @@ export default {
   </div>
 </template>
 
-<script lang="ts">
+<script>
 import { mapGetters } from 'vuex';
 import store from '@/store';
 import TrackCard from '@/components/TrackCard.vue';
