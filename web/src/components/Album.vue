@@ -2,7 +2,7 @@
   <v-card class="album">
     <div class="album__header" :style="{ 'background-color': background }">
       <v-avatar tile size="128px" :elevation="2" class="album__artwork white">
-        <img :src="artwork" :alt="name" ref="artwork" />
+        <img :src="image" :alt="name" ref="artwork" />
       </v-avatar>
       <div class="album__details" :style="{ color: textColor }">
         <h5 class="album__title">{{ name }}</h5>
@@ -34,7 +34,7 @@ export default {
   },
   methods: {
     setBackgroundFromImage() {
-      Vibrant.from(this.artwork)
+      Vibrant.from(this.image)
         .getPalette()
         .then((palette) => {
           const swatch = palette.DarkMuted;
@@ -83,7 +83,10 @@ export default {
       )}, 1), rgba(${rgb.join(', ')}, 0)`;
     },
     artworkBackground() {
-      return `url(${this.artwork})`;
+      return `url(${this.image})`;
+    },
+    image() {
+      return this.artwork || '/img/default-album-image.png';
     },
   },
 };

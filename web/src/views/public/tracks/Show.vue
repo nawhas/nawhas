@@ -5,7 +5,7 @@
         <div class="track-hero__left">
           <div class="track-hero__avatar" :elevation="2">
             <v-avatar size="120px" class="white" tile>
-              <img :src="album.artwork" :alt="album.name" />
+              <img :src="image" :alt="album.name" />
             </v-avatar>
           </div>
           <div class="track-hero__text">
@@ -103,13 +103,16 @@ export default {
       album: 'albums/album',
       track: 'tracks/track',
     }),
+    image() {
+      return this.artwork || '/img/default-album-image.png';
+    },
   },
   methods: {
     setBackgroundFromImage() {
       if (!this.track) {
         return;
       }
-      Vibrant.from(this.album.artwork)
+      Vibrant.from(this.image)
         .getPalette()
         .then((palette) => {
           const swatch = palette.DarkMuted;
