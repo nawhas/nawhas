@@ -4957,16 +4957,16 @@
         },
         {
             "name": "zain/laravel-doctrine-jetpack",
-            "version": "v0.5",
+            "version": "v0.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/szainmehdi/laravel-doctrine-jetpack.git",
-                "reference": "e8fac0b69c607d6d22f8b3c19bbf163fd3ee75ce"
+                "reference": "0c797e3cb11a803f040898d8d04a724fa67e22f5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/szainmehdi/laravel-doctrine-jetpack/zipball/e8fac0b69c607d6d22f8b3c19bbf163fd3ee75ce",
-                "reference": "e8fac0b69c607d6d22f8b3c19bbf163fd3ee75ce",
+                "url": "https://api.github.com/repos/szainmehdi/laravel-doctrine-jetpack/zipball/0c797e3cb11a803f040898d8d04a724fa67e22f5",
+                "reference": "0c797e3cb11a803f040898d8d04a724fa67e22f5",
                 "shasum": ""
             },
             "require": {
@@ -5018,7 +5018,7 @@
                 "laravel",
                 "mapping"
             ],
-            "time": "2020-02-10T02:35:22+00:00"
+            "time": "2020-02-13T02:42:49+00:00"
         }
     ],
     "packages-dev": [
