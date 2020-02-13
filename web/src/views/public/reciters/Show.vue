@@ -9,9 +9,7 @@
               <img :src="image" :alt="reciter.name" />
             </v-avatar>
           </div>
-          <h4 class="reciter-hero__title">
-            {{ reciter.name }}
-          </h4>
+          <h4 class="reciter-hero__title">{{ reciter.name }}</h4>
           <p class="reciter-hero__bio">{{ reciter.description }}</p>
         </v-card>
       </div>
@@ -38,20 +36,8 @@
 
 <script>
 import { mapGetters } from 'vuex';
-import store from '@/store';
 import TrackCard from '@/components/TrackCard.vue';
 import Album from '@//components/Album.vue';
-
-async function fetchData(reciter) {
-  await Promise.all([
-    store.dispatch('albums/fetchAlbums', { reciter }),
-    store.dispatch('reciters/fetchReciter', { reciter }),
-  ]);
-  await store.dispatch('popular/fetchPopularTracks', {
-    limit: 6,
-    reciterId: store.getters['reciters/reciter'].id,
-  });
-}
 
 export default {
   name: 'reciters.show',
@@ -59,13 +45,14 @@ export default {
     TrackCard,
     Album,
   },
-  async beforeRouteEnter(to, from, next) {
-    await fetchData(to.params.reciter);
-    next();
-  },
-  async beforeRouteUpdate(to, from, next) {
-    await fetchData(to.params.reciter);
-    next();
+  async mounted() {
+    const { reciter } = this.$route.params;
+    await this.$store.dispatch('reciters/fetchReciter', { reciter });
+    this.$store.dispatch('albums/fetchAlbums', { reciter: this.reciter.slug });
+    this.$store.dispatch('popular/fetchPopularTracks', {
+      limit: 6,
+      reciterId: this.reciter.id,
+    });
   },
   computed: {
     ...mapGetters({
@@ -86,7 +73,7 @@ export default {
     width: 100%;
     height: 220px;
     margin-bottom: -220px;
-    background: linear-gradient(to bottom right, #E90500, #FA6000);
+    background: linear-gradient(to bottom right, #e90500, #fa6000);
   }
 
   .reciter-hero__content {

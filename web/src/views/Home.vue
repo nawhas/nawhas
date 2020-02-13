@@ -29,21 +29,13 @@
   </div>
 </template>
 
-<script lang="ts">
+<script>
 import HeroBanner from '@/components/HeroBanner.vue';
 import HeroQuote from '@/components/HeroQuote.vue';
 import ReciterCard from '@/components/ReciterCard.vue';
 import TrackCard from '@/components/TrackCard.vue';
 import { mapGetters } from 'vuex';
-import store from '@/store';
-import { Route } from 'vue-router';
 
-async function fetchData() {
-  await Promise.all([
-    store.dispatch('popular/fetchPopularReciters', { limit: 6 }),
-    store.dispatch('popular/fetchPopularTracks', { limit: 6 }),
-  ]);
-}
 
 export default {
   name: 'Home',
@@ -53,13 +45,9 @@ export default {
     ReciterCard,
     TrackCard,
   },
-  async beforeRouteEnter(to: Route, from: Route, next: (to?: any) => void) {
-    await fetchData();
-    next();
-  },
-  async beforeRouteUpdate(to: Route, from: Route, next: (to?: any) => void) {
-    await fetchData();
-    next();
+  mounted() {
+    this.$store.dispatch('popular/fetchPopularReciters', { limit: 6 });
+    this.$store.dispatch('popular/fetchPopularTracks', { limit: 6 });
   },
   computed: {
     ...mapGetters({

@@ -24,29 +24,16 @@
   </div>
 </template>
 
-<script lang="ts">
+<script>
 import ReciterCard from '@/components/ReciterCard.vue';
 import { mapGetters } from 'vuex';
-import store from '@/store';
-import { Route } from 'vue-router';
-
-async function fetchData() {
-  await Promise.all([
-    store.dispatch('popular/fetchPopularReciters', { limit: 6 }),
-    store.dispatch('reciters/fetchReciters', { limit: 6 }),
-  ]);
-}
 
 export default {
   name: 'Reciters',
   components: { ReciterCard },
-  async beforeRouteEnter(to: Route, from: Route, next: (to?: any) => void) {
-    await fetchData();
-    next();
-  },
-  async beforeRouteUpdate(to: Route, from: Route, next: (to?: any) => void) {
-    await fetchData();
-    next();
+  mounted() {
+    this.$store.dispatch('popular/fetchPopularReciters', { limit: 6 });
+    this.$store.dispatch('reciters/fetchReciters');
   },
   computed: {
     ...mapGetters({
