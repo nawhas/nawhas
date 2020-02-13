@@ -1,8 +1,8 @@
 <template>
   <div>
-    <div class="track-hero" :style="{'background-color': background, color: textColor}">
-      <div class="track-hero__content">
-        <template v-if="loaded">
+    <template v-if="loaded">
+      <div class="track-hero" :style="{'background-color': background, color: textColor}">
+        <div class="track-hero__content">
           <div class="track-hero__left">
             <div class="track-hero__avatar" :elevation="2">
               <v-avatar size="120px" class="white" tile>
@@ -17,36 +17,37 @@
               </div>
             </div>
           </div>
-        </template>
-        <template v-else>
-          <track-header-skeleton />
-        </template>
-        <div class="track-hero__actions">
-          <ul>
-            <li>
-              <v-btn icon class="white--text">
-                <v-icon>add_to_photos</v-icon>
-              </v-btn>
-            </li>
-            <li>
-              <v-btn icon class="white--text">
-                <v-icon>share</v-icon>
-              </v-btn>
-            </li>
-            <li>
-              <v-btn icon class="white--text">
-                <v-icon>print</v-icon>
-              </v-btn>
-            </li>
-            <li>
-              <v-btn icon class="white--text">
-                <v-icon>more_horiz</v-icon>
-              </v-btn>
-            </li>
-          </ul>
+          <div class="track-hero__actions">
+            <ul>
+              <li>
+                <v-btn icon class="white--text">
+                  <v-icon>add_to_photos</v-icon>
+                </v-btn>
+              </li>
+              <li>
+                <v-btn icon class="white--text">
+                  <v-icon>share</v-icon>
+                </v-btn>
+              </li>
+              <li>
+                <v-btn icon class="white--text">
+                  <v-icon>print</v-icon>
+                </v-btn>
+              </li>
+              <li>
+                <v-btn icon class="white--text">
+                  <v-icon>more_horiz</v-icon>
+                </v-btn>
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
-    </div>
+    </template>
+
+    <template v-else>
+      <reciter-hero-skeleton></reciter-hero-skeleton>
+    </template>
 
     <div class="track-page-content">
       <v-container grid-list-xl>
@@ -91,12 +92,12 @@
 <script>
 import { mapGetters } from 'vuex';
 import Vibrant from 'node-vibrant';
-import TrackHeaderSkeleton from '@/components/TrackHeaderSkeleton.vue';
+import ReciterHeroSkeleton from '@/components/ReciterHeroSkeleton.vue';
 
 export default {
   name: 'tracks.show',
   components: {
-    TrackHeaderSkeleton,
+    ReciterHeroSkeleton,
   },
   data() {
     return {
