@@ -5,6 +5,7 @@ namespace App\Http\Transformers;
 use App\Entities\Contracts\TimestampedEntity;
 use Illuminate\Http\Resources\ConditionallyLoadsAttributes;
 use Illuminate\Http\Resources\MergeValue;
+use League\Fractal\Resource\Primitive;
 use League\Fractal\TransformerAbstract;
 
 abstract class Transformer extends TransformerAbstract
@@ -35,5 +36,10 @@ abstract class Transformer extends TransformerAbstract
             'createdAt' => $this->dateTime($entity->getCreatedAt()),
             'updatedAt' => $this->dateTime($entity->getUpdatedAt()),
         ]);
+    }
+
+    protected function null(): Primitive
+    {
+        return $this->primitive(null);
     }
 }
