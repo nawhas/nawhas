@@ -8,13 +8,17 @@ jobs:
     name: 'Build'
     steps:
     - uses: actions/checkout@v2
-      
-    - name: NPM or Yarn install with caching
-      uses: bahmutov/npm-install@v1.1.0
+    - uses: actions/setup-node@v1
       with:
-        working-directory: web
-    - run: yarn install --frozen-lockfile
+        node-version: '12.x'
+        
+    - name: 'Install Dependencies'
+    - run:
+        yarn install --frozen-lockfile
+      working-directory: ./web
+
+    - name: 'Build App'
     - run: yarn build
-    # - run: npm test
+      working-directory: ./web
       env:
         CI: true
