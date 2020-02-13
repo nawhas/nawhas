@@ -2,20 +2,25 @@
   <div>
     <div class="track-hero" :style="{'background-color': background, color: textColor}">
       <div class="track-hero__content">
-        <div class="track-hero__left">
-          <div class="track-hero__avatar" :elevation="2">
-            <v-avatar size="120px" class="white" tile>
-              <img :src="image" :alt="album.name" />
-            </v-avatar>
-          </div>
-          <div class="track-hero__text">
-            <h4 class="track-hero__title">{{ track.title }}</h4>
-            <div class="track-hero__meta">
-              <p>{{ reciter.name }}</p>
-              <p>{{ album.year }} &bull; {{ album.title }}</p>
+        <template v-if="loaded">
+          <div class="track-hero__left">
+            <div class="track-hero__avatar" :elevation="2">
+              <v-avatar size="120px" class="white" tile>
+                <img :src="image" :alt="album.name" />
+              </v-avatar>
+            </div>
+            <div class="track-hero__text">
+              <h4 class="track-hero__title">{{ track.title }}</h4>
+              <div class="track-hero__meta">
+                <p>{{ reciter.name }}</p>
+                <p>{{ album.year }} &bull; {{ album.title }}</p>
+              </div>
             </div>
           </div>
-        </div>
+        </template>
+        <template v-else>
+          <track-header-skeleton />
+        </template>
         <div class="track-hero__actions">
           <ul>
             <li>
@@ -48,12 +53,19 @@
         <v-layout row>
           <v-flex md7>
             <v-card class="track-page-content__card track-page-content__card--lyrics lyrics">
-              <div class="lyrics__content" v-if="track.lyrics">
-                <p v-html="track.lyrics.content"></p>
-              </div>
-              <div class="lyrics__empty" v-else>
-                <div class="lyrics__empty-message">We don't have a write-up for this nawha yet.</div>
-              </div>
+              <template v-if="track">
+                <div class="lyrics__content" v-if="track.lyrics">
+                  <p v-html="track.lyrics.content"></p>
+                </div>
+                <div class="lyrics__empty" v-else>
+                  <div class="lyrics__empty-message">We don't have a write-up for this nawha yet.</div>
+                </div>
+              </template>
+              <template v-else>
+                <div class="lyrics__empty">
+                  <div class="lyrics__empty-message">We don't have a write-up for this nawha yet.</div>
+                </div>
+              </template>
             </v-card>
           </v-flex>
           <v-flex md5>
@@ -79,23 +91,25 @@
 <script>
 import { mapGetters } from 'vuex';
 import Vibrant from 'node-vibrant';
-import store from '@/store';
-
-async function fetchData(reciter, album, track) {
-  await Promise.all([
-    store.dispatch('reciters/fetchReciter', { reciter }),
-    store.dispatch('albums/fetchAlbum', { reciter, album }),
-    store.dispatch('tracks/fetchTrack', { reciter, album, track }),
-  ]);
-}
+import TrackHeaderSkeleton from '@/components/TrackHeaderSkeleton.vue';
 
 export default {
   name: 'tracks.show',
+  components: {
+    TrackHeaderSkeleton,
+  },
   data() {
     return {
       background: '#222',
       textColor: '#fff',
     };
+  },
+  mounted() {
+    const { reciter, album, track } = this.$route.params;
+    this.$store.dispatch('reciters/fetchReciter', { reciter });
+    this.$store.dispatch('albums/fetchAlbum', { reciter, album });
+    this.$store.dispatch('tracks/fetchTrack', { reciter, album, track });
+    this.setBackgroundFromImage();
   },
   computed: {
     ...mapGetters({
@@ -105,6 +119,9 @@ export default {
     }),
     image() {
       return this.artwork || '/img/default-album-image.png';
+    },
+    loaded() {
+      return this.reciter && this.album && this.track;
     },
   },
   methods: {
@@ -123,17 +140,6 @@ export default {
           this.textColor = swatch.getBodyTextColor();
         });
     },
-  },
-  created() {
-    this.setBackgroundFromImage();
-  },
-  async beforeRouteEnter(to, from, next) {
-    await fetchData(to.params.reciter, to.params.album, to.params.track);
-    next();
-  },
-  async beforeRouteUpdate(to, from, next) {
-    await fetchData(to.params.reciter, to.params.album, to.params.track);
-    next();
   },
 };
 </script>
