@@ -6,10 +6,11 @@ namespace App\Http\Transformers;
 
 use App\Entities\Track;
 use League\Fractal\Resource\Item;
+use League\Fractal\Resource\ResourceInterface;
 
 class TrackTransformer extends Transformer
 {
-    protected $availableIncludes = ['reciter', 'album'];
+    protected $availableIncludes = ['reciter', 'album', 'lyrics'];
 
     public function toArray(Track $track): array
     {
@@ -32,5 +33,14 @@ class TrackTransformer extends Transformer
     public function includeAlbum(Track $track): Item
     {
         return $this->item($track->getAlbum(), new AlbumTransformer());
+    }
+
+    public function includeLyrics(Track $track): ?ResourceInterface
+    {
+        if (($lyrics = $track->getLyrics()) === null) {
+            return $this->null();
+        }
+
+        return $this->item($lyrics, new LyricsTransformer());
     }
 }
