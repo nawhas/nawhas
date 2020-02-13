@@ -13,11 +13,11 @@ jobs:
         node-version: '12.x'
         
     - name: 'Install Dependencies'
-    - run: yarn install --frozen-lockfile
+      run: yarn install --frozen-lockfile
       working-directory: ./web
 
     - name: 'Build App'
-    - run: yarn build
+      run: yarn build
       working-directory: ./web
       env:
         CI: true
