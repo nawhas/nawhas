@@ -27,7 +27,7 @@ const mutations = {
 
 const actions = {
   async fetchAlbums({ commit }, payload) {
-    const response = await client.get(`/v1/reciters/${payload.reciter}/albums`);
+    const response = await client.get(`/v1/reciters/${payload.reciter}/albums?include=tracks`);
     commit('FETCH_ALBUMS', {
       data: response.data.data,
     });

@@ -11,6 +11,7 @@
   "dependencies": {
     "axios": "^0.19.2",
     "core-js": "^3.6.4",
+    "material-design-icons-iconfont": "^5.0.1",
     "node-vibrant": "^3.1.5",
     "query-string": "^6.10.1",
     "register-service-worker": "^1.6.2",

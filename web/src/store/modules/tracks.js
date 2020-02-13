@@ -34,7 +34,7 @@ const actions = {
   },
   async fetchTrack({ commit }, payload) {
     const response = await client.get(
-      `/v1/reciters/${payload.reciter}/albums/${payload.album}/tracks/${payload.track}`,
+      `/v1/reciters/${payload.reciter}/albums/${payload.album}/tracks/${payload.track}?include=lyrics`,
     );
     commit('FETCH_TRACK', {
       data: response.data,

@@ -22,6 +22,7 @@ module.exports = {
     }],
     'max-len': ['error', { code: 120, ignoreUrls: true }],
     'no-restricted-syntax': 0,
+    "linebreak-style": 0,
     'no-shadow': 0,
     'arrow-parens': ['error', 'always'],
     'no-param-reassign': ['error', {
