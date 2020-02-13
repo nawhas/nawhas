@@ -63,15 +63,14 @@
                 </div>
               </template>
               <template v-else>
-                <div class="lyrics__empty">
-                  <div class="lyrics__empty-message">We don't have a write-up for this nawha yet.</div>
+                <div class="lyrics__content">
+                  <lyrics-skeleton />
                 </div>
               </template>
             </v-card>
           </v-flex>
           <v-flex md5>
             <v-card class="track-page-content__card track-page-content__card--audio">
-              Audio
               <section>
                 <p>There is no track available yet</p>
               </section>
@@ -93,11 +92,13 @@
 import { mapGetters } from 'vuex';
 import Vibrant from 'node-vibrant';
 import ReciterHeroSkeleton from '@/components/ReciterHeroSkeleton.vue';
+import LyricsSkeleton from '@/components/LyricsSkeleton.vue';
 
 export default {
   name: 'tracks.show',
   components: {
     ReciterHeroSkeleton,
+    LyricsSkeleton,
   },
   data() {
     return {
