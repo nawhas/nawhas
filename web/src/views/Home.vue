@@ -9,9 +9,14 @@
     <section class="page-section" id="top-reciters-section">
       <h5 class="title">Top Reciters</h5>
       <v-container grid-list-lg class="pa-0" fluid>
-        <v-layout row wrap>
+        <v-layout row wrap v-if="popularReciters">
           <v-flex xs12 sm6 md4 v-for="reciter in popularReciters" :key="reciter.id">
-            <reciter-card featured v-bind="reciter"/>
+            <reciter-card featured v-bind="reciter" />
+          </v-flex>
+        </v-layout>
+        <v-layout row wrap v-else>
+          <v-flex xs12 sm6 md4 v-for="index in 6" :key="index">
+            <reciter-card-skeleton />
           </v-flex>
         </v-layout>
       </v-container>
@@ -19,9 +24,14 @@
     <section class="page-section" id="trending-nawhas">
       <h5 class="title">Trending Nawhas</h5>
       <v-container grid-list-lg class="pa-0" fluid>
-        <v-layout row wrap>
+        <v-layout row wrap v-if="popularTracks">
           <v-flex xs12 sm6 md4 v-for="track in popularTracks" v-bind:key="track.id">
-            <track-card v-bind="track" :show-reciter="true"/>
+            <track-card v-bind="track" :show-reciter="true" />
+          </v-flex>
+        </v-layout>
+        <v-layout row wrap v-else>
+          <v-flex xs12 sm6 md4 v-for="index in 6" :key="index">
+            <reciter-card-skeleton />
           </v-flex>
         </v-layout>
       </v-container>
@@ -34,8 +44,8 @@ import HeroBanner from '@/components/HeroBanner.vue';
 import HeroQuote from '@/components/HeroQuote.vue';
 import ReciterCard from '@/components/ReciterCard.vue';
 import TrackCard from '@/components/TrackCard.vue';
+import ReciterCardSkeleton from '@/components/ReciterCardSkeleton.vue';
 import { mapGetters } from 'vuex';
-
 
 export default {
   name: 'Home',
@@ -44,6 +54,7 @@ export default {
     HeroQuote,
     ReciterCard,
     TrackCard,
+    ReciterCardSkeleton,
   },
   mounted() {
     this.$store.dispatch('popular/fetchPopularReciters', { limit: 6 });
