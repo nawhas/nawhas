@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="reciter-hero">
+    <div class="reciter-hero" v-if="reciter">
       <div class="reciter-hero__ribbon"></div>
       <div class="reciter-hero__content">
         <v-card class="reciter-hero__card">
@@ -14,21 +14,34 @@
         </v-card>
       </div>
     </div>
+    <div v-else>
+      <reciter-hero-skeleton />
+    </div>
     <section class="page-section" id="top-reciters-section">
       <h5 class="title">Top Nawhas</h5>
       <v-container grid-list-lg class="pa-0" fluid>
-        <v-layout row wrap>
-          <v-flex xs12 sm6 md4 v-for="track in popularTracks" v-bind:key="track.id">
-            <track-card v-bind="track" :show-reciter="false"></track-card>
-          </v-flex>
-        </v-layout>
+        <template v-if="popularTracks">
+          <v-layout row wrap>
+            <v-flex xs12 sm6 md4 v-for="track in popularTracks" v-bind:key="track.id">
+              <track-card v-bind="track" :show-reciter="false"></track-card>
+            </v-flex>
+          </v-layout>
+        </template>
+        <template v-else>
+          <six-card-skeleton />
+        </template>
       </v-container>
     </section>
 
     <section class="page-section" id="all-reciters-section">
       <h5 class="title">Albums</h5>
-      <template v-for="album in albums">
-        <album v-bind="album" :reciter="reciter" v-bind:key="album.id"></album>
+      <template v-if="albums">
+        <template v-for="album in albums">
+          <album v-bind="album" :reciter="reciter" v-bind:key="album.id"></album>
+        </template>
+      </template>
+      <template v-else>
+        <album-table-skeleton />
       </template>
     </section>
   </div>
@@ -37,6 +50,9 @@
 <script>
 import { mapGetters } from 'vuex';
 import TrackCard from '@/components/TrackCard.vue';
+import ReciterHeroSkeleton from '@/components/ReciterHeroSkeleton.vue';
+import SixCardSkeleton from '@/components/SixCardSkeleton.vue';
+import AlbumTableSkeleton from '@/components/AlbumTableSkeleton.vue';
 import Album from '@//components/Album.vue';
 
 export default {
@@ -44,6 +60,9 @@ export default {
   components: {
     TrackCard,
     Album,
+    ReciterHeroSkeleton,
+    SixCardSkeleton,
+    AlbumTableSkeleton,
   },
   async mounted() {
     const { reciter } = this.$route.params;

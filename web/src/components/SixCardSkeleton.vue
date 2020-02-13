@@ -14,6 +14,6 @@
 
 <script>
 export default {
-  name: 'reciter.card.skeleton',
+  name: 'skeleton.six.cards',
 };
 </script>
