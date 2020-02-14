@@ -24,7 +24,7 @@
 import Vibrant from 'node-vibrant';
 
 export default {
-  name: 'track-card',
+  name: 'TrackCard',
   props: ['title', 'slug', 'album', 'reciter', 'showReciter'],
   mounted() {
     this.setBackgroundFromImage();

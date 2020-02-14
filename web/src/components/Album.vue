@@ -27,7 +27,7 @@
 import Vibrant from 'node-vibrant';
 
 export default {
-  name: 'album',
+  name: 'Album',
   props: ['name', 'album', 'year', 'tracks', 'artwork', 'reciter'],
   mounted() {
     this.setBackgroundFromImage();
