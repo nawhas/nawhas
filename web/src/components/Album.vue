@@ -12,7 +12,13 @@
         </h6>
       </div>
     </div>
-    <v-data-table :headers="headers" :items="tracks.data" :disable-pagination="true" :hide-default-footer="true" class="album__tracks-1">
+    <v-data-table
+      :headers="headers"
+      :items="tracks.data"
+      :disable-pagination="true"
+      :hide-default-footer="true"
+      class="album__tracks-1"
+    >
       <template v-slot:item="props">
         <tr @click="goToTrack(props.item)" class="album__track">
           <td>{{ props.item.title }}</td>
