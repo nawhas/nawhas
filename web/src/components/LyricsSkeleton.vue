@@ -1,9 +1,9 @@
 <template>
-  <v-skeleton-loader ref="skeleton" :boilerplate="false" type="paragraph" class="mx-auto"></v-skeleton-loader>
+  <v-skeleton-loader ref="skeleton" type="paragraph" class="mx-auto"></v-skeleton-loader>
 </template>
 
 <script>
 export default {
-  name: 'skeleton.lyrics.text',
+  name: 'LyricsSkeleton',
 };
 </script>

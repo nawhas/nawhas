@@ -56,7 +56,7 @@ import AlbumTableSkeleton from '@/components/AlbumTableSkeleton.vue';
 import Album from '@//components/Album.vue';
 
 export default {
-  name: 'reciters.show',
+  name: 'ReciterProfile',
   components: {
     TrackCard,
     Album,

@@ -6,7 +6,7 @@
 
 <script>
 export default {
-  name: 'upload-button',
+  name: 'UploadButton',
   props: {
     selectedCallback: Function,
     title: String,

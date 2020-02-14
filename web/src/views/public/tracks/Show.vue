@@ -95,7 +95,7 @@ import ReciterHeroSkeleton from '@/components/ReciterHeroSkeleton.vue';
 import LyricsSkeleton from '@/components/LyricsSkeleton.vue';
 
 export default {
-  name: 'tracks.show',
+  name: 'TrackPage',
   components: {
     ReciterHeroSkeleton,
     LyricsSkeleton,
