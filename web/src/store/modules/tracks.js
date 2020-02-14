@@ -1,3 +1,4 @@
+import store from '@/store';
 import client from '../../services/client';
 
 const state = {
@@ -34,10 +35,16 @@ const actions = {
   },
   async fetchTrack({ commit }, payload) {
     const response = await client.get(
-      `/v1/reciters/${payload.reciter}/albums/${payload.album}/tracks/${payload.track}?include=lyrics`,
+      `/v1/reciters/${payload.reciter}/albums/${payload.album}/tracks/${payload.track}?include=reciter,album,lyrics`,
     );
     commit('FETCH_TRACK', {
       data: response.data,
+    });
+    store.commit('reciters/FETCH_RECITER', {
+      data: response.data.reciter,
+    });
+    store.commit('albums/FETCH_ALBUM', {
+      data: response.data.album,
     });
   },
   async storeTrack({ commit }, payload) {

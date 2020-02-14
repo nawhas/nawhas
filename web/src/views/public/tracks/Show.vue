@@ -106,11 +106,9 @@ export default {
       textColor: '#fff',
     };
   },
-  mounted() {
+  async mounted() {
     const { reciter, album, track } = this.$route.params;
-    this.$store.dispatch('reciters/fetchReciter', { reciter });
-    this.$store.dispatch('albums/fetchAlbum', { reciter, album });
-    this.$store.dispatch('tracks/fetchTrack', { reciter, album, track });
+    await this.$store.dispatch('tracks/fetchTrack', { reciter, album, track });
     this.setBackgroundFromImage();
   },
   computed: {
