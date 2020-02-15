@@ -2,17 +2,23 @@
   <v-card class="album">
     <div class="album__header" :style="{ 'background-color': background }">
       <v-avatar tile size="128px" :elevation="2" class="album__artwork white">
-        <img :src="image" :alt="name" ref="artwork" />
+        <img :src="image" :alt="title" ref="artwork" />
       </v-avatar>
       <div class="album__details" :style="{ color: textColor }">
-        <h5 class="album__title">{{ name }}</h5>
+        <h5 class="album__title">{{ title }}</h5>
         <h6 class="album__release-date">
           <strong>{{ year }}</strong>
           &bull; {{ tracks.data.length }} tracks
         </h6>
       </div>
     </div>
-    <v-data-table :headers="headers" :items="tracks.data" class="album__tracks-1">
+    <v-data-table
+      :headers="headers"
+      :items="tracks.data"
+      :disable-pagination="true"
+      :hide-default-footer="true"
+      class="album__tracks-1"
+    >
       <template v-slot:item="props">
         <tr @click="goToTrack(props.item)" class="album__track">
           <td>{{ props.item.title }}</td>
@@ -27,8 +33,8 @@
 import Vibrant from 'node-vibrant';
 
 export default {
-  name: 'album',
-  props: ['name', 'album', 'year', 'tracks', 'artwork', 'reciter'],
+  name: 'Album',
+  props: ['title', 'album', 'year', 'tracks', 'artwork', 'reciter'],
   mounted() {
     this.setBackgroundFromImage();
   },
@@ -109,7 +115,7 @@ export default {
 
     .album__details {
       margin-left: 128px + 24px;
-      padding: 40px 32px;
+      padding: 24px 32px;
       color: white;
 
       .album__title {

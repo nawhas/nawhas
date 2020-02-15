@@ -17,7 +17,7 @@
 import Vibrant from 'node-vibrant';
 
 export default {
-  name: 'reciter-card',
+  name: 'ReciterCard',
   props: ['id', 'name', 'slug', 'avatar', 'createdAt', 'updatedAt', 'featured'],
   mounted() {
     if (this.featured !== undefined) {

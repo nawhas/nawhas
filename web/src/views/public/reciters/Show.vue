@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="reciter-hero">
+    <div class="reciter-hero" v-if="reciter">
       <div class="reciter-hero__ribbon"></div>
       <div class="reciter-hero__content">
         <v-card class="reciter-hero__card">
@@ -9,28 +9,39 @@
               <img :src="image" :alt="reciter.name" />
             </v-avatar>
           </div>
-          <h4 class="reciter-hero__title">
-            {{ reciter.name }}
-          </h4>
+          <h4 class="reciter-hero__title">{{ reciter.name }}</h4>
           <p class="reciter-hero__bio">{{ reciter.description }}</p>
         </v-card>
       </div>
     </div>
+    <div v-else>
+      <reciter-hero-skeleton />
+    </div>
     <section class="page-section" id="top-reciters-section">
       <h5 class="title">Top Nawhas</h5>
       <v-container grid-list-lg class="pa-0" fluid>
-        <v-layout row wrap>
-          <v-flex xs12 sm6 md4 v-for="track in popularTracks" v-bind:key="track.id">
-            <track-card v-bind="track" :show-reciter="false"></track-card>
-          </v-flex>
-        </v-layout>
+        <template v-if="popularTracks">
+          <v-layout row wrap>
+            <v-flex xs12 sm6 md4 v-for="track in popularTracks" v-bind:key="track.id">
+              <track-card v-bind="track" :show-reciter="false"></track-card>
+            </v-flex>
+          </v-layout>
+        </template>
+        <template v-else>
+          <six-card-skeleton />
+        </template>
       </v-container>
     </section>
 
     <section class="page-section" id="all-reciters-section">
       <h5 class="title">Albums</h5>
-      <template v-for="album in albums">
-        <album v-bind="album" :reciter="reciter" v-bind:key="album.id"></album>
+      <template v-if="albums">
+        <template v-for="album in albums">
+          <album v-bind="album" :reciter="reciter" v-bind:key="album.id"></album>
+        </template>
+      </template>
+      <template v-else>
+        <album-table-skeleton />
       </template>
     </section>
   </div>
@@ -38,34 +49,29 @@
 
 <script>
 import { mapGetters } from 'vuex';
-import store from '@/store';
 import TrackCard from '@/components/TrackCard.vue';
+import ReciterHeroSkeleton from '@/components/ReciterHeroSkeleton.vue';
+import SixCardSkeleton from '@/components/SixCardSkeleton.vue';
+import AlbumTableSkeleton from '@/components/AlbumTableSkeleton.vue';
 import Album from '@//components/Album.vue';
 
-async function fetchData(reciter) {
-  await Promise.all([
-    store.dispatch('albums/fetchAlbums', { reciter }),
-    store.dispatch('reciters/fetchReciter', { reciter }),
-  ]);
-  await store.dispatch('popular/fetchPopularTracks', {
-    limit: 6,
-    reciterId: store.getters['reciters/reciter'].id,
-  });
-}
-
 export default {
-  name: 'reciters.show',
+  name: 'ReciterProfile',
   components: {
     TrackCard,
     Album,
+    ReciterHeroSkeleton,
+    SixCardSkeleton,
+    AlbumTableSkeleton,
   },
-  async beforeRouteEnter(to, from, next) {
-    await fetchData(to.params.reciter);
-    next();
-  },
-  async beforeRouteUpdate(to, from, next) {
-    await fetchData(to.params.reciter);
-    next();
+  async mounted() {
+    const { reciter } = this.$route.params;
+    await this.$store.dispatch('reciters/fetchReciter', { reciter });
+    this.$store.dispatch('albums/fetchAlbums', { reciter: this.reciter.slug });
+    this.$store.dispatch('popular/fetchPopularTracks', {
+      limit: 6,
+      reciterId: this.reciter.id,
+    });
   },
   computed: {
     ...mapGetters({
@@ -86,7 +92,7 @@ export default {
     width: 100%;
     height: 220px;
     margin-bottom: -220px;
-    background: linear-gradient(to bottom right, #E90500, #FA6000);
+    background: linear-gradient(to bottom right, #e90500, #fa6000);
   }
 
   .reciter-hero__content {
