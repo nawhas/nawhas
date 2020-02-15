@@ -1,6 +1,6 @@
 <template>
   <div>
-    <template v-if="loaded">
+    <template v-if="track">
       <div class="track-hero" :style="{'background-color': background, color: textColor}">
         <div class="track-hero__content">
           <div class="track-hero__left">
@@ -119,9 +119,6 @@ export default {
     }),
     image() {
       return this.artwork || '/img/default-album-image.png';
-    },
-    loaded() {
-      return this.reciter && this.album && this.track;
     },
   },
   methods: {

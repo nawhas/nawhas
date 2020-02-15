@@ -1,4 +1,3 @@
-import store from '@/store';
 import client from '../../services/client';
 
 const state = {
@@ -40,12 +39,12 @@ const actions = {
     commit('FETCH_TRACK', {
       data: response.data,
     });
-    store.commit('reciters/FETCH_RECITER', {
+    commit('reciters/FETCH_RECITER', {
       data: response.data.reciter,
-    });
-    store.commit('albums/FETCH_ALBUM', {
+    }, { root: true });
+    commit('albums/FETCH_ALBUM', {
       data: response.data.album,
-    });
+    }, { root: true });
   },
   async storeTrack({ commit }, payload) {
     const response = await client.post(
