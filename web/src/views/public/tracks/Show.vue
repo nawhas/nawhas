@@ -1,6 +1,6 @@
 <template>
   <div>
-    <template v-if="loaded">
+    <template v-if="track">
       <div class="track-hero" :style="{'background-color': background, color: textColor}">
         <div class="track-hero__content">
           <div class="track-hero__left">
@@ -106,11 +106,9 @@ export default {
       textColor: '#fff',
     };
   },
-  mounted() {
+  async mounted() {
     const { reciter, album, track } = this.$route.params;
-    this.$store.dispatch('reciters/fetchReciter', { reciter });
-    this.$store.dispatch('albums/fetchAlbum', { reciter, album });
-    this.$store.dispatch('tracks/fetchTrack', { reciter, album, track });
+    await this.$store.dispatch('tracks/fetchTrack', { reciter, album, track });
     this.setBackgroundFromImage();
   },
   computed: {
@@ -121,9 +119,6 @@ export default {
     }),
     image() {
       return this.artwork || '/img/default-album-image.png';
-    },
-    loaded() {
-      return this.reciter && this.album && this.track;
     },
   },
   methods: {
