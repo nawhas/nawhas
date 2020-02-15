@@ -25,6 +25,15 @@
               <reciter-card v-bind="reciter" />
             </v-flex>
           </v-layout>
+          <v-layout row>
+            <v-flex>
+              <v-pagination
+                v-model="page"
+                :length="recitersPaginationLength"
+                @input="goToPage"
+              ></v-pagination>
+            </v-flex>
+          </v-layout>
         </template>
         <template v-else>
           <six-card-skeleton />
@@ -44,13 +53,24 @@ export default {
   components: { ReciterCard, SixCardSkeleton },
   mounted() {
     this.$store.dispatch('popular/fetchPopularReciters', { limit: 6 });
-    this.$store.dispatch('reciters/fetchReciters');
+    this.$store.dispatch('reciters/fetchReciters', { page: 1 });
+  },
+  data() {
+    return {
+      page: 1,
+    };
   },
   computed: {
     ...mapGetters({
       popularReciters: 'popular/popularReciters',
       reciters: 'reciters/reciters',
+      recitersPaginationLength: 'reciters/recitersPaginationLength',
     }),
+  },
+  methods: {
+    goToPage(number) {
+      this.$store.dispatch('reciters/fetchReciters', { page: number });
+    },
   },
 };
 </script>

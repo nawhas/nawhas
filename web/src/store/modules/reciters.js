@@ -3,16 +3,21 @@ import client from '../../services/client';
 const state = {
   reciters: null,
   reciter: null,
+  recitersPaginationLength: null,
 };
 
 const getters = {
   reciters: (state) => state.reciters,
   reciter: (state) => state.reciter,
+  recitersPaginationLength: (state) => state.recitersPaginationLength,
 };
 
 const mutations = {
   FETCH_RECITERS(state, payload) {
     state.reciters = payload.data;
+  },
+  SET_RECITERS_PAGINATION_LENGTH(state, payload) {
+    state.recitersPaginationLength = payload.data;
   },
   FETCH_RECITER(state, payload) {
     state.reciter = payload.data;
@@ -26,10 +31,13 @@ const mutations = {
 };
 
 const actions = {
-  async fetchReciters({ commit }) {
-    const response = await client.get('/v1/reciters');
+  async fetchReciters({ commit }, payload) {
+    const response = await client.get('/v1/reciters', { page: payload.page });
     commit('FETCH_RECITERS', {
       data: response.data.data,
+    });
+    commit('SET_RECITERS_PAGINATION_LENGTH', {
+      data: response.data.meta.pagination.total_pages,
     });
   },
   async fetchReciter({ commit }, payload) {
