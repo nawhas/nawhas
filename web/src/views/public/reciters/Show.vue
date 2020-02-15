@@ -39,6 +39,7 @@
         <template v-for="album in albums">
           <album v-bind="album" :reciter="reciter" v-bind:key="album.id"></album>
         </template>
+        <v-pagination v-model="page" :length="albumsPaginationLength" @input="goToPage"></v-pagination>
       </template>
       <template v-else>
         <album-table-skeleton />
@@ -67,7 +68,7 @@ export default {
   async mounted() {
     const { reciter } = this.$route.params;
     await this.$store.dispatch('reciters/fetchReciter', { reciter });
-    this.$store.dispatch('albums/fetchAlbums', { reciter: this.reciter.slug });
+    this.$store.dispatch('albums/fetchAlbums', { reciter: this.reciter.slug, page: 1 });
     this.$store.dispatch('popular/fetchPopularTracks', {
       limit: 6,
       reciterId: this.reciter.id,
@@ -77,10 +78,21 @@ export default {
     ...mapGetters({
       reciter: 'reciters/reciter',
       albums: 'albums/albums',
+      albumsPaginationLength: 'albums/albumsPaginationLength',
       popularTracks: 'popular/popularTracks',
     }),
     image() {
       return this.avatar || '/img/default-reciter-avatar.png';
+    },
+  },
+  data() {
+    return {
+      page: 1,
+    };
+  },
+  methods: {
+    goToPage(number) {
+      this.$store.dispatch('albums/fetchAlbums', { reciter: this.reciter.slug, page: number });
     },
   },
 };
