@@ -30,6 +30,7 @@
               <v-pagination
                 v-model="page"
                 :length="recitersPaginationLength"
+                circle
                 @input="goToPage"
               ></v-pagination>
             </v-flex>

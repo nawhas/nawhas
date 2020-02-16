@@ -39,7 +39,7 @@
         <template v-for="album in albums">
           <album v-bind="album" :reciter="reciter" v-bind:key="album.id"></album>
         </template>
-        <v-pagination v-model="page" :length="albumsPaginationLength" @input="goToPage"></v-pagination>
+        <v-pagination v-model="page" :length="albumsPaginationLength" circle @input="goToPage"></v-pagination>
       </template>
       <template v-else>
         <album-table-skeleton />
@@ -152,5 +152,9 @@ export default {
 }
 .title {
   margin-bottom: 12px;
+}
+
+.v-pagination {
+  margin-top: 16px;
 }
 </style>

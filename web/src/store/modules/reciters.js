@@ -32,7 +32,7 @@ const mutations = {
 
 const actions = {
   async fetchReciters({ commit }, payload) {
-    const response = await client.get('/v1/reciters', { page: payload.page });
+    const response = await client.get('/v1/reciters', { per_page: 60, page: payload.page });
     commit('FETCH_RECITERS', {
       data: response.data.data,
     });
