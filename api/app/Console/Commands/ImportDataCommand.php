@@ -109,6 +109,8 @@ class ImportDataCommand extends Command
 
         // Persist the reciter.
         $this->em->persist($reciter);
+        $this->em->flush();
+
 
         $this->importAlbumsForReciter($reciter, $directory, $bar);
     }
@@ -160,7 +162,7 @@ class ImportDataCommand extends Command
 
             // Lyrics
             if ($this->filesystem->exists($directory . '/lyrics.txt')) {
-                $text = trim($this->filesystem->get($directory . '/lyrics.txt'));
+                $text = $this->getLyricsFromFile($directory);
                 $lyrics = new Lyrics($track, $text);
                 $track->replaceLyrics($lyrics);
             }
@@ -178,5 +180,12 @@ class ImportDataCommand extends Command
         $bar->setMessage($message);
 
         return $bar;
+    }
+
+    private function getLyricsFromFile(string $directory): string
+    {
+        $text = trim($this->filesystem->get($directory . '/lyrics.txt'));
+        $text = mb_scrub($text);
+        return $text;
     }
 }
