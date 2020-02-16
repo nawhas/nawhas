@@ -32,4 +32,9 @@ class EntityManager
 
         return $repo;
     }
+
+    public function flush(): void
+    {
+        $this->em->flush();
+    }
 }
