@@ -21,7 +21,7 @@ class AlbumMapping extends EntityMapping
         $map->uuidPrimaryKey();
         $map->belongsTo(Reciter::class, 'reciter');
         $map->string('title');
-        $map->string('year')->length(10);
+        $map->string('year')->length(20);
         $map->string('artwork')->nullable();
         $map->hasMany(Track::class)->mappedBy('album')->cascadeAll();
         $map->timestamps();

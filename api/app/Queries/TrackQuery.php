@@ -22,6 +22,14 @@ class TrackQuery extends Query
         return $this;
     }
 
+    public function whereTitle(string $title): self
+    {
+        $this->builder->andWhere('t.title = :title')
+            ->setParameter('title', $title);
+
+        return $this;
+    }
+
     public function whereIdentifier($identifier): self
     {
         $this->builder->andWhere($this->builder->expr()->orX(
