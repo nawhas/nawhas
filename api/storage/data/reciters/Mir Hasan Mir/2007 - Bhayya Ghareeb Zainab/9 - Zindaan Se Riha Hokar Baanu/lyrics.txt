@@ -1,13 +1,3 @@
-
-
-**Zindaan se riha hokar baanu audio file**
-
-**_
-
-Zindaan se riha hokar baanu
-
-**_
-
 (Haaye asghar, Haay Haay Sakina) x2
 
 (Haay asghar Haay Sakina) x3
@@ -34,7 +24,7 @@ Haay asghar
 
 Haay haay sakina
 
-  2. Khaali jhula shehzaade ka aur khun mein tar ik baali 
+  2. Khaali jhula shehzaade ka aur khun mein tar ik baali
 
 Jab dekhegi ghar mein aakar zindaan se aane waali
 
@@ -88,7 +78,7 @@ Haay asghar
 
 Haay haay sakina
 
-  5. Ab is se bara kya hoga sitam ay chashme falak tu batla 
+  5. Ab is se bara kya hoga sitam ay chashme falak tu batla
 
 Aulaad se ronak hoti hai uthta he jo koi laasha
 
@@ -124,7 +114,7 @@ Haay asghar
 
 Haay haay sakina
 
-  7. Lori ki sadaa nauha ban kar zindaan se ghar tak aayi 
+  7. Lori ki sadaa nauha ban kar zindaan se ghar tak aayi
 
 Maa se sughra ye puchhti he ye kaisi hai tanhaayi
 
@@ -163,4 +153,3 @@ Haay haay sakina
 Haay Sakina Haay Sakina
 
 Haay asghar Haay Sakina Haay Sakina
-

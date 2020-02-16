@@ -1,13 +1,3 @@
-
-
-**Baba mera maara gayaa audio file**
-
-**_
-
-Baba mera maara gayaa
-
-**_
-
 Baba mera maara gayaa aaye naheen kyu dada jan
 
   1. Baba pay jab khanjar chala aaye naheen kyu dada jan
@@ -51,4 +41,3 @@ Baba mera maara gayaa aaye naheen kyu dada jan
 Baba mera maara gayaa aaye naheen kyu dada jan
 
     ![](Babameramaragaya.gif)
-

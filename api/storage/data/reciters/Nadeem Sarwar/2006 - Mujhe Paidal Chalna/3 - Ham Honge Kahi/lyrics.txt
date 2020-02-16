@@ -1,13 +1,3 @@
-  
-  
-**Ham honge kahi audio file**
-
-**_
-
-Ham honge kahi
-
-**_
-
 Sheh kehte the bibi hame ab jaane do ghar se
 
 Wo kehti thi saya jo ye uth jaayenga sar se
@@ -112,6 +102,5 @@ Dhundonge to phir ham ko na paogi Sakina
 
 Ham honge kahi tum kahi jawongi Sakina |
 
-![](Hamhonge.jpg)  
+![](Hamhonge.jpg)
 ---|---
-
