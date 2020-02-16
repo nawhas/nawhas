@@ -11,10 +11,16 @@ jobs:
     - uses: actions/setup-node@v1
       with:
         node-version: '12.x'
-        
+
     - name: 'Install Dependencies'
       run: yarn install --frozen-lockfile
       working-directory: ./web
+
+    - name: 'Lint JS'
+      run: yarn lint --no-fix
+      working-directory: ./web
+      env:
+        CI: true
 
     - name: 'Build App'
       run: yarn build
