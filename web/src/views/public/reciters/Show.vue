@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="reciter-hero" v-if="reciter">
+    <div class="reciter-hero" v-if="!loading">
       <div class="reciter-hero__ribbon"></div>
       <div class="reciter-hero__content">
         <v-card class="reciter-hero__card">
@@ -20,7 +20,7 @@
     <section class="page-section" id="top-reciters-section">
       <h5 class="title">Top Nawhas</h5>
       <v-container grid-list-lg class="pa-0" fluid>
-        <template v-if="popularTracks">
+        <template v-if="!loading">
           <v-layout row wrap>
             <v-flex xs12 sm6 md4 v-for="track in popularTracks" v-bind:key="track.id">
               <track-card v-bind="track" :show-reciter="false"></track-card>
@@ -35,11 +35,11 @@
 
     <section class="page-section" id="all-reciters-section">
       <h5 class="title">Albums</h5>
-      <template v-if="albums">
+      <template v-if="!loading">
         <template v-for="album in albums">
           <album v-bind="album" :reciter="reciter" v-bind:key="album.id"></album>
         </template>
-        <v-pagination v-model="page" :length="albumsPaginationLength" circle @input="goToPage"></v-pagination>
+        <v-pagination v-model="page" :length="length" circle @input="goToPage"></v-pagination>
       </template>
       <template v-else>
         <album-table-skeleton />
@@ -54,6 +54,7 @@ import TrackCard from '@/components/TrackCard.vue';
 import ReciterHeroSkeleton from '@/components/ReciterHeroSkeleton.vue';
 import SixCardSkeleton from '@/components/SixCardSkeleton.vue';
 import AlbumTableSkeleton from '@/components/AlbumTableSkeleton.vue';
+import { getAlbums } from '@/services/albums';
 import Album from '@//components/Album.vue';
 
 export default {
@@ -66,19 +67,18 @@ export default {
     AlbumTableSkeleton,
   },
   async mounted() {
+    this.loading = true;
     const { reciter } = this.$route.params;
-    await this.$store.dispatch('reciters/fetchReciter', { reciter });
-    this.$store.dispatch('albums/fetchAlbums', { reciter: this.reciter.slug, page: 1 });
+    const albums = await getAlbums(reciter);
+    this.setData(albums);
     this.$store.dispatch('popular/fetchPopularTracks', {
       limit: 6,
       reciterId: this.reciter.id,
     });
+    this.loading = false;
   },
   computed: {
     ...mapGetters({
-      reciter: 'reciters/reciter',
-      albums: 'albums/albums',
-      albumsPaginationLength: 'albums/albumsPaginationLength',
       popularTracks: 'popular/popularTracks',
     }),
     image() {
@@ -88,11 +88,23 @@ export default {
   data() {
     return {
       page: 1,
+      reciter: {},
+      albums: [],
+      length: 0,
+      loading: false,
     };
   },
   methods: {
+    setData(data) {
+      this.reciter = data.data.data[0].reciter;
+      this.albums = data.data.data;
+      this.length = data.data.meta.pagination.total_pages;
+    },
     goToPage(number) {
-      this.$store.dispatch('albums/fetchAlbums', { reciter: this.reciter.slug, page: number });
+      this.$store.dispatch('albums/fetchAlbums', {
+        reciter: this.reciter.slug,
+        page: number,
+      });
     },
   },
 };

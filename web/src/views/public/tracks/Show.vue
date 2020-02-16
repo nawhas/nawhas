@@ -1,6 +1,6 @@
 <template>
   <div>
-    <template v-if="track">
+    <template v-if="!loading">
       <div class="track-hero" :style="{'background-color': background, color: textColor}">
         <div class="track-hero__content">
           <div class="track-hero__left">
@@ -54,7 +54,7 @@
         <v-layout row>
           <v-flex md7>
             <v-card class="track-page-content__card track-page-content__card--lyrics lyrics">
-              <template v-if="track">
+              <template v-if="!loading">
                 <div class="lyrics__content" v-if="track.lyrics">
                   <p v-html="track.lyrics.content"></p>
                 </div>
@@ -89,10 +89,10 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
 import Vibrant from 'node-vibrant';
 import ReciterHeroSkeleton from '@/components/ReciterHeroSkeleton.vue';
 import LyricsSkeleton from '@/components/LyricsSkeleton.vue';
+import { getTrack } from '@/services/tracks';
 
 export default {
   name: 'TrackPage',
@@ -104,24 +104,31 @@ export default {
     return {
       background: '#222',
       textColor: '#fff',
+      reciter: {},
+      album: {},
+      track: {},
+      loading: false,
     };
   },
   async mounted() {
+    this.loading = true;
     const { reciter, album, track } = this.$route.params;
-    await this.$store.dispatch('tracks/fetchTrack', { reciter, album, track });
+    const data = await getTrack(reciter, album, track);
+    this.setData(data);
     this.setBackgroundFromImage();
+    this.loading = false;
   },
   computed: {
-    ...mapGetters({
-      reciter: 'reciters/reciter',
-      album: 'albums/album',
-      track: 'tracks/track',
-    }),
     image() {
-      return this.artwork || '/img/default-album-image.png';
+      return this.album.artwork || '/img/default-album-image.png';
     },
   },
   methods: {
+    setData(data) {
+      this.reciter = data.data.reciter;
+      this.album = data.data.album;
+      this.track = data.data;
+    },
     setBackgroundFromImage() {
       if (!this.track) {
         return;
