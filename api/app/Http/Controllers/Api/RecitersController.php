@@ -24,9 +24,9 @@ class RecitersController extends Controller
 
     public function index(Request $request): JsonResponse
     {
-        $reciters = $this->repository->paginate(
-            PaginationState::fromRequest($request)
-        );
+        $reciters = $this->repository->query()
+            ->sortByName()
+            ->paginate(PaginationState::fromRequest($request));
 
         return $this->respondWithPaginator($reciters);
     }

@@ -32,6 +32,13 @@ class ReciterQuery extends Query
         return $this;
     }
 
+    public function sortByName(): self
+    {
+        $this->builder->orderBy('t.name', 'asc');
+
+        return $this;
+    }
+
     protected static function entity(): string
     {
         return Reciter::class;
