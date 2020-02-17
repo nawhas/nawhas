@@ -1,20 +1,20 @@
 services:
   # Staging: Vue Frontend App
-  - type: web
-    name: staging-nawhas
-    env: static
-    buildCommand: cd web && yarn install --frozen-lockfile && yarn build
-    staticPublishPath: ./web/dist
-    pullRequestPreviewsEnabled: false
-    domains:
-      - staging.nawhas.com
-    routes:
-      - type: rewrite
-        source: /*
-        destination: /index.html
-    envVars:
-      - key: VUE_APP_API_DOMAIN
-        value: https://api.staging.nawhas.com
+#  - type: web
+#    name: staging-nawhas
+#    env: static
+#    buildCommand: cd web && yarn install --frozen-lockfile && yarn build
+#    staticPublishPath: ./web/dist
+#    pullRequestPreviewsEnabled: false
+#    domains:
+#      - staging.nawhas.com
+#    routes:
+#      - type: rewrite
+#        source: /*
+#        destination: /index.html
+#    envVars:
+#      - key: VUE_APP_API_DOMAIN
+#        value: https://api.staging.nawhas.com
   # Staging MySQL DB
   - type: pserv
     name: mysql-staging-nawhas
