@@ -3,7 +3,7 @@ services:
   - type: web
     name: staging.nawhas
     env: static
-    buildCommand: cd web && yarn build
+    buildCommand: cd web && yarn install --frozen-lockfile && yarn build
     staticPublishPath: ./web/dist
     pullRequestPreviewsEnabled: false
     domains:
