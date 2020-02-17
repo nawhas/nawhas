@@ -33,6 +33,13 @@ class AlbumQuery extends Query
         return $this;
     }
 
+    public function sortByNewest(): self
+    {
+        $this->builder->orderBy('t.year', 'desc');
+
+        return $this;
+    }
+
     protected static function entity(): string
     {
         return Album::class;
