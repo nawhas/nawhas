@@ -16,6 +16,7 @@ class Track implements Entity, TimestampedEntity
     use SerializesAttributes;
 
     private UuidInterface $id;
+    private Reciter $reciter;
     private Album $album;
     private string $title;
     private string $slug;
@@ -25,6 +26,7 @@ class Track implements Entity, TimestampedEntity
     {
         $this->id = Uuid::uuid1();
         $this->album = $album;
+        $this->reciter = $album->getReciter();
         $this->title = $title;
         // TODO - This may need to take uniqueness into account?
         $this->slug = Str::slug($title);
@@ -37,7 +39,7 @@ class Track implements Entity, TimestampedEntity
 
     public function getReciter(): Reciter
     {
-        return $this->getAlbum()->getReciter();
+        return $this->reciter;
     }
 
     public function getAlbum(): Album
