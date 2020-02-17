@@ -52,7 +52,7 @@ export default {
     getReciters({ per_page: 60 }).then((response) => {
       this.setReciters(response);
     });
-    getPopularReciters({ limit: 6 }).then((response) => {
+    getPopularReciters({ per_page: 6 }).then((response) => {
       this.popularReciters = response.data.data;
     });
   },

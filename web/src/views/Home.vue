@@ -57,10 +57,10 @@ export default {
     SixCardSkeleton,
   },
   mounted() {
-    getPopularReciters({ limit: 6 }).then((response) => {
+    getPopularReciters({ per_page: 6 }).then((response) => {
       this.popularReciters = response.data.data;
     });
-    getPopularTracks({ limit: 6, include: 'reciter,album' }).then((response) => {
+    getPopularTracks({ per_page: 6, include: 'reciter,album' }).then((response) => {
       this.popularTracks = response.data.data;
     });
   },

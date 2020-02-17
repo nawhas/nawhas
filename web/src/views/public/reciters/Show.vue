@@ -77,9 +77,9 @@ export default {
     getReciter(reciter).then((response) => {
       this.reciter = response.data;
       getPopularTracks({
-        limit: 6,
-        include: 'album,reciter',
+        per_page: 6,
         reciterId: this.reciter.id,
+        include: 'album,reciter',
       }).then((responseT) => {
         this.popularTracks = responseT.data.data;
       });
