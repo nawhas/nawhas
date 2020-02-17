@@ -29,6 +29,30 @@ services:
       sizeGB: 10
     envVars:
       - fromGroup: mysql
+  # Staging API PHP Service
+  - type: pserv
+    name: api-fpm-staging-nawhas
+    plan: standard
+    env: docker
+    autoDeploy: false
+    dockerfilePath: ./api/Dockerfile
+    dockerContext: ./api
+    envVars:
+      - key: DB_HOST
+        fromService:
+          name: mysql-staging-nawhas
+          type: pserv
+          property: host
+      - key: DB_USERNAME
+        fromService:
+          name: mysql-staging-nawhas
+          type: pserv
+          envVarKey: MYSQL_USER
+      - key: DB_PASSWORD
+        fromService:
+          name: mysql-staging-nawhas
+          type: pserv
+          envVarKey: MYSQL_PASSWORD
 
 envVarGroups:
   - name: mysql
