@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="reciter-hero" v-if="!loading">
+    <div class="reciter-hero" v-if="reciter">
       <div class="reciter-hero__ribbon"></div>
       <div class="reciter-hero__content">
         <v-card class="reciter-hero__card">
@@ -20,7 +20,7 @@
     <section class="page-section" id="top-reciters-section">
       <h5 class="title">Top Nawhas</h5>
       <v-container grid-list-lg class="pa-0" fluid>
-        <template v-if="!loading">
+        <template v-if="popularTracks">
           <v-layout row wrap>
             <v-flex xs12 sm6 md4 v-for="track in popularTracks" v-bind:key="track.id">
               <track-card v-bind="track" :show-reciter="false"></track-card>
@@ -35,7 +35,7 @@
 
     <section class="page-section" id="all-reciters-section">
       <h5 class="title">Albums</h5>
-      <template v-if="!loading">
+      <template v-if="albums">
         <template v-if="albums.length > 0">
           <template v-for="album in albums">
             <album v-bind="album" :reciter="reciter" v-bind:key="album.id"></album>
@@ -72,21 +72,21 @@ export default {
     SixCardSkeleton,
     AlbumTableSkeleton,
   },
-  async mounted() {
-    this.loading = true;
+  mounted() {
     const { reciter } = this.$route.params;
-    const [reciterResponse, albums, popularTracks] = await Promise.all([
-      getReciter(reciter),
-      getAlbums(reciter, { include: 'tracks' }),
+    getReciter(reciter).then((response) => {
+      this.reciter = response.data;
       getPopularTracks({
         limit: 6,
         include: 'album,reciter',
-        reciterId: reciter,
-      }),
-    ]);
-    this.setData(reciterResponse, albums);
-    this.setPopularTracks(popularTracks);
-    this.loading = false;
+        reciterId: this.reciter.id,
+      }).then((responseT) => {
+        this.popularTracks = responseT.data.data;
+      });
+    });
+    getAlbums(reciter, { include: 'tracks' }).then((response) => {
+      this.setAlbums(response);
+    });
   },
   computed: {
     image() {
@@ -96,31 +96,22 @@ export default {
   data() {
     return {
       page: 1,
-      reciter: {},
-      albums: [],
+      reciter: null,
+      albums: null,
       length: 0,
-      loading: false,
-      popularTracks: [],
+      popularTracks: null,
     };
   },
   methods: {
-    setData(reciter, albums) {
-      if (reciter) {
-        this.reciter = reciter.data;
-      }
+    setAlbums(albums) {
       this.albums = albums.data.data;
       this.length = albums.data.meta.pagination.total_pages;
     },
-    setPopularTracks(popularTracks) {
-      this.popularTracks = popularTracks.data.data;
-    },
-    async goToPage(number) {
-      this.loading = true;
-      const [albums] = await Promise.all([
-        getAlbums(this.reciter.id, { include: 'tracks', page: number }),
-      ]);
-      this.setData(null, albums);
-      this.loading = false;
+    goToPage(number) {
+      this.albums = null;
+      getAlbums(this.reciter.id, { include: 'tracks', page: number }).then((response) => {
+        this.setAlbums(response);
+      });
     },
   },
 };

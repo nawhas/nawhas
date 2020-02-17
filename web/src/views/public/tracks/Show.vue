@@ -1,6 +1,6 @@
 <template>
   <div>
-    <template v-if="!loading">
+    <template v-if="reciter || album || track">
       <div class="track-hero" :style="{'background-color': background, color: textColor}">
         <div class="track-hero__content">
           <div class="track-hero__left">
@@ -54,7 +54,7 @@
         <v-layout row>
           <v-flex md7>
             <v-card class="track-page-content__card track-page-content__card--lyrics lyrics">
-              <template v-if="!loading">
+              <template v-if="track">
                 <div class="lyrics__content" v-if="track.lyrics">
                   <div v-html="prepareLyrics(track.lyrics.content)"></div>
                 </div>
@@ -104,19 +104,20 @@ export default {
     return {
       background: '#222',
       textColor: '#fff',
-      reciter: {},
-      album: {},
-      track: {},
-      loading: false,
+      reciter: null,
+      album: null,
+      track: null,
     };
   },
-  async mounted() {
-    this.loading = true;
+  mounted() {
     const { reciter, album, track } = this.$route.params;
-    const [data] = await Promise.all([getTrack(reciter, album, track, { include: 'reciter,album,lyrics' })]);
-    this.setData(data);
-    this.setBackgroundFromImage();
-    this.loading = false;
+    getTrack(reciter, album, track, { include: 'reciter,album,lyrics' }).then((response) => {
+      this.track = response.data;
+      this.reciter = response.data.reciter;
+      this.album = response.data.album;
+
+      this.setBackgroundFromImage();
+    });
   },
   computed: {
     image() {
@@ -124,11 +125,6 @@ export default {
     },
   },
   methods: {
-    setData(data) {
-      this.reciter = data.data.reciter;
-      this.album = data.data.album;
-      this.track = data.data;
-    },
     setBackgroundFromImage() {
       if (!this.track) {
         return;
