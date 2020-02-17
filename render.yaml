@@ -15,4 +15,28 @@ services:
     envVars:
       - key: VUE_APP_API_DOMAIN
         value: https://api.staging.nawhas.com
+  # Staging MySQL DB
+  - type: pserv
+    name: mysql-staging-nawhas
+    plan: standard
+    env: docker
+    dockerfilePath: ./db/Dockerfile
+    dockerContext: ./db
+    disk:
+      name: mysql
+      mountPath: /var/lib/mysql
+      sizeGB: 10
+    envVars:
+      - fromGroup: mysql
 
+envVarGroups:
+  - name: mysql
+    envVars:
+      - key: MYSQL_DATABASE
+        value: nawhas
+      - key: MYSQL_USER
+        value: nawhas
+      - key: MYSQL_PASSWORD
+        generateValue: true
+      - key: MYSQL_ROOT_PASSWORD
+        generateValue: true
