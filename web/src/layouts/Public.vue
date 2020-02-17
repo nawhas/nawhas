@@ -32,16 +32,6 @@
         <img class="masthead__logo" :src="require('../assets/logo.svg')"
              alt="Nawhas.com">
       </v-toolbar-title>
-      <v-spacer></v-spacer>
-      <template v-if="$store.getters['auth/authenticated']">
-        <v-btn flat @click="$store.dispatch('auth/logout')">logout</v-btn>
-        <v-btn icon to="/auth/redirect">
-          <v-icon>account_circle</v-icon>
-        </v-btn>
-      </template>
-      <template v-else>
-        <v-btn text @click="$store.dispatch('auth/redirectToLogin')">Login</v-btn>
-      </template>
     </v-app-bar>
     <v-content>
       <v-container fluid class="grey lighten-5 main-container">
