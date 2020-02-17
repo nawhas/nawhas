@@ -7,7 +7,7 @@
       </hero-quote>
     </hero-banner>
     <section class="page-section" id="top-reciters-section">
-      <h5 class="title">Top Reciters</h5>
+      <h5 class="title">Most Popular Reciters</h5>
       <v-container grid-list-lg class="pa-0" fluid>
         <template v-if="popularReciters">
           <v-layout row wrap>
