@@ -21,6 +21,7 @@ return [
 
         'allow_origins' => [
             'https://localhost:8080',
+            'https://*.onrender.com',
             'https://' . env('APP_DOMAIN'),
         ],
 
