@@ -39,6 +39,13 @@ abstract class Query
         return new static($queryBuilder);
     }
 
+    public function sortRandom(): self
+    {
+        $this->builder->orderBy('RAND()');
+
+        return $this;
+    }
+
     public function first(): ?Entity
     {
         try {

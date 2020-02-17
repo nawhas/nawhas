@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Queries;
 
-use App\Entities\{Album, Track};
+use App\Entities\{Album, Reciter, Track};
 use Illuminate\Support\Collection;
 
 /**
@@ -18,6 +18,14 @@ class TrackQuery extends Query
     {
         $this->builder->andWhere('t.album = :album')
             ->setParameter('album', $album);
+
+        return $this;
+    }
+
+    public function whereReciter(Reciter $reciter): self
+    {
+        $this->builder->andWhere('t.reciter = :reciter')
+            ->setParameter('reciter', $reciter);
 
         return $this;
     }

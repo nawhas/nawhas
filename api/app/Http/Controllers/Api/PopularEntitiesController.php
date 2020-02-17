@@ -19,21 +19,39 @@ class PopularEntitiesController extends Controller
 {
     public function reciters(Request $request, ReciterTransformer $transformer, ReciterRepository $repository): JsonResponse
     {
-        $reciters = $repository->query()->paginate(PaginationState::make(1, (int)$request->get('limit', 10)));
+        $reciters = $repository->query()
+            ->sortRandom()
+            ->paginate(PaginationState::fromRequest($request));
 
         return $this->respondWithPaginator($reciters, $transformer);
     }
 
-    public function albums(Request $request, AlbumTransformer $transformer, AlbumRepository $repository): JsonResponse
+    public function albums(Request $request, AlbumTransformer $transformer, ReciterRepository $reciterRepo, AlbumRepository $albumRepo): JsonResponse
     {
-        $albums = $repository->query()->paginate(PaginationState::make(1, (int)$request->get('limit', 10)));
+        $query = $albumRepo->query()
+            ->sortRandom();
+
+        if ($request->has('reciterId')) {
+            $reciter = $reciterRepo->query()->whereIdentifier($request->get('reciterId'))->get();
+            $query->whereReciter($reciter);
+        }
+
+        $albums = $query->paginate(PaginationState::fromRequest($request));
 
         return $this->respondWithPaginator($albums, $transformer);
     }
 
-    public function tracks(Request $request, TrackTransformer $transformer, TrackRepository $repository): JsonResponse
+    public function tracks(Request $request, TrackTransformer $transformer, ReciterRepository $reciterRepo, TrackRepository $trackRepo): JsonResponse
     {
-        $tracks = $repository->query()->paginate(PaginationState::make(1, (int)$request->get('limit', 10)));
+        $query = $trackRepo->query()
+            ->sortRandom();
+
+        if ($request->has('reciterId')) {
+            $reciter = $reciterRepo->query()->whereIdentifier($request->get('reciterId'))->get();
+            $query->whereReciter($reciter);
+        }
+
+        $tracks = $query->paginate(PaginationState::fromRequest($request));
 
         return $this->respondWithPaginator($tracks, $transformer);
     }
