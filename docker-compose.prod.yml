@@ -8,18 +8,16 @@ volumes:
 
 services:
   api:
-    image: szainmehdi/php:7.4-dev
+    build:
+      context: api
+      dockerfile: Dockerfile
     container_name: nawhas_api
-    working_dir: /var/www/api
     environment:
-      - XDEBUG_ENABLE=true
-      - XDEBUG_REMOTE_PORT=9001
-      - XDEBUG_IDE_KEY=PHPSTORM
-      - XDEBUG_REMOTE_HOST=host.docker.internal
-    volumes:
-      - ./api:/var/www/api
-    ports:
-      - "9000:9000"
+      - DB_HOST=nawhas_db
+      - DB_PORT=3306
+      - DB_DATABASE=nawhas
+      - DB_USERNAME=docker
+      - DB_PASSWORD=secret
     networks:
       - nawhas
     depends_on:
@@ -39,11 +37,12 @@ services:
     networks:
       - nawhas
   api_nginx:
-    image: nginx:stable-alpine
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+      args:
+        FPM_CONTAINER: nawhas_api
     container_name: nawhas_api_nginx
-    working_dir: /var/www/api/public
-    volumes:
-      - ./docker/nginx/api.conf:/etc/nginx/conf.d/default.conf
     depends_on:
       - api
       - mysql
@@ -74,3 +73,6 @@ services:
       - MYSQL_ROOT_PASSWORD=secret
     networks:
       - nawhas
+
+
+

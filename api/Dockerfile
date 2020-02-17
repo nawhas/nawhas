@@ -3,9 +3,6 @@ FROM szainmehdi/php:7.4-dev as api-build
 WORKDIR /var/www/api
 ENV COMPOSER_ALLOW_SUPERUSER 1
 
-# Quicken Composer Installation by paralleizing downloads
-RUN composer global require hirak/prestissimo --prefer-dist
-
 # Copy Dependencies files
 COPY ./composer.json ./composer.lock ./
 

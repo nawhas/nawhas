@@ -3,21 +3,24 @@ set -xe
 
 ENV=$(php artisan inspect:env)
 
-if [ "$ENV" != "local" ]; then
-  # Cache configuration
-  php artisan config:cache
-fi
+if [ "$ENV" = "local" ]; then
+    echo 'Running in local mode.';
+    exec "$@"
+else
+    # Cache configuration
+    php artisan config:cache
 
-# Wait for the database.
-php artisan wait:database
+    # Wait for the database.
+    php artisan wait:database
 
-# Run Migrations
-php artisan doctrine:migrations:migrate --force --allow-no-migration
+    # Run Migrations
+    php artisan doctrine:migrations:migrate --force --allow-no-migration
 
-# Clear doctrine metadata cache
-php artisan doctrine:clear:metadata:cache
+    # Clear doctrine metadata cache
+    php artisan doctrine:clear:metadata:cache
 
-# Generate proxies
-php artisan doctrine:generate:proxies
+    # Generate proxies
+    php artisan doctrine:generate:proxies
 
-exec "$@"
+    exec "$@"
+fi;
