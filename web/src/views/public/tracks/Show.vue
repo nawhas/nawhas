@@ -56,7 +56,7 @@
             <v-card class="track-page-content__card track-page-content__card--lyrics lyrics">
               <template v-if="!loading">
                 <div class="lyrics__content" v-if="track.lyrics">
-                  <p v-html="track.lyrics.content"></p>
+                  <div v-html="prepareLyrics(track.lyrics.content)"></div>
                 </div>
                 <div class="lyrics__empty" v-else>
                   <div class="lyrics__empty-message">We don't have a write-up for this nawha yet.</div>
@@ -144,6 +144,9 @@ export default {
           this.textColor = swatch.getBodyTextColor();
         });
     },
+    prepareLyrics(content) {
+      return content.replace(/\n/gi, '<br>');
+    },
   },
 };
 </script>
@@ -155,7 +158,7 @@ export default {
 
   .track-hero__content {
     max-width: 1000px;
-    padding: 24px;
+    padding: 48px 24px 24px;
     margin: 0 auto;
     display: flex;
     align-items: center;
@@ -205,7 +208,7 @@ export default {
 }
 
 .track-page-content {
-  margin-top: -104px;
+  margin-top: -72px;
   padding: 0 8px;
   max-width: 1024px;
   margin-left: auto;
@@ -217,7 +220,8 @@ export default {
     height: 200px;
 
     &--lyrics {
-      height: 500px;
+      min-height: 500px;
+      height: auto;
 
       .lyrics__empty {
         display: flex;

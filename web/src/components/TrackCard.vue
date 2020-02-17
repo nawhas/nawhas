@@ -13,7 +13,6 @@
         </div>
       </div>
       <div class="track-card__album-art">
-        <div class="track-card__album-art-gradient" :style="{background: gradient}"></div>
         <img crossorigin ref="artwork" :src="artwork" :alt="title"/>
       </div>
     </v-card>
@@ -25,9 +24,11 @@ import Vibrant from 'node-vibrant';
 
 export default {
   name: 'TrackCard',
-  props: ['title', 'slug', 'album', 'reciter', 'showReciter'],
+  props: ['title', 'slug', 'album', 'reciter', 'showReciter', 'colored'],
   mounted() {
-    this.setBackgroundFromImage();
+    if (this.colored) {
+      this.setBackgroundFromImage();
+    }
   },
   methods: {
     setBackgroundFromImage() {
@@ -46,8 +47,8 @@ export default {
   },
   data() {
     return {
-      background: '#444444',
-      textColor: 'white',
+      background: '#ffffff',
+      textColor: '#333',
     };
   },
   computed: {
@@ -76,7 +77,7 @@ export default {
   justify-content: space-between;
   background: gray;
   cursor: pointer;
-  // will-change: box-shadow background-color;
+  will-change: box-shadow, background-color;
   // transition: background-color $transition, box-shadow $transition;
 
   &:hover {

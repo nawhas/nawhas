@@ -8,6 +8,7 @@
       </div>
       <div class="reciter-card__text" :style="{ 'color': textColor }">
         <div class="reciter-card__name body-2" :title="name">{{ name }}</div>
+        <!-- <div class="reciter-card__name caption">6 albums</div> -->
       </div>
     </v-card>
   </div>
@@ -38,7 +39,7 @@ export default {
       Vibrant.from(image.src)
         .getPalette()
         .then((palette) => {
-          const swatch = palette.DarkVibrant;
+          const swatch = palette.DarkMuted;
           if (!swatch) {
             return;
           }
@@ -56,8 +57,8 @@ export default {
     }
 
     return {
-      background: 'transparent',
-      textColor: 'black',
+      background: 'white',
+      textColor: '#333',
     };
   },
   computed: {
@@ -94,6 +95,10 @@ export default {
 
     &:hover {
       // elevation(8);
+    }
+
+    .reciter-card__text .reciter-card__name {
+      font-weight: bold;
     }
   }
 

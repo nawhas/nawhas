@@ -25,10 +25,10 @@ class AlbumsController extends Controller
 
     public function index(Reciter $reciter, Request $request): JsonResponse
     {
-        $albums = $this->repository->paginateAllByReciter(
-            $reciter,
-            PaginationState::fromRequest($request)
-        );
+        $albums = $this->repository->query()
+            ->whereReciter($reciter)
+            ->sortByNewest()
+            ->paginate(PaginationState::fromRequest($request));
 
         return $this->respondWithPaginator($albums);
     }
