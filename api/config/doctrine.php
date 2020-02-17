@@ -163,7 +163,7 @@ return [
     */
     'cache' => [
         'second_level' => false,
-        'default' => env('DOCTRINE_CACHE', 'array'),
+        'default' => env('DOCTRINE_CACHE', 'file'),
         'namespace' => null,
         'metadata' => [
             'driver' => env('DOCTRINE_METADATA_CACHE', env('DOCTRINE_CACHE', 'array')),
