@@ -1,7 +1,7 @@
 services:
   # Staging: Vue Frontend App
   - type: web
-    name: Nawhas.com Staging - Web
+    name: staging.nawhas
     env: static
     buildCommand: cd web && yarn build
     staticPublishPath: ./web/dist
