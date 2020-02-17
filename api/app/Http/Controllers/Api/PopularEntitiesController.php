@@ -32,7 +32,7 @@ class PopularEntitiesController extends Controller
             ->sortRandom();
 
         if ($request->has('reciterId')) {
-            $reciter = $reciterRepo->get($request->get('reciterId'));
+            $reciter = $reciterRepo->query()->whereIdentifier($request->get('reciterId'))->get();
             $query->whereReciter($reciter);
         }
 
@@ -47,7 +47,7 @@ class PopularEntitiesController extends Controller
             ->sortRandom();
 
         if ($request->has('reciterId')) {
-            $reciter = $reciterRepo->get($request->get('reciterId'));
+            $reciter = $reciterRepo->query()->whereIdentifier($request->get('reciterId'))->get();
             $query->whereReciter($reciter);
         }
 
