@@ -120,7 +120,9 @@ return [
     | DQL custom numeric functions
     |--------------------------------------------------------------------------
     */
-    'custom_numeric_functions' => [],
+    'custom_numeric_functions' => [
+        'RAND' => \DoctrineExtensions\Query\Mysql\Rand::class,
+    ],
     /*
     |--------------------------------------------------------------------------
     | DQL custom string functions
