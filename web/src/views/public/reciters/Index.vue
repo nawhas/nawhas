@@ -43,16 +43,19 @@
 import ReciterCard from '@/components/ReciterCard.vue';
 import SixCardSkeleton from '@/components/SixCardSkeleton.vue';
 import { getReciters } from '@/services/reciters';
-import { mapGetters } from 'vuex';
+import { getPopularReciters } from '@/services/popular';
 
 export default {
   name: 'Reciters',
   components: { ReciterCard, SixCardSkeleton },
   async mounted() {
     this.loading = true;
-    this.$store.dispatch('popular/fetchPopularReciters', { limit: 6 });
-    const reciters = await getReciters();
-    this.setData(reciters.data.data, reciters.data.meta.pagination.total_pages);
+    const [reciters, popularReciters] = await Promise.all([
+      getReciters({ per_page: 60 }),
+      getPopularReciters({ limit: 6 }),
+    ]);
+    this.setData(reciters);
+    this.setPopularReciters(popularReciters);
     this.loading = false;
   },
   data() {
@@ -61,25 +64,21 @@ export default {
       reciters: null,
       length: 0,
       loading: false,
+      popularReciters: [],
     };
   },
-  computed: {
-    ...mapGetters({
-      popularReciters: 'popular/popularReciters',
-    }),
-  },
   methods: {
-    setData(reciters, length = this.length) {
-      this.reciters = reciters;
-      this.length = length;
+    setData(data) {
+      this.reciters = data.data.data;
+      this.length = data.data.meta.pagination.total_pages;
+    },
+    setPopularReciters(data) {
+      this.popularReciters = data.data.data;
     },
     async goToPage(number) {
       this.loading = true;
-      const reciters = await getReciters({ page: number });
-      this.setData(
-        reciters.data.data,
-        reciters.data.meta.pagination.total_pages,
-      );
+      const [reciters] = await Promise.all([getReciters({ per_page: 60, page: number })]);
+      this.setData(reciters);
       this.loading = false;
     },
   },

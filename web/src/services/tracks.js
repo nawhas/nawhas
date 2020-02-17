@@ -12,7 +12,6 @@ import client from './client';
  * @returns {Promise}
  */
 export function getTrack(reciter, album, track, options = {}) {
-  options.include = 'reciter,album,lyrics';
   return client.get(`/v1/reciters/${reciter}/albums/${album}/tracks/${track}`, options);
 }
 

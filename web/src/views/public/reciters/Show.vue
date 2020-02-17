@@ -36,10 +36,15 @@
     <section class="page-section" id="all-reciters-section">
       <h5 class="title">Albums</h5>
       <template v-if="!loading">
-        <template v-for="album in albums">
-          <album v-bind="album" :reciter="reciter" v-bind:key="album.id"></album>
+        <template v-if="albums.length > 0">
+          <template v-for="album in albums">
+            <album v-bind="album" :reciter="reciter" v-bind:key="album.id"></album>
+          </template>
+          <v-pagination v-model="page" :length="length" circle @input="goToPage"></v-pagination>
         </template>
-        <v-pagination v-model="page" :length="length" circle @input="goToPage"></v-pagination>
+        <template v-else>
+          <p>Sorry there are no albums currently.</p>
+        </template>
       </template>
       <template v-else>
         <album-table-skeleton />
@@ -49,12 +54,13 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
 import TrackCard from '@/components/TrackCard.vue';
 import ReciterHeroSkeleton from '@/components/ReciterHeroSkeleton.vue';
 import SixCardSkeleton from '@/components/SixCardSkeleton.vue';
 import AlbumTableSkeleton from '@/components/AlbumTableSkeleton.vue';
+import { getReciter } from '@/services/reciters';
 import { getAlbums } from '@/services/albums';
+import { getPopularTracks } from '@/services/popular';
 import Album from '@//components/Album.vue';
 
 export default {
@@ -69,18 +75,20 @@ export default {
   async mounted() {
     this.loading = true;
     const { reciter } = this.$route.params;
-    const albums = await getAlbums(reciter);
-    this.setData(albums);
-    this.$store.dispatch('popular/fetchPopularTracks', {
-      limit: 6,
-      reciterId: this.reciter.id,
-    });
+    const [reciterResponse, albums, popularTracks] = await Promise.all([
+      getReciter(reciter),
+      getAlbums(reciter, { include: 'tracks' }),
+      getPopularTracks({
+        limit: 6,
+        include: 'album,reciter',
+        reciterId: reciter,
+      }),
+    ]);
+    this.setData(reciterResponse, albums);
+    this.setPopularTracks(popularTracks);
     this.loading = false;
   },
   computed: {
-    ...mapGetters({
-      popularTracks: 'popular/popularTracks',
-    }),
     image() {
       return this.avatar || '/img/default-reciter-avatar.png';
     },
@@ -92,19 +100,27 @@ export default {
       albums: [],
       length: 0,
       loading: false,
+      popularTracks: [],
     };
   },
   methods: {
-    setData(data) {
-      this.reciter = data.data.data[0].reciter;
-      this.albums = data.data.data;
-      this.length = data.data.meta.pagination.total_pages;
+    setData(reciter, albums) {
+      if (reciter) {
+        this.reciter = reciter.data;
+      }
+      this.albums = albums.data.data;
+      this.length = albums.data.meta.pagination.total_pages;
     },
-    goToPage(number) {
-      this.$store.dispatch('albums/fetchAlbums', {
-        reciter: this.reciter.slug,
-        page: number,
-      });
+    setPopularTracks(popularTracks) {
+      this.popularTracks = popularTracks.data.data;
+    },
+    async goToPage(number) {
+      this.loading = true;
+      const [albums] = await Promise.all([
+        getAlbums(this.reciter.id, { include: 'tracks', page: number }),
+      ]);
+      this.setData(null, albums);
+      this.loading = false;
     },
   },
 };

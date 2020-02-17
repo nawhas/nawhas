@@ -9,7 +9,6 @@ import client from './client';
  * @returns {Promise}
  */
 export function getReciters(options = {}) {
-  options.per_page = 60;
   return client.get('/v1/reciters', options);
 }
 
@@ -21,7 +20,6 @@ export function getReciters(options = {}) {
  * @returns {Promise}
  */
 export function getReciter(reciter, options = {}) {
-  options.include = 'albums';
   return client.get(`/v1/reciters/${reciter}`, options);
 }
 

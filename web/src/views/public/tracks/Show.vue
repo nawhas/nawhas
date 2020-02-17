@@ -113,7 +113,7 @@ export default {
   async mounted() {
     this.loading = true;
     const { reciter, album, track } = this.$route.params;
-    const data = await getTrack(reciter, album, track);
+    const [data] = await Promise.all([getTrack(reciter, album, track, { include: 'reciter,album,lyrics' })]);
     this.setData(data);
     this.setBackgroundFromImage();
     this.loading = false;
