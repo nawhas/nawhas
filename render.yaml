@@ -1,7 +1,7 @@
 services:
   # Staging: Vue Frontend App
   - type: web
-    name: staging.nawhas
+    name: staging-nawhas
     env: static
     buildCommand: cd web && yarn install --frozen-lockfile && yarn build
     staticPublishPath: ./web/dist
