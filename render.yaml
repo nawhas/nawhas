@@ -20,6 +20,7 @@ services:
     name: mysql-staging-nawhas
     plan: standard
     env: docker
+    autoDeploy: false
     dockerfilePath: ./db/Dockerfile
     dockerContext: ./db
     disk:
