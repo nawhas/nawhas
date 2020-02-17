@@ -34,7 +34,7 @@ services:
     name: api-fpm-staging-nawhas
     plan: standard
     env: docker
-    autoDeploy: false
+    autoDeploy: true
     dockerfilePath: ./api/Dockerfile
     dockerContext: ./api
     envVars:
