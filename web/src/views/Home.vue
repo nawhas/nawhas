@@ -9,7 +9,7 @@
     <section class="page-section" id="top-reciters-section">
       <h5 class="title">Top Reciters</h5>
       <v-container grid-list-lg class="pa-0" fluid>
-        <template v-if="!loading">
+        <template v-if="popularReciters">
           <v-layout row wrap>
             <v-flex xs12 sm6 md4 v-for="reciter in popularReciters" :key="reciter.id">
               <reciter-card featured v-bind="reciter" />
@@ -24,7 +24,7 @@
     <section class="page-section" id="trending-nawhas">
       <h5 class="title">Trending Nawhas</h5>
       <v-container grid-list-lg class="pa-0" fluid>
-        <template v-if="!loading">
+        <template v-if="popularTracks">
           <v-layout row wrap>
             <v-flex xs12 sm6 md4 v-for="track in popularTracks" v-bind:key="track.id">
               <track-card v-bind="track" :show-reciter="true" />
@@ -56,28 +56,19 @@ export default {
     TrackCard,
     SixCardSkeleton,
   },
-  async mounted() {
-    this.loading = true;
-    const [popularReciters, popularTracks] = await Promise.all([
-      getPopularReciters({ limit: 6 }),
-      getPopularTracks({ limit: 6, include: 'reciter,album' }),
-    ]);
-
-    this.setData(popularReciters, popularTracks);
-    this.loading = false;
+  mounted() {
+    getPopularReciters({ per_page: 6 }).then((response) => {
+      this.popularReciters = response.data.data;
+    });
+    getPopularTracks({ per_page: 6, include: 'reciter,album' }).then((response) => {
+      this.popularTracks = response.data.data;
+    });
   },
   data() {
     return {
-      popularReciters: [],
-      popularTracks: [],
-      loading: false,
+      popularReciters: null,
+      popularTracks: null,
     };
-  },
-  methods: {
-    setData(popularReciters, popularTracks) {
-      this.popularReciters = popularReciters.data.data;
-      this.popularTracks = popularTracks.data.data;
-    },
   },
 };
 </script>
