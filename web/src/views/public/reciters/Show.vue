@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="reciter-hero" v-if="reciter">
+    <div class="reciter-hero" v-if="!loading">
       <div class="reciter-hero__ribbon"></div>
       <div class="reciter-hero__content">
         <v-card class="reciter-hero__card">
@@ -20,7 +20,7 @@
     <section class="page-section" id="top-reciters-section">
       <h5 class="title">Top Nawhas</h5>
       <v-container grid-list-lg class="pa-0" fluid>
-        <template v-if="popularTracks">
+        <template v-if="!loading">
           <v-layout row wrap>
             <v-flex xs12 sm6 md4 v-for="track in popularTracks" v-bind:key="track.id">
               <track-card v-bind="track" :show-reciter="false"></track-card>
@@ -35,11 +35,16 @@
 
     <section class="page-section" id="all-reciters-section">
       <h5 class="title">Albums</h5>
-      <template v-if="albums">
-        <template v-for="album in albums">
-          <album v-bind="album" :reciter="reciter" v-bind:key="album.id"></album>
+      <template v-if="!loading">
+        <template v-if="albums.length > 0">
+          <template v-for="album in albums">
+            <album v-bind="album" :reciter="reciter" v-bind:key="album.id"></album>
+          </template>
+          <v-pagination v-model="page" :length="length" circle @input="goToPage"></v-pagination>
         </template>
-        <v-pagination v-model="page" :length="albumsPaginationLength" circle @input="goToPage"></v-pagination>
+        <template v-else>
+          <p>Sorry there are no albums currently.</p>
+        </template>
       </template>
       <template v-else>
         <album-table-skeleton />
@@ -49,11 +54,13 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
 import TrackCard from '@/components/TrackCard.vue';
 import ReciterHeroSkeleton from '@/components/ReciterHeroSkeleton.vue';
 import SixCardSkeleton from '@/components/SixCardSkeleton.vue';
 import AlbumTableSkeleton from '@/components/AlbumTableSkeleton.vue';
+import { getReciter } from '@/services/reciters';
+import { getAlbums } from '@/services/albums';
+import { getPopularTracks } from '@/services/popular';
 import Album from '@//components/Album.vue';
 
 export default {
@@ -66,21 +73,22 @@ export default {
     AlbumTableSkeleton,
   },
   async mounted() {
+    this.loading = true;
     const { reciter } = this.$route.params;
-    await this.$store.dispatch('reciters/fetchReciter', { reciter });
-    this.$store.dispatch('albums/fetchAlbums', { reciter: this.reciter.slug, page: 1 });
-    this.$store.dispatch('popular/fetchPopularTracks', {
-      limit: 6,
-      reciterId: this.reciter.id,
-    });
+    const [reciterResponse, albums, popularTracks] = await Promise.all([
+      getReciter(reciter),
+      getAlbums(reciter, { include: 'tracks' }),
+      getPopularTracks({
+        limit: 6,
+        include: 'album,reciter',
+        reciterId: reciter,
+      }),
+    ]);
+    this.setData(reciterResponse, albums);
+    this.setPopularTracks(popularTracks);
+    this.loading = false;
   },
   computed: {
-    ...mapGetters({
-      reciter: 'reciters/reciter',
-      albums: 'albums/albums',
-      albumsPaginationLength: 'albums/albumsPaginationLength',
-      popularTracks: 'popular/popularTracks',
-    }),
     image() {
       return this.avatar || '/img/default-reciter-avatar.png';
     },
@@ -88,11 +96,31 @@ export default {
   data() {
     return {
       page: 1,
+      reciter: {},
+      albums: [],
+      length: 0,
+      loading: false,
+      popularTracks: [],
     };
   },
   methods: {
-    goToPage(number) {
-      this.$store.dispatch('albums/fetchAlbums', { reciter: this.reciter.slug, page: number });
+    setData(reciter, albums) {
+      if (reciter) {
+        this.reciter = reciter.data;
+      }
+      this.albums = albums.data.data;
+      this.length = albums.data.meta.pagination.total_pages;
+    },
+    setPopularTracks(popularTracks) {
+      this.popularTracks = popularTracks.data.data;
+    },
+    async goToPage(number) {
+      this.loading = true;
+      const [albums] = await Promise.all([
+        getAlbums(this.reciter.id, { include: 'tracks', page: number }),
+      ]);
+      this.setData(null, albums);
+      this.loading = false;
     },
   },
 };
