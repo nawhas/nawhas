@@ -33,23 +33,19 @@ class ImportDataCommand extends Command
     private TrackRepository $tracks;
     private EntityManager $em;
 
-    public function __construct(
+    public function handle(
         ReciterRepository $reciters,
         AlbumRepository $albums,
         TrackRepository $tracks,
         EntityManager $em
-    ) {
-        parent::__construct();
+    ): bool {
         $this->source = Storage::disk('import');
         $this->destination = Storage::disk('s3');
         $this->reciters = $reciters;
         $this->albums = $albums;
         $this->tracks = $tracks;
         $this->em = $em;
-    }
 
-    public function handle(): bool
-    {
         if (!$this->source->exists('reciters')) {
             $this->error("The directory 'reciters' does not exist.");
 
