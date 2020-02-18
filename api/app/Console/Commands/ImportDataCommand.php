@@ -7,13 +7,18 @@ namespace App\Console\Commands;
 use App\Database\Doctrine\EntityManager;
 use App\Entities\Album;
 use App\Entities\Lyrics;
+use App\Entities\Media;
 use App\Entities\Reciter;
 use App\Entities\Track;
 use App\Repositories\AlbumRepository;
 use App\Repositories\ReciterRepository;
 use App\Repositories\TrackRepository;
+use Aws\S3\S3Client;
 use Illuminate\Console\Command;
-use Illuminate\Filesystem\Filesystem;
+use Illuminate\Contracts\Filesystem\Cloud;
+use Illuminate\Contracts\Filesystem\Filesystem;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Symfony\Component\Console\Helper\ProgressBar;
 
 class ImportDataCommand extends Command
@@ -21,40 +26,35 @@ class ImportDataCommand extends Command
     protected $signature = 'data:import {path?}';
     protected $description = 'Import reciters, albums, and nawhas from a folder.';
 
-    private Filesystem $filesystem;
+    private Filesystem $source;
+    private Cloud $destination;
     private ReciterRepository $reciters;
     private AlbumRepository $albums;
     private TrackRepository $tracks;
     private EntityManager $em;
 
-    public function __construct(
-        Filesystem $filesystem,
+    public function handle(
         ReciterRepository $reciters,
         AlbumRepository $albums,
         TrackRepository $tracks,
         EntityManager $em
-    ) {
-        parent::__construct();
-        $this->filesystem = $filesystem;
+    ): bool {
+        $this->source = Storage::disk('import');
+        $this->destination = Storage::disk('s3');
         $this->reciters = $reciters;
         $this->albums = $albums;
         $this->tracks = $tracks;
         $this->em = $em;
-    }
 
-    public function handle(): bool
-    {
-        $directory = $this->argument('path') ?? storage_path('data/reciters');
-
-        if (!$this->filesystem->exists($directory)) {
-            $this->error("The directory {$directory} does not exist.");
+        if (!$this->source->exists('reciters')) {
+            $this->error("The directory 'reciters' does not exist.");
 
             return false;
         }
 
-        $this->comment('Importing data from ' . $directory . '');
+        $this->comment('Importing data from S3...');
 
-        $this->importReciters($directory);
+        $this->importReciters('reciters');
 
         $this->em->flush();
         $this->info('✅  Done!');
@@ -64,7 +64,7 @@ class ImportDataCommand extends Command
 
     private function importReciters(string $base): void
     {
-        $directories = $this->filesystem->directories($base);
+        $directories = $this->source->directories($base);
 
         $count = count($directories);
         if (!$count > 0) {
@@ -77,9 +77,15 @@ class ImportDataCommand extends Command
 
         $progress = $this->createCustomProgressBar($count, 'Starting to import reciters...');
 
+        $count = 0;
         foreach ($directories as $directory) {
             $this->importReciter($directory, $progress);
             $progress->advance();
+            $count++;
+
+            if ($count === 12) {
+                break;
+            }
         }
 
         $progress->finish();
@@ -90,7 +96,7 @@ class ImportDataCommand extends Command
 
     private function importReciter(string $directory, ProgressBar $bar): void
     {
-        $name = trim($this->filesystem->basename($directory));
+        $name = trim(basename($directory));
         $bar->setMessage("Importing \"$name\"");
 
         $reciter = $this->reciters->query()->whereName($name)->first();
@@ -99,29 +105,19 @@ class ImportDataCommand extends Command
             $reciter = new Reciter($name);
         }
 
-        // Set the bio for the reciter if bio.txt exists.
-        $bioFile = $directory . '/bio.txt';
-        if ($this->filesystem->exists($bioFile)) {
-            $reciter->setDescription(trim($this->filesystem->get($bioFile)));
-        }
-
-        // TODO - Add avatar handling
-
         // Persist the reciter.
         $this->em->persist($reciter);
-        $this->em->flush();
-
 
         $this->importAlbumsForReciter($reciter, $directory, $bar);
     }
 
     private function importAlbumsForReciter(Reciter $reciter, string $directory, ProgressBar $bar): void
     {
-        $directories = $this->filesystem->directories($directory);
+        $directories = $this->source->directories($directory);
         $bar->setMessage('Importing ' . count($directories) . ' albums for ' . $reciter->getName());
 
         foreach ($directories as $directory) {
-            $albumText = trim($this->filesystem->basename($directory));
+            $albumText = trim(basename($directory));
 
             [$year, $title] = explode(' - ', $albumText);
             $bar->setMessage("Importing \"{$reciter->getName()}\"'s {$year} album called \"{$title}\".");
@@ -135,8 +131,6 @@ class ImportDataCommand extends Command
                 $album = new Album($reciter, $title, $year);
             }
 
-            // TODO - Import artwork.
-
             $this->em->persist($album);
 
             $this->importTracks($reciter, $album, $directory, $bar);
@@ -145,11 +139,12 @@ class ImportDataCommand extends Command
 
     private function importTracks(Reciter $reciter, Album $album, string $directory, ProgressBar $bar)
     {
-        $directories = $this->filesystem->directories($directory);
+        $directories = $this->source->directories($directory);
         $bar->setMessage('Importing ' . count($directories) . " tracks for {$reciter->getName()}'s {$album->getYear()} album.");
+        $bar->display();
 
         foreach ($directories as $directory) {
-            $base = trim($this->filesystem->basename($directory));
+            $base = trim(basename($directory));
             [, $title] = explode(' - ', $base);
 
             $track = $this->tracks->query()->whereAlbum($album)->whereTitle($title)->first();
@@ -158,10 +153,30 @@ class ImportDataCommand extends Command
                 $track = new Track($album, $title);
             }
 
-            // TODO - Handle audio file upload.
+            // Audio File
+            $audio = collect($this->source->files($directory))
+                ->filter(fn (string $name) => Str::startsWith(basename($name), 'audio.'))
+                ->first();
+
+            if ($audio && $this->source->size($audio) > 0) {
+                /** @var S3Client $client */
+                $client = $this->source->getDriver()->getAdapter()->getClient();
+                $ext = pathinfo($audio, PATHINFO_EXTENSION);
+                $destination = "reciters/{$reciter->getSlug()}/albums/{$album->getYear()}/tracks/{$track->getSlug()}.{$ext}";
+
+                $client->copy(
+                    config('filesystems.disks.import.bucket'),
+                    $audio,
+                    config('filesystems.disks.s3.bucket'),
+                    $destination,
+                    'public-read'
+                );
+
+                $track->addAudioFile(Media::audioFile($this->destination->url($destination)));
+            }
 
             // Lyrics
-            if ($this->filesystem->exists($directory . '/lyrics.txt')) {
+            if ($this->source->exists($directory . '/lyrics.txt')) {
                 $text = $this->getLyricsFromFile($directory);
                 $lyrics = new Lyrics($track, $text);
                 $track->replaceLyrics($lyrics);
@@ -184,7 +199,7 @@ class ImportDataCommand extends Command
 
     private function getLyricsFromFile(string $directory): string
     {
-        $text = trim($this->filesystem->get($directory . '/lyrics.txt'));
+        $text = trim($this->source->get($directory . '/lyrics.txt'));
         $text = mb_scrub($text);
         return $text;
     }

@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace App\Entities;
 
 use App\Entities\Behaviors\HasTimestamps;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\Criteria;
 use App\Entities\Contracts\{Entity, TimestampedEntity};
 use Illuminate\Support\Str;
 use Ramsey\Uuid\{Uuid, UuidInterface};
@@ -21,6 +24,7 @@ class Track implements Entity, TimestampedEntity
     private string $title;
     private string $slug;
     private ?Lyrics $lyrics = null;
+    private Collection $media;
 
     public function __construct(Album $album, string $title)
     {
@@ -28,8 +32,8 @@ class Track implements Entity, TimestampedEntity
         $this->album = $album;
         $this->reciter = $album->getReciter();
         $this->title = $title;
-        // TODO - This may need to take uniqueness into account?
         $this->slug = Str::slug($title);
+        $this->media = new ArrayCollection();
     }
 
     public function getId(): string
@@ -65,5 +69,27 @@ class Track implements Entity, TimestampedEntity
     public function replaceLyrics(Lyrics $lyrics): void
     {
         $this->lyrics = $lyrics;
+    }
+
+    /**
+     * @return Collection|Media[]
+     */
+    public function getMedia(): Collection
+    {
+        return $this->media;
+    }
+
+    public function addAudioFile(Media $media): void
+    {
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->eq('type', Media::TYPE_AUDIO_FILE));
+        $existing = $this->media->matching($criteria);
+
+        if ($existing->count() >= 0) {
+            // Remove existing audio files.
+            collect($existing->toArray())->map(fn (Media $media) => $this->media->remove($media));
+        }
+
+        $this->media->add($media);
     }
 }

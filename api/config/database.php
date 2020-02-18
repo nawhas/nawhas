@@ -46,11 +46,11 @@ return [
         'mysql' => [
             'driver' => 'mysql',
             'url' => env('DATABASE_URL'),
-            'host' => env('DB_HOST', 'mysql'),
+            'host' => env('DB_HOST', 'nawhas_db'),
             'port' => env('DB_PORT', '3306'),
             'database' => env('DB_DATABASE', 'nawhas'),
-            'username' => env('DB_USERNAME', 'nawhas'),
-            'password' => env('DB_PASSWORD', ''),
+            'username' => env('DB_USERNAME', 'docker'),
+            'password' => env('DB_PASSWORD', 'secret'),
             'unix_socket' => env('DB_SOCKET', ''),
             'charset' => 'utf8mb4',
             'collation' => 'utf8mb4_unicode_ci',
@@ -123,7 +123,7 @@ return [
 
         'options' => [
             'cluster' => env('REDIS_CLUSTER', 'redis'),
-            'prefix' => env('REDIS_PREFIX', Str::slug(env('APP_NAME', 'laravel'), '_').'_database_'),
+            'prefix' => env('REDIS_PREFIX', 'nawhas_database_'),
         ],
 
         'default' => [
