@@ -13,7 +13,8 @@ class MediaTransformer extends Transformer
         return [
             'id' => $media->getId(),
             'uri' => $media->getUri(),
-            'type' => $media->getType(),
+            'type' => $media->getType()->getValue(),
+            'provider' => $media->getProvider()->getValue(),
             $this->timestamps($media),
         ];
     }
