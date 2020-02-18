@@ -5,12 +5,13 @@ declare(strict_types=1);
 namespace App\Http\Transformers;
 
 use App\Entities\Track;
+use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\Item;
 use League\Fractal\Resource\ResourceInterface;
 
 class TrackTransformer extends Transformer
 {
-    protected $availableIncludes = ['reciter', 'album', 'lyrics'];
+    protected $availableIncludes = ['reciter', 'album', 'lyrics', 'media'];
 
     public function toArray(Track $track): array
     {
@@ -42,5 +43,10 @@ class TrackTransformer extends Transformer
         }
 
         return $this->item($lyrics, new LyricsTransformer());
+    }
+
+    public function includeMedia(Track $track): Collection
+    {
+        return $this->collection($track->getMedia(), new MediaTransformer());
     }
 }
