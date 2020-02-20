@@ -44,7 +44,7 @@ class TrackQuery extends Query
         if (Uuid::isValid($identifier)) {
             $this->builder->andWhere('t.id = :id');
         } else {
-            $this->builder->andWhere('t.year = :id');
+            $this->builder->andWhere('t.slug = :id');
         }
 
         $this->builder->setParameter(':id', $identifier);
