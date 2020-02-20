@@ -27,7 +27,7 @@ class BootApplication extends Command
                 'config:cache',
                 'route:cache',
                 'wait:database',
-                'doctrine:migrations:migrate --force --allow-no-migration',
+                ['doctrine:migrations:migrate', ['--force', '--allow-no-migration']],
                 'doctrine:clear:metadata:cache',
                 'doctrine:generate:proxies'
             );
@@ -40,11 +40,17 @@ class BootApplication extends Command
         return 0;
     }
 
-    private function all(string ...$commands): void
+    private function all(...$commands): void
     {
         foreach ($commands as $command) {
-            if (($code = $this->call($command)) !== 0) {
-                throw new Exception("Command $command failed with exit code $code");
+            if (is_array($command)) {
+                $code = $this->call(...$command);
+            } else {
+                $code = $this->call($command);
+            }
+
+            if ($code !== 0) {
+                throw new Exception("Command '$command' failed with exit code $code");
             }
         }
     }

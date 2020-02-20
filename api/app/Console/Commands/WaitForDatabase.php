@@ -21,7 +21,7 @@ class WaitForDatabase extends Command
         $this->connection = $connection;
     }
 
-    public function handle()
+    public function handle(): int
     {
         $this->comment('Looking for database connection...');
 
@@ -33,13 +33,13 @@ class WaitForDatabase extends Command
                 $this->connection->unprepared('SELECT * FROM pg_catalog.pg_tables');
 
                 $this->info("Success! Found connection after $tries tries.");
-                return;
+                return 0;
             } catch (Throwable $e) {
                 // Do nothing.
             }
         }
 
-        $this->warn('Timeout after 20 seconds. Connection not found.');
-        return;
+        $this->error('Timeout after 20 seconds. Connection not found.');
+        return 1;
     }
 }
