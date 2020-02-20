@@ -12,7 +12,7 @@ export function getLoginUrl() {
   return `${API_DOMAIN}/oauth/authorize?${QueryString.stringify(params)}`;
 }
 
-export function getSignupUrl()
+export function getSignupUrl() {
   const params = { redirect: getLoginUrl() };
   return `${API_DOMAIN}/register?${QueryString.stringify(params)}`;
 }
