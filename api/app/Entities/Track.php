@@ -10,6 +10,7 @@ use App\Enum\MediaType;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
+use Doctrine\Common\Collections\Selectable;
 use App\Entities\Contracts\{Entity, TimestampedEntity};
 use Illuminate\Support\Str;
 use Ramsey\Uuid\{Uuid, UuidInterface};
@@ -98,6 +99,10 @@ class Track implements Entity, TimestampedEntity
      */
     public function getAudioFiles(): Collection
     {
+        if (!($this->media instanceof Selectable)) {
+            throw new \BadMethodCallException('Cannot select audio files from a collection not implementing Selectable.');
+        }
+
         $criteria = Criteria::create()
             ->where(Criteria::expr()->eq('type', MediaType::AUDIO()))
             ->where(Criteria::expr()->eq('provider', MediaProvider::FILE()));

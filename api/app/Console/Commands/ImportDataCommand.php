@@ -19,6 +19,7 @@ use Illuminate\Contracts\Filesystem\Cloud;
 use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use League\Flysystem\AwsS3v3\AwsS3Adapter;
 use Symfony\Component\Console\Helper\ProgressBar;
 
 class ImportDataCommand extends Command
@@ -40,11 +41,14 @@ class ImportDataCommand extends Command
         EntityManager $em
     ): bool {
         $this->source = Storage::disk('import');
-        $this->destination = Storage::disk('s3');
         $this->reciters = $reciters;
         $this->albums = $albums;
         $this->tracks = $tracks;
         $this->em = $em;
+
+        /** @var \Illuminate\Filesystem\FilesystemAdapter $s3 */
+        $s3 = Storage::disk('s3');
+        $this->destination = $s3;
 
         if (!$this->source->exists('reciters')) {
             $this->error("The directory 'reciters' does not exist.");
@@ -164,8 +168,7 @@ class ImportDataCommand extends Command
                 ->first();
 
             if ($audio && $this->source->size($audio) > 0) {
-                /** @var S3Client $client */
-                $client = $this->source->getDriver()->getAdapter()->getClient();
+                $client = $this->getS3Client();
                 $ext = pathinfo($audio, PATHINFO_EXTENSION);
                 $destination = "reciters/{$reciter->getSlug()}/albums/{$album->getYear()}/tracks/{$track->getSlug()}.{$ext}";
 
@@ -207,5 +210,16 @@ class ImportDataCommand extends Command
         $text = trim($this->source->get($directory . '/lyrics.txt'));
         $text = mb_scrub($text);
         return $text;
+    }
+
+    private function getS3Client(): S3Client
+    {
+        /** @var \League\Flysystem\Filesystem $driver */
+        $driver = $this->source->getDriver();
+
+        /** @var AwsS3Adapter $adapter */
+        $adapter = $driver->getAdapter();
+
+        return $adapter->getClient();
     }
 }

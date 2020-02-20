@@ -1,0 +1,12 @@
+includes:
+    - ./vendor/nunomaduro/larastan/extension.neon
+
+parameters:
+    paths:
+        - app
+    level: 3
+    ignoreErrors:
+        - '#Unsafe usage of new static#'
+        - '#Call to an undefined method LaravelDoctrine\\Fluent\\Fluent\:\:uuidPrimaryKey\(\)#'
+    excludes_analyse:
+        - ./app/Http/Controllers/Auth/*.php

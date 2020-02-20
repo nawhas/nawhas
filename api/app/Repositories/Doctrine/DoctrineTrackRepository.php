@@ -10,6 +10,10 @@ use App\Queries\TrackQuery;
 use App\Repositories\TrackRepository;
 use Illuminate\Support\Collection;
 
+/**
+ * @method Track|null findFromRepo(string $id)
+ * @method Track getFromRepo(string $id)
+ */
 class DoctrineTrackRepository extends DoctrineRepository implements TrackRepository
 {
     public function find(string $id): ?Track
