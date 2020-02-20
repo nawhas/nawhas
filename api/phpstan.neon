@@ -4,7 +4,7 @@ includes:
 parameters:
     paths:
         - app
-    level: 3
+    level: 4
     ignoreErrors:
         - '#Unsafe usage of new static#'
         - '#Call to an undefined method LaravelDoctrine\\Fluent\\Fluent\:\:uuidPrimaryKey\(\)#'
