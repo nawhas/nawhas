@@ -24,7 +24,20 @@ services:
     dockerfilePath: ./api/Dockerfile
     dockerContext: ./api
     envVars:
-      - fromGroup: staging-db
+      - key: DB_DATABASE
+        value: nawhas
+      - key: DB_HOST
+        fromDatabase:
+          name: postgres-staging-nawhas
+          property: host
+      - key: DB_USERNAME
+        fromDatabase:
+          name: postgres-staging-nawhas
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: postgres-staging-nawhas
+          property: password
       - fromGroup: staging-aws
 databases:
   - name: postgres-staging-nawhas
@@ -41,19 +54,3 @@ envVarGroups:
         value: us-east-2
       - key: AWS_BUCKET
         value: staging.nawhas
-  - name: staging-db
-    envVars:
-      - key: DB_DATABASE
-        value: nawhas
-      - key: DB_HOST
-        fromDatabase:
-          name: postgres-staging-nawhas
-          property: host
-      - key: DB_USERNAME
-        fromDatabase:
-          name: postgres-staging-nawhas
-          property: user
-      - key: DB_PASSWORD
-        fromDatabase:
-          name: postgres-staging-nawhas
-          property: password
