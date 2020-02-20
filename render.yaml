@@ -16,7 +16,7 @@ services:
       - key: VUE_APP_API_DOMAIN
         value: https://api.staging.nawhas.com
   # Staging API PHP Service
-  - type: pserv
+  - type: web
     name: api-staging-nawhas
     plan: standard
     env: docker
