@@ -4,6 +4,7 @@ on: [push]
 
 env:
   PROJECT_ID: nawhas
+  IMAGE_NAME: api
 
 jobs:
   build:
@@ -25,8 +26,14 @@ jobs:
           gcloud auth configure-docker
 
       - run: gcloud info
-      - name: 'Build API Container'
+      - name: 'Build API Image'
         run: |
           docker build ./api --file ./api/Dockerfile \
-            --tag gcr.io/$PROJECT_ID/api:${GITHUB_SHA::8} \
-            --tag gcr.io/$PROJECT_ID/api:${GITHUB_REF##*/}
+            --tag gcr.io/$PROJECT_ID/$IMAGE_NAME:${GITHUB_SHA::8} \
+            --tag gcr.io/$PROJECT_ID/$IMAGE_NAME:${GITHUB_REF##*/}
+
+      # Push the Docker image to Google Container Registry
+      - name: 'Publish API Image'
+        run: |
+          docker push gcr.io/$PROJECT_ID/$IMAGE_NAME:${GITHUB_SHA::8}
+          docker push gcr.io/$PROJECT_ID/$IMAGE_NAME:${GITHUB_REF##*/}
