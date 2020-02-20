@@ -19,7 +19,7 @@ services:
       - XDEBUG_REMOTE_HOST=host.docker.internal
     volumes:
       - ./api:/var/www/api
-      - ./docker/nginx/api.conf:/etc/nginx/conf.d/default.conf
+      - ./api/docker/nginx.conf:/etc/nginx/conf.d/default.conf
     ports:
       - "9000:9000"
     networks:

@@ -3,6 +3,7 @@ module.exports = {
   transpileDependencies: [
     'vuetify',
   ],
+  productionSourceMap: false,
   devServer: {
     https: true,
   },
