@@ -24,6 +24,7 @@ services:
     dockerfilePath: ./api/Dockerfile
     dockerContext: ./api
     pullRequestPreviewsEnabled: false
+    healthCheckPath: /alive
     envVars:
       - key: DB_DATABASE
         value: nawhas
