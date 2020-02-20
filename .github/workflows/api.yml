@@ -1,0 +1,28 @@
+name: Build & Test API Service
+
+on: [push]
+
+env:
+  PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+        with:
+          service_account_email: ${{ secrets.GCP_SA_EMAIL }}
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
+
+      - run: gcloud info
+      - name: 'Build API Container'
+        run: |
+          docker build ./api --file ./api/Dockerfile \
+            --tag nawhas/api:${GITHUB_SHA::8} \
+            --tag nawhas/api:${GITHUB_REF##*/}
+
+      - name: gcloud Set up
+        run: |
+          gcloud config set project $PROJECT_ID
