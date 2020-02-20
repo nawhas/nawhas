@@ -23,7 +23,7 @@ use Symfony\Component\Console\Helper\ProgressBar;
 
 class ImportDataCommand extends Command
 {
-    protected $signature = 'data:import {path?}';
+    protected $signature = 'data:import {path?} {--limit=}';
     protected $description = 'Import reciters, albums, and nawhas from a folder.';
 
     private Filesystem $source;
@@ -54,6 +54,10 @@ class ImportDataCommand extends Command
 
         $this->comment('Importing data from S3...');
 
+        if ($this->option('limit')) {
+            $this->comment('Limiting to ' . intval($this->option('limit')) . ' reciters');
+        }
+
         $this->importReciters('reciters');
 
         $this->em->flush();
@@ -65,6 +69,7 @@ class ImportDataCommand extends Command
     private function importReciters(string $base): void
     {
         $directories = $this->source->directories($base);
+        $limit = ($this->option('limit')) ? (int)$this->option('limit') : null;
 
         $count = count($directories);
         if (!$count > 0) {
@@ -83,7 +88,7 @@ class ImportDataCommand extends Command
             $progress->advance();
             $count++;
 
-            if ($count === 9) {
+            if ($limit && $count === $limit) {
                 break;
             }
         }
