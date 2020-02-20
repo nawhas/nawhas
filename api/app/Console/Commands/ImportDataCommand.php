@@ -114,6 +114,8 @@ class ImportDataCommand extends Command
         $this->em->persist($reciter);
 
         $this->importAlbumsForReciter($reciter, $directory, $bar);
+
+        $this->em->flush();
     }
 
     private function importAlbumsForReciter(Reciter $reciter, string $directory, ProgressBar $bar): void
