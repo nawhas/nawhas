@@ -24,6 +24,7 @@ class AlbumMapping extends EntityMapping
         $map->string('year')->length(20);
         $map->string('artwork')->nullable();
         $map->hasMany(Track::class)->mappedBy('album')->cascadeAll();
+        $map->unique(['reciter_id', 'year']);
         $map->timestamps();
     }
 }

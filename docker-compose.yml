@@ -8,16 +8,18 @@ volumes:
 
 services:
   api:
-    image: szainmehdi/php:7.4-dev
+    image: szainmehdi/php:7.4-nginx
     container_name: nawhas_api
     working_dir: /var/www/api
     environment:
+      - APP_ENV=local
       - XDEBUG_ENABLE=true
       - XDEBUG_REMOTE_PORT=9001
       - XDEBUG_IDE_KEY=PHPSTORM
       - XDEBUG_REMOTE_HOST=host.docker.internal
     volumes:
       - ./api:/var/www/api
+      - ./docker/nginx/api.conf:/etc/nginx/conf.d/default.conf
     ports:
       - "9000:9000"
     networks:
@@ -34,18 +36,8 @@ services:
       - ./docker/nginx/certs:/etc/nginx/certs
       - ./docker/nginx/ingress.conf:/etc/nginx/conf.d/default.conf
     depends_on:
-      - api_nginx
-      - web_nginx
-    networks:
-      - nawhas
-  api_nginx:
-    image: nginx:stable-alpine
-    container_name: nawhas_api_nginx
-    working_dir: /var/www/api/public
-    volumes:
-      - ./docker/nginx/api.conf:/etc/nginx/conf.d/default.conf
-    depends_on:
       - api
+      - web_nginx
     networks:
       - nawhas
   web_nginx:
@@ -59,7 +51,7 @@ services:
       - nawhas
   db:
     image: postgres:11
-    container_name: db
+    container_name: nawhas_db
     restart: unless-stopped
     tty: true
     ports:

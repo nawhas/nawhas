@@ -30,7 +30,7 @@ class WaitForDatabase extends Command
             try {
                 sleep(1);
                 $tries++;
-                $this->connection->unprepared('SHOW TABLES;');
+                $this->connection->unprepared('SELECT * FROM pg_catalog.pg_tables');
 
                 $this->info("Success! Found connection after $tries tries.");
                 return;
