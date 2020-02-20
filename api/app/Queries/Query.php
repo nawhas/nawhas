@@ -41,8 +41,7 @@ abstract class Query
 
     public function sortRandom(): self
     {
-        $this->builder->orderBy('RAND()');
-
+        // TODO - ???
         return $this;
     }
 
