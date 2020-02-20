@@ -27,9 +27,9 @@ class BootApplication extends Command
                 'config:cache',
                 'route:cache',
                 'wait:database',
-//                'doctrine:migrations:migrate --force --allow-no-migration',
-//                'doctrine:clear:metadata:cache',
-//                'doctrine:generate:proxies'
+                'doctrine:migrations:migrate --force --allow-no-migration',
+                'doctrine:clear:metadata:cache',
+                'doctrine:generate:proxies'
             );
         } catch (Exception $e) {
             $this->error("Failed to boot application.\n{$e->getMessage()}");
