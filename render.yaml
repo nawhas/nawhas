@@ -5,7 +5,7 @@ services:
     env: static
     buildCommand: cd web && yarn install --frozen-lockfile && yarn build
     staticPublishPath: ./web/dist
-    pullRequestPreviewsEnabled: false
+    pullRequestPreviewsEnabled: true
     domains:
       - staging.nawhas.com
     routes:
@@ -23,6 +23,7 @@ services:
     autoDeploy: true
     dockerfilePath: ./api/Dockerfile
     dockerContext: ./api
+    pullRequestPreviewsEnabled: false
     envVars:
       - key: DB_DATABASE
         value: nawhas
