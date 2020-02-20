@@ -18,12 +18,32 @@ services:
   # Staging API PHP Service
   - type: web
     name: api-staging-nawhas
-    plan: standard
+    plan: starter
     env: docker
     autoDeploy: true
     dockerfilePath: ./api/Dockerfile
     dockerContext: ./api
     envVars:
+
+databases:
+  - name: postgres-staging-nawhas
+    databaseName: nawhas
+
+envVarGroups:
+  - name: staging-aws
+    envVars:
+      - key: AWS_ACCESS_KEY_ID
+        sync: false
+      - key: AWS_SECRET_ACCESS_KEY
+        sync: false
+      - key: AWS_DEFAULT_REGION
+        value: us-east-2
+      - key: AWS_BUCKET
+        value: staging.nawhas
+  - name: staging-db
+    envVars:
+      - key: DB_DATABASE
+        value: nawhas
       - key: DB_HOST
         fromDatabase:
           name: postgres-staging-nawhas
@@ -36,7 +56,3 @@ services:
         fromDatabase:
           name: postgres-staging-nawhas
           property: password
-
-databases:
-  - name: postgres-staging-nawhas
-    databaseName: nawhas
