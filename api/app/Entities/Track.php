@@ -87,7 +87,7 @@ class Track implements Entity, TimestampedEntity
 
         if ($existing->count() >= 0) {
             // Remove existing audio files.
-            collect($existing->toArray())->map(fn (Media $media) => $this->media->remove($media));
+            collect($existing->toArray())->map(fn (Media $media) => $this->media->removeElement($media));
         }
 
         $this->media->add($media);
