@@ -5,12 +5,9 @@ declare(strict_types=1);
 namespace App\Entities;
 
 use App\Entities\Behaviors\HasTimestamps;
-use App\Enum\MediaProvider;
-use App\Enum\MediaType;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
-use Doctrine\Common\Collections\Criteria;
 use App\Entities\Contracts\{Entity, TimestampedEntity};
+use App\Enum\{MediaProvider, MediaType};
+use Doctrine\Common\Collections\{ArrayCollection, Collection};
 use Illuminate\Support\Str;
 use Ramsey\Uuid\{Uuid, UuidInterface};
 use Zain\LaravelDoctrine\Jetpack\Serializer\SerializesAttributes;
@@ -98,10 +95,9 @@ class Track implements Entity, TimestampedEntity
      */
     public function getAudioFiles(): Collection
     {
-        $criteria = Criteria::create()
-            ->where(Criteria::expr()->eq('type', MediaType::AUDIO()))
-            ->where(Criteria::expr()->eq('provider', MediaProvider::FILE()));
-
-        return $this->media->matching($criteria);
+        return $this->media->filter(function (Media $m): bool {
+            return $m->getType()->equals(MediaType::AUDIO())
+                && $m->getProvider()->equals(MediaProvider::FILE());
+        });
     }
 }
