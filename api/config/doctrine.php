@@ -24,7 +24,7 @@ return [
         'default' => [
             'dev' => env('APP_DEBUG', false),
             'meta' => 'fluent',
-            'connection' => env('DB_CONNECTION', 'mysql'),
+            'connection' => env('DB_CONNECTION', 'pgsql'),
             'namespaces' => [],
             'paths' => [
                 base_path('app/Entities')
@@ -46,7 +46,9 @@ return [
             */
             'events' => [
                 'listeners' => [],
-                'subscribers' => []
+                'subscribers' => [
+                    \App\Database\Doctrine\Events\MigrationEventSubscriber::class
+                ]
             ],
             'filters' => [],
             /*

@@ -83,7 +83,7 @@ class ImportDataCommand extends Command
             $progress->advance();
             $count++;
 
-            if ($count === 12) {
+            if ($count === 9) {
                 break;
             }
         }

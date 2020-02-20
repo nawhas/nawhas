@@ -7,6 +7,7 @@ namespace App\Queries;
 use App\Entities\Album;
 use App\Entities\Reciter;
 use Illuminate\Support\Collection;
+use Ramsey\Uuid\Uuid;
 
 /**
  * @method Album|null first()
@@ -25,10 +26,13 @@ class AlbumQuery extends Query
 
     public function whereIdentifier($identifier): self
     {
-        $this->builder->andWhere($this->builder->expr()->orX(
-            $this->builder->expr()->eq('t.id', ':identifier'),
-            $this->builder->expr()->eq('t.year', ':identifier')
-        ))->setParameter(':identifier', $identifier);
+        if (Uuid::isValid($identifier)) {
+            $this->builder->andWhere('t.id = :id');
+        } else {
+            $this->builder->andWhere('t.year = :id');
+        }
+
+        $this->builder->setParameter(':id', $identifier);
 
         return $this;
     }

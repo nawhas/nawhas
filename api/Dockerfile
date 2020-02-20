@@ -1,30 +1,20 @@
-FROM szainmehdi/php:7.4-dev as api-build
+FROM szainmehdi/php:7.4-nginx
 
 WORKDIR /var/www/api
+ENV APP_ENV production
 ENV COMPOSER_ALLOW_SUPERUSER 1
 
-# Copy Dependencies files
-COPY ./composer.json ./composer.lock ./
-
-RUN composer install -n --no-dev --prefer-dist --no-scripts --no-autoloader
-
-# ---------------------------------------------------------------------------
-FROM szainmehdi/php:7.4
-
-ENV COMPOSER_ALLOW_SUPERUSER 1
-WORKDIR /var/www/api
-COPY --from=api-build /var/www/api/vendor /var/www/api/vendor
-COPY --from=api-build /usr/local/bin/composer /usr/local/bin/composer
 COPY . .
 
-RUN composer dump-autoload -n -o --no-dev \
+RUN composer install -n --no-dev --prefer-dist --no-scripts --no-autoloader \
+    && composer dump-autoload -n -o --no-dev \
     && composer check-platform-reqs
 
 RUN chown -R www-data: /var/www/api
 
-COPY entrypoint.sh /usr/bin/docker-api-entrypoint
-RUN chmod +x /usr/bin/docker-api-entrypoint
+COPY docker/nginx.conf /etc/nginx/conf.d/default.conf
+COPY docker/entrypoint.sh /usr/bin/docker-nawhas-api-entrypoint
+RUN chmod +x /usr/bin/docker-nawhas-api-entrypoint
 
-ENTRYPOINT ["docker-api-entrypoint"]
-EXPOSE 9000
-CMD 'php-fpm'
+ENTRYPOINT [ "docker-nawhas-api-entrypoint" ]
+CMD []

@@ -6,6 +6,7 @@ namespace App\Queries;
 
 use App\Entities\{Album, Reciter, Track};
 use Illuminate\Support\Collection;
+use Ramsey\Uuid\Uuid;
 
 /**
  * @method Track get()
@@ -40,10 +41,13 @@ class TrackQuery extends Query
 
     public function whereIdentifier($identifier): self
     {
-        $this->builder->andWhere($this->builder->expr()->orX(
-            $this->builder->expr()->eq('t.id', ':identifier'),
-            $this->builder->expr()->eq('t.slug', ':identifier')
-        ))->setParameter(':identifier', $identifier);
+        if (Uuid::isValid($identifier)) {
+            $this->builder->andWhere('t.id = :id');
+        } else {
+            $this->builder->andWhere('t.year = :id');
+        }
+
+        $this->builder->setParameter(':id', $identifier);
 
         return $this;
     }

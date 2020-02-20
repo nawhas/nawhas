@@ -4,7 +4,7 @@ networks:
   nawhas:
 
 volumes:
-  mariadb:
+  postgres:
 
 services:
   api:
@@ -13,11 +13,11 @@ services:
       dockerfile: Dockerfile
     container_name: nawhas_api
     env_file:
-      - api/.env.staging
+      - api/.env.production
     networks:
       - nawhas
     depends_on:
-      - mysql
+      - db
   ingress:
     image: nginx:stable-alpine
     container_name: nawhas_ingress
@@ -28,20 +28,7 @@ services:
       - ./docker/nginx/certs:/etc/nginx/certs
       - ./docker/nginx/ingress.conf:/etc/nginx/conf.d/default.conf
     depends_on:
-      - api_nginx
       - web_nginx
-    networks:
-      - nawhas
-  api_nginx:
-    build:
-      context: ./nginx
-      dockerfile: Dockerfile
-      args:
-        FPM_CONTAINER: nawhas_api
-    container_name: nawhas_api_nginx
-    depends_on:
-      - api
-      - mysql
     networks:
       - nawhas
   web_nginx:
@@ -53,20 +40,19 @@ services:
       - ./docker/nginx/web.conf:/etc/nginx/conf.d/default.conf
     networks:
       - nawhas
-  mysql:
-    image: mariadb:10
+  db:
+    image: postgres:11
     container_name: nawhas_db
     restart: unless-stopped
     tty: true
     ports:
-      - "3306:3306"
-    volumes:
-      - mariadb:/var/lib/mysql
+      - "5432:5432"
     environment:
-      - MYSQL_DATABASE=nawhas
-      - MYSQL_USER=docker
-      - MYSQL_PASSWORD=secret
-      - MYSQL_ROOT_PASSWORD=secret
+      POSTGRES_DB: nawhas
+      POSTGRES_USER: docker
+      POSTGRES_PASSWORD: secret
+    volumes:
+      - postgres:/var/lib/postgresql/data
     networks:
       - nawhas
 

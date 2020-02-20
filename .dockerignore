@@ -2,6 +2,7 @@
 .gitattributes
 .gitignore
 .dockerignore
+.github
 .idea
 README.md
 CHANGELOG.md

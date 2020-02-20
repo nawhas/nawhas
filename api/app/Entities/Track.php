@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Entities;
 
 use App\Entities\Behaviors\HasTimestamps;
+use App\Enum\MediaProvider;
+use App\Enum\MediaType;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
@@ -81,9 +83,7 @@ class Track implements Entity, TimestampedEntity
 
     public function addAudioFile(Media $media): void
     {
-        $criteria = Criteria::create()
-            ->where(Criteria::expr()->eq('type', Media::TYPE_AUDIO_FILE));
-        $existing = $this->media->matching($criteria);
+        $existing = $this->getAudioFiles();
 
         if ($existing->count() >= 0) {
             // Remove existing audio files.
@@ -91,5 +91,17 @@ class Track implements Entity, TimestampedEntity
         }
 
         $this->media->add($media);
+    }
+
+    /**
+     * @return Collection|Media[]
+     */
+    public function getAudioFiles(): Collection
+    {
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->eq('type', MediaType::AUDIO()))
+            ->where(Criteria::expr()->eq('provider', MediaProvider::FILE()));
+
+        return $this->media->matching($criteria);
     }
 }
