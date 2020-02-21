@@ -1,3 +1,18 @@
+FROM szainmehdi/php:7.4 as test
+
+WORKDIR /var/www/api
+ENV APP_ENV production
+ENV COMPOSER_ALLOW_SUPERUSER 1
+
+COPY . .
+
+RUN composer install \
+    && composer phpstan \
+    && composer test
+
+# ---------------------------------------------------------------------------
+# Production Image
+# ---------------------------------------------------------------------------
 FROM szainmehdi/php:7.4-nginx
 
 WORKDIR /var/www/api
