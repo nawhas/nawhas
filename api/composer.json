@@ -28,6 +28,8 @@
         "fzaninotto/faker": "^1.9.1",
         "mockery/mockery": "^1.0",
         "nunomaduro/collision": "^3.0",
+        "nunomaduro/larastan": "^0.5.2",
+        "phpstan/phpstan": "^0.12.11",
         "phpunit/phpunit": "^8.0"
     },
     "config": {
@@ -57,6 +59,12 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "scripts": {
+        "phpstan": [
+            "./vendor/bin/phpstan analyze --memory-limit=2G"
+        ],
+        "test": [
+            "./vendor/bin/phpunit"
+        ],
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
             "@php artisan package:discover --ansi"

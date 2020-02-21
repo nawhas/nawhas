@@ -8,6 +8,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Transformers\AlbumTransformer;
 use App\Http\Transformers\ReciterTransformer;
 use App\Http\Transformers\TrackTransformer;
+use App\Queries\AlbumQuery;
+use App\Queries\TrackQuery;
 use App\Repositories\AlbumRepository;
 use App\Repositories\ReciterRepository;
 use App\Repositories\TrackRepository;
@@ -28,6 +30,7 @@ class PopularEntitiesController extends Controller
 
     public function albums(Request $request, AlbumTransformer $transformer, ReciterRepository $reciterRepo, AlbumRepository $albumRepo): JsonResponse
     {
+        /** @var AlbumQuery $query */
         $query = $albumRepo->query()
             ->sortRandom();
 
@@ -43,6 +46,7 @@ class PopularEntitiesController extends Controller
 
     public function tracks(Request $request, TrackTransformer $transformer, ReciterRepository $reciterRepo, TrackRepository $trackRepo): JsonResponse
     {
+        /** @var TrackQuery $query */
         $query = $trackRepo->query()
             ->sortRandom();
 

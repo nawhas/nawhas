@@ -39,7 +39,7 @@ trait TransformsResponses
     }
 
     /**
-     * @param $collection - some collection of data
+     * @param mixed $collection - some collection of data
      */
     protected function respondWithCollection($collection, Transformer $transformer = null): JsonResponse
     {

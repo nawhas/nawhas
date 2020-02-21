@@ -8,12 +8,11 @@ use App\Database\Doctrine\EntityManager;
 use App\Entities\Contracts\Entity;
 use App\Exceptions\EntityNotFoundException;
 use Doctrine\ORM\EntityRepository;
-use Doctrine\Persistence\ObjectRepository;
 
 abstract class DoctrineRepository
 {
     protected EntityManager $em;
-    protected ObjectRepository $repo;
+    protected EntityRepository $repo;
 
     public function __construct(EntityManager $em)
     {
