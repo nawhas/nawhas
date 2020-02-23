@@ -21,7 +21,8 @@
         "myclabs/php-enum": "^1.7",
         "ramsey/uuid-doctrine": "^1.6",
         "spatie/laravel-cors": "^1.6",
-        "zain/laravel-doctrine-jetpack": "*"
+        "zain/laravel-doctrine-algolia": "dev-master",
+        "zain/laravel-doctrine-jetpack": "dev-master"
     },
     "require-dev": {
         "facade/ignition": "^1.4",
@@ -32,6 +33,12 @@
         "phpstan/phpstan": "^0.12.11",
         "phpunit/phpunit": "^8.0"
     },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/szainmehdi/laravel-doctrine-algolia.git"
+        }
+    ],
     "config": {
         "optimize-autoloader": true,
         "preferred-install": "dist",
@@ -56,7 +63,6 @@
             "Tests\\": "tests/"
         }
     },
-    "minimum-stability": "dev",
     "prefer-stable": true,
     "scripts": {
         "phpstan": [
