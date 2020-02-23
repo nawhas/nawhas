@@ -19,7 +19,15 @@ return [
         'indices' => [
             'reciters' => [
                 'class' => App\Entities\Reciter::class,
-                'normalizer' => App\Search\Normalizers\ReciterNormalizer::class,
+                'normalizer' => App\Normalizers\Search\ReciterNormalizer::class,
+            ],
+            'albums' => [
+                'class' => App\Entities\Album::class,
+                'normalizer' => App\Normalizers\Search\AlbumNormalizer::class,
+            ],
+            'tracks' => [
+                'class' => App\Entities\Track::class,
+                'normalizer' => App\Normalizers\Search\TrackNormalizer::class,
             ],
         ]
     ],

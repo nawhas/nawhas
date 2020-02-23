@@ -12,13 +12,13 @@ trait HasTimestamps
     protected ?DateTimeInterface $createdAt = null;
     protected ?DateTimeInterface $updatedAt = null;
 
-    public function getCreatedAt(): ?Carbon
+    public function getCreatedAt(): ?DateTimeInterface
     {
-        return Carbon::instance($this->createdAt);
+        return $this->createdAt;
     }
 
-    public function getUpdatedAt(): ?Carbon
+    public function getUpdatedAt(): ?DateTimeInterface
     {
-        return Carbon::instance($this->updatedAt);
+        return $this->updatedAt;
     }
 }

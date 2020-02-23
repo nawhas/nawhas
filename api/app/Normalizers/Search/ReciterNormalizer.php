@@ -2,10 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Search\Normalizers;
+namespace App\Normalizers\Search;
 
 use App\Entities\Reciter;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use Zain\LaravelDoctrine\Algolia\Searchable;
 
 class ReciterNormalizer implements NormalizerInterface
 {
@@ -25,6 +26,6 @@ class ReciterNormalizer implements NormalizerInterface
 
     public function supportsNormalization($data, string $format = null)
     {
-        return $data instanceof Reciter;
+        return $data instanceof Reciter && $format === Searchable::NORMALIZATION_FORMAT;
     }
 }

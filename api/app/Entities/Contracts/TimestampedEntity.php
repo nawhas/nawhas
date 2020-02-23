@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Entities\Contracts;
 
-use Carbon\Carbon;
+use DateTimeInterface;
 
 interface TimestampedEntity
 {
-    public function getCreatedAt(): ?Carbon;
-    public function getUpdatedAt(): ?Carbon;
+    public function getCreatedAt(): ?DateTimeInterface;
+    public function getUpdatedAt(): ?DateTimeInterface;
 }
