@@ -80,7 +80,31 @@
                 <p>There is no video available</p>
               </section>
             </v-card>
-            <v-card class="track-page-content__card track-page-content__card--album">More</v-card>
+            <v-card class="track-page-content__card track-page-content__card--album">
+              <v-card-title class="track-page-content__card--album--title">
+                <v-icon class="track-page-content__card--album--title--icon">format_list_numbered</v-icon>
+                <span>More from this Album</span>
+              </v-card-title>
+              <v-card-text>
+                <div
+                  v-for="(albumtrack, index) in album.tracks.data"
+                  :key="albumtrack.id"
+                  class="album_tracks">
+                  <template v-if="track.id === albumtrack.id">
+                    <v-avatar class="album_tracks_avatar" color="primary" size="36">
+                      <span class="white--text"><strong>{{ index+1 }}</strong></span>
+                    </v-avatar>
+                    <p class="album_tracks_text"><strong>{{ albumtrack.title }}</strong></p>
+                  </template>
+                  <template v-else>
+                    <v-avatar class="album_tracks_avatar" color="grey lighten-4" size="36">
+                      <span>{{ index+1 }}</span>
+                    </v-avatar>
+                    <p class="album_tracks_text">{{ albumtrack.title }}</p>
+                  </template>
+                </div>
+              </v-card-text>
+            </v-card>
           </v-flex>
         </v-layout>
       </v-container>
@@ -92,6 +116,7 @@
 import Vibrant from 'node-vibrant';
 import ReciterHeroSkeleton from '@/components/ReciterHeroSkeleton.vue';
 import LyricsSkeleton from '@/components/LyricsSkeleton.vue';
+import { getAlbum } from '@/services/albums';
 import { getTrack } from '@/services/tracks';
 
 export default {
@@ -111,11 +136,14 @@ export default {
   },
   mounted() {
     const { reciter, album, track } = this.$route.params;
-    getTrack(reciter, album, track, { include: 'reciter,album,lyrics' }).then((response) => {
-      this.track = response.data;
-      this.reciter = response.data.reciter;
-      this.album = response.data.album;
-
+    getTrack(reciter, album, track, { include: 'reciter,lyrics' }).then(
+      (response) => {
+        this.track = response.data;
+        this.reciter = response.data.reciter;
+      },
+    );
+    getAlbum(reciter, album, { include: 'tracks' }).then((response) => {
+      this.album = response.data;
       this.setBackgroundFromImage();
     });
   },
@@ -213,7 +241,35 @@ export default {
   .track-page-content__card {
     padding: 24px;
     margin-bottom: 24px;
-    height: 200px;
+    min-height: 200px;
+
+    &--album {
+      padding: 0px;
+      &--title {
+        border-bottom: rgba(0,0,0,0.05) solid 1px;
+        margin-bottom: 10px;
+        font-size: 18px;
+        font-weight: normal;
+
+        &--icon {
+          margin-left: 7px;
+          margin-right: 22px;
+        }
+      }
+
+      .album_tracks {
+        padding-bottom: 10px;
+        cursor: default;
+
+        .album_tracks_avatar {
+          margin-right: 20px;
+        }
+
+        .album_tracks_text {
+          display: inline;
+        }
+      }
+    }
 
     &--lyrics {
       min-height: 500px;
