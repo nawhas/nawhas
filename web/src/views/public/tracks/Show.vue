@@ -1,6 +1,6 @@
 <template>
   <div>
-    <template v-if="reciter || album || track">
+    <template v-if="reciter && album && track">
       <div class="track-hero" :style="{'background-color': background, color: textColor}">
         <div class="track-hero__content">
           <div class="track-hero__left">
@@ -83,26 +83,33 @@
             <v-card class="track-page-content__card track-page-content__card--album">
               <v-card-title class="track-page-content__card--album--title">
                 <v-icon class="track-page-content__card--album--title--icon">format_list_numbered</v-icon>
-                <span>More from this Album</span>
+                <span>More From This Album</span>
               </v-card-title>
-              <v-card-text>
-                <div
+              <v-card-text class="pa-0" v-if="track && album">
+                <router-link
                   v-for="(albumtrack, index) in album.tracks.data"
                   :key="albumtrack.id"
-                  class="album_tracks">
+                  class="album_tracks"
+                  tag="div"
+                  :to="`/reciters/${reciter.slug}/albums/${album.year}/tracks/${albumtrack.slug}`"
+                >
                   <template v-if="track.id === albumtrack.id">
-                    <v-avatar class="album_tracks_avatar" color="primary" size="36">
-                      <span class="white--text"><strong>{{ index+1 }}</strong></span>
+                    <v-avatar class="album_tracks_avatar" color="primary" size="28">
+                      <span class="white--text">
+                        <strong>{{ index+1 }}</strong>
+                      </span>
                     </v-avatar>
-                    <p class="album_tracks_text"><strong>{{ albumtrack.title }}</strong></p>
+                    <div class="album_tracks_text">
+                      <strong>{{ albumtrack.title }}</strong>
+                    </div>
                   </template>
                   <template v-else>
-                    <v-avatar class="album_tracks_avatar" color="grey lighten-4" size="36">
+                    <v-avatar class="album_tracks_avatar" color="grey lighten-4" size="28">
                       <span>{{ index+1 }}</span>
                     </v-avatar>
-                    <p class="album_tracks_text">{{ albumtrack.title }}</p>
+                    <div class="album_tracks_text">{{ albumtrack.title }}</div>
                   </template>
-                </div>
+                </router-link>
               </v-card-text>
             </v-card>
           </v-flex>
@@ -134,25 +141,35 @@ export default {
       track: null,
     };
   },
-  mounted() {
-    const { reciter, album, track } = this.$route.params;
-    getTrack(reciter, album, track, { include: 'reciter,lyrics' }).then(
-      (response) => {
-        this.track = response.data;
-        this.reciter = response.data.reciter;
-      },
-    );
-    getAlbum(reciter, album, { include: 'tracks' }).then((response) => {
-      this.album = response.data;
-      this.setBackgroundFromImage();
-    });
+  created() {
+    this.fetchData();
   },
   computed: {
     image() {
-      return this.album.artwork || '/img/default-album-image.png';
+      if (this.album) {
+        return this.album.artwork || '/img/default-album-image.png';
+      }
+      return '/img/default-album-image.png';
     },
   },
+  watch: {
+    // call again the method if the route changes
+    $route: 'fetchData',
+  },
   methods: {
+    async fetchData() {
+      this.$Progress.start();
+      const { reciter, album, track } = this.$route.params;
+      const [trackResponse, albumResponse] = await Promise.all([
+        getTrack(reciter, album, track, { include: 'reciter,lyrics' }),
+        getAlbum(reciter, album, { include: 'tracks' }),
+      ]);
+      this.track = trackResponse.data;
+      this.reciter = trackResponse.data.reciter;
+      this.album = albumResponse.data;
+      this.setBackgroundFromImage();
+      this.$Progress.finish();
+    },
     setBackgroundFromImage() {
       if (!this.track) {
         return;
@@ -245,28 +262,39 @@ export default {
 
     &--album {
       padding: 0px;
+      margin-bottom: 12px;
+
       &--title {
-        border-bottom: rgba(0,0,0,0.05) solid 1px;
-        margin-bottom: 10px;
+        border-bottom: rgba(0, 0, 0, 0.05) solid 1px;
         font-size: 18px;
         font-weight: normal;
 
         &--icon {
           margin-left: 7px;
-          margin-right: 22px;
+          margin-right: 12px;
         }
       }
 
       .album_tracks {
-        padding-bottom: 10px;
-        cursor: default;
+        padding: 8px 12px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        will-change: background-color;
+        transition: background-color 0.2s;
+        background-color: transparent;
+
+        &:hover {
+          background-color: rgba(0, 0, 0, 0.15);
+        }
 
         .album_tracks_avatar {
-          margin-right: 20px;
+          font-family: 'Roboto Slab', sans-serif;
+          margin-right: 15px;
         }
 
         .album_tracks_text {
-          display: inline;
+          font-size: 14px;
         }
       }
     }
