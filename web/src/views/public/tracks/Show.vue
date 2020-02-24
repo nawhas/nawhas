@@ -307,6 +307,7 @@ export default {
     &--lyrics {
       min-height: 500px;
       height: auto;
+      font-family: 'Roboto Slab', sans-serif;
 
       .lyrics__empty {
         display: flex;
