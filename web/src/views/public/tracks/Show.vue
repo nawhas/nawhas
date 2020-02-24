@@ -111,6 +111,9 @@
                   </template>
                 </router-link>
               </v-card-text>
+              <v-card-text v-else>
+                <more-tracks-skeleton />
+              </v-card-text>
             </v-card>
           </v-flex>
         </v-layout>
@@ -123,6 +126,7 @@
 import Vibrant from 'node-vibrant';
 import ReciterHeroSkeleton from '@/components/ReciterHeroSkeleton.vue';
 import LyricsSkeleton from '@/components/LyricsSkeleton.vue';
+import MoreTracksSkeleton from '@/components/MoreTracksSkeleton.vue';
 import { getAlbum } from '@/services/albums';
 import { getTrack } from '@/services/tracks';
 
@@ -131,6 +135,7 @@ export default {
   components: {
     ReciterHeroSkeleton,
     LyricsSkeleton,
+    MoreTracksSkeleton,
   },
   data() {
     return {
