@@ -1,6 +1,6 @@
 <template>
   <div>
-    <template v-if="reciter || album || track">
+    <template v-if="reciter && album && track">
       <div class="track-hero" :style="{'background-color': background, color: textColor}">
         <div class="track-hero__content">
           <div class="track-hero__left">
@@ -80,7 +80,41 @@
                 <p>There is no video available</p>
               </section>
             </v-card>
-            <v-card class="track-page-content__card track-page-content__card--album">More</v-card>
+            <v-card class="track-page-content__card track-page-content__card--album">
+              <v-card-title class="track-page-content__card--album--title subtitle-1">
+                <v-icon class="track-page-content__card--album--title--icon">format_list_numbered</v-icon>
+                <span>More From This Album</span>
+              </v-card-title>
+              <v-card-text class="pa-0 subtitle-1" v-if="track && album">
+                <router-link
+                  v-for="(albumTrack, index) in album.tracks.data"
+                  :key="albumTrack.id"
+                  class="album__tracks"
+                  tag="div"
+                  :to="`/reciters/${reciter.slug}/albums/${album.year}/tracks/${albumTrack.slug}`"
+                >
+                  <template v-if="track.id === albumTrack.id">
+                    <v-avatar class="album__tracks__avatar" color="primary" size="28">
+                      <span class="white--text">
+                        <strong>{{ index+1 }}</strong>
+                      </span>
+                    </v-avatar>
+                    <div class="album__tracks__text">
+                      <strong>{{ albumTrack.title }}</strong>
+                    </div>
+                  </template>
+                  <template v-else>
+                    <v-avatar class="album__tracks__avatar" color="grey lighten-4" size="28">
+                      <span>{{ index+1 }}</span>
+                    </v-avatar>
+                    <div class="album__tracks__text">{{ albumTrack.title }}</div>
+                  </template>
+                </router-link>
+              </v-card-text>
+              <v-card-text v-else>
+                <more-tracks-skeleton />
+              </v-card-text>
+            </v-card>
           </v-flex>
         </v-layout>
       </v-container>
@@ -92,6 +126,8 @@
 import Vibrant from 'node-vibrant';
 import ReciterHeroSkeleton from '@/components/ReciterHeroSkeleton.vue';
 import LyricsSkeleton from '@/components/LyricsSkeleton.vue';
+import MoreTracksSkeleton from '@/components/MoreTracksSkeleton.vue';
+import { getAlbum } from '@/services/albums';
 import { getTrack } from '@/services/tracks';
 
 export default {
@@ -99,6 +135,7 @@ export default {
   components: {
     ReciterHeroSkeleton,
     LyricsSkeleton,
+    MoreTracksSkeleton,
   },
   data() {
     return {
@@ -109,22 +146,35 @@ export default {
       track: null,
     };
   },
-  mounted() {
-    const { reciter, album, track } = this.$route.params;
-    getTrack(reciter, album, track, { include: 'reciter,album,lyrics' }).then((response) => {
-      this.track = response.data;
-      this.reciter = response.data.reciter;
-      this.album = response.data.album;
-
-      this.setBackgroundFromImage();
-    });
+  created() {
+    this.fetchData();
   },
   computed: {
     image() {
-      return this.album.artwork || '/img/default-album-image.png';
+      if (this.album) {
+        return this.album.artwork || '/img/default-album-image.png';
+      }
+      return '/img/default-album-image.png';
     },
   },
+  watch: {
+    // call again the method if the route changes
+    $route: 'fetchData',
+  },
   methods: {
+    async fetchData() {
+      this.$Progress.start();
+      const { reciter, album, track } = this.$route.params;
+      const [trackResponse, albumResponse] = await Promise.all([
+        getTrack(reciter, album, track, { include: 'reciter,lyrics' }),
+        getAlbum(reciter, album, { include: 'tracks' }),
+      ]);
+      this.track = trackResponse.data;
+      this.reciter = trackResponse.data.reciter;
+      this.album = albumResponse.data;
+      this.setBackgroundFromImage();
+      this.$Progress.finish();
+    },
     setBackgroundFromImage() {
       if (!this.track) {
         return;
@@ -213,11 +263,48 @@ export default {
   .track-page-content__card {
     padding: 24px;
     margin-bottom: 24px;
-    height: 200px;
+    min-height: 200px;
+
+    &--album {
+      padding: 0px;
+      margin-bottom: 12px;
+
+      &--title {
+        border-bottom: rgba(0, 0, 0, 0.05) solid 1px;
+
+        &--icon {
+          margin-right: 14px;
+        }
+      }
+
+      .album__tracks {
+        padding: 8px 12px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        will-change: background-color;
+        transition: background-color 0.2s;
+        background-color: transparent;
+
+        &:hover {
+          background-color: rgba(0, 0, 0, 0.15);
+        }
+
+        .album__tracks__avatar {
+          font-family: 'Roboto Slab', sans-serif;
+          margin-right: 15px;
+        }
+
+        .album__tracks__text {
+          font-size: 14px;
+        }
+      }
+    }
 
     &--lyrics {
       min-height: 500px;
       height: auto;
+      font-family: 'Roboto Slab', sans-serif;
 
       .lyrics__empty {
         display: flex;
