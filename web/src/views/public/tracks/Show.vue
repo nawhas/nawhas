@@ -273,8 +273,7 @@ export default {
         border-bottom: rgba(0, 0, 0, 0.05) solid 1px;
 
         &--icon {
-          margin-left: 7px;
-          margin-right: 12px;
+          margin-right: 14px;
         }
       }
 
