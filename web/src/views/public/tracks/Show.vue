@@ -81,11 +81,11 @@
               </section>
             </v-card>
             <v-card class="track-page-content__card track-page-content__card--album">
-              <v-card-title class="track-page-content__card--album--title">
+              <v-card-title class="track-page-content__card--album--title subtitle-1">
                 <v-icon class="track-page-content__card--album--title--icon">format_list_numbered</v-icon>
                 <span>More From This Album</span>
               </v-card-title>
-              <v-card-text class="pa-0" v-if="track && album">
+              <v-card-text class="pa-0 subtitle-1" v-if="track && album">
                 <router-link
                   v-for="(albumTrack, index) in album.tracks.data"
                   :key="albumTrack.id"
@@ -271,8 +271,6 @@ export default {
 
       &--title {
         border-bottom: rgba(0, 0, 0, 0.05) solid 1px;
-        font-size: 18px;
-        font-weight: normal;
 
         &--icon {
           margin-left: 7px;
