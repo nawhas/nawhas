@@ -1,25 +1,21 @@
 <template>
   <v-app id="keep">
-    <v-navigation-drawer
-      v-model="drawer"
-      fixed
-      clipped
-      floating
-      width="250"
-      app>
+    <v-navigation-drawer v-model="drawer" fixed clipped floating width="250" app>
       <div v-for="(item, index) in navigation" :key="item.group">
         <v-list class="nav" shaped>
-          <v-list-item class="nav__tile" v-for="link in item.children"
-                       :key="link.to"
-                       :to="link.to"
-                       active-class="nav__tile--active"
-                       :exact="link.exact">
+          <v-list-item
+            class="nav__tile"
+            v-for="link in item.children"
+            :key="link.to"
+            :to="link.to"
+            active-class="nav__tile--active"
+            :exact="link.exact"
+          >
             <v-list-item-action class="nav__tile__action">
               <v-icon class="nav__tile__action__icon" v-text="link.icon"></v-icon>
             </v-list-item-action>
             <v-list-item-content class="nav__tile__content">
-              <v-list-item-title class="nav__tile__content__title">{{ link.title }}
-              </v-list-item-title>
+              <v-list-item-title class="nav__tile__content__title">{{ link.title }}</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
         </v-list>
@@ -29,8 +25,9 @@
     <v-app-bar color="white" app fixed clipped-left flat>
       <v-app-bar-nav-icon @click.native="drawer = !drawer" v-show="$vuetify.breakpoint.mdAndDown" />
       <v-toolbar-title class="d-flex pa-4">
-        <img class="masthead__logo" :src="require('../assets/logo.svg')"
-             alt="Nawhas.com">
+        <router-link to="/" tag="div" class="masthead__logo">
+          <img class="masthead__logo" :src="require('../assets/logo.svg')" alt="Nawhas.com" />
+        </router-link>
       </v-toolbar-title>
     </v-app-bar>
     <v-content>
@@ -57,7 +54,9 @@ export default class PublicVuetify extends Vue {
     const role = this.$store.getters['auth/userRole'];
 
     for (const group of this.items) {
-      group.children = group.children.filter((child) => !(child.role && child.role !== role));
+      group.children = group.children.filter(
+        (child) => !(child.role && child.role !== role),
+      );
 
       if (group.children.length > 0) {
         items.push(group);
@@ -90,5 +89,6 @@ export default class PublicVuetify extends Vue {
 }
 .masthead__logo {
   height: 38px;
+  cursor: pointer;
 }
 </style>

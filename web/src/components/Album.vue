@@ -15,6 +15,7 @@
     <v-data-table
       :headers="headers"
       :items="tracks.data"
+      :disable-sort="true"
       :disable-pagination="true"
       :hide-default-footer="true"
       class="album__tracks-1"
