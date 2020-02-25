@@ -99,7 +99,8 @@ return [
         //LaravelDoctrine\Extensions\Loggable\LoggableExtension::class,
         //LaravelDoctrine\Extensions\Blameable\BlameableExtension::class,
         //LaravelDoctrine\Extensions\IpTraceable\IpTraceableExtension::class,
-        //LaravelDoctrine\Extensions\Translatable\TranslatableExtension::class
+        //LaravelDoctrine\Extensions\Translatable\TranslatableExtension::class,
+        Zain\LaravelDoctrine\Algolia\AlgoliaExtension::class,
     ],
     /*
     |--------------------------------------------------------------------------
