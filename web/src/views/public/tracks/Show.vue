@@ -87,27 +87,27 @@
               </v-card-title>
               <v-card-text class="pa-0" v-if="track && album">
                 <router-link
-                  v-for="(albumtrack, index) in album.tracks.data"
-                  :key="albumtrack.id"
-                  class="album_tracks"
+                  v-for="(albumTrack, index) in album.tracks.data"
+                  :key="albumTrack.id"
+                  class="album__tracks"
                   tag="div"
-                  :to="`/reciters/${reciter.slug}/albums/${album.year}/tracks/${albumtrack.slug}`"
+                  :to="`/reciters/${reciter.slug}/albums/${album.year}/tracks/${albumTrack.slug}`"
                 >
-                  <template v-if="track.id === albumtrack.id">
-                    <v-avatar class="album_tracks_avatar" color="primary" size="28">
+                  <template v-if="track.id === albumTrack.id">
+                    <v-avatar class="album__tracks__avatar" color="primary" size="28">
                       <span class="white--text">
                         <strong>{{ index+1 }}</strong>
                       </span>
                     </v-avatar>
-                    <div class="album_tracks_text">
-                      <strong>{{ albumtrack.title }}</strong>
+                    <div class="album__tracks__text">
+                      <strong>{{ albumTrack.title }}</strong>
                     </div>
                   </template>
                   <template v-else>
-                    <v-avatar class="album_tracks_avatar" color="grey lighten-4" size="28">
+                    <v-avatar class="album__tracks__avatar" color="grey lighten-4" size="28">
                       <span>{{ index+1 }}</span>
                     </v-avatar>
-                    <div class="album_tracks_text">{{ albumtrack.title }}</div>
+                    <div class="album__tracks__text">{{ albumTrack.title }}</div>
                   </template>
                 </router-link>
               </v-card-text>
@@ -280,7 +280,7 @@ export default {
         }
       }
 
-      .album_tracks {
+      .album__tracks {
         padding: 8px 12px;
         cursor: pointer;
         display: flex;
@@ -293,12 +293,12 @@ export default {
           background-color: rgba(0, 0, 0, 0.15);
         }
 
-        .album_tracks_avatar {
+        .album__tracks__avatar {
           font-family: 'Roboto Slab', sans-serif;
           margin-right: 15px;
         }
 
-        .album_tracks_text {
+        .album__tracks__text {
           font-size: 14px;
         }
       }
