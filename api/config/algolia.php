@@ -1,9 +1,12 @@
 <?php
 
+use App\Normalizers\Search as Normalizers;
+
 return [
     'enabled' => env('ALGOLIA_ENABLED', env('ALGOLIA_APP_ID') !== null),
     'app' => env('ALGOLIA_APP_ID'),
     'secret' => env('ALGOLIA_API_KEY'),
+    'settingsDirectory' => storage_path('algolia'),
 
     'search' => [
         // Number of results to retrieve on search (default: 20)
@@ -19,16 +22,21 @@ return [
         'indices' => [
             'reciters' => [
                 'class' => App\Entities\Reciter::class,
-                'normalizer' => App\Normalizers\Search\ReciterNormalizer::class,
             ],
             'albums' => [
                 'class' => App\Entities\Album::class,
-                'normalizer' => App\Normalizers\Search\AlbumNormalizer::class,
             ],
             'tracks' => [
                 'class' => App\Entities\Track::class,
-                'normalizer' => App\Normalizers\Search\TrackNormalizer::class,
             ],
+        ],
+
+        // For entities without a normalizer specified above, prepend this stack
+        // to the default normalizer stack. Order matters.
+        'normalizers' => [
+            Normalizers\ReciterNormalizer::class,
+            Normalizers\AlbumNormalizer::class,
+            Normalizers\TrackNormalizer::class,
         ]
     ],
 ];

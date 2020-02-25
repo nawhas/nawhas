@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "575539275d49143afe1d4db7d43ce795",
+    "content-hash": "e81753bdbb71896f240a1724fafe638e",
     "packages": [
         {
             "name": "acelaya/doctrine-enum-type",
@@ -5958,22 +5958,23 @@
         },
         {
             "name": "zain/laravel-doctrine-algolia",
-            "version": "dev-master",
+            "version": "v0.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/szainmehdi/laravel-doctrine-algolia.git",
-                "reference": "5cf44f466688e9c8ec49ee686cf6d2b89f1a2e56"
+                "reference": "3356c78c2c9daae7eb4331c267b9cf08f482107a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/szainmehdi/laravel-doctrine-algolia/zipball/5cf44f466688e9c8ec49ee686cf6d2b89f1a2e56",
-                "reference": "5cf44f466688e9c8ec49ee686cf6d2b89f1a2e56",
+                "url": "https://api.github.com/repos/szainmehdi/laravel-doctrine-algolia/zipball/3356c78c2c9daae7eb4331c267b9cf08f482107a",
+                "reference": "3356c78c2c9daae7eb4331c267b9cf08f482107a",
                 "shasum": ""
             },
             "require": {
                 "algolia/algoliasearch-client-php": "^2.5",
                 "doctrine/common": "^2.5",
                 "ext-json": "*",
+                "laravel-doctrine/orm": "^1.5",
                 "php": "^7.4",
                 "symfony/config": "^4.0 | ^5.0",
                 "symfony/filesystem": "^4.0 | ^5.0",
@@ -6042,10 +6043,10 @@
             ],
             "description": "Algolia integration with Laravel & Doctrine",
             "support": {
-                "source": "https://github.com/szainmehdi/laravel-doctrine-algolia/tree/master",
+                "source": "https://github.com/szainmehdi/laravel-doctrine-algolia/tree/v0.1.0",
                 "issues": "https://github.com/szainmehdi/laravel-doctrine-algolia/issues"
             },
-            "time": "2020-02-23T16:16:22+00:00"
+            "time": "2020-02-25T04:06:14+00:00"
         },
         {
             "name": "zain/laravel-doctrine-jetpack",
@@ -8617,7 +8618,6 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "zain/laravel-doctrine-algolia": 20,
         "zain/laravel-doctrine-jetpack": 20
     },
     "prefer-stable": true,
