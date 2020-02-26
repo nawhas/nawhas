@@ -9,14 +9,16 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "algoliasearch": "^4.0.3",
     "axios": "^0.19.2",
     "core-js": "^3.6.4",
+    "instantsearch.css": "^7.4.2",
     "material-design-icons-iconfont": "^5.0.1",
     "node-vibrant": "^3.1.5",
     "query-string": "^6.10.1",
     "register-service-worker": "^1.6.2",
     "vue": "^2.6.11",
-    "vue-class-component": "^7.2.2",
+    "vue-instantsearch": "^2.7.0",
     "vue-progressbar": "^0.7.5",
     "vue-property-decorator": "^8.3.0",
     "vue-router": "^3.1.5",

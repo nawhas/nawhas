@@ -22,13 +22,17 @@
         <v-divider v-if="index < navigation.length - 1"></v-divider>
       </div>
     </v-navigation-drawer>
-    <v-app-bar color="white" app fixed clipped-left flat>
+    <v-app-bar class="app-bar" color="white" app fixed clipped-left flat>
       <v-app-bar-nav-icon @click.native="drawer = !drawer" v-show="$vuetify.breakpoint.mdAndDown" />
-      <v-toolbar-title class="d-flex pa-4">
+      <v-toolbar-title class="d-flex pa-4 nav__title">
         <router-link to="/" tag="div" class="masthead__logo">
           <img class="masthead__logo" :src="require('../assets/logo.svg')" alt="Nawhas.com" />
         </router-link>
       </v-toolbar-title>
+      <div class="nav__search">
+        <global-search />
+      </div>
+      <v-spacer></v-spacer>
     </v-app-bar>
     <v-content>
       <v-container fluid class="grey lighten-5 main-container">
@@ -40,9 +44,14 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
+import GlobalSearch from '@/components/GlobalSearch.vue';
 import navItems from '@/data/navigation';
 
-@Component
+@Component({
+  components: {
+    GlobalSearch,
+  },
+})
 export default class PublicVuetify extends Vue {
   private items = navItems;
 
@@ -75,6 +84,13 @@ export default class PublicVuetify extends Vue {
 
 .nav__tile__action {
   justify-content: center;
+}
+
+.nav__title {
+  min-width: 234px;
+}
+.nav__search {
+  align-self: flex-start;
 }
 
 .nav__tile--active {
