@@ -14,7 +14,6 @@ module.exports = {
   productionSourceMap: false,
   devServer: {
     https,
-    public: 'nawhas.test:8080',
   },
   pwa: {
     name: 'Nawhas.com',
