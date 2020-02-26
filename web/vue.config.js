@@ -2,16 +2,18 @@
 const fs = require('fs');
 const path = require('path');
 
+const https = process.env.NODE_ENV === 'production' ? false : {
+  key: fs.readFileSync(path.resolve(__dirname, '../docker/nginx/certs/nawhas.test.key')),
+  cert: fs.readFileSync(path.resolve(__dirname, '../docker/nginx/certs/nawhas.test.crt')),
+};
+
 module.exports = {
   transpileDependencies: [
     'vuetify',
   ],
   productionSourceMap: false,
   devServer: {
-    https: {
-      key: fs.readFileSync(path.resolve(__dirname, '../docker/nginx/certs/nawhas.test.key')),
-      cert: fs.readFileSync(path.resolve(__dirname, '../docker/nginx/certs/nawhas.test.crt')),
-    },
+    https,
     public: 'nawhas.test:8080',
   },
   pwa: {
