@@ -1,5 +1,5 @@
 <template>
-  <div @click="goToReciter()">
+  <div @click="emitSelectedEvent">
     <div class="reciter-result">
       <div class="reciter-result__avatar">
         <v-avatar size="36">
@@ -20,8 +20,8 @@ export default {
   name: 'ReciterResult',
   props: ['reciter'],
   methods: {
-    goToReciter() {
-      this.$router.push({
+    emitSelectedEvent() {
+      this.$emit('selected', {
         name: 'reciters.show',
         params: { reciter: this.reciter.slug },
       });

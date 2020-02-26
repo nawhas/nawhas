@@ -12,6 +12,7 @@ module.exports = {
     ecmaVersion: 2020,
   },
   rules: {
+    'class-methods-use-this': 0,
     'no-return-assign': 0,
     'lines-between-class-members': 0,
     'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',

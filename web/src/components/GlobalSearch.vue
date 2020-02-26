@@ -13,7 +13,7 @@
                   class="search__input"
     ></v-text-field>
     <v-expand-transition>
-      <div class="search__container" v-show="focused || search">
+      <div class="search__container" v-show="focused">
         <div class="search__header">
           <div class="body-2" v-if="!search">Start typing to see results...</div>
           <div class="body-2" v-else></div>
@@ -26,7 +26,7 @@
             <ais-hits :escapeHTML="false">
               <template slot-scope="{ items }">
                 <div class="search__hit search__hit--reciter" v-for="(item, index) in items" :key="index">
-                  <reciter-result :reciter="item" />
+                  <reciter-result @selected="onSelect" :reciter="item" />
                 </div>
               </template>
             </ais-hits>
@@ -40,6 +40,7 @@
 <script lang="ts">
 import { Component, Ref, Vue } from 'vue-property-decorator';
 import algolia from 'algoliasearch/lite';
+import { RawLocation } from 'vue-router';
 import { ALGOLIA_APP_ID, ALGOLIA_SEARCH_KEY } from '@/config';
 import ReciterResult from '@/components/search/ReciterResult.vue';
 
@@ -58,7 +59,7 @@ export default class GlobalSearch extends Vue {
   @Ref('search') readonly input!: HTMLElement;
 
   onBlur() {
-    this.resetSearch();
+    this.focused = false;
   }
   onEsc() {
     this.input.blur();
@@ -72,10 +73,16 @@ export default class GlobalSearch extends Vue {
     window.clearTimeout(this.timeout);
 
     this.$nextTick(() => {
-      this.search = '';
-      this.searching = false;
-      this.timeout = window.setTimeout(() => (this.focused = false), timeout);
+      this.timeout = window.setTimeout(() => {
+        this.focused = false;
+        this.searching = false;
+        this.search = '';
+      }, timeout);
     });
+  }
+  onSelect(route: RawLocation) {
+    this.resetSearch();
+    this.$router.push(route);
   }
 }
 </script>
