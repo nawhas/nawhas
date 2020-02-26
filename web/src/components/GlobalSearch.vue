@@ -4,7 +4,9 @@
                   background-color="transparent"
                   prepend-inner-icon="search"
                   ref="search"
-                  clearable
+                  :full-width="mobile"
+                  :clearable="!!search"
+                  :dense="mobile"
                   @focus="onFocus"
                   @blur="onBlur"
                   @keydown.esc="onEsc"
@@ -66,7 +68,7 @@
           </ais-state-results>
         </ais-instant-search>
         <div class="search__footer">
-          <div class="body-2" v-if="!search">Start typing to see results...</div>
+          <div class="search__footer-hint body-2" v-if="!search">Start typing to see results...</div>
           <div class="body-2" v-else></div>
           <img :src="require('../assets/search-by-algolia.svg')" alt="Search by Algolia"/>
         </div>
@@ -98,6 +100,10 @@ export default class GlobalSearch extends Vue {
   private searching = false;
   private timeout: number|undefined = undefined;
   @Ref('search') readonly input!: HTMLElement;
+
+  get mobile() {
+    return this.$vuetify.breakpoint.smAndDown;
+  }
 
   onBlur() {
     this.focused = false;
@@ -150,6 +156,8 @@ export default class GlobalSearch extends Vue {
 
   .search__container {
     width: 450px;
+    max-height: calc(100vh - 100px);
+    overflow-y: auto;
     border-top: 1px solid rgba(0, 0, 0, 0.06);
     position: relative;
 
@@ -172,6 +180,25 @@ export default class GlobalSearch extends Vue {
     padding: 8px 16px;
     background-color: rgba(0,0,0,0.03);
     font-weight: 500;
+  }
+}
+
+@media #{map-get($display-breakpoints, 'sm-and-down')} {
+  .search {
+    width: 100%;
+
+    &--focused {
+      position: fixed;
+      top: 0;
+      left: 0;
+    }
+    .search__container {
+      width: 100%;
+
+      .search__footer-hint {
+        display: none;
+      }
+    }
   }
 }
 </style>
