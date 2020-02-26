@@ -38,23 +38,6 @@
               <div class="search__hits--empty" v-else></div>
             </ais-state-results>
           </ais-instant-search>
-          <!--        <ais-instant-search :search-client="client" index-name="albums">-->
-          <!--          <ais-configure :query="search" :hits-per-page.camel="4" :distinct="true" />-->
-          <!--          <ais-state-results>-->
-          <!--            <div class="search__hits" slot-scope="{ nbHits }" v-if="nbHits > 0 && search">-->
-          <!--              <div class="search__hits__heading caption">Albums</div>-->
-          <!--              <ais-hits :escapeHTML="false">-->
-          <!--                <template slot-scope="{ items }">-->
-          <!--                  <div class="search__hit search__hit&#45;&#45;album"-->
-          <!--                       v-for="(item, index) in items" :key="index">-->
-          <!--                    <album-result @selected="onSelect" :album="item" />-->
-          <!--                  </div>-->
-          <!--                </template>-->
-          <!--              </ais-hits>-->
-          <!--            </div>-->
-          <!--            <div class="search__hits&#45;&#45;empty" v-else></div>-->
-          <!--          </ais-state-results>-->
-          <!--        </ais-instant-search>-->
           <ais-instant-search :search-client="client" index-name="tracks">
             <ais-configure :query="search"
                            :hits-per-page.camel="4"
@@ -79,7 +62,7 @@
           <div class="search__footer">
             <div class="search__footer-hint body-2" v-if="!search">Start typing to see results...</div>
             <div class="body-2" v-else></div>
-            <img :src="require('../assets/search-by-algolia.svg')" alt="Search by Algolia"/>
+            <img :src="require('../../assets/search-by-algolia.svg')" alt="Search by Algolia"/>
           </div>
         </div>
       </v-expand-transition>

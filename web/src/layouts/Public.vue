@@ -34,7 +34,7 @@
       </v-toolbar-title>
       <v-spacer v-if="mobile"></v-spacer>
       <div class="nav__search">
-        <global-search />
+        <search />
       </div>
     </v-app-bar>
     <v-content>
@@ -47,12 +47,12 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import GlobalSearch from '@/components/GlobalSearch.vue';
+import Search from '@/components/search/Search.vue';
 import navItems from '@/data/navigation';
 
 @Component({
   components: {
-    GlobalSearch,
+    Search,
   },
 })
 export default class PublicVuetify extends Vue {
@@ -94,7 +94,7 @@ export default class PublicVuetify extends Vue {
 }
 
 .nav__title {
-  margin-right: 8px;
+  min-width: 232px;
 }
 .nav__search {
   align-self: flex-start;
