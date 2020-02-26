@@ -6,7 +6,6 @@ return [
     'enabled' => env('ALGOLIA_ENABLED', env('ALGOLIA_APP_ID') !== null),
     'app' => env('ALGOLIA_APP_ID'),
     'secret' => env('ALGOLIA_API_KEY'),
-    'settingsDirectory' => storage_path('algolia'),
 
     'search' => [
         // Number of results to retrieve on search (default: 20)
@@ -37,6 +36,8 @@ return [
             Normalizers\ReciterNormalizer::class,
             Normalizers\AlbumNormalizer::class,
             Normalizers\TrackNormalizer::class,
-        ]
+        ],
+
+        'settingsDirectory' => storage_path('algolia'),
     ],
 ];
