@@ -62,7 +62,7 @@
           <div class="search__footer">
             <div class="search__footer-hint body-2" v-if="!search">Start typing to see results...</div>
             <div class="body-2" v-else></div>
-            <img :src="require('../../assets/search-by-algolia.svg')" alt="Search by Algolia"/>
+            <img src="../../assets/search-by-algolia.svg" alt="Search by Algolia"/>
           </div>
         </div>
       </v-expand-transition>

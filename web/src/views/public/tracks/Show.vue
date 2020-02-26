@@ -137,6 +137,12 @@ export default {
     LyricsSkeleton,
     MoreTracksSkeleton,
   },
+
+  watch: {
+    // call again the method if the route changes
+    $route: 'fetchData',
+  },
+
   data() {
     return {
       background: '#222',
@@ -146,9 +152,11 @@ export default {
       track: null,
     };
   },
+
   created() {
     this.fetchData();
   },
+
   computed: {
     image() {
       if (this.album) {
@@ -157,10 +165,7 @@ export default {
       return '/img/default-album-image.png';
     },
   },
-  watch: {
-    // call again the method if the route changes
-    $route: 'fetchData',
-  },
+
   methods: {
     async fetchData() {
       this.$Progress.start();
