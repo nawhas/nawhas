@@ -14,6 +14,12 @@ module.exports = {
   productionSourceMap: false,
   devServer: {
     https,
+    proxy: {
+      '/api': {
+        target: 'https://api.nawhas.test',
+        pathRewrite: { '^/api': '' },
+      },
+    },
   },
   pwa: {
     name: 'Nawhas.com',
