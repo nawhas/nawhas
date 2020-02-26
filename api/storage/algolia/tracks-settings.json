@@ -37,9 +37,9 @@
     "separatorsToIndex": "",
     "removeWordsIfNoResults": "none",
     "queryType": "prefixLast",
-    "highlightPreTag": "<em>",
-    "highlightPostTag": "<\/em>",
-    "snippetEllipsisText": "",
+    "highlightPreTag": "<mark>",
+    "highlightPostTag": "<\/mark>",
+    "snippetEllipsisText": "...",
     "alternativesAsExact": [
         "ignorePlurals",
         "singleWordSynonym"
