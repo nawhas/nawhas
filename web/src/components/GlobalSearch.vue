@@ -8,30 +8,68 @@
                   @focus="onFocus"
                   @blur="onBlur"
                   @keydown.esc="onEsc"
-                  placeholder="Search for nawhas, reciters, albums, or lyrics..."
+                  placeholder="Search for nawhas, reciters, or lyrics..."
                   v-model="search"
                   class="search__input"
     ></v-text-field>
     <v-expand-transition>
       <div class="search__container" v-show="focused">
-        <div class="search__header">
+        <ais-instant-search :search-client="client" index-name="reciters">
+          <ais-configure :query="search" :hits-per-page.camel="4" :distinct="true" />
+          <ais-state-results>
+            <div class="search__hits" slot-scope="{ nbHits }" v-if="nbHits > 0 && search">
+              <div class="search__hits__heading caption">Reciters</div>
+              <ais-hits :escapeHTML="false">
+                <template slot-scope="{ items }">
+                  <div class="search__hit search__hit--reciter"
+                       v-for="(item, index) in items" :key="index">
+                    <reciter-result @selected="onSelect" :reciter="item" />
+                  </div>
+                </template>
+              </ais-hits>
+            </div>
+            <div class="search__hits--empty" v-else></div>
+          </ais-state-results>
+        </ais-instant-search>
+<!--        <ais-instant-search :search-client="client" index-name="albums">-->
+<!--          <ais-configure :query="search" :hits-per-page.camel="4" :distinct="true" />-->
+<!--          <ais-state-results>-->
+<!--            <div class="search__hits" slot-scope="{ nbHits }" v-if="nbHits > 0 && search">-->
+<!--              <div class="search__hits__heading caption">Albums</div>-->
+<!--              <ais-hits :escapeHTML="false">-->
+<!--                <template slot-scope="{ items }">-->
+<!--                  <div class="search__hit search__hit&#45;&#45;album"-->
+<!--                       v-for="(item, index) in items" :key="index">-->
+<!--                    <album-result @selected="onSelect" :album="item" />-->
+<!--                  </div>-->
+<!--                </template>-->
+<!--              </ais-hits>-->
+<!--            </div>-->
+<!--            <div class="search__hits&#45;&#45;empty" v-else></div>-->
+<!--          </ais-state-results>-->
+<!--        </ais-instant-search>-->
+        <ais-instant-search :search-client="client" index-name="tracks">
+          <ais-configure :query="search" :hits-per-page.camel="4" :distinct="true" />
+          <ais-state-results>
+            <div class="search__hits" slot-scope="{ nbHits }" v-if="nbHits > 0 && search">
+              <div class="search__hits__heading caption">Tracks</div>
+              <ais-hits :escapeHTML="false">
+                <template slot-scope="{ items }">
+                  <div class="search__hit search__hit--track"
+                       v-for="(item, index) in items" :key="index">
+                    <track-result @selected="onSelect" :track="item" />
+                  </div>
+                </template>
+              </ais-hits>
+            </div>
+            <div class="search__hits--empty" v-else></div>
+          </ais-state-results>
+        </ais-instant-search>
+        <div class="search__footer">
           <div class="body-2" v-if="!search">Start typing to see results...</div>
           <div class="body-2" v-else></div>
           <img :src="require('../assets/search-by-algolia.svg')" alt="Search by Algolia"/>
         </div>
-        <ais-instant-search :search-client="client" index-name="reciters">
-          <ais-configure :query="search" :hits-per-page.camel="4" :distinct="true" />
-          <div class="search__hits" v-if="search">
-            <div class="search__hits__heading caption">Reciters</div>
-            <ais-hits :escapeHTML="false">
-              <template slot-scope="{ items }">
-                <div class="search__hit search__hit--reciter" v-for="(item, index) in items" :key="index">
-                  <reciter-result @selected="onSelect" :reciter="item" />
-                </div>
-              </template>
-            </ais-hits>
-          </div>
-        </ais-instant-search>
       </div>
     </v-expand-transition>
   </div>
@@ -43,10 +81,14 @@ import algolia from 'algoliasearch/lite';
 import { RawLocation } from 'vue-router';
 import { ALGOLIA_APP_ID, ALGOLIA_SEARCH_KEY } from '@/config';
 import ReciterResult from '@/components/search/ReciterResult.vue';
+import AlbumResult from '@/components/search/AlbumResult.vue';
+import TrackResult from '@/components/search/TrackResult.vue';
 
 @Component({
   components: {
     ReciterResult,
+    AlbumResult,
+    TrackResult,
     // AisInstantSearch,
   },
 })
@@ -81,6 +123,7 @@ export default class GlobalSearch extends Vue {
     });
   }
   onSelect(route: RawLocation) {
+    console.log(route);
     this.resetSearch();
     this.$router.push(route);
   }
@@ -112,7 +155,7 @@ export default class GlobalSearch extends Vue {
     border-top: 1px solid rgba(0, 0, 0, 0.06);
     position: relative;
 
-    .search__header {
+    .search__footer {
       color: rgba(0, 0, 0, 0.3);
       display: flex;
       justify-content: space-between;
@@ -128,7 +171,9 @@ export default class GlobalSearch extends Vue {
 .search__hits {
   margin-bottom: 8px;
   .search__hits__heading {
-    padding: 8px;
+    padding: 8px 16px;
+    background-color: rgba(0,0,0,0.03);
+    font-weight: 500;
   }
 }
 </style>

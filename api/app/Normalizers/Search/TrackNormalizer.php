@@ -23,14 +23,20 @@ class TrackNormalizer implements NormalizerInterface
             'title' => $object->getTitle(),
             'slug' => $object->getSlug(),
             'reciter' => [
-                'id' => $object->getReciter()->getId(),
                 'name' => $object->getReciter()->getName(),
             ],
             'album' => [
-                'id' => $object->getAlbum()->getId(),
                 'title' => $object->getAlbum()->getTitle(),
+                'year' => $object->getAlbum()->getYear(),
+                'artwork' => $object->getAlbum()->getArtwork(),
             ],
             'lyrics' => $this->normalizeLyrics($object->getLyrics()),
+            'url' => sprintf(
+                '/reciters/%s/albums/%s/tracks/%s',
+                $object->getReciter()->getSlug(),
+                $object->getAlbum()->getYear(),
+                $object->getSlug()
+            ),
         ];
     }
 

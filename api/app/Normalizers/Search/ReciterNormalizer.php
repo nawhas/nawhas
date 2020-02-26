@@ -20,8 +20,9 @@ class ReciterNormalizer implements NormalizerInterface
         return [
             'id' => $object->getId(),
             'name' => $object->getName(),
-            'slug' => $object->getSlug(),
             'description' => $object->getDescription(),
+            'avatar' => $object->getAvatar(),
+            'url' => "/reciters/{$object->getSlug()}",
         ];
     }
 

@@ -21,10 +21,7 @@ export default {
   props: ['reciter'],
   methods: {
     emitSelectedEvent() {
-      this.$emit('selected', {
-        name: 'reciters.show',
-        params: { reciter: this.reciter.slug },
-      });
+      this.$emit('selected', this.reciter.url);
     },
   },
   computed: {
@@ -63,7 +60,7 @@ export default {
         font-style: normal;
         background: none;
         padding-bottom: 1px;
-        border-bottom: 2px solid red;
+        border-bottom: 2px solid orangered;
       }
     }
   }
