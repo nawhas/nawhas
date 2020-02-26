@@ -3,36 +3,80 @@
     <v-text-field solo flat single-line hide-details
                   background-color="transparent"
                   prepend-inner-icon="search"
+                  ref="search"
                   clearable
-                  @focus="focused = true"
-                  @blur="focused = false"
+                  @focus="onFocus"
+                  @blur="onBlur"
+                  @keydown.esc="onEsc"
                   placeholder="Search for nawhas, reciters, albums, or lyrics..."
-                  class="search__input">
-    </v-text-field>
+                  v-model="search"
+                  class="search__input"
+    ></v-text-field>
     <v-expand-transition>
-      <div class="search__container" v-if="focused">
-        <div class="search__branding">
+      <div class="search__container" v-show="focused || search">
+        <div class="search__header">
+          <div class="body-2" v-if="!search">Start typing to see results...</div>
+          <div class="body-2" v-else></div>
           <img :src="require('../assets/search-by-algolia.svg')" alt="Search by Algolia"/>
         </div>
+        <ais-instant-search :search-client="client" index-name="reciters">
+          <ais-configure :query="search" :hits-per-page.camel="4" :distinct="true" />
+          <div class="search__hits" v-if="search">
+            <div class="search__hits__heading caption">Reciters</div>
+            <ais-hits :escapeHTML="false">
+              <template slot-scope="{ items }">
+                <div class="search__hit search__hit--reciter" v-for="(item, index) in items" :key="index">
+                  <reciter-result :reciter="item" />
+                </div>
+              </template>
+            </ais-hits>
+          </div>
+        </ais-instant-search>
       </div>
     </v-expand-transition>
   </div>
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Ref, Vue } from 'vue-property-decorator';
 import algolia from 'algoliasearch/lite';
 import { ALGOLIA_APP_ID, ALGOLIA_SEARCH_KEY } from '@/config';
+import ReciterResult from '@/components/search/ReciterResult.vue';
 
 @Component({
   components: {
+    ReciterResult,
     // AisInstantSearch,
   },
 })
 export default class GlobalSearch extends Vue {
   private client = algolia(ALGOLIA_APP_ID, ALGOLIA_SEARCH_KEY)
-
   private focused = false;
+  private search = '';
+  private searching = false;
+  private timeout: number|undefined = undefined;
+  @Ref('search') readonly input!: HTMLElement;
+
+  onBlur() {
+    this.resetSearch();
+  }
+  onEsc() {
+    this.input.blur();
+  }
+  onFocus() {
+    window.clearTimeout(this.timeout);
+
+    this.focused = true;
+  }
+  resetSearch(timeout = 0) {
+    window.clearTimeout(this.timeout);
+
+    this.$nextTick(() => {
+      this.search = '';
+      this.searching = false;
+      this.timeout = window.setTimeout(() => (this.focused = false), timeout);
+    });
+  }
 }
 </script>
 
@@ -61,9 +105,10 @@ export default class GlobalSearch extends Vue {
     border-top: 1px solid rgba(0, 0, 0, 0.06);
     position: relative;
 
-    .search__branding {
+    .search__header {
+      color: rgba(0, 0, 0, 0.3);
       display: flex;
-      justify-content: flex-end;
+      justify-content: space-between;
       padding: 8px;
       img {
         height: 16px;
@@ -71,6 +116,12 @@ export default class GlobalSearch extends Vue {
       }
     }
   }
+}
 
+.search__hits {
+  margin-bottom: 8px;
+  .search__hits__heading {
+    padding: 8px;
+  }
 }
 </style>
