@@ -21,6 +21,7 @@ class TrackNormalizer implements NormalizerInterface
         return [
             'id' => $object->getId(),
             'title' => $object->getTitle(),
+            'slug' => $object->getSlug(),
             'reciter' => [
                 'id' => $object->getReciter()->getId(),
                 'name' => $object->getReciter()->getName(),
