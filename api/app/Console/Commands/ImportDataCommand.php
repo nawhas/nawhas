@@ -222,6 +222,9 @@ class ImportDataCommand extends Command
         /** @var AwsS3Adapter $adapter */
         $adapter = $driver->getAdapter();
 
-        return $adapter->getClient();
+        /** @var S3Client $client */
+        $client = $adapter->getClient();
+
+        return $client;
     }
 }
