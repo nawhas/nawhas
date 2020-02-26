@@ -27,17 +27,12 @@
       <v-toolbar-title class="d-flex pa-4 nav__title">
         <router-link to="/" tag="div" class="masthead__logo">
           <img class="masthead__logo"
-               v-if="this.$vuetify.breakpoint.mdAndUp"
                :src="require('../assets/logo.svg')"
-               alt="Nawhas.com"
-          />
-          <img class="masthead__logo"
-               v-else
-               :src="require('../assets/icon.svg')"
                alt="Nawhas.com"
           />
         </router-link>
       </v-toolbar-title>
+      <v-spacer v-if="mobile"></v-spacer>
       <div class="nav__search">
         <global-search />
       </div>
@@ -64,6 +59,10 @@ export default class PublicVuetify extends Vue {
   private items = navItems;
 
   private drawer: boolean | null = null;
+
+  get mobile() {
+    return this.$vuetify.breakpoint.smAndDown;
+  }
 
   get navigation() {
     // return filtered nav list based on role
