@@ -33,7 +33,6 @@ export default {
   props: ['track'],
   methods: {
     emitSelectedEvent() {
-      console.log('emitting');
       this.$emit('selected', this.track.url);
     },
   },

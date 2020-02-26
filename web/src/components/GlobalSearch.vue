@@ -89,7 +89,6 @@ import TrackResult from '@/components/search/TrackResult.vue';
     ReciterResult,
     AlbumResult,
     TrackResult,
-    // AisInstantSearch,
   },
 })
 export default class GlobalSearch extends Vue {
@@ -123,7 +122,6 @@ export default class GlobalSearch extends Vue {
     });
   }
   onSelect(route: RawLocation) {
-    console.log(route);
     this.resetSearch();
     this.$router.push(route);
   }
