@@ -56,7 +56,11 @@
           <!--          </ais-state-results>-->
           <!--        </ais-instant-search>-->
           <ais-instant-search :search-client="client" index-name="tracks">
-            <ais-configure :query="search" :hits-per-page.camel="4" :distinct="true" />
+            <ais-configure :query="search"
+                           :hits-per-page.camel="4"
+                           :attributesToSnippet="['lyrics']"
+                           :distinct="true"
+            />
             <ais-state-results>
               <div class="search__hits" slot-scope="{ nbHits }" v-if="nbHits > 0 && search">
                 <div class="search__hits__heading caption">Tracks</div>

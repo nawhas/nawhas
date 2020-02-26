@@ -19,7 +19,7 @@
           <ais-highlight :hit="track" attribute="reciter.name" />
         </div>
         <div class="track-result__lyrics body-2">
-          <ais-highlight v-if="track.lyrics" :hit="track" attribute="lyrics" />
+          <ais-snippet v-if="track.lyrics" :hit="track" attribute="lyrics" />
           <span v-else :hit="track">No lyrics available</span>
         </div>
       </div>
@@ -66,7 +66,7 @@ export default {
     width: 100%;
 
     em, mark {
-      font-style: normal;
+      font-style: inherit;
       background: none;
       padding-bottom: 1px;
       border-bottom: 2px solid orangered;
