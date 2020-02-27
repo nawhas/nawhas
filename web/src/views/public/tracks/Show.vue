@@ -30,7 +30,7 @@
                 </v-btn>
               </li>
               <li>
-                <v-btn icon class="white--text">
+                <v-btn @click="print" icon class="white--text">
                   <v-icon>print</v-icon>
                 </v-btn>
               </li>
@@ -123,6 +123,7 @@
 </template>
 
 <script>
+/* eslint-disable dot-notation */
 import Vibrant from 'node-vibrant';
 import ReciterHeroSkeleton from '@/components/ReciterHeroSkeleton.vue';
 import LyricsSkeleton from '@/components/LyricsSkeleton.vue';
@@ -153,10 +154,22 @@ export default {
     };
   },
 
-  created() {
+  mounted() {
     this.fetchData();
+    const handler = (e) => {
+      e.preventDefault();
+      this.print();
+    };
+    this.$el['__onPrintHandler__'] = handler;
+    window.addEventListener('beforeprint', handler);
   },
-
+  beforeDestroy() {
+    window.removeEventListener(
+      'beforeprint',
+      this.$el['__onPrintHandler__'],
+    );
+    delete this.$el['__onPrintHandler__'];
+  },
   computed: {
     image() {
       if (this.album) {
@@ -165,7 +178,6 @@ export default {
       return '/img/default-album-image.png';
     },
   },
-
   methods: {
     async fetchData() {
       this.$Progress.start();
@@ -197,6 +209,17 @@ export default {
     },
     prepareLyrics(content) {
       return content.replace(/\n/gi, '<br>');
+    },
+    print() {
+      this.$router.push({
+        name: 'LyricsPrint',
+        params: {
+          trackData: this.track,
+          reciter: this.reciter.slug,
+          album: this.album.year,
+          track: this.track.id,
+        },
+      });
     },
   },
 };
