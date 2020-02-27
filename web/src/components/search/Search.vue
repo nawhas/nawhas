@@ -110,7 +110,6 @@ export default class GlobalSearch extends Vue {
   }
 
   onClickOutside() {
-    console.log('deactivating');
     this.activated = false;
   }
 
@@ -121,7 +120,6 @@ export default class GlobalSearch extends Vue {
   }
 
   activate() {
-    console.log('activating');
     this.focused = true;
     this.$nextTick(() => this.input.focus());
   }
