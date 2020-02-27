@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import Public from '@/layouts/Public.vue';
+import LyricsPrint from '@/layouts/LyricsPrint.vue';
 
 Vue.use(VueRouter);
 
@@ -27,6 +28,7 @@ const routes = [
       {
         path: 'reciters/:reciter/albums/:album/tracks/:track',
         name: 'tracks.show',
+        props: true,
         component: () => import(/* webpackChunkName: "tracks" */'@/views/public/tracks/Show.vue'),
       },
     ],
@@ -38,6 +40,12 @@ const routes = [
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "about" */ '../views/About.vue'),
+  },
+  {
+    path: '/print/:reciter/:album/:track',
+    name: 'print.lyrics',
+    component: LyricsPrint,
+    props: true,
   },
 ];
 
