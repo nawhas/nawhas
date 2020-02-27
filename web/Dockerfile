@@ -14,7 +14,7 @@ ENV VUE_APP_API_DOMAIN $API_DOMAIN
 ENV VUE_APP_APP_DOMAIN $APP_DOMAIN
 
 RUN yarn install --frozen-lockfile \
-        && yarn lint --no-fix \
+        && yarn lint --mode=production --no-fix \
         && yarn build
 
 # ---------------------------------------------------------------------------

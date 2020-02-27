@@ -31,7 +31,8 @@ class BootApplication extends Command
                     '--force' => true, '--allow-no-migration' => true,
                 ]],
                 'doctrine:clear:metadata:cache',
-                'doctrine:generate:proxies'
+                'doctrine:generate:proxies',
+                'search:settings:push',
             );
         } catch (Exception $e) {
             $this->error("Failed to boot application.\n{$e->getMessage()}");

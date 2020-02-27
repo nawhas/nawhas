@@ -72,21 +72,12 @@ export default {
     SixCardSkeleton,
     AlbumTableSkeleton,
   },
-  mounted() {
-    const { reciter } = this.$route.params;
-    getReciter(reciter).then((response) => {
-      this.reciter = response.data;
-      getPopularTracks({
-        per_page: 6,
-        reciterId: this.reciter.id,
-        include: 'album,reciter',
-      }).then((responseT) => {
-        this.popularTracks = responseT.data.data;
-      });
-    });
-    getAlbums(reciter, { include: 'tracks' }).then((response) => {
-      this.setAlbums(response);
-    });
+  watch: {
+    // call again the method if the route changes
+    $route: 'fetchData',
+  },
+  created() {
+    this.fetchData();
   },
   computed: {
     image() {
@@ -103,6 +94,27 @@ export default {
     };
   },
   methods: {
+    async fetchData() {
+      this.reciter = null;
+      this.albums = null;
+      this.length = 0;
+      this.popularTracks = null;
+
+      const { reciter } = this.$route.params;
+      getReciter(reciter).then((response) => {
+        this.reciter = response.data;
+      });
+      getPopularTracks({
+        per_page: 6,
+        reciterId: reciter,
+        include: 'album,reciter',
+      }).then((response) => {
+        this.popularTracks = response.data.data;
+      });
+      getAlbums(reciter, { include: 'tracks' }).then((response) => {
+        this.setAlbums(response);
+      });
+    },
     setAlbums(albums) {
       this.albums = albums.data.data;
       this.length = albums.data.meta.pagination.total_pages;

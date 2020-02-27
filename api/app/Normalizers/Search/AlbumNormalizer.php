@@ -21,10 +21,11 @@ class AlbumNormalizer implements NormalizerInterface
             'id' => $object->getId(),
             'title' => $object->getTitle(),
             'year' => $object->getYear(),
+            'artwork' => $object->getArtwork(),
             'reciter' => [
-                'id' => $object->getReciter()->getId(),
                 'name' => $object->getReciter()->getName(),
-            ]
+            ],
+            'url' => sprintf('/reciters/%s/albums/%s', $object->getReciter()->getSlug(), $object->getYear()),
         ];
     }
 
