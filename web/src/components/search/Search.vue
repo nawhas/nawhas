@@ -1,7 +1,10 @@
 <template>
   <div>
     <v-btn v-if="mobile" icon @click="activate"><v-icon>search</v-icon></v-btn>
-    <div v-show="!mobile || focused" :class="{ search: true, 'search--focused': focused }">
+    <div v-show="!mobile || activated"
+         :class="{ search: true, 'search--focused': activated }"
+         v-click-outside="onClickOutside"
+    >
       <div class="search__bar">
         <v-btn v-if="mobile" icon @click="resetSearch"><v-icon>arrow_back</v-icon></v-btn>
         <v-text-field solo flat single-line hide-details
@@ -20,7 +23,7 @@
         ></v-text-field>
       </div>
       <v-expand-transition>
-        <div class="search__container" v-show="focused">
+        <div class="search__container" v-show="activated">
           <ais-instant-search :search-client="client" index-name="reciters">
             <ais-configure :query="search" :hits-per-page.camel="4" :distinct="true" />
             <ais-state-results>
@@ -60,7 +63,9 @@
             </ais-state-results>
           </ais-instant-search>
           <div class="search__footer">
-            <div class="search__footer-hint body-2" v-if="!search">Start typing to see results...</div>
+            <div class="search__footer-hint body-2" v-if="!search">
+              Start typing to see results...
+            </div>
             <div class="body-2" v-else></div>
             <img src="../../assets/search-by-algolia.svg" alt="Search by Algolia"/>
           </div>
@@ -75,11 +80,11 @@ import {
   Component, Ref, Vue, Watch,
 } from 'vue-property-decorator';
 import algolia from 'algoliasearch/lite';
-import { RawLocation } from 'vue-router';
 import { ALGOLIA_APP_ID, ALGOLIA_SEARCH_KEY } from '@/config';
 import ReciterResult from '@/components/search/ReciterResult.vue';
 import AlbumResult from '@/components/search/AlbumResult.vue';
 import TrackResult from '@/components/search/TrackResult.vue';
+import '@/directives/click-outside';
 
 @Component({
   components: {
@@ -90,10 +95,10 @@ import TrackResult from '@/components/search/TrackResult.vue';
 })
 export default class GlobalSearch extends Vue {
   private client = algolia(ALGOLIA_APP_ID, ALGOLIA_SEARCH_KEY)
+  private activated = false;
   private focused = false;
   private search = '';
   private searching = false;
-  private timeout: number|undefined = undefined;
   @Ref('search') readonly input!: HTMLElement;
 
   get mobile() {
@@ -105,38 +110,38 @@ export default class GlobalSearch extends Vue {
     this.resetSearch();
   }
 
-  onBlur() {
-    window.clearTimeout(this.timeout);
-    this.$nextTick(() => {
-      this.timeout = window.setTimeout(() => {
-        this.focused = false;
-      }, 280);
-    });
+  @Watch('focused')
+  onFocusChange(focused) {
+    if (focused) {
+      this.activated = true;
+    }
+    if (!focused && !this.search) {
+      this.activated = false;
+    }
   }
+
+  onBlur() {
+    this.focused = false;
+  }
+
   onEsc() {
     this.input.blur();
   }
-  onFocus() {
-    window.clearTimeout(this.timeout);
 
+  onFocus() {
     this.focused = true;
   }
-  resetSearch(timeout = 0) {
-    window.clearTimeout(this.timeout);
 
-    this.$nextTick(() => {
-      this.timeout = window.setTimeout(() => {
-        this.focused = false;
-        this.searching = false;
-        this.search = '';
-      }, timeout);
-    });
-  }
-  onSelect(route: RawLocation) {
-    this.$router.push(route);
-    this.$nextTick(() => this.resetSearch());
+  onClickOutside() {
+    this.activated = false;
   }
 
+  resetSearch() {
+    this.search = '';
+    this.focused = false;
+    this.searching = false;
+    this.activated = false;
+  }
   activate() {
     this.focused = true;
     this.$nextTick(() => this.input.focus());
