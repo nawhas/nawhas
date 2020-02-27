@@ -186,6 +186,9 @@ export default {
     delete this.$el['__onPrintHandler__'];
   },
   methods: {
+    onRouteUpdate() {
+      this.fetchData();
+    },
     async fetchData() {
       this.$Progress.start();
       const { reciter, album, track } = this.$route.params;
