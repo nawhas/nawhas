@@ -1,10 +1,8 @@
 <template>
-  <div>
+  <div v-click-outside="onClickOutside">
     <v-btn v-if="mobile" icon @click="activate"><v-icon>search</v-icon></v-btn>
     <div v-show="!mobile || activated"
-         :class="{ search: true, 'search--focused': activated }"
-         v-click-outside="onClickOutside"
-    >
+         :class="{ search: true, 'search--focused': activated }">
       <div class="search__bar">
         <v-btn v-if="mobile" icon @click="resetSearch"><v-icon>arrow_back</v-icon></v-btn>
         <v-text-field solo flat single-line hide-details
@@ -24,44 +22,19 @@
       </div>
       <v-expand-transition>
         <div class="search__container" v-show="activated">
-          <ais-instant-search :search-client="client" index-name="reciters">
-            <ais-configure :query="search" :hits-per-page.camel="4" :distinct="true" />
-            <ais-state-results>
-              <div class="search__hits" slot-scope="{ nbHits }" v-if="nbHits > 0 && search">
-                <div class="search__hits__heading caption">Reciters</div>
-                <ais-hits :escapeHTML="false">
-                  <template slot-scope="{ items }">
-                    <div class="search__hit search__hit--reciter"
-                         v-for="(item, index) in items" :key="index">
-                      <reciter-result :reciter="item" />
-                    </div>
-                  </template>
-                </ais-hits>
-              </div>
-              <div class="search__hits--empty" v-else></div>
-            </ais-state-results>
-          </ais-instant-search>
-          <ais-instant-search :search-client="client" index-name="tracks">
-            <ais-configure :query="search"
-                           :hits-per-page.camel="4"
-                           :attributesToSnippet="['lyrics']"
-                           :distinct="true"
-            />
-            <ais-state-results>
-              <div class="search__hits" slot-scope="{ nbHits }" v-if="nbHits > 0 && search">
-                <div class="search__hits__heading caption">Tracks</div>
-                <ais-hits :escapeHTML="false">
-                  <template slot-scope="{ items }">
-                    <div class="search__hit search__hit--track"
-                         v-for="(item, index) in items" :key="index">
-                      <track-result :track="item" />
-                    </div>
-                  </template>
-                </ais-hits>
-              </div>
-              <div class="search__hits--empty" v-else></div>
-            </ais-state-results>
-          </ais-instant-search>
+          <index-hits :client="client" :search="search" index="reciters" caption="Reciters">
+            <reciter-result slot-scope="{ item }" :reciter="item" />
+          </index-hits>
+          <index-hits :client="client" :search="search" index="tracks" caption="Tracks">
+            <track-result slot-scope="{ item }" :track="item" />
+            <template v-slot:configure>
+              <ais-configure :query="search"
+                             :hits-per-page.camel="4"
+                             :attributesToSnippet="['lyrics']"
+                             :distinct="true"
+              />
+            </template>
+          </index-hits>
           <div class="search__footer">
             <div class="search__footer-hint body-2" v-if="!search">
               Start typing to see results...
@@ -81,6 +54,7 @@ import {
 } from 'vue-property-decorator';
 import algolia from 'algoliasearch/lite';
 import { ALGOLIA_APP_ID, ALGOLIA_SEARCH_KEY } from '@/config';
+import IndexHits from '@/components/search/IndexHits.vue';
 import ReciterResult from '@/components/search/ReciterResult.vue';
 import AlbumResult from '@/components/search/AlbumResult.vue';
 import TrackResult from '@/components/search/TrackResult.vue';
@@ -91,6 +65,7 @@ import ClickOutside from '@/directives/click-outside';
     ReciterResult,
     AlbumResult,
     TrackResult,
+    IndexHits,
   },
   directives: {
     ClickOutside,
@@ -135,6 +110,7 @@ export default class GlobalSearch extends Vue {
   }
 
   onClickOutside() {
+    console.log('deactivating');
     this.activated = false;
   }
 
@@ -145,6 +121,7 @@ export default class GlobalSearch extends Vue {
   }
 
   activate() {
+    console.log('activating');
     this.focused = true;
     this.$nextTick(() => this.input.focus());
   }
@@ -195,15 +172,6 @@ export default class GlobalSearch extends Vue {
         width: auto;
       }
     }
-  }
-}
-
-.search__hits {
-  margin-bottom: 8px;
-  .search__hits__heading {
-    padding: 8px 16px;
-    background-color: rgba(0,0,0,0.03);
-    font-weight: 500;
   }
 }
 
