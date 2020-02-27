@@ -84,7 +84,7 @@ import { ALGOLIA_APP_ID, ALGOLIA_SEARCH_KEY } from '@/config';
 import ReciterResult from '@/components/search/ReciterResult.vue';
 import AlbumResult from '@/components/search/AlbumResult.vue';
 import TrackResult from '@/components/search/TrackResult.vue';
-import '@/directives/click-outside';
+import ClickOutside from '@/directives/click-outside';
 
 @Component({
   components: {
@@ -92,13 +92,15 @@ import '@/directives/click-outside';
     AlbumResult,
     TrackResult,
   },
+  directives: {
+    ClickOutside,
+  },
 })
 export default class GlobalSearch extends Vue {
   private client = algolia(ALGOLIA_APP_ID, ALGOLIA_SEARCH_KEY)
   private activated = false;
   private focused = false;
   private search = '';
-  private searching = false;
   @Ref('search') readonly input!: HTMLElement;
 
   get mobile() {
@@ -139,9 +141,9 @@ export default class GlobalSearch extends Vue {
   resetSearch() {
     this.search = '';
     this.focused = false;
-    this.searching = false;
     this.activated = false;
   }
+
   activate() {
     this.focused = true;
     this.$nextTick(() => this.input.focus());
