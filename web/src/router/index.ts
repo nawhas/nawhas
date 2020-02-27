@@ -45,7 +45,7 @@ const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
   routes,
-  scrollBehavior(to, from, savedPosition) {
+  scrollBehavior() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   },
 });

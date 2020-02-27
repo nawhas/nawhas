@@ -6,6 +6,7 @@ const ClickOutside: DirectiveOptions = {
     // Provided expression must evaluate to a function.
     if (typeof binding.value !== 'function') {
       const warn = `[ClickOutside] Provided expression '${binding.expression}' is not a function, but has to be`;
+      // eslint-disable-next-line no-console
       console.warn(warn);
     }
 
