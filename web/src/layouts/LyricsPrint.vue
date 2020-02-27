@@ -1,58 +1,100 @@
 <template>
   <v-app>
-    <v-content>
+    <v-content v-if="data">
       <div class="print__header">
         <div class="print__header__title">
-          <div class="print__header__title--track--name">{{ track.title }}</div>
-          <div class="print__header__title--track--meta">{{ track.reciter.name }} - {{ track.year }}</div>
+          <div class="print__header__title--track--name">{{ data.title }}</div>
+          <div class="print__header__title--track--meta">{{ data.reciter.name }} - {{ data.year }}</div>
         </div>
         <v-spacer></v-spacer>
         <div class="print__header_logo">
-          <img src="./../assets/logo.png" />
+          <img src="./../assets/logo.png"  alt="Nawhas.com" />
         </div>
       </div>
-      <div class="print__content" v-html="prepareLyrics(track.lyrics.content)"></div>
+      <div class="print__content" v-if="data.lyrics" v-html="prepareLyrics(data.lyrics.content)"></div>
+      <div class="print__content print__content--empty" v-else>
+        We don't have a write-up of this nawha yet.
+      </div>
     </v-content>
+    <v-content v-else>Loading...</v-content>
   </v-app>
 </template>
 
 <script>
+/* eslint-disable dot-notation */
 import { getTrack } from '@/services/tracks';
 
 export default {
-  mounted() {
-    if (this.trackData) {
-      this.track = this.trackData;
-      window.print();
-      window.addEventListener('focus', this.goBack);
-    }
+  props: ['trackObject'],
+
+  data: () => ({
+    fetchedTrack: undefined,
+    timeout: undefined,
+  }),
+
+  computed: {
+    data() {
+      return this.trackObject || this.fetchedTrack;
+    },
+  },
+
+  created() {
     if (!this.track) {
       const { reciter, album, track } = this.$route.params;
       getTrack(reciter, album, track, { include: 'reciter,lyrics' })
         .then((response) => {
-          this.track = response.data;
-        })
-        .then(() => {
-          window.print();
-          window.addEventListener('focus', this.goBack);
+          this.fetchedTrack = response.data;
         });
     }
   },
-  beforeDestroy() {
-    window.removeEventListener('focus', this.goBack);
-  },
-  props: ['trackData'],
-  data() {
-    return {
-      track: null,
+  mounted() {
+    const handler = () => {
+      this.goBackToTrack();
     };
+    this.$el['__onPrintCompleteHandler__'] = handler;
+    window.addEventListener('afterprint', handler);
+
+    if (!this.data) {
+      return;
+    }
+
+    this.triggerPrint();
+  },
+  updated() {
+    if (!this.data) {
+      return;
+    }
+
+    this.triggerPrint();
+  },
+  beforeDestroy() {
+    window.removeEventListener('afterprint', this.$el['__onPrintCompleteHandler__']);
+    delete this.$el['__onPrintCompleteHandler__'];
   },
   methods: {
+    triggerPrint() {
+      window.clearTimeout(this.timeout);
+      window.timeout = window.setTimeout(() => {
+        window.print();
+      }, 500);
+    },
     prepareLyrics(content) {
       return content.replace(/\n/gi, '<br>');
     },
-    goBack() {
-      this.$router.go(-1);
+    goBackToTrack() {
+      if (!this.data) {
+        return;
+      }
+
+      this.$router.replace({
+        name: 'tracks.show',
+        params: {
+          reciter: this.data.reciter.slug,
+          album: this.data.year,
+          track: this.data.slug,
+          trackObject: this.data,
+        },
+      });
     },
   },
 };
@@ -78,9 +120,15 @@ export default {
 
 .print__content {
   padding-top: 6mm;
-  -webkit-column-count: 2; /* Chrome, Safari, Opera */
-  -moz-column-count: 2; /* Firefox */
   column-count: 2;
   font-family: 'Roboto Slab', sans-serif;
+}
+
+.print__content--empty {
+  color: rgba(0,0,0,0.6);
+  font-size: 20px;
+  column-count: 1;
+  padding: 20px;
+  text-align: center;
 }
 </style>

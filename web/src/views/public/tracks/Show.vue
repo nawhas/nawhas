@@ -128,7 +128,6 @@ import Vibrant from 'node-vibrant';
 import ReciterHeroSkeleton from '@/components/ReciterHeroSkeleton.vue';
 import LyricsSkeleton from '@/components/LyricsSkeleton.vue';
 import MoreTracksSkeleton from '@/components/MoreTracksSkeleton.vue';
-import { getAlbum } from '@/services/albums';
 import { getTrack } from '@/services/tracks';
 
 export default {
@@ -138,20 +137,36 @@ export default {
     LyricsSkeleton,
     MoreTracksSkeleton,
   },
+  props: [
+    'trackObject',
+  ],
 
   watch: {
     // call again the method if the route changes
-    $route: 'fetchData',
+    $route: 'onRouteUpdate',
   },
 
   data() {
     return {
       background: '#222',
       textColor: '#fff',
-      reciter: null,
-      album: null,
       track: null,
     };
+  },
+
+  computed: {
+    reciter() {
+      return this.track && this.track.reciter;
+    },
+    album() {
+      return this.track && this.track.album;
+    },
+    image() {
+      if (this.album) {
+        return this.album.artwork || '/img/default-album-image.png';
+      }
+      return '/img/default-album-image.png';
+    },
   },
 
   mounted() {
@@ -170,25 +185,24 @@ export default {
     );
     delete this.$el['__onPrintHandler__'];
   },
-  computed: {
-    image() {
-      if (this.album) {
-        return this.album.artwork || '/img/default-album-image.png';
-      }
-      return '/img/default-album-image.png';
-    },
-  },
   methods: {
+    onRouteUpdate() {
+      this.fetchData();
+    },
     async fetchData() {
       this.$Progress.start();
       const { reciter, album, track } = this.$route.params;
-      const [trackResponse, albumResponse] = await Promise.all([
-        getTrack(reciter, album, track, { include: 'reciter,lyrics' }),
-        getAlbum(reciter, album, { include: 'tracks' }),
-      ]);
-      this.track = trackResponse.data;
-      this.reciter = trackResponse.data.reciter;
-      this.album = albumResponse.data;
+
+      if (this.trackObject) {
+        this.track = this.trackObject;
+      }
+
+      if (!this.track || !this.isSameTrack(this.$route.params)) {
+        await getTrack(reciter, album, track, { include: 'reciter,lyrics,album.tracks' }).then((r) => {
+          this.track = r.data;
+        });
+      }
+
       this.setBackgroundFromImage();
       this.$Progress.finish();
     },
@@ -210,14 +224,19 @@ export default {
     prepareLyrics(content) {
       return content.replace(/\n/gi, '<br>');
     },
+    isSameTrack({ reciter, album, track }) {
+      return this.track.reciter.slug === reciter
+        && this.track.album.year === album
+        && this.track.slug === track;
+    },
     print() {
-      this.$router.push({
-        name: 'LyricsPrint',
+      this.$router.replace({
+        name: 'print.lyrics',
         params: {
-          trackData: this.track,
+          track: this.track.id,
           reciter: this.reciter.slug,
           album: this.album.year,
-          track: this.track.id,
+          trackObject: this.track,
         },
       });
     },

@@ -28,6 +28,7 @@ const routes = [
       {
         path: 'reciters/:reciter/albums/:album/tracks/:track',
         name: 'tracks.show',
+        props: true,
         component: () => import(/* webpackChunkName: "tracks" */'@/views/public/tracks/Show.vue'),
       },
     ],
@@ -42,7 +43,7 @@ const routes = [
   },
   {
     path: '/print/:reciter/:album/:track',
-    name: 'LyricsPrint',
+    name: 'print.lyrics',
     component: LyricsPrint,
     props: true,
   },
