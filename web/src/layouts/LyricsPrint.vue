@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-content v-if="data">
+    <v-content class="content" v-if="data">
       <div class="print__header">
         <div class="print__header__title">
           <div class="print__header__title--track--name">{{ data.title }}</div>
@@ -8,7 +8,7 @@
         </div>
         <v-spacer></v-spacer>
         <div class="print__header_logo">
-          <img src="./../assets/logo.png"  alt="Nawhas.com" />
+          <img src="./../assets/logo.svg"  alt="Nawhas.com" />
         </div>
       </div>
       <div class="print__content" v-if="data.lyrics" v-html="prepareLyrics(data.lyrics.content)"></div>
@@ -130,5 +130,14 @@ export default {
   column-count: 1;
   padding: 20px;
   text-align: center;
+}
+
+.content {
+  padding: 24px !important;
+}
+@media print {
+  .content {
+    padding: 0 !important;
+  }
 }
 </style>
