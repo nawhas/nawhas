@@ -41,7 +41,7 @@ export default {
   created() {
     if (!this.track) {
       const { reciter, album, track } = this.$route.params;
-      getTrack(reciter, album, track, { include: 'reciter,lyrics' })
+      getTrack(reciter, album, track, { include: 'reciter,lyrics,album.tracks' })
         .then((response) => {
           this.fetchedTrack = response.data;
         });
