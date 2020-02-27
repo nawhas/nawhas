@@ -1,5 +1,5 @@
 <template>
-  <router-link :to="reciter.url" tag="div">
+  <router-link :to="reciter.url" class="link">
     <div class="reciter-result">
       <div class="reciter-result__avatar">
         <v-avatar size="36">
@@ -28,7 +28,11 @@ export default {
 </script>
 
 <style lang="scss">
+.link {
+  text-decoration: none;
+}
 .reciter-result {
+  color: rgba(0, 0, 0, 0.76);
   padding: 8px 16px;
   display: flex;
   align-items: center;

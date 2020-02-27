@@ -1,5 +1,5 @@
 <template>
-  <router-link :to="album.url" tag="div">
+  <router-link :to="album.url" class="link">
     <div class="album-result">
       <div class="album-result__artwork">
         <v-avatar tile size="40">
@@ -36,7 +36,11 @@ export default {
 </script>
 
 <style lang="scss">
+.link {
+  text-decoration: none;
+}
 .album-result {
+  color: rgba(0, 0, 0, 0.76);
   padding: 8px 16px;
   display: flex;
   align-items: center;

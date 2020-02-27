@@ -172,6 +172,7 @@ export default class GlobalSearch extends Vue {
 
   .search__container {
     width: 450px;
+    background-color: white;
     max-height: calc(100vh - 100px);
     overflow-y: auto;
     border-top: 1px solid rgba(0, 0, 0, 0.06);

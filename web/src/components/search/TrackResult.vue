@@ -1,5 +1,5 @@
 <template>
-  <router-link :to="track.url" tag="div">
+  <router-link :to="track.url" class="link">
     <div class="track-result">
       <div class="track-result__artwork">
         <v-avatar tile size="40">
@@ -40,7 +40,11 @@ export default {
 </script>
 
 <style lang="scss">
+.link {
+  text-decoration: none;
+}
 .track-result {
+  color: rgba(0, 0, 0, 0.76);
   padding: 8px 16px;
   display: flex;
   align-items: center;
