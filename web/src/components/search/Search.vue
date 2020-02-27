@@ -30,7 +30,7 @@
                   <template slot-scope="{ items }">
                     <div class="search__hit search__hit--reciter"
                          v-for="(item, index) in items" :key="index">
-                      <reciter-result @selected="onSelect" :reciter="item" />
+                      <reciter-result :reciter="item" />
                     </div>
                   </template>
                 </ais-hits>
@@ -51,7 +51,7 @@
                   <template slot-scope="{ items }">
                     <div class="search__hit search__hit--track"
                          v-for="(item, index) in items" :key="index">
-                      <track-result @selected="onSelect" :track="item" />
+                      <track-result :track="item" />
                     </div>
                   </template>
                 </ais-hits>
@@ -71,7 +71,9 @@
 </template>
 
 <script lang="ts">
-import { Component, Ref, Vue } from 'vue-property-decorator';
+import {
+  Component, Ref, Vue, Watch,
+} from 'vue-property-decorator';
 import algolia from 'algoliasearch/lite';
 import { RawLocation } from 'vue-router';
 import { ALGOLIA_APP_ID, ALGOLIA_SEARCH_KEY } from '@/config';
@@ -98,12 +100,17 @@ export default class GlobalSearch extends Vue {
     return this.$vuetify.breakpoint.smAndDown;
   }
 
+  @Watch('$route')
+  onRouteChange() {
+    this.resetSearch();
+  }
+
   onBlur() {
     window.clearTimeout(this.timeout);
     this.$nextTick(() => {
       this.timeout = window.setTimeout(() => {
         this.focused = false;
-      }, 0);
+      }, 280);
     });
   }
   onEsc() {

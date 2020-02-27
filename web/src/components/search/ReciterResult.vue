@@ -1,5 +1,5 @@
 <template>
-  <div @click="emitSelectedEvent">
+  <router-link :to="reciter.url" tag="div">
     <div class="reciter-result">
       <div class="reciter-result__avatar">
         <v-avatar size="36">
@@ -12,18 +12,13 @@
         </div>
       </div>
     </div>
-  </div>
+  </router-link>
 </template>
 
 <script>
 export default {
   name: 'ReciterResult',
   props: ['reciter'],
-  methods: {
-    emitSelectedEvent() {
-      this.$emit('selected', this.reciter.url);
-    },
-  },
   computed: {
     image() {
       return this.reciter.avatar || '/img/default-reciter-avatar.png';

@@ -1,5 +1,5 @@
 <template>
-  <div @click="emitSelectedEvent">
+  <router-link :to="album.url" tag="div">
     <div class="album-result">
       <div class="album-result__artwork">
         <v-avatar tile size="40">
@@ -20,18 +20,13 @@
         </div>
       </div>
     </div>
-  </div>
+  </router-link>
 </template>
 
 <script>
 export default {
   name: 'AlbumResult',
   props: ['album'],
-  methods: {
-    emitSelectedEvent() {
-      this.$emit('selected', this.album.url);
-    },
-  },
   computed: {
     image() {
       return this.album.artwork || '/img/default-album-image.png';
