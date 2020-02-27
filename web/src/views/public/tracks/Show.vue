@@ -233,7 +233,7 @@ export default {
       this.$router.replace({
         name: 'print.lyrics',
         params: {
-          track: this.track.id,
+          track: this.track.slug,
           reciter: this.reciter.slug,
           album: this.album.year,
           trackObject: this.track,
