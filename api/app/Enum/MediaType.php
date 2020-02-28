@@ -7,6 +7,7 @@ namespace App\Enum;
 use MyCLabs\Enum\Enum;
 
 /**
+ * @psalm-immutable
  * @method static self AUDIO()
  * @method static self VIDEO()
  */

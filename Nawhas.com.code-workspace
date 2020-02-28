@@ -1,0 +1,25 @@
+{
+	"folders": [
+		{
+			"name": "API",
+			"path": "./api"
+		},
+		{
+			"name": "Docker",
+			"path": "./docker"
+		},
+		{
+			"name": "Web",
+			"path": "./web"
+		},
+		{
+			"name": "Project Root",
+			"path": "."
+		}
+	],
+	"settings": {
+		"psalm.enableDebugLog": false,
+		"files.insertFinalNewline": true,
+		"psalm.connectToServerWithTcp": true,
+	}
+}
