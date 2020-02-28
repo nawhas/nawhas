@@ -2,4 +2,3 @@
 node_modules
 .dev.swp
 .DS_Store
-*.code-workspace

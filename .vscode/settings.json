@@ -1,0 +1,7 @@
+{
+    "files.exclude": {
+        "/api": true,
+        "/docker": true,
+        "/web": true
+    }
+}

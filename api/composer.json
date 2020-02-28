@@ -21,6 +21,7 @@
         "myclabs/php-enum": "^1.7",
         "ramsey/uuid-doctrine": "^1.6",
         "spatie/laravel-cors": "^1.6",
+        "weirdan/doctrine-psalm-plugin": "^0.10.0",
         "zain/laravel-doctrine-algolia": "^0.1.0",
         "zain/laravel-doctrine-jetpack": "dev-master"
     },
@@ -31,7 +32,9 @@
         "nunomaduro/collision": "^3.0",
         "nunomaduro/larastan": "^0.5.2",
         "phpstan/phpstan": "^0.12.11",
-        "phpunit/phpunit": "^8.0"
+        "phpunit/phpunit": "^8.0",
+        "psalm/plugin-laravel": "^1.1",
+        "vimeo/psalm": "^3.9"
     },
     "config": {
         "optimize-autoloader": true,
@@ -61,6 +64,12 @@
     "scripts": {
         "phpstan": [
             "./vendor/bin/phpstan analyze --memory-limit=2G"
+        ],
+        "psalm:plugin": [
+            "./vendor/bin/psalm-plugin"
+        ],
+        "psalm:lint": [
+            "./vendor/bin/psalm"
         ],
         "test": [
             "./vendor/bin/phpunit"
