@@ -15,6 +15,14 @@
                 <p>{{ reciter.name }}</p>
                 <p>{{ album.year }} &bull; {{ album.title }}</p>
               </div>
+              <div class="track-hero__audio_buttons">
+                <v-btn text class="track-hero__audio_buttons--play white--text">
+                  <v-icon class="track-hero__audio_buttons--icons">play_circle_filled</v-icon>Play Audio
+                </v-btn>
+                <v-btn text class="track-hero__audio_buttons--queue white--text">
+                  <v-icon class="track-hero__audio_buttons--icons">playlist_add</v-icon>Add to Queue
+                </v-btn>
+              </div>
             </div>
           </div>
           <div class="track-hero__actions">
@@ -70,11 +78,6 @@
             </v-card>
           </v-flex>
           <v-flex md5>
-            <v-card class="track-page-content__card track-page-content__card--audio">
-              <section>
-                <p>There is no track available yet</p>
-              </section>
-            </v-card>
             <v-card class="track-page-content__card track-page-content__card--audio">
               <section>
                 <p>There is no video available</p>
@@ -137,9 +140,7 @@ export default {
     LyricsSkeleton,
     MoreTracksSkeleton,
   },
-  props: [
-    'trackObject',
-  ],
+  props: ['trackObject'],
 
   watch: {
     // call again the method if the route changes
@@ -179,10 +180,7 @@ export default {
     window.addEventListener('beforeprint', handler);
   },
   beforeDestroy() {
-    window.removeEventListener(
-      'beforeprint',
-      this.$el['__onPrintHandler__'],
-    );
+    window.removeEventListener('beforeprint', this.$el['__onPrintHandler__']);
     delete this.$el['__onPrintHandler__'];
   },
   methods: {
@@ -198,7 +196,9 @@ export default {
       }
 
       if (!this.track || !this.isSameTrack(this.$route.params)) {
-        await getTrack(reciter, album, track, { include: 'reciter,lyrics,album.tracks' }).then((r) => {
+        await getTrack(reciter, album, track, {
+          include: 'reciter,lyrics,album.tracks',
+        }).then((r) => {
           this.track = r.data;
         });
       }
@@ -225,9 +225,11 @@ export default {
       return content.replace(/\n/gi, '<br>');
     },
     isSameTrack({ reciter, album, track }) {
-      return this.track.reciter.slug === reciter
+      return (
+        this.track.reciter.slug === reciter
         && this.track.album.year === album
-        && this.track.slug === track;
+        && this.track.slug === track
+      );
     },
     print() {
       this.$router.replace({
@@ -280,6 +282,21 @@ export default {
         font-size: 15px;
         margin: 0 0 6px 0;
         padding: 0;
+      }
+    }
+
+    .track-hero__audio_buttons {
+      &--play {
+        padding: 2px;
+        margin-right: 10px;
+      }
+
+      &--queue {
+        padding: 2px;
+      }
+
+      &--icons {
+        margin-right: 6px;
       }
     }
 
