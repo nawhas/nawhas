@@ -20,6 +20,7 @@ module.exports = {
         pathRewrite: { '^/api': '' },
       },
     },
+    public: 'https://localhost:8080',
   },
   pwa: {
     name: 'Nawhas.com',

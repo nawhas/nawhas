@@ -1,23 +1,39 @@
 <template>
-    <div class="audio-player">
+    <div :class="{ 'audio-player': true, 'audio-player--hovering': hovering }"
+         @mouseenter="hovering = true"
+         @mouseleave="hovering = false"
+    >
       <div class="artwork">
         <img src="/img/default-album-image.png" />
       </div>
       <div class="player-content">
         <div class="seek-bar">
-          <v-slider
+          <v-progress-linear
             v-model="currentSeek"
-            :min="startTime"
-            :max="endTime"
-            hide-details>
-          </v-slider>
-          <div class="current-time">
-            {{ currentSeek }}
+            color="deep-orange"
+            height="8"
+            class="seek-bar--bar">
+          </v-progress-linear>
+        </div>
+        <div class="track-info">
+          <div class="track-info--track-name body-1">
+            Chotey Hazrat
           </div>
-          <v-spacer></v-spacer>
-          <div class="end-time">
-            {{ endTime }}
+          <div class="track-info--track-meta body-2">
+            Nadeem Sarwar &bull; 2011
           </div>
+        </div>
+        <div class="player-actions">
+          <v-btn icon large disabled><v-icon>skip_previous</v-icon></v-btn>
+          <v-btn icon x-large color="deep-orange" @click="togglePlayState">
+            <v-icon v-if="playing">pause_circle_filled</v-icon>
+            <v-icon v-else>play_circle_filled</v-icon>
+          </v-btn>
+          <v-btn icon large disabled><v-icon>skip_next</v-icon></v-btn>
+        </div>
+        <div class="player-sub-actions">
+          <v-btn icon large><v-icon>playlist_play</v-icon></v-btn>
+          <v-btn icon large><v-icon>picture_in_picture_alt</v-icon></v-btn>
         </div>
       </div>
     </div>
@@ -28,9 +44,19 @@ import { Component, Vue } from 'vue-property-decorator';
 
 @Component
 export default class AudioPlayer extends Vue {
-  public currentSeek = 0;
-  public startTime = 0;
-  public endTime = 360;
+  private currentSeek = 0;
+  private startTime = 0;
+  private endTime = 360;
+  private hovering = false;
+  private playing = false;
+
+  get seekBarHeight() {
+    return this.hovering ? 10 : 4;
+  }
+
+  togglePlayState() {
+    this.playing = !this.playing;
+  }
 }
 </script>
 
@@ -38,25 +64,55 @@ export default class AudioPlayer extends Vue {
 @import '~vuetify/src/styles/styles';
 
 .audio-player {
-    width: 100%;
-    height: 80px;
-    background: white;
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    z-index: 10;
-    box-shadow: 0 -2px 8px 4px rgba(0,0,0,0.16);
-    display: flex;
+  width: 100%;
+  height: 80px;
+  background: white;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  z-index: 10;
+  box-shadow: 0 -2px 8px 4px rgba(0,0,0,0.16);
+  display: flex;
 
 
-    .artwork img {
-      width: 80px;
-    }
-
-    .player-content {
-      width: 100%;
-    }
+  .artwork img {
+    width: 80px;
+  }
 }
+
+
+.seek-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  overflow: hidden;
+  will-change: height;
+  transition: height 280ms;
+}
+
+.player-content {
+  width: 100%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  .track-info {
+    padding: 0 12px;
+  }
+  .player-sub-actions {
+    padding: 0 12px;
+  }
+}
+
+.audio-player--hovering {
+  .seek-bar {
+    height: 6px;
+  }
+}
+
 @media #{map-get($display-breakpoints, 'md-and-down')} {
     .audio-player {
       z-index: 3 !important;
