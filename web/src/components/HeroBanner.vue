@@ -14,7 +14,7 @@ export default {
   props: ['background'],
   computed: {
     style() {
-      return `background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('${this.background}')`;
+      return `background-image: linear-gradient(rgba(0, 0, 0, 0.63), rgba(0, 0, 0, 0.63)), url('${this.background}')`;
     },
   },
 };
@@ -33,6 +33,9 @@ export default {
   height: auto;
 }
 .hero--lg, .hero--xl {
-  height: 350px;
+  min-height: 350px;
+}
+.hero--md {
+  min-height: 300px;
 }
 </style>

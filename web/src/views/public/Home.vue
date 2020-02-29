@@ -6,36 +6,32 @@
         extinguish.
       </hero-quote>
     </hero-banner>
-    <section class="page-section" id="top-reciters-section">
-      <h5 class="title">Top Reciters</h5>
-      <v-container grid-list-lg class="pa-0" fluid>
-        <template v-if="popularReciters">
-          <v-layout row wrap>
-            <v-flex xs12 sm6 md4 v-for="reciter in popularReciters" :key="reciter.id">
-              <reciter-card featured v-bind="reciter" />
-            </v-flex>
-          </v-layout>
-        </template>
-        <template v-else>
-          <six-card-skeleton />
-        </template>
-      </v-container>
-    </section>
-    <section class="page-section" id="trending-nawhas">
-      <h5 class="title">Trending Nawhas</h5>
-      <v-container grid-list-lg class="pa-0" fluid>
-        <template v-if="popularTracks">
-          <v-layout row wrap>
-            <v-flex xs12 sm6 md4 v-for="track in popularTracks" v-bind:key="track.id">
-              <track-card v-bind="track" :show-reciter="true" />
-            </v-flex>
-          </v-layout>
-        </template>
-        <template v-else>
-          <six-card-skeleton />
-        </template>
-      </v-container>
-    </section>
+    <v-container class="app__section">
+      <h5 class="headline">Top Reciters</h5>
+      <template v-if="popularReciters">
+        <v-row :dense="$vuetify.breakpoint.smAndDown">
+          <v-col v-for="reciter in popularReciters" :key="reciter.id" md="4" sm="6" cols="12">
+            <reciter-card featured v-bind="reciter" />
+          </v-col>
+        </v-row>
+      </template>
+      <template v-else>
+        <six-card-skeleton />
+      </template>
+    </v-container>
+    <v-container class="app__section">
+      <h5 class="headline">Trending Nawhas</h5>
+      <template v-if="popularTracks">
+        <v-row :dense="$vuetify.breakpoint.smAndDown">
+          <v-col cols="12" sm="6" md="4" v-for="track in popularTracks" v-bind:key="track.id">
+            <track-card v-bind="track" :show-reciter="true" />
+          </v-col>
+        </v-row>
+      </template>
+      <template v-else>
+        <six-card-skeleton />
+      </template>
+    </v-container>
   </div>
 </template>
 
@@ -74,7 +70,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.title {
+.headline {
   margin-bottom: 12px;
 }
 </style>
