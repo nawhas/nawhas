@@ -51,7 +51,7 @@ export default class AudioPlayer extends Vue {
   private hovering = false;
   private playing = false;
   private uri = 'https://s3.us-east-2.amazonaws.com/staging.nawhas/reciters/hassan-sadiq/albums/2004/tracks/tu-rut-na-roia-ker.mp3';
-  private howl: Howl|undefined = undefined;
+  private howl: Howl|undefined = null;
 
   get seekBarHeight() {
     return this.hovering ? 10 : 4;
@@ -64,6 +64,9 @@ export default class AudioPlayer extends Vue {
     return (this.seek / this.duration) * 100;
   }
   set progress(progress) {
+    if (!this.howl) {
+      return;
+    }
     this.howl.seek((progress / 100) * this.duration);
   }
 
