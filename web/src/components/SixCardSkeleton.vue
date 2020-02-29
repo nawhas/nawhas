@@ -1,17 +1,7 @@
 <template>
-  <v-layout row wrap>
-    <v-flex xs12 sm6 md4 v-for="index in 6" :key="index">
-      <v-skeleton-loader
-        ref="skeleton"
-        type="list-item-avatar-three-line"
-        class="mx-auto"
-      ></v-skeleton-loader>
-    </v-flex>
-  </v-layout>
+  <v-row>
+    <v-col cols="12" sm="6" md="4" v-for="index in 6" :key="index">
+      <v-skeleton-loader type="list-item-avatar-two-line" elevation="2"></v-skeleton-loader>
+    </v-col>
+  </v-row>
 </template>
-
-<script>
-export default {
-  name: 'SixCardSkeleton',
-};
-</script>
