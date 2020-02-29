@@ -2,6 +2,7 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 import Public from '@/layouts/Public.vue';
 import LyricsPrint from '@/layouts/LyricsPrint.vue';
+import goTo from 'vuetify/es5/services/goto';
 
 Vue.use(VueRouter);
 
@@ -53,8 +54,16 @@ const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
   routes,
-  scrollBehavior() {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+  scrollBehavior(to, from, savedPosition) {
+    let scrollTo: number|string = 0;
+
+    if (to.hash) {
+      scrollTo = to.hash;
+    } else if (savedPosition) {
+      scrollTo = savedPosition.y;
+    }
+
+    return goTo(scrollTo);
   },
 });
 
