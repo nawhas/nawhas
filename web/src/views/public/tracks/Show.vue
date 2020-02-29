@@ -15,8 +15,8 @@
                 <p>{{ reciter.name }}</p>
                 <p>{{ album.year }} &bull; {{ album.title }}</p>
               </div>
-              <div class="track-hero__audio_buttons">
-                <v-btn text class="track-hero__audio_buttons--play white--text">
+              <div class="track-hero__audio_buttons" v-if="track.media.data.length > 0">
+                <v-btn @click="playTrack" text class="track-hero__audio_buttons--play white--text">
                   <v-icon class="track-hero__audio_buttons--icons">play_circle_filled</v-icon>Play Audio
                 </v-btn>
                 <v-btn text class="track-hero__audio_buttons--queue white--text">
@@ -197,7 +197,7 @@ export default {
 
       if (!this.track || !this.isSameTrack(this.$route.params)) {
         await getTrack(reciter, album, track, {
-          include: 'reciter,lyrics,album.tracks',
+          include: 'reciter,lyrics,album.tracks,media',
         }).then((r) => {
           this.track = r.data;
         });
@@ -241,6 +241,9 @@ export default {
           trackObject: this.track,
         },
       });
+    },
+    playTrack() {
+      this.$store.commit('player/PLAY_TRACK', { track: this.track });
     },
   },
 };

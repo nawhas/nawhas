@@ -2,11 +2,12 @@
     <div :class="{ 'audio-player': true, 'audio-player--hovering': hovering, 'audio-player--floating': floating }"
          @mouseenter="hovering = true"
          @mouseleave="hovering = false"
+         v-if="track"
     >
       <v-hover class="artwork">
         <template v-slot:default="{ hover }">
           <div>
-            <img src="/img/default-album-image.png" />
+            <img :src="artwork" />
             <v-fade-transition>
               <v-overlay v-if="hover && floating" absolute>
                 <v-btn icon @click="toggleFloating"><v-icon>fullscreen</v-icon></v-btn>
@@ -29,10 +30,10 @@
         <v-expand-transition>
           <div class="track-info" v-if="!floating">
             <div class="track-info--track-name body-1">
-              Chotey Hazrat
+              {{ track.title }}
             </div>
             <div class="track-info--track-meta body-2">
-              Nadeem Sarwar &bull; 2011
+              {{ track.reciter.name }} &bull; {{ track.year }}
             </div>
           </div>
         </v-expand-transition>
@@ -58,7 +59,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Vue, Watch } from 'vue-property-decorator';
 import { Howl } from 'howler';
 
 @Component
@@ -73,8 +74,6 @@ export default class AudioPlayer extends Vue {
   private playing = false;
   /* Denote whether the player is "minimized" */
   private floating = false;
-  /* Audio file URI */
-  private uri = 'https://s3.us-east-2.amazonaws.com/staging.nawhas/reciters/hassan-sadiq/albums/2004/tracks/tu-rut-na-roia-ker.mp3';
   /* Playback engine */
   private howl: Howl|undefined = null;
 
@@ -84,6 +83,31 @@ export default class AudioPlayer extends Vue {
    */
   get seekBarHeight() {
     return this.hovering ? 10 : 4;
+  }
+
+  get track() {
+    return this.$store.state.player.track;
+  }
+
+  @Watch('track')
+  onTrackUpdate() {
+    this.play();
+  }
+
+  get artwork() {
+    if (!this.track || !this.track.album.artwork) {
+      return '/img/default-album-image.png';
+    }
+
+    return this.track.album.artwork;
+  }
+
+  get uri() {
+    if (!this.track) {
+      return null;
+    }
+
+    return this.track.media.data[0].uri;
   }
 
   /**
