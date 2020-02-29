@@ -106,9 +106,6 @@ export default class PublicVuetify extends Vue {
   text-transform: none;
   font-weight: 400;
 }
-.app-bar {
-  position: relative;
-}
 .nav__title {
   margin: auto;
 }
