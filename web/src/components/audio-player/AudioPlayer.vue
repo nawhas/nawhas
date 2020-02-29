@@ -3,9 +3,18 @@
          @mouseenter="hovering = true"
          @mouseleave="hovering = false"
     >
-      <div class="artwork">
-        <img src="/img/default-album-image.png" />
-      </div>
+      <v-hover class="artwork">
+        <template v-slot:default="{ hover }">
+          <div>
+            <img src="/img/default-album-image.png" />
+            <v-fade-transition>
+              <v-overlay v-if="hover && floating" absolute>
+                <v-btn icon @click="toggleFloating"><v-icon>fullscreen</v-icon></v-btn>
+              </v-overlay>
+            </v-fade-transition>
+          </div>
+        </template>
+      </v-hover>
       <div class="player-content">
         <div class="seek-bar">
           <v-progress-linear
@@ -17,14 +26,16 @@
             class="seek-bar__progress">
           </v-progress-linear>
         </div>
-        <div class="track-info">
-          <div class="track-info--track-name body-1">
-            Chotey Hazrat
+        <v-expand-transition>
+          <div class="track-info" v-if="!floating">
+            <div class="track-info--track-name body-1">
+              Chotey Hazrat
+            </div>
+            <div class="track-info--track-meta body-2">
+              Nadeem Sarwar &bull; 2011
+            </div>
           </div>
-          <div class="track-info--track-meta body-2">
-            Nadeem Sarwar &bull; 2011
-          </div>
-        </div>
+        </v-expand-transition>
         <div class="player-actions">
           <v-btn icon large disabled><v-icon>skip_previous</v-icon></v-btn>
           <v-btn icon x-large color="deep-orange" @click="togglePlayState">
@@ -32,11 +43,16 @@
             <v-icon v-else>play_circle_filled</v-icon>
           </v-btn>
           <v-btn icon large disabled><v-icon>skip_next</v-icon></v-btn>
+          <v-expand-transition>
+            <v-btn icon v-if="floating"><v-icon>more_vert</v-icon></v-btn>
+          </v-expand-transition>
         </div>
-        <div class="player-sub-actions">
-          <v-btn icon large><v-icon>playlist_play</v-icon></v-btn>
-          <v-btn icon large><v-icon>picture_in_picture_alt</v-icon></v-btn>
-        </div>
+        <v-expand-transition>
+          <div class="player-sub-actions" v-if="!floating">
+            <v-btn icon large><v-icon>playlist_play</v-icon></v-btn>
+            <v-btn @click="toggleFloating" icon large><v-icon>picture_in_picture_alt</v-icon></v-btn>
+          </div>
+        </v-expand-transition>
       </div>
     </div>
 </template>
@@ -56,7 +72,7 @@ export default class AudioPlayer extends Vue {
   /* Denote weather the the audio-player is playing */
   private playing = false;
   /* Denote whether the player is "minimized" */
-  private floating = false;
+  private floating = true;
   /* Audio file URI */
   private uri = 'https://s3.us-east-2.amazonaws.com/staging.nawhas/reciters/hassan-sadiq/albums/2004/tracks/tu-rut-na-roia-ker.mp3';
   /* Playback engine */
@@ -100,6 +116,13 @@ export default class AudioPlayer extends Vue {
     } else {
       this.play();
     }
+  }
+
+  /**
+   * Makes the audio player floating
+   */
+  toggleFloating() {
+    this.floating = !this.floating;
   }
 
   /**
@@ -192,7 +215,8 @@ export default class AudioPlayer extends Vue {
 
 <style lang="scss" scoped>
 @import '~vuetify/src/styles/styles';
-
+$transition: cubic-bezier(0.4, 0, 0.2, 1);
+$duration: 500ms;
 .audio-player {
   user-select: none;
   width: 100%;
@@ -200,10 +224,16 @@ export default class AudioPlayer extends Vue {
   background: white;
   position: fixed;
   bottom: 0;
-  left: 0;
+  right: 0;
+  white-space: nowrap;
   z-index: 10;
   box-shadow: 0 -2px 8px 4px rgba(0,0,0,0.16);
   display: flex;
+  transition: width $duration $transition,
+     height $duration $transition,
+     left $duration $transition,
+     right $duration $transition,
+     bottom $duration $transition;
 
   .artwork img {
     width: 80px;
@@ -243,6 +273,22 @@ export default class AudioPlayer extends Vue {
 .audio-player--hovering {
   .seek-bar {
     height: 6px;
+  }
+}
+
+.artwork {
+  position: relative;
+}
+.audio-player--floating {
+  width: 270px;
+  bottom: 24px;
+  right: 24px;
+  left: auto;
+  border-radius: 4px;
+  overflow: hidden;
+
+  .track-info {
+    opacity: 0;
   }
 }
 
