@@ -1,5 +1,5 @@
 <template>
-    <div :class="{ 'audio-player': true, 'audio-player--hovering': hovering }"
+    <div :class="{ 'audio-player': true, 'audio-player--hovering': hovering, 'audio-player--floating': floating }"
          @mouseenter="hovering = true"
          @mouseleave="hovering = false"
     >
@@ -47,23 +47,43 @@ import { Howl } from 'howler';
 
 @Component
 export default class AudioPlayer extends Vue {
+  /* Current audio file time in seconds */
   private seek = 0;
+  /* Duration of the audio file in seconds */
   private duration = 0;
+  /* Denote whether the user is hovering over the player */
   private hovering = false;
+  /* Denote weather the the audio-player is playing */
   private playing = false;
+  /* Denote whether the player is "minimized" */
+  private floating = false;
+  /* Audio file URI */
   private uri = 'https://s3.us-east-2.amazonaws.com/staging.nawhas/reciters/hassan-sadiq/albums/2004/tracks/tu-rut-na-roia-ker.mp3';
+  /* Playback engine */
   private howl: Howl|undefined = null;
 
+  /**
+   * Increase the height of the seek bar when hovering
+   * for easier usability.
+   */
   get seekBarHeight() {
     return this.hovering ? 10 : 4;
   }
 
+  /**
+   * Update the progress bar with the current playback status.
+  */
   get progress() {
     if (!this.seek || !this.duration) {
       return 0;
     }
     return (this.seek / this.duration) * 100;
   }
+
+  /**
+   * When progress bar is clicked, update Howl to seek to the
+   * given position in the audio track.
+   */
   set progress(progress) {
     if (!this.howl) {
       return;
@@ -71,6 +91,9 @@ export default class AudioPlayer extends Vue {
     this.howl.seek((progress / 100) * this.duration);
   }
 
+  /**
+   * Handle Play/Pause button click.
+   */
   togglePlayState() {
     if (this.playing) {
       this.pause();
@@ -79,6 +102,9 @@ export default class AudioPlayer extends Vue {
     }
   }
 
+  /**
+   * Tells Howler to start playing the audio file
+   */
   play() {
     if (!this.howl) {
       this.initializeHowler();
@@ -88,6 +114,9 @@ export default class AudioPlayer extends Vue {
     this.playing = true;
   }
 
+  /**
+   * Pause playback if playing.
+   */
   pause() {
     if (!this.howl) {
       return;
@@ -97,6 +126,10 @@ export default class AudioPlayer extends Vue {
     this.playing = false;
   }
 
+  /**
+   * Every 1/4 of a second, update the progress bar with the
+   * current seek time.
+   */
   updateSeek() {
     if (!this.howl) {
       return;
@@ -106,6 +139,10 @@ export default class AudioPlayer extends Vue {
     this.duration = this.howl.duration();
   }
 
+  /**
+   * Initialize Howler for playback.
+   * Bind event listeners to Howl.
+   */
   initializeHowler() {
     this.howl = new Howl({
       src: [this.uri],
@@ -168,12 +205,10 @@ export default class AudioPlayer extends Vue {
   box-shadow: 0 -2px 8px 4px rgba(0,0,0,0.16);
   display: flex;
 
-
   .artwork img {
     width: 80px;
   }
 }
-
 
 .seek-bar {
   position: absolute;
