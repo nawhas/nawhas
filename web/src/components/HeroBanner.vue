@@ -33,6 +33,6 @@ export default {
   height: auto;
 }
 .hero--lg, .hero--xl {
-  height: 287px;
+  height: 350px;
 }
 </style>
