@@ -9,9 +9,10 @@
       <div class="player-content">
         <div class="seek-bar">
           <v-progress-linear
-            v-model="currentSeek"
+            v-model="progress"
             color="deep-orange"
             height="8"
+            :background-opacity="hovering ? 0.3 : 0"
             class="seek-bar--bar">
           </v-progress-linear>
         </div>
@@ -41,21 +42,72 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
+import { Howl } from 'howler';
 
 @Component
 export default class AudioPlayer extends Vue {
-  private currentSeek = 0;
-  private startTime = 0;
-  private endTime = 360;
+  private seek = 0;
+  private duration = 0;
   private hovering = false;
   private playing = false;
+  private uri = 'https://s3.us-east-2.amazonaws.com/staging.nawhas/reciters/hassan-sadiq/albums/2004/tracks/tu-rut-na-roia-ker.mp3';
+  private howl: Howl|undefined = undefined;
 
   get seekBarHeight() {
     return this.hovering ? 10 : 4;
   }
 
+  get progress() {
+    if (!this.seek || !this.duration) {
+      return 0;
+    }
+    return (this.seek / this.duration) * 100;
+  }
+
   togglePlayState() {
-    this.playing = !this.playing;
+    if (this.playing) {
+      this.pause();
+    } else {
+      this.play();
+    }
+  }
+
+  play() {
+    if (!this.howl) {
+      this.initializeHowler();
+    }
+
+    this.howl.play();
+    this.playing = true;
+  }
+
+  pause() {
+    if (!this.howl) {
+      return;
+    }
+
+    this.howl.pause();
+    this.playing = false;
+  }
+
+  updateSeek() {
+    if (!this.howl) {
+      return;
+    }
+
+    this.seek = this.howl.seek();
+    this.duration = this.howl.duration();
+  }
+
+  initializeHowler() {
+    this.howl = new Howl({
+      src: [this.uri],
+    });
+
+    // Register seek binding.
+    this.howl.on('play', () => {
+      window.setInterval(() => this.updateSeek(), 1000 / 4);
+    });
   }
 }
 </script>
@@ -90,6 +142,7 @@ export default class AudioPlayer extends Vue {
   overflow: hidden;
   will-change: height;
   transition: height 280ms;
+  cursor: pointer;
 }
 
 .player-content {
