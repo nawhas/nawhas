@@ -63,6 +63,9 @@ export default class AudioPlayer extends Vue {
     }
     return (this.seek / this.duration) * 100;
   }
+  set progress(progress) {
+    this.howl.seek((progress / 100) * this.duration);
+  }
 
   togglePlayState() {
     if (this.playing) {
