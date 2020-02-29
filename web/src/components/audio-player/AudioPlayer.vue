@@ -91,6 +91,8 @@ export default class AudioPlayer extends Vue {
 
   @Watch('track')
   onTrackUpdate() {
+    this.stop();
+    this.howl = null;
     this.play();
   }
 
@@ -171,6 +173,20 @@ export default class AudioPlayer extends Vue {
 
     this.howl.pause();
     this.playing = false;
+  }
+
+  /**
+   * Stop playback if playing.
+   */
+  stop() {
+    if (!this.howl) {
+      return;
+    }
+
+    this.howl.stop();
+    this.playing = false;
+    this.seek = 0;
+    this.duration = 0;
   }
 
   /**
