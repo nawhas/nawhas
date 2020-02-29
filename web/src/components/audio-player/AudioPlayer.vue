@@ -9,11 +9,12 @@
       <div class="player-content">
         <div class="seek-bar">
           <v-progress-linear
+            :active="duration !== 0"
             v-model="progress"
             color="deep-orange"
             height="8"
             :background-opacity="hovering ? 0.3 : 0"
-            class="seek-bar--bar">
+            class="seek-bar__progress">
           </v-progress-linear>
         </div>
         <div class="track-info">
@@ -108,12 +109,46 @@ export default class AudioPlayer extends Vue {
   initializeHowler() {
     this.howl = new Howl({
       src: [this.uri],
+      html5: true,
     });
 
     // Register seek binding.
     this.howl.on('play', () => {
+      this.playing = true;
       window.setInterval(() => this.updateSeek(), 1000 / 4);
     });
+
+    // Register end binding.
+    this.howl.on('end', () => {
+      this.playing = false;
+    });
+
+    // Register pause binding.
+    this.howl.on('pause', () => {
+      this.playing = false;
+    });
+
+    // if ('mediaSession' in navigator) {
+    //   // eslint-disable-next-line no-undef
+    //   (navigator as any).mediaSession.metadata = new MediaMetadata({
+    //     title: 'Chotey Hazrat',
+    //     artist: 'Nadeem Sarwar',
+    //     album: '2011',
+    //     artwork: [
+    //       { src: 'https://localhost:8080/img/default-album-image.png', sizes: '1024x1024', type: 'image/png' },
+    //     ],
+    //   });
+    //   (navigator as any).mediaSession.setActionHandler('play', () => {
+    //     this.play();
+    //   });
+    //   (navigator as any).mediaSession.setActionHandler('pause', () => {
+    //     this.pause();
+    //   });
+    //   // navigator.mediaSession.setActionHandler('seekbackward', function() {});
+    //   // navigator.mediaSession.setActionHandler('seekforward', function() {});
+    //   // navigator.mediaSession.setActionHandler('previoustrack', function() {});
+    //   // navigator.mediaSession.setActionHandler('nexttrack', function() {});
+    // }
   }
 }
 </script>
@@ -122,6 +157,7 @@ export default class AudioPlayer extends Vue {
 @import '~vuetify/src/styles/styles';
 
 .audio-player {
+  user-select: none;
   width: 100%;
   height: 80px;
   background: white;
@@ -148,7 +184,10 @@ export default class AudioPlayer extends Vue {
   overflow: hidden;
   will-change: height;
   transition: height 280ms;
-  cursor: pointer;
+
+  .seek-bar__progress {
+    cursor: pointer;
+  }
 }
 
 .player-content {
