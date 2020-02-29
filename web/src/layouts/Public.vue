@@ -1,39 +1,44 @@
 <template>
-  <v-app id="keep">
-    <v-navigation-drawer v-model="drawer" fixed clipped floating width="250" app>
-      <div v-for="(item, index) in navigation" :key="item.group">
-        <v-list class="nav" shaped>
-          <v-list-item
-            class="nav__tile"
-            v-for="link in item.children"
-            :key="link.to"
-            :to="link.to"
-            active-class="nav__tile--active"
-            :exact="link.exact"
-          >
-            <v-list-item-action class="nav__tile__action">
-              <v-icon class="nav__tile__action__icon" v-text="link.icon"></v-icon>
-            </v-list-item-action>
-            <v-list-item-content class="nav__tile__content">
-              <v-list-item-title class="nav__tile__content__title">{{ link.title }}</v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
-        </v-list>
-        <v-divider v-if="index < navigation.length - 1"></v-divider>
-      </div>
+  <v-app>
+    <v-navigation-drawer v-model="drawer" temporary app>
+      <v-list class="nav" shaped>
+        <v-list-item
+          v-for="link in navigation"
+          :key="link.to"
+          class="nav__tile"
+          :to="link.to"
+          active-class="nav__tile--active"
+          :exact="link.exact"
+        >
+          <v-list-item-action class="nav__tile__action">
+            <v-icon class="nav__tile__action__icon" v-text="link.icon"></v-icon>
+          </v-list-item-action>
+          <v-list-item-content class="nav__tile__content">
+            <v-list-item-title class="nav__tile__content__title">{{ link.title }}</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+      </v-list>
     </v-navigation-drawer>
-    <v-app-bar class="app-bar" color="white" app fixed clipped-left flat>
-      <v-app-bar-nav-icon @click.native="drawer = !drawer" v-show="$vuetify.breakpoint.mdAndDown" />
-      <v-toolbar-title class="d-flex pa-4 nav__title">
-        <router-link to="/" tag="div" class="masthead__logo">
-          <img class="masthead__logo"
-               :src="require('../assets/logo.svg')"
-               alt="Nawhas.com"
-          />
-        </router-link>
-      </v-toolbar-title>
-      <v-spacer v-if="mobile"></v-spacer>
-      <div class="nav__search">
+    <v-app-bar class="app-bar" color="white" app fixed elevate-on-scroll>
+      <div class="app-bar__left">
+        <nav class="nav__buttons" v-if="$vuetify.breakpoint.lgAndUp">
+          <v-btn text v-for="(link) in navigation" class="nav__btn" :key="link.to" :to="link.to">
+            {{ link.title }}
+          </v-btn>
+        </nav>
+        <v-app-bar-nav-icon @click.native="drawer = !drawer" v-else />
+      </div>
+      <div class="app-bar__center">
+        <v-toolbar-title class="nav__title">
+          <router-link to="/" tag="div" class="masthead__logo">
+            <img class="masthead__logo"
+                 :src="require('../assets/logo.svg')"
+                 alt="Nawhas.com"
+            />
+          </router-link>
+        </v-toolbar-title>
+      </div>
+      <div class="app-bar__right nav__search">
         <search />
       </div>
     </v-app-bar>
@@ -56,8 +61,6 @@ import navItems from '@/data/navigation';
   },
 })
 export default class PublicVuetify extends Vue {
-  private items = navItems;
-
   private drawer: boolean | null = null;
 
   get mobile() {
@@ -65,26 +68,14 @@ export default class PublicVuetify extends Vue {
   }
 
   get navigation() {
-    // return filtered nav list based on role
-    const items: object[] = [];
-    const role = this.$store.getters['auth/userRole'];
-
-    for (const group of this.items) {
-      group.children = group.children.filter(
-        (child) => !(child.role && child.role !== role),
-      );
-
-      if (group.children.length > 0) {
-        items.push(group);
-      }
-    }
-
-    return items;
+    return navItems;
   }
 }
 </script>
 
 <style lang="scss" scoped>
+@import "~vuetify/src/styles/styles";
+
 .main-container {
   padding: 0;
 }
@@ -93,9 +84,6 @@ export default class PublicVuetify extends Vue {
   justify-content: center;
 }
 
-.nav__title {
-  min-width: 232px;
-}
 .nav__search {
   align-self: flex-start;
 }
@@ -113,5 +101,32 @@ export default class PublicVuetify extends Vue {
 .masthead__logo {
   height: 38px;
   cursor: pointer;
+}
+.nav__btn {
+  text-transform: none;
+  font-weight: 400;
+}
+.app-bar {
+  position: relative;
+}
+.nav__title {
+  margin: auto;
+}
+
+.app-bar__left, .app-bar__right {
+  flex: 1;
+  display: flex;
+}
+.app-bar__left {
+  justify-content: flex-start;
+}
+.app-bar__right {
+  justify-content: flex-end;
+}
+
+@media #{map-get($display-breakpoints, 'md-and-down')} {
+  .app-bar__left {
+    flex: 0;
+  }
 }
 </style>
