@@ -1,6 +1,6 @@
 <template>
   <div>
-    <hero-banner :background="require('../assets/imam-hussain-header.jpg')" class="mb-4">
+    <hero-banner :background="require('../../assets/imam-hussain-header.jpg')" class="mb-4">
       <hero-quote author="Imam Jafar Sadiq (a.s.)">
         The murder of Hussain has lit a fire in the hearts of the believers which will never
         extinguish.
