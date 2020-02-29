@@ -72,7 +72,7 @@ export default class AudioPlayer extends Vue {
   /* Denote weather the the audio-player is playing */
   private playing = false;
   /* Denote whether the player is "minimized" */
-  private floating = true;
+  private floating = false;
   /* Audio file URI */
   private uri = 'https://s3.us-east-2.amazonaws.com/staging.nawhas/reciters/hassan-sadiq/albums/2004/tracks/tu-rut-na-roia-ker.mp3';
   /* Playback engine */
