@@ -50,7 +50,47 @@
         </div>
         <v-expand-transition>
           <div class="player-sub-actions" v-if="!floating">
-            <v-btn icon large><v-icon>playlist_play</v-icon></v-btn>
+            <v-menu
+              v-model="queueMenu"
+              top
+              :nudge-left="300"
+              offset-y
+              :close-on-content-click="false"
+            >
+              <template v-slot:activator="{ on }">
+                <v-btn
+                  icon large
+                  v-on="on"
+                >
+                <v-icon>playlist_play</v-icon>
+                </v-btn>
+              </template>
+
+              <v-card>
+                <v-list>
+                  <v-list-item
+                    v-for="(track, index) in this.queue"
+                    :key="track.id"
+                    :class="{'queue-active': isCurrentTrack(track)}"
+                  >
+                    <v-list-item-avatar>
+                      <img src="/img/default-album-image.png">
+                    </v-list-item-avatar>
+
+                    <v-list-item-content>
+                      <v-list-item-title>{{ track.title }}</v-list-item-title>
+                      <v-list-item-subtitle>{{ track.reciter.name }} - {{ track.year }}</v-list-item-subtitle>
+                    </v-list-item-content>
+
+                    <v-list-item-action>
+                      <v-btn icon @click="removeTrackFromQueue(index)">
+                        <v-icon>remove_circle_outline</v-icon>
+                      </v-btn>
+                    </v-list-item-action>
+                  </v-list-item>
+                </v-list>
+              </v-card>
+            </v-menu>
             <v-btn @click="toggleFloating" icon large><v-icon>picture_in_picture_alt</v-icon></v-btn>
           </div>
         </v-expand-transition>
@@ -87,6 +127,8 @@ export default class AudioPlayer extends Vue {
     id: null,
     index: null,
   };
+  /* Denote whether the menu for the queue is 'minimized' */
+  private queueMenu = false;
 
   /**
    * Increase the height of the seek bar when hovering
@@ -163,6 +205,27 @@ export default class AudioPlayer extends Vue {
       return;
     }
     this.howl.seek((progress / 100) * this.duration);
+  }
+
+  /**
+   * Check to see weather a track is the current track
+   */
+  isCurrentTrack(track) {
+    if (this.queue[this.currentTrack.index] === track) {
+      return true;
+    }
+
+    return false;
+  }
+
+  /**
+   * Removes the track from the queue
+   */
+  removeTrackFromQueue(trackIndex) {
+    this.$store.commit('player/REMOVE_TRACK', { trackIndex });
+    if (this.isCurrentTrack(this.queue[trackIndex])) {
+      this.stop();
+    }
   }
 
   /**
@@ -404,6 +467,19 @@ $duration: 500ms;
 
   .track-info {
     opacity: 0;
+  }
+}
+
+.queue-active {
+  background-color: orangered;
+
+  .v-list-item__title {
+    font-weight: bold;
+    color: white;
+  }
+
+  .v-list-item__subtitle {
+    color: white !important;
   }
 }
 
