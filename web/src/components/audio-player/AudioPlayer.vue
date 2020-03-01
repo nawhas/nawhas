@@ -115,6 +115,13 @@ export default class AudioPlayer extends Vue {
   }
 
   /**
+   * Determine if there's another track in the queue before this.
+   */
+  get hasPrevious(): boolean {
+    return this.$store.getters['player/hasPrevious'];
+  }
+
+  /**
    * Gets the current queue from the player store
    */
   get queue() {
@@ -236,7 +243,14 @@ export default class AudioPlayer extends Vue {
   }
 
   previous() {
-    // TODO - Implement
+    if (this.hasPrevious && this.progress < 2) {
+      this.$store.commit('player/PREVIOUS');
+      return;
+    }
+
+    // Reset the track if the current track is more than 2 percent complete
+    // or if there's no previous track..
+    this.howl.seek(0);
   }
 
   /**

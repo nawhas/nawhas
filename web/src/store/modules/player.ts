@@ -18,6 +18,7 @@ const getters = {
       : state.queue[state.current]
   ),
   hasNext: (state: PlayerState) => (state.current !== null && state.queue.length > state.current + 1),
+  hasPrevious: (state: PlayerState) => (state.current !== null && state.current !== 0),
 };
 
 const mutations = {
@@ -33,6 +34,12 @@ const mutations = {
       return;
     }
     state.current++;
+  },
+  PREVIOUS(state: PlayerState) {
+    if (state.current === null) {
+      return;
+    }
+    state.current--;
   },
 };
 
