@@ -43,7 +43,7 @@
             <v-icon v-if="playing">pause_circle_filled</v-icon>
             <v-icon v-else>play_circle_filled</v-icon>
           </v-btn>
-          <v-btn icon large disabled><v-icon>skip_next</v-icon></v-btn>
+          <v-btn @click="playNextTrack" icon large :disabled="queue.length < 1"><v-icon>skip_next</v-icon></v-btn>
           <v-expand-transition>
             <v-btn icon v-if="floating"><v-icon>more_vert</v-icon></v-btn>
           </v-expand-transition>
@@ -213,6 +213,22 @@ export default class AudioPlayer extends Vue {
   }
 
   /**
+   * Play the next track in the queue
+   */
+  playNextTrack() {
+    let currentTrackIndex;
+    // eslint-disable-next-line no-plusplus
+    for (let index = 0; index < this.queue.length; index++) {
+      const element = this.queue[index];
+      if (this.track === element) {
+        currentTrackIndex = index;
+      }
+    }
+
+    this.$store.commit('player/PLAY_TRACK', { track: this.queue[currentTrackIndex + 1] });
+  }
+
+  /**
    * Initialize Howler for playback.
    * Bind event listeners to Howl.
    */
@@ -236,6 +252,11 @@ export default class AudioPlayer extends Vue {
     // Register pause binding.
     this.howl.on('pause', () => {
       this.playing = false;
+    });
+
+    // Register end binding
+    this.howl.on('end', () => {
+      this.playNextTrack();
     });
 
     // if ('mediaSession' in navigator) {

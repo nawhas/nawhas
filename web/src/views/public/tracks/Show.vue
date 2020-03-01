@@ -19,7 +19,7 @@
                 <v-btn @click="playTrack" text class="track-hero__audio_buttons--play white--text">
                   <v-icon class="track-hero__audio_buttons--icons">play_circle_filled</v-icon>Play Audio
                 </v-btn>
-                <v-btn text class="track-hero__audio_buttons--queue white--text">
+                <v-btn @click="addToQueue" text class="track-hero__audio_buttons--queue white--text">
                   <v-icon class="track-hero__audio_buttons--icons">playlist_add</v-icon>Add to Queue
                 </v-btn>
               </div>
@@ -244,6 +244,7 @@ export default {
     },
     playTrack() {
       this.$store.commit('player/PLAY_TRACK', { track: this.track });
+      this.$store.commit('player/ADD_TO_QUEUE', { track: this.track });
     },
     addToQueue() {
       this.$store.commit('player/ADD_TO_QUEUE', { track: this.track });
