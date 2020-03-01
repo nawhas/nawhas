@@ -1,34 +1,31 @@
 <template>
-    <div :class="{ 'audio-player': true, 'audio-player--hovering': hovering, 'audio-player--floating': floating }"
+    <div :class="classes"
          @mouseenter="hovering = true"
          @mouseleave="hovering = false"
          v-if="track"
     >
+      <div class="audio-player__mobile-header"
+           v-ripple
+           v-if="mobile && !minimized"
+           @click="toggleMinimized"
+      >
+        <v-icon large>remove</v-icon>
+      </div>
       <v-hover class="artwork">
         <template v-slot:default="{ hover }">
-          <div>
+          <div @click="toggleMinimized">
             <img :src="artwork" />
             <v-fade-transition>
-              <v-overlay v-if="hover && floating" absolute>
-                <v-btn icon @click="toggleFloating"><v-icon>fullscreen</v-icon></v-btn>
+              <v-overlay v-if="hover && minimized && !mobile" absolute>
+                <v-btn icon @click="toggleMinimized"><v-icon>fullscreen</v-icon></v-btn>
               </v-overlay>
             </v-fade-transition>
           </div>
         </template>
       </v-hover>
       <div class="player-content">
-        <div class="seek-bar">
-          <v-progress-linear
-            :active="duration !== 0"
-            v-model="progress"
-            color="deep-orange"
-            height="8"
-            :background-opacity="hovering ? 0.3 : 0"
-            class="seek-bar__progress">
-          </v-progress-linear>
-        </div>
         <v-expand-transition>
-          <div class="track-info" v-if="!floating">
+          <div class="track-info" v-if="!minimized || mobile">
             <div class="track-info--track-name body-1" @click="goToTrack">
               {{ track.title }}
             </div>
@@ -37,19 +34,55 @@
             </div>
           </div>
         </v-expand-transition>
+        <div class="seek-bar">
+          <v-progress-linear
+            :active="duration !== 0"
+            v-model="progress"
+            color="deep-orange"
+            height="8"
+            :background-opacity="hovering || mobile ? 0.3 : 0"
+            class="seek-bar__progress">
+          </v-progress-linear>
+        </div>
         <div class="player-actions">
-          <v-btn icon large @click="previous"><v-icon>skip_previous</v-icon></v-btn>
-          <v-btn icon x-large color="deep-orange" @click="togglePlayState">
-            <v-icon v-if="playing">pause_circle_filled</v-icon>
-            <v-icon v-else>play_circle_filled</v-icon>
+          <v-btn
+            v-if="!mobile || !minimized"
+            icon
+            :height="playbackControlSizes.standard.button"
+            :width="playbackControlSizes.standard.button"
+            @click="previous"
+          >
+            <v-icon :size="playbackControlSizes.standard.icon">skip_previous</v-icon>
           </v-btn>
-          <v-btn icon large @click="next" :disabled="!hasNext"><v-icon>skip_next</v-icon></v-btn>
+          <v-btn icon
+                 :height="playbackControlSizes.prominent.button"
+                 :width="playbackControlSizes.prominent.button"
+                 color="deep-orange"
+                 @click="togglePlayState"
+          >
+            <v-icon v-if="playing" :size="playbackControlSizes.prominent.icon">
+              pause_circle_filled
+            </v-icon>
+            <v-icon v-else :size="playbackControlSizes.prominent.icon">
+              play_circle_filled
+            </v-icon>
+          </v-btn>
+          <v-btn
+            icon
+            v-if="!mobile || !minimized"
+            :height="playbackControlSizes.standard.button"
+            :width="playbackControlSizes.standard.button"
+            @click="next"
+            :disabled="!hasNext"
+          >
+            <v-icon :size="playbackControlSizes.standard.icon">skip_next</v-icon>
+          </v-btn>
           <v-expand-transition>
-            <v-btn icon v-if="floating"><v-icon>more_vert</v-icon></v-btn>
+            <v-btn icon v-if="minimized"><v-icon>more_vert</v-icon></v-btn>
           </v-expand-transition>
         </div>
         <v-expand-transition>
-          <div class="player-sub-actions" v-if="!floating">
+          <div class="player-sub-actions" v-if="!minimized && !mobile">
             <v-menu
               v-model="queueMenu"
               top
@@ -99,7 +132,7 @@
                 </v-list>
               </v-card>
             </v-menu>
-            <v-btn @click="toggleFloating" icon large><v-icon>picture_in_picture_alt</v-icon></v-btn>
+            <v-btn @click="toggleMinimized" icon large><v-icon>picture_in_picture_alt</v-icon></v-btn>
           </div>
         </v-expand-transition>
       </div>
@@ -109,7 +142,7 @@
 <script lang="ts">
 import { Component, Vue, Watch } from 'vue-property-decorator';
 import { Howl } from 'howler';
-import { PlayerState, TrackQueue, QueuedTrack } from '@/store/modules/player';
+import { PlayerState, QueuedTrack, TrackQueue } from '@/store/modules/player';
 
 interface CachedTrackReference {
   queued: QueuedTrack|null;
@@ -126,8 +159,8 @@ export default class AudioPlayer extends Vue {
   private hovering = false;
   /* Denote weather the the audio-player is playing */
   private playing = false;
-  /* Denote whether the player is "minimized" */
-  private floating = false;
+  /* Denote whether the player is "minimized". Default to minimized on Mobile */
+  private minimized = false; // TODO - Default to true on Mobile
   /* Playback engine */
   private howl: Howl|undefined = undefined;
   /* Cache the current playing track to compare */
@@ -137,6 +170,20 @@ export default class AudioPlayer extends Vue {
   };
   /* Denote whether the menu for the queue is 'minimized' */
   private queueMenu = false;
+
+  get classes() {
+    return {
+      'audio-player': true,
+      'audio-player--hovering': this.hovering && !this.mobile,
+      'audio-player--minimized': this.minimized,
+      'audio-player--expanded': !this.minimized,
+      'audio-player--mobile': this.mobile,
+    };
+  }
+
+  get mobile() {
+    return this.$vuetify.breakpoint.smAndDown;
+  }
 
   /**
    * Increase the height of the seek bar when hovering
@@ -151,6 +198,20 @@ export default class AudioPlayer extends Vue {
    */
   get store(): PlayerState {
     return this.$store.state.player;
+  }
+
+  get playbackControlSizes() {
+    if (this.mobile && !this.minimized) {
+      return {
+        standard: { button: 48, icon: 40 },
+        prominent: { button: 96, icon: 88 },
+      };
+    }
+
+    return {
+      standard: { button: 36, icon: 28 },
+      prominent: { button: 48, icon: 40 },
+    };
   }
 
   /**
@@ -297,10 +358,10 @@ export default class AudioPlayer extends Vue {
   }
 
   /**
-   * Makes the audio player floating
+   * Makes the audio player minimized
    */
-  toggleFloating() {
-    this.floating = !this.floating;
+  toggleMinimized() {
+    this.minimized = !this.minimized;
   }
 
   /**
@@ -471,6 +532,7 @@ $duration: 500ms;
      bottom $duration $transition;
 
   .artwork img {
+    transition: width $duration;
     width: 80px;
   }
 }
@@ -514,7 +576,7 @@ $duration: 500ms;
 .artwork {
   position: relative;
 }
-.audio-player--floating {
+.audio-player--minimized {
   width: 270px;
   bottom: 24px;
   right: 24px;
@@ -535,5 +597,73 @@ $duration: 500ms;
     .audio-player {
       z-index: 3 !important;
     }
+}
+
+.audio-player--mobile.audio-player--expanded {
+  height: 90vh;
+  border-radius: 16px 16px 0 0;
+  overflow-y: auto;
+  display: block;
+
+  .audio-player__mobile-header {
+    width: 100%;
+    text-align: center;
+    padding: 4px;
+    transition: background-color $duration;
+  }
+
+  .artwork {
+    padding: 24px 88px;
+
+    img {
+      width: 100%;
+    }
+  }
+
+  .player-content {
+    padding: 24px 48px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+
+    .track-info {
+      margin-bottom: 36px;
+      text-align: center;
+
+      .track-info--track-name {
+        font-size: 24px !important;
+        margin-bottom: 12px;
+      }
+    }
+
+    .seek-bar {
+      position: relative;
+      top: auto;
+      left: auto;
+      width: 100%;
+      height: 4px;
+      overflow: hidden;
+      margin-bottom: 24px;
+    }
+
+    .player-actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      padding: 0 24px;
+    }
+  }
+}
+
+.audio-player--mobile.audio-player--minimized {
+  height: 80px;
+  bottom: 0;
+  right: 0;
+  width: 100%;
+
+  .track-info {
+    opacity: 1;
+  }
 }
 </style>
