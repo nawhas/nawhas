@@ -433,14 +433,14 @@ export default class AudioPlayer extends Vue {
   beforeDestroy() {
     if (this.howl) {
       this.howl.unload();
-      this.howl = null;
+      this.howl = undefined;
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-@import '@/styles/variables.scss';
+@import '@/styles/theme';
 
 $transition: cubic-bezier(0.4, 0, 0.2, 1);
 $duration: 500ms;
