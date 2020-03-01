@@ -17,14 +17,14 @@
             <img :src="artwork" />
             <v-fade-transition>
               <v-overlay v-if="hover && minimized && !mobile" absolute>
-                <v-btn icon @click="toggleMinimized"><v-icon>fullscreen</v-icon></v-btn>
+                <v-icon>fullscreen</v-icon>
               </v-overlay>
             </v-fade-transition>
           </div>
         </template>
       </v-hover>
       <div class="player-content">
-        <v-expand-transition>
+        <v-expand-x-transition>
           <div class="track-info" v-if="!minimized || mobile">
             <div class="track-info--track-name body-1" @click="goToTrack">
               {{ track.title }}
@@ -33,7 +33,7 @@
               {{ track.reciter.name }} &bull; {{ track.year }}
             </div>
           </div>
-        </v-expand-transition>
+        </v-expand-x-transition>
         <div class="seek-bar">
           <v-progress-linear
             :active="duration !== 0"
@@ -310,6 +310,10 @@ export default class AudioPlayer extends Vue {
   }
 
   goToTrack() {
+    if (this.mobile && !this.minimized) {
+      this.minimized = true;
+    }
+
     this.$router.push({
       name: 'tracks.show',
       params: {
@@ -516,7 +520,7 @@ export default class AudioPlayer extends Vue {
 @import '@/styles/theme';
 
 $transition: cubic-bezier(0.4, 0, 0.2, 1);
-$duration: 500ms;
+$duration: 680ms;
 .audio-player {
   user-select: none;
   width: 100%;
@@ -535,9 +539,12 @@ $duration: 500ms;
      right $duration $transition,
      bottom $duration $transition;
 
-  .artwork img {
-    transition: width $duration;
-    width: 80px;
+  .artwork {
+    cursor: pointer;
+    img {
+      transition: width $duration $transition, max-width $duration $transition;
+      max-width: 80px;
+    }
   }
 }
 
@@ -565,9 +572,19 @@ $duration: 500ms;
 
   .track-info {
     padding: 0 12px;
+    flex: 1;
+  }
+  .player-actions {
+    margin: auto;
+    justify-content: center;
+    display: flex;
+    align-items: center;
   }
   .player-sub-actions {
     padding: 0 12px;
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
   }
 }
 
@@ -604,11 +621,11 @@ $duration: 500ms;
 }
 
 .audio-player--mobile.audio-player--expanded {
-  height: 99vh;
+  height: 98%;
   border-radius: 16px 16px 0 0;
   overflow-y: auto;
-  display: block;
   z-index: 100 !important;
+  flex-direction: column;
 
   .audio-player__mobile-header {
     width: 100%;
