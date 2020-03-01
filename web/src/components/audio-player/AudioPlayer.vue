@@ -95,7 +95,7 @@
                   icon large
                   v-on="on"
                 >
-                <v-icon>playlist_play</v-icon>
+                  <v-icon>playlist_play</v-icon>
                 </v-btn>
               </template>
 
@@ -600,23 +600,25 @@ $duration: 500ms;
 }
 
 .audio-player--mobile.audio-player--expanded {
-  height: 90vh;
+  height: 99vh;
   border-radius: 16px 16px 0 0;
   overflow-y: auto;
   display: block;
+  z-index: 100 !important;
 
   .audio-player__mobile-header {
     width: 100%;
     text-align: center;
     padding: 4px;
-    transition: background-color $duration;
   }
 
   .artwork {
     padding: 24px 88px;
+    text-align: center;
 
     img {
       width: 100%;
+      max-width: 400px;
     }
   }
 
@@ -661,6 +663,7 @@ $duration: 500ms;
   bottom: 0;
   right: 0;
   width: 100%;
+  padding-right: 8px;
 
   .track-info {
     opacity: 1;
