@@ -85,7 +85,7 @@
             </v-card>
             <v-card class="track-page-content__card track-page-content__card--album">
               <v-card-title class="track-page-content__card--album--title subtitle-1">
-                <v-icon class="track-page-content__card--album--title--icon">format_list_numbered</v-icon>
+                <v-icon class="track-page-content__card--album--title--icon">format_list_bulleted</v-icon>
                 <span>More From This Album</span>
               </v-card-title>
               <v-card-text class="pa-0 subtitle-1" v-if="track && album">
@@ -122,6 +122,12 @@
         </v-layout>
       </v-container>
     </div>
+    <v-snackbar v-model="addedToQueueSnackbar" right>
+      <v-icon color="white">playlist_add_check</v-icon> Added to Queue
+      <v-btn color="deep-orange" text @click="addedToQueueSnackbar = false">
+        Close
+      </v-btn>
+    </v-snackbar>
   </div>
 </template>
 
@@ -152,6 +158,7 @@ export default {
       background: '#222',
       textColor: '#fff',
       track: null,
+      addedToQueueSnackbar: false,
     };
   },
 
@@ -247,6 +254,7 @@ export default {
     },
     addToQueue() {
       this.$store.commit('player/ADD_TO_QUEUE', { track: this.track });
+      this.addedToQueueSnackbar = true;
     },
   },
 };
