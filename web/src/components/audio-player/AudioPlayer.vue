@@ -309,7 +309,7 @@ export default class AudioPlayer extends Vue {
    */
   play() {
     if (!this.howl) {
-      this.initializeHowler();
+      this.howl = this.initializeHowler();
     }
 
     this.howl.play();
@@ -350,7 +350,9 @@ export default class AudioPlayer extends Vue {
 
     // Reset the track if the current track is more than 2 percent complete
     // or if there's no previous track..
-    this.howl.seek(0);
+    if (this.howl) {
+      this.howl.seek(0);
+    }
   }
 
   /**
@@ -369,7 +371,7 @@ export default class AudioPlayer extends Vue {
       return;
     }
 
-    this.seek = this.howl.seek();
+    this.seek = (this.howl.seek() as number);
     this.duration = this.howl.duration();
   }
 
@@ -377,20 +379,24 @@ export default class AudioPlayer extends Vue {
    * Initialize Howler for playback.
    * Bind event listeners to Howl.
    */
-  initializeHowler() {
-    this.howl = new Howl({
+  initializeHowler(): Howl {
+    if (this.uri === null) {
+      throw new TypeError('Cannot instantiate player: no audio track URI available.');
+    }
+
+    const howl = new Howl({
       src: [this.uri],
       html5: true,
     });
 
     // Register seek binding.
-    this.howl.on('play', () => {
+    howl.on('play', () => {
       this.playing = true;
       window.setInterval(() => this.updateSeek(), 1000 / 4);
     });
 
     // Register end binding.
-    this.howl.on('end', () => {
+    howl.on('end', () => {
       if (this.hasNext) {
         this.next();
       } else {
@@ -399,7 +405,7 @@ export default class AudioPlayer extends Vue {
     });
 
     // Register pause binding.
-    this.howl.on('pause', () => {
+    howl.on('pause', () => {
       this.playing = false;
     });
 
@@ -424,6 +430,8 @@ export default class AudioPlayer extends Vue {
     //   // navigator.mediaSession.setActionHandler('previoustrack', function() {});
     //   // navigator.mediaSession.setActionHandler('nexttrack', function() {});
     // }
+
+    return howl;
   }
 
   /**
