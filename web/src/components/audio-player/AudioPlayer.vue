@@ -69,9 +69,9 @@
               <v-card>
                 <v-list>
                   <v-list-item
-                    v-for="(track, index) in this.queue"
+                    v-for="track in this.queue"
                     :key="track.id"
-                    :class="{'queue-active': isCurrentTrack(track)}"
+                    :class="{'queue-active': isCurrentTrack(track.id)}"
                   >
                     <v-list-item-avatar>
                       <img src="/img/default-album-image.png">
@@ -83,7 +83,7 @@
                     </v-list-item-content>
 
                     <v-list-item-action>
-                      <v-btn icon @click="removeTrackFromQueue(index)">
+                      <v-btn icon @click="removeTrackFromQueue(track)">
                         <v-icon>remove_circle_outline</v-icon>
                       </v-btn>
                     </v-list-item-action>
@@ -211,7 +211,7 @@ export default class AudioPlayer extends Vue {
    * Check to see weather a track is the current track
    */
   isCurrentTrack(track) {
-    if (this.queue[this.currentTrack.index] === track) {
+    if (this.currentTrack.id === track) {
       return true;
     }
 
@@ -221,9 +221,9 @@ export default class AudioPlayer extends Vue {
   /**
    * Removes the track from the queue
    */
-  removeTrackFromQueue(trackIndex) {
-    this.$store.commit('player/REMOVE_TRACK', { trackIndex });
-    if (this.isCurrentTrack(this.queue[trackIndex])) {
+  removeTrackFromQueue(track) {
+    this.$store.commit('player/REMOVE_TRACK', { track });
+    if (!this.hasNext) {
       this.stop();
     }
   }
