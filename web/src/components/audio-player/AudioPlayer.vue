@@ -129,7 +129,7 @@ export default class AudioPlayer extends Vue {
   /* Denote whether the player is "minimized" */
   private floating = false;
   /* Playback engine */
-  private howl: Howl|undefined = null;
+  private howl: Howl|undefined = undefined;
   /* Cache the current playing track to compare */
   private currentTrack: CachedTrackReference = {
     queued: null,
@@ -280,7 +280,7 @@ export default class AudioPlayer extends Vue {
     this.currentTrack.index = this.store.current;
 
     this.stop();
-    this.howl = null;
+    this.howl = undefined;
     this.play();
   }
 
