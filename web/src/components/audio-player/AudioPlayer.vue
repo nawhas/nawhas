@@ -433,6 +433,7 @@ export default class AudioPlayer extends Vue {
   beforeDestroy() {
     if (this.howl) {
       this.howl.unload();
+      this.howl = null;
     }
   }
 }
