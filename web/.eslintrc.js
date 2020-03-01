@@ -12,6 +12,7 @@ module.exports = {
     ecmaVersion: 2020,
   },
   rules: {
+    'no-plusplus': 0,
     'class-methods-use-this': 0,
     'no-return-assign': 0,
     'lines-between-class-members': 0,

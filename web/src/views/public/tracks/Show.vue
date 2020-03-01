@@ -244,7 +244,6 @@ export default {
     },
     playTrack() {
       this.$store.commit('player/PLAY_TRACK', { track: this.track });
-      this.$store.commit('player/ADD_TO_QUEUE', { track: this.track });
     },
     addToQueue() {
       this.$store.commit('player/ADD_TO_QUEUE', { track: this.track });

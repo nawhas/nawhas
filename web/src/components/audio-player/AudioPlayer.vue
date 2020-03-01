@@ -38,12 +38,12 @@
           </div>
         </v-expand-transition>
         <div class="player-actions">
-          <v-btn icon large disabled><v-icon>skip_previous</v-icon></v-btn>
+          <v-btn icon large @click="previous"><v-icon>skip_previous</v-icon></v-btn>
           <v-btn icon x-large color="deep-orange" @click="togglePlayState">
             <v-icon v-if="playing">pause_circle_filled</v-icon>
             <v-icon v-else>play_circle_filled</v-icon>
           </v-btn>
-          <v-btn @click="playNextTrack" icon large :disabled="queue.length < 1"><v-icon>skip_next</v-icon></v-btn>
+          <v-btn icon large @click="next" :disabled="!hasNext"><v-icon>skip_next</v-icon></v-btn>
           <v-expand-transition>
             <v-btn icon v-if="floating"><v-icon>more_vert</v-icon></v-btn>
           </v-expand-transition>
@@ -61,6 +61,12 @@
 <script lang="ts">
 import { Component, Vue, Watch } from 'vue-property-decorator';
 import { Howl } from 'howler';
+import { PlayerState } from '@/store/modules/player';
+
+interface CachedTrackReference {
+  id: string|null;
+  index: number|null;
+}
 
 @Component
 export default class AudioPlayer extends Vue {
@@ -76,6 +82,11 @@ export default class AudioPlayer extends Vue {
   private floating = false;
   /* Playback engine */
   private howl: Howl|undefined = null;
+  /* Cache the current playing track to compare */
+  private currentTrack: CachedTrackReference = {
+    id: null,
+    index: null,
+  };
 
   /**
    * Increase the height of the seek bar when hovering
@@ -85,28 +96,32 @@ export default class AudioPlayer extends Vue {
     return this.hovering ? 10 : 4;
   }
 
+  get store(): PlayerState {
+    return this.$store.state.player;
+  }
+
   /**
    * Gets the current track from the player store
    */
   get track() {
-    return this.$store.state.player.track;
+    return this.$store.getters['player/track'];
+  }
+
+  /**
+   * Determine if there's another track in the queue.
+   */
+  get hasNext(): boolean {
+    return this.$store.getters['player/hasNext'];
   }
 
   /**
    * Gets the current queue from the player store
    */
   get queue() {
-    return this.$store.state.player.queue;
+    return this.store.queue;
   }
 
-  @Watch('track')
-  onTrackUpdate() {
-    this.stop();
-    this.howl = null;
-    this.play();
-  }
-
-  get artwork() {
+  get artwork(): string {
     if (!this.track || !this.track.album.artwork) {
       return '/img/default-album-image.png';
     }
@@ -114,7 +129,7 @@ export default class AudioPlayer extends Vue {
     return this.track.album.artwork;
   }
 
-  get uri() {
+  get uri(): string|null {
     if (!this.track) {
       return null;
     }
@@ -125,7 +140,7 @@ export default class AudioPlayer extends Vue {
   /**
    * Update the progress bar with the current playback status.
   */
-  get progress() {
+  get progress(): number {
     if (!this.seek || !this.duration) {
       return 0;
     }
@@ -136,12 +151,32 @@ export default class AudioPlayer extends Vue {
    * When progress bar is clicked, update Howl to seek to the
    * given position in the audio track.
    */
-  set progress(progress) {
+  set progress(progress: number) {
     if (!this.howl) {
       return;
     }
     this.howl.seek((progress / 100) * this.duration);
   }
+
+  /**
+   * If a new track is requested, play the new one.
+   */
+  @Watch('track')
+  onTrackUpdate() {
+    if (this.currentTrack.index === this.store.current && this.currentTrack.id === this.track.id) {
+      // If the current track index and the current track ID match, we're not actually
+      // changing tracks. So don't do anything.
+      return;
+    }
+
+    this.currentTrack.index = this.store.current;
+    this.currentTrack.id = this.track.id;
+
+    this.stop();
+    this.howl = null;
+    this.play();
+  }
+
 
   /**
    * Handle Play/Pause button click.
@@ -162,7 +197,8 @@ export default class AudioPlayer extends Vue {
   }
 
   /**
-   * Tells Howler to start playing the audio file
+   * Start playing the current track.
+   * If no player is initialized, initialize Howler.
    */
   play() {
     if (!this.howl) {
@@ -199,6 +235,17 @@ export default class AudioPlayer extends Vue {
     this.duration = 0;
   }
 
+  previous() {
+    // TODO - Implement
+  }
+
+  /**
+   * Play the next track in the queue
+   */
+  next() {
+    this.$store.commit('player/NEXT');
+  }
+
   /**
    * Every 1/4 of a second, update the progress bar with the
    * current seek time.
@@ -210,22 +257,6 @@ export default class AudioPlayer extends Vue {
 
     this.seek = this.howl.seek();
     this.duration = this.howl.duration();
-  }
-
-  /**
-   * Play the next track in the queue
-   */
-  playNextTrack() {
-    let currentTrackIndex;
-    // eslint-disable-next-line no-plusplus
-    for (let index = 0; index < this.queue.length; index++) {
-      const element = this.queue[index];
-      if (this.track === element) {
-        currentTrackIndex = index;
-      }
-    }
-
-    this.$store.commit('player/PLAY_TRACK', { track: this.queue[currentTrackIndex + 1] });
   }
 
   /**
@@ -247,16 +278,15 @@ export default class AudioPlayer extends Vue {
     // Register end binding.
     this.howl.on('end', () => {
       this.playing = false;
+
+      if (this.queue.length > 0) {
+        this.next();
+      }
     });
 
     // Register pause binding.
     this.howl.on('pause', () => {
       this.playing = false;
-    });
-
-    // Register end binding
-    this.howl.on('end', () => {
-      this.playNextTrack();
     });
 
     // if ('mediaSession' in navigator) {
