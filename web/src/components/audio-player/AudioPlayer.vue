@@ -44,12 +44,14 @@
             <v-icon v-else>play_circle_filled</v-icon>
           </v-btn>
           <v-btn icon large disabled><v-icon>skip_next</v-icon></v-btn>
+          <v-expand-transition>
+            <v-btn icon v-if="floating"><v-icon>more_vert</v-icon></v-btn>
+          </v-expand-transition>
         </div>
         <v-expand-transition>
-          <div class="player-sub-actions">
-            <v-btn v-if="!floating" icon large><v-icon>playlist_play</v-icon></v-btn>
-            <v-btn v-if="!floating" @click="toggleFloating" icon large><v-icon>picture_in_picture_alt</v-icon></v-btn>
-            <v-btn icon><v-icon>more_vert</v-icon></v-btn>
+          <div class="player-sub-actions" v-if="!floating">
+            <v-btn icon large><v-icon>playlist_play</v-icon></v-btn>
+            <v-btn @click="toggleFloating" icon large><v-icon>picture_in_picture_alt</v-icon></v-btn>
           </div>
         </v-expand-transition>
       </div>
