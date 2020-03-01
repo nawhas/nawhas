@@ -160,7 +160,7 @@ export default class AudioPlayer extends Vue {
   /* Denote weather the the audio-player is playing */
   private playing = false;
   /* Denote whether the player is "minimized". Default to minimized on Mobile */
-  private minimized = false; // TODO - Default to true on Mobile
+  private minimized = false;
   /* Playback engine */
   private howl: Howl|undefined = undefined;
   /* Cache the current playing track to compare */
@@ -286,6 +286,10 @@ export default class AudioPlayer extends Vue {
       return;
     }
     this.howl.seek((progress / 100) * this.duration);
+  }
+
+  mounted() {
+    this.minimized = this.mobile;
   }
 
   /**
