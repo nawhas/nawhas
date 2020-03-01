@@ -29,7 +29,7 @@
         </div>
         <v-expand-transition>
           <div class="track-info" v-if="!floating">
-            <div class="track-info--track-name body-1">
+            <div class="track-info--track-name body-1" @click="goToTrack">
               {{ track.title }}
             </div>
             <div class="track-info--track-meta body-2">
@@ -69,9 +69,10 @@
               <v-card>
                 <v-list>
                   <v-list-item
-                    v-for="track in this.queue"
-                    :key="track.id"
-                    :class="{'queue-active': isCurrentTrack(track.id)}"
+                    v-for="{ id, track } in this.queue"
+                    :key="id"
+                    @click="skipToTrack(id)"
+                    :class="{'queue-item': true, 'queue-item--active': isCurrentTrack(id)}"
                   >
                     <v-list-item-avatar>
                       <img src="/img/default-album-image.png">
@@ -83,9 +84,16 @@
                     </v-list-item-content>
 
                     <v-list-item-action>
-                      <v-btn icon @click="removeTrackFromQueue(track)">
+                      <v-btn icon v-if="!isCurrentTrack(id)" @click="removeTrackFromQueue(id)">
                         <v-icon>remove_circle_outline</v-icon>
                       </v-btn>
+                      <v-progress-circular
+                        v-else
+                        :size="20"
+                        :rotate="-90"
+                        :value="progress"
+                        color="primary"
+                      ></v-progress-circular>
                     </v-list-item-action>
                   </v-list-item>
                 </v-list>
@@ -101,10 +109,10 @@
 <script lang="ts">
 import { Component, Vue, Watch } from 'vue-property-decorator';
 import { Howl } from 'howler';
-import { PlayerState } from '@/store/modules/player';
+import { PlayerState, TrackQueue, QueuedTrack } from '@/store/modules/player';
 
 interface CachedTrackReference {
-  id: string|null;
+  queued: QueuedTrack|null;
   index: number|null;
 }
 
@@ -124,7 +132,7 @@ export default class AudioPlayer extends Vue {
   private howl: Howl|undefined = null;
   /* Cache the current playing track to compare */
   private currentTrack: CachedTrackReference = {
-    id: null,
+    queued: null,
     index: null,
   };
   /* Denote whether the menu for the queue is 'minimized' */
@@ -138,6 +146,9 @@ export default class AudioPlayer extends Vue {
     return this.hovering ? 10 : 4;
   }
 
+  /**
+   * Convenient accessor for the Player store.
+   */
   get store(): PlayerState {
     return this.$store.state.player;
   }
@@ -145,7 +156,16 @@ export default class AudioPlayer extends Vue {
   /**
    * Gets the current track from the player store
    */
-  get track() {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  get track(): any {
+    const queued: QueuedTrack|null = this.$store.getters['player/track'];
+    return queued !== null ? queued.track : null;
+  }
+
+  /**
+   * Gets the current QueuedTrack object from the player store
+   */
+  get currentQueuedTrack(): QueuedTrack|null {
     return this.$store.getters['player/track'];
   }
 
@@ -166,7 +186,7 @@ export default class AudioPlayer extends Vue {
   /**
    * Gets the current queue from the player store
    */
-  get queue() {
+  get queue(): TrackQueue {
     return this.store.queue;
   }
 
@@ -210,22 +230,37 @@ export default class AudioPlayer extends Vue {
   /**
    * Check to see weather a track is the current track
    */
-  isCurrentTrack(track) {
-    if (this.currentTrack.id === track) {
-      return true;
-    }
-
-    return false;
+  isCurrentTrack(id: string) {
+    return (this.currentTrack.queued && this.currentTrack.queued.id === id);
   }
 
   /**
    * Removes the track from the queue
    */
-  removeTrackFromQueue(track) {
-    this.$store.commit('player/REMOVE_TRACK', { track });
-    if (!this.hasNext) {
-      this.stop();
-    }
+  removeTrackFromQueue(id: string) {
+    this.$store.commit('player/REMOVE_TRACK', { id });
+    // resetting queueMenu back to true to re-render the height of the queue menu
+    this.queueMenu = false;
+    this.$nextTick(() => this.queueMenu = true);
+  }
+
+  goToTrack() {
+    this.$router.push({
+      name: 'tracks.show',
+      params: {
+        reciter: this.track.reciter.slug,
+        album: this.track.album.year,
+        track: this.track.slug,
+        trackObject: this.track,
+      },
+    });
+  }
+
+  /**
+   * Skip to the selected track in the queue
+   */
+  skipToTrack(id) {
+    this.$store.commit('player/SKIP_TO_TRACK', { id });
   }
 
   /**
@@ -233,14 +268,16 @@ export default class AudioPlayer extends Vue {
    */
   @Watch('track')
   onTrackUpdate() {
-    if (this.currentTrack.index === this.store.current && this.currentTrack.id === this.track.id) {
-      // If the current track index and the current track ID match, we're not actually
-      // changing tracks. So don't do anything.
-      return;
+    // If the current track we're playing is the same as the updated track from
+    // the store, don't do anything.
+    if (this.currentTrack.queued && this.currentQueuedTrack) {
+      if (this.currentTrack.queued.id === this.currentQueuedTrack.id) {
+        return;
+      }
     }
 
+    this.currentTrack.queued = this.currentQueuedTrack;
     this.currentTrack.index = this.store.current;
-    this.currentTrack.id = this.track.id;
 
     this.stop();
     this.howl = null;
@@ -388,11 +425,22 @@ export default class AudioPlayer extends Vue {
     //   // navigator.mediaSession.setActionHandler('nexttrack', function() {});
     // }
   }
+
+  /**
+   * For development purpose only
+   * stops playing and unloads howl on hot reload
+   */
+  beforeDestroy() {
+    if (this.howl) {
+      this.howl.unload();
+    }
+  }
 }
 </script>
 
 <style lang="scss" scoped>
-@import '~vuetify/src/styles/styles';
+@import '@/styles/variables.scss';
+
 $transition: cubic-bezier(0.4, 0, 0.2, 1);
 $duration: 500ms;
 .audio-player {
@@ -470,17 +518,8 @@ $duration: 500ms;
   }
 }
 
-.queue-active {
-  background-color: orangered;
-
-  .v-list-item__title {
-    font-weight: bold;
-    color: white;
-  }
-
-  .v-list-item__subtitle {
-    color: white !important;
-  }
+.queue-item--active {
+  background-color: map-deep-get($colors, 'deep-orange', 'lighten-5');
 }
 
 @media #{map-get($display-breakpoints, 'md-and-down')} {
