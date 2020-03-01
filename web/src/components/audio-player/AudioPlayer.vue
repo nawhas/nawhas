@@ -43,6 +43,10 @@
             :background-opacity="hovering || mobile ? 0.3 : 0"
             class="seek-bar__progress">
           </v-progress-linear>
+          <div class="seek-bar__timestamps" v-if="duration">
+            <div class="seek-bar__timestamps__current">{{ formattedSeek }}</div>
+            <div class="seek-bar__timestamps__duration">{{ formattedDuration }}</div>
+          </div>
         </div>
         <div class="player-actions">
           <v-btn
@@ -142,6 +146,7 @@
 <script lang="ts">
 import { Component, Vue, Watch } from 'vue-property-decorator';
 import { Howl } from 'howler';
+import * as moment from 'moment';
 import { PlayerState, QueuedTrack, TrackQueue } from '@/store/modules/player';
 
 interface CachedTrackReference {
@@ -286,6 +291,14 @@ export default class AudioPlayer extends Vue {
       return;
     }
     this.howl.seek((progress / 100) * this.duration);
+  }
+
+  get formattedSeek() {
+    return moment.utc(moment.duration(this.seek, 'seconds').asMilliseconds()).format('m:ss');
+  }
+
+  get formattedDuration() {
+    return moment.utc(moment.duration(this.duration, 'seconds').asMilliseconds()).format('m:ss');
   }
 
   mounted() {
@@ -664,9 +677,16 @@ $duration: 680ms;
       top: auto;
       left: auto;
       width: 100%;
-      height: 4px;
-      overflow: hidden;
+      height: auto;
       margin-bottom: 24px;
+
+      .seek-bar__timestamps {
+        display: flex;
+        justify-content: space-between;
+        font-size: 13px;
+        color: rgba(0, 0, 0, 0.6);
+        margin-top: 4px;
+      }
     }
 
     .player-actions {
