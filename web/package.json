@@ -28,6 +28,7 @@
     "vuex-router-sync": "^5.0.0"
   },
   "devDependencies": {
+    "@types/howler": "^2.1.2",
     "@types/jest": "^24.0.19",
     "@typescript-eslint/eslint-plugin": "^2.18.0",
     "@typescript-eslint/parser": "^2.18.0",
