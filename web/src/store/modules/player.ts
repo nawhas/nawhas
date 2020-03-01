@@ -23,7 +23,7 @@ const getters = {
   track: (state: PlayerState): QueuedTrack|null => (
     state.current === null
       ? null
-      : state.queue[state.current]
+      : (state.queue[state.current] || null)
   ),
   hasNext: (state: PlayerState) => (state.current !== null && state.queue.length > state.current + 1),
   hasPrevious: (state: PlayerState) => (state.current !== null && state.current !== 0),

@@ -391,10 +391,10 @@ export default class AudioPlayer extends Vue {
 
     // Register end binding.
     this.howl.on('end', () => {
-      this.playing = false;
-
-      if (this.queue.length > 0) {
+      if (this.hasNext) {
         this.next();
+      } else {
+        this.stop();
       }
     });
 
