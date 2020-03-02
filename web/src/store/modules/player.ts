@@ -12,14 +12,24 @@ function generateId(): string {
 export interface PlayerState {
   current: CurrentTrackRef;
   queue: TrackQueue;
+  seek: number;
+  duration: number;
 }
 
 const state: PlayerState = {
   current: null,
+  seek: 0,
+  duration: 0,
   queue: [],
 };
 
 const getters = {
+  progress: (state: PlayerState): number => {
+    if (!state.seek || !state.duration) {
+      return 0;
+    }
+    return (state.seek / state.duration) * 100;
+  },
   track: (state: PlayerState): QueuedTrack|null => (
     state.current === null
       ? null
@@ -65,6 +75,10 @@ const mutations = {
   SKIP_TO_TRACK(state: PlayerState, { id }) {
     const index = state.queue.findIndex((queued: QueuedTrack) => queued.id === id);
     state.current = index;
+  },
+  UPDATE_TRACK_PROGRESS(state: PlayerState, { seek, duration }) {
+    state.seek = seek;
+    state.duration = duration;
   },
 };
 

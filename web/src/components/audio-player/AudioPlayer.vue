@@ -123,36 +123,7 @@
               </template>
 
               <v-card>
-                <v-list>
-                  <v-list-item
-                    v-for="{ id, track } in this.queue"
-                    :key="id"
-                    @click="skipToTrack(id)"
-                    :class="{'queue-item': true, 'queue-item--active': isCurrentTrack(id)}"
-                  >
-                    <v-list-item-avatar>
-                      <img src="/img/default-album-image.png">
-                    </v-list-item-avatar>
-
-                    <v-list-item-content>
-                      <v-list-item-title>{{ track.title }}</v-list-item-title>
-                      <v-list-item-subtitle>{{ track.reciter.name }} - {{ track.year }}</v-list-item-subtitle>
-                    </v-list-item-content>
-
-                    <v-list-item-action>
-                      <v-btn icon v-if="!isCurrentTrack(id)" @click="removeTrackFromQueue(id)">
-                        <v-icon>remove_circle_outline</v-icon>
-                      </v-btn>
-                      <v-progress-circular
-                        v-else
-                        :size="20"
-                        :rotate="-90"
-                        :value="progress"
-                        color="primary"
-                      ></v-progress-circular>
-                    </v-list-item-action>
-                  </v-list-item>
-                </v-list>
+                <queue-list @change="resetQueueMenu"></queue-list>
               </v-card>
             </v-menu>
             <v-btn @click="toggleMinimized" icon large><v-icon>picture_in_picture_alt</v-icon></v-btn>
@@ -167,6 +138,7 @@
 import { Component, Vue, Watch } from 'vue-property-decorator';
 import { Howl } from 'howler';
 import * as moment from 'moment';
+import QueueList from '@/components/audio-player/QueueList.vue';
 import { PlayerState, QueuedTrack, TrackQueue } from '@/store/modules/player';
 
 interface CachedTrackReference {
@@ -174,12 +146,14 @@ interface CachedTrackReference {
   index: number|null;
 }
 
-@Component
+@Component({
+  components: {
+    QueueList,
+  },
+})
 export default class AudioPlayer extends Vue {
   /* Current audio file time in seconds */
   private seek = 0;
-  /* Duration of the audio file in seconds */
-  private duration = 0;
   /* Denote whether the user is hovering over the player */
   private hovering = false;
   /* Denote weather the the audio-player is playing */
@@ -298,10 +272,7 @@ export default class AudioPlayer extends Vue {
    * Update the progress bar with the current playback status.
   */
   get progress(): number {
-    if (!this.seek || !this.duration) {
-      return 0;
-    }
-    return (this.seek / this.duration) * 100;
+    return this.$store.getters['player/progress'];
   }
 
   /**
@@ -313,6 +284,13 @@ export default class AudioPlayer extends Vue {
       return;
     }
     this.howl.seek((progress / 100) * this.duration);
+  }
+
+  /**
+   * Update the progress bar with the current playback status.
+  */
+  get duration(): number {
+    return this.$store.state.player.duration;
   }
 
   get formattedSeek() {
@@ -335,11 +313,9 @@ export default class AudioPlayer extends Vue {
   }
 
   /**
-   * Removes the track from the queue
+   * Reset queueMenu back to true to re-render the height of the queue menu
    */
-  removeTrackFromQueue(id: string) {
-    this.$store.commit('player/REMOVE_TRACK', { id });
-    // resetting queueMenu back to true to re-render the height of the queue menu
+  resetQueueMenu() {
     this.queueMenu = false;
     this.$nextTick(() => this.queueMenu = true);
   }
@@ -470,8 +446,10 @@ export default class AudioPlayer extends Vue {
 
     this.howl.stop();
     this.playing = false;
-    this.seek = 0;
-    this.duration = 0;
+    const seek = 0;
+    const duration = 0;
+
+    this.$store.commit('player/UPDATE_TRACK_PROGRESS', { seek, duration });
     this.updatePlaybackStateOnMediaSession();
     if (this.progressInterval !== null) {
       window.clearInterval(this.progressInterval);
@@ -507,8 +485,9 @@ export default class AudioPlayer extends Vue {
       return;
     }
 
-    this.seek = (this.howl.seek() as number);
-    this.duration = this.howl.duration();
+    const seek = (this.howl.seek() as number);
+    const duration = this.howl.duration();
+    this.$store.commit('player/UPDATE_TRACK_PROGRESS', { seek, duration });
     this.updateSeekOnMediaSession();
   }
 
@@ -718,10 +697,6 @@ $duration: 680ms;
   .track-info {
     opacity: 0;
   }
-}
-
-.queue-item--active {
-  background-color: map-deep-get($colors, 'deep-orange', 'lighten-5');
 }
 
 @media #{map-get($display-breakpoints, 'md-and-down')} {
