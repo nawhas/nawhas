@@ -12,6 +12,7 @@ module.exports = {
     ecmaVersion: 2020,
   },
   rules: {
+    'no-plusplus': 0,
     'class-methods-use-this': 0,
     'no-return-assign': 0,
     'lines-between-class-members': 0,
@@ -26,6 +27,7 @@ module.exports = {
     'max-len': ['error', { code: 120, ignoreUrls: true }],
     'no-restricted-syntax': 0,
     'linebreak-style': 0,
+    '@typescript-eslint/no-explicit-any': 0,
     '@typescript-eslint/camelcase': ['error', {
       properties: 'always',
       allow: ['per_page'],

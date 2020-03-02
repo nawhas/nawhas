@@ -4,14 +4,14 @@
  */
 import { Module, ModuleTree } from 'vuex';
 
-const files = require.context('.', false, /\.js$/);
+const files = require.context('.', false, /\.(js|ts)$/);
 const modules: ModuleTree<Module<object, object>> = {};
 
 files.keys().forEach((key: string) => {
-  if (key === './index.js') {
+  if (key === './index.ts') {
     return;
   }
-  modules[key.replace(/(\.\/|\.js)/g, '')] = files(key).default;
+  modules[key.replace(/(\.\/|\.js|\.ts)/g, '')] = files(key).default;
 });
 
 export default modules;
