@@ -20,7 +20,7 @@ module.exports = {
         pathRewrite: { '^/api': '' },
       },
     },
-    public: 'https://localhost:8080',
+    public: process.env.LIVE_SHARE ? 'https://localhost:8080' : undefined,
   },
   pwa: {
     name: 'Nawhas.com',
