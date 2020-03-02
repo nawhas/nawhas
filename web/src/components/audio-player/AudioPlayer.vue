@@ -152,8 +152,6 @@ interface CachedTrackReference {
   },
 })
 export default class AudioPlayer extends Vue {
-  /* Current audio file time in seconds */
-  private seek = 0;
   /* Denote whether the user is hovering over the player */
   private hovering = false;
   /* Denote weather the the audio-player is playing */
@@ -287,10 +285,17 @@ export default class AudioPlayer extends Vue {
   }
 
   /**
-   * Update the progress bar with the current playback status.
-  */
+   * Get the duration from the store.
+   */
   get duration(): number {
     return this.$store.state.player.duration;
+  }
+
+  /**
+   * Get the seek from the store
+   */
+  get seek(): number {
+    return this.$store.state.player.seek;
   }
 
   get formattedSeek() {
@@ -391,6 +396,10 @@ export default class AudioPlayer extends Vue {
     this.play();
   }
 
+  @Watch('queue')
+  onQueueUpdate() {
+    this.updateMediaSessionNextHandler();
+  }
 
   /**
    * Handle Play/Pause button click.
@@ -553,6 +562,12 @@ export default class AudioPlayer extends Vue {
       // navigator.mediaSession.setActionHandler('seekbackward', function() {});
       // navigator.mediaSession.setActionHandler('seekforward', function() {});
       (navigator as any).mediaSession.setActionHandler('previoustrack', () => this.previous());
+      this.updateMediaSessionNextHandler();
+    }
+  }
+
+  updateMediaSessionNextHandler() {
+    if (this.hasNext) {
       (navigator as any).mediaSession.setActionHandler('nexttrack', () => this.next());
     }
   }
