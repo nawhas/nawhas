@@ -144,6 +144,7 @@
 </template>
 
 <script lang="ts">
+/* eslint-disable no-undef */
 import { Component, Vue, Watch } from 'vue-property-decorator';
 import { Howl } from 'howler';
 import * as moment from 'moment';
@@ -396,6 +397,7 @@ export default class AudioPlayer extends Vue {
 
     this.howl.play();
     this.playing = true;
+    this.setMediaSessionMetadata();
   }
 
   /**
@@ -491,29 +493,28 @@ export default class AudioPlayer extends Vue {
       this.playing = false;
     });
 
-    // if ('mediaSession' in navigator) {
-    //   // eslint-disable-next-line no-undef
-    //   (navigator as any).mediaSession.metadata = new MediaMetadata({
-    //     title: 'Chotey Hazrat',
-    //     artist: 'Nadeem Sarwar',
-    //     album: '2011',
-    //     artwork: [
-    //       { src: 'https://localhost:8080/img/default-album-image.png', sizes: '1024x1024', type: 'image/png' },
-    //     ],
-    //   });
-    //   (navigator as any).mediaSession.setActionHandler('play', () => {
-    //     this.play();
-    //   });
-    //   (navigator as any).mediaSession.setActionHandler('pause', () => {
-    //     this.pause();
-    //   });
-    //   // navigator.mediaSession.setActionHandler('seekbackward', function() {});
-    //   // navigator.mediaSession.setActionHandler('seekforward', function() {});
-    //   // navigator.mediaSession.setActionHandler('previoustrack', function() {});
-    //   // navigator.mediaSession.setActionHandler('nexttrack', function() {});
-    // }
-
     return howl;
+  }
+
+  setMediaSessionMetadata() {
+    if ('mediaSession' in navigator && this.track) {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+      // @ts-ignore
+      (navigator as any).mediaSession.metadata = new MediaMetadata({
+        title: this.track.title,
+        artist: this.track.reciter.name,
+        album: this.track.album.year,
+        artwork: [
+          { src: this.artwork, sizes: '512x512', type: 'image/png' },
+        ],
+      });
+      (navigator as any).mediaSession.setActionHandler('play', () => this.play());
+      (navigator as any).mediaSession.setActionHandler('pause', () => this.pause());
+      // navigator.mediaSession.setActionHandler('seekbackward', function() {});
+      // navigator.mediaSession.setActionHandler('seekforward', function() {});
+      (navigator as any).mediaSession.setActionHandler('previoustrack', () => this.previous());
+      (navigator as any).mediaSession.setActionHandler('nexttrack', () => this.next());
+    }
   }
 
   /**
