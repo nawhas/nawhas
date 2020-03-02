@@ -49,10 +49,10 @@ export default {
   name: 'Reciters',
   components: { ReciterCard, SixCardSkeleton },
   mounted() {
-    getReciters({ per_page: 60 }).then((response) => {
+    getReciters({ per_page: 60, include: 'related' }).then((response) => {
       this.setReciters(response);
     });
-    getPopularReciters({ per_page: 6 }).then((response) => {
+    getPopularReciters({ per_page: 6, include: 'related' }).then((response) => {
       this.popularReciters = response.data.data;
     });
   },
