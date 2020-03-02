@@ -76,14 +76,15 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import '../styles/theme';
+
 .reciter-card {
   padding: 16px;
   display: flex;
   align-items: center;
   cursor: pointer;
-  will-change: box-shadow, background-color;
-  // transition: background-color $transition, box-shadow $transition;
-  // elevation(0);
+  @include transition(background-color, box-shadow);
+  @include elevation(2);
 
   &:hover:not(.reciter-card--featured) {
     background-color: rgba(0, 0, 0, 0.1) !important;
@@ -91,10 +92,10 @@ export default {
 
   &--featured {
     background: gray;
-    // elevation(4);
+    @include elevation(4);
 
     &:hover {
-      // elevation(8);
+      @include elevation(8);
     }
 
     .reciter-card__text .reciter-card__name {
@@ -104,12 +105,11 @@ export default {
 
   .reciter-card__text {
     margin-left: 16px;
-    will-change: color;
-    // transition: color $transition;
     overflow: hidden;
+    @include transition(color);
 
     .reciter-card__name {
-      //      white-space nowrap;
+      white-space: nowrap;
       text-overflow: ellipsis;
       overflow: hidden;
       width: auto;

@@ -80,8 +80,7 @@ export default class PublicVuetify extends Vue {
 @import "~vuetify/src/styles/styles";
 
 .main-container {
-  padding: 0;
-  padding-bottom: 84px;
+  padding: 0 0 84px;
   min-height: calc(100vh - 64px);
 }
 
