@@ -82,7 +82,26 @@
             <v-icon :size="playbackControlSizes.standard.icon">skip_next</v-icon>
           </v-btn>
           <v-expand-transition>
-            <v-btn icon v-if="minimized"><v-icon>more_vert</v-icon></v-btn>
+            <v-menu
+              v-if="minimized"
+              top
+              offset-y
+              :close-on-content-click="false">
+            <template v-slot:activator="{ on }">
+                <v-btn
+                  icon large
+                  v-on="on"
+                >
+                  <v-icon>more_vert</v-icon>
+                </v-btn>
+              </template>
+              <v-card>
+                <v-list>
+                  <v-list-item @click="goToReciter">Go To Reciter</v-list-item>
+                  <v-list-item @click="goToTrack">Go To Track</v-list-item>
+                </v-list>
+              </v-card>
+            </v-menu>
           </v-expand-transition>
         </div>
         <v-expand-transition>
@@ -321,6 +340,14 @@ export default class AudioPlayer extends Vue {
     // resetting queueMenu back to true to re-render the height of the queue menu
     this.queueMenu = false;
     this.$nextTick(() => this.queueMenu = true);
+  }
+
+  goToReciter() {
+    if (this.mobile && !this.minimized) {
+      this.minimized = true;
+    }
+
+    this.$router.push({ name: 'reciters.show', params: { reciter: this.track.reciter.slug } });
   }
 
   goToTrack() {
@@ -605,6 +632,12 @@ $duration: 680ms;
 .audio-player--hovering {
   .seek-bar {
     height: 6px;
+  }
+
+  .track-info {
+    &--track-name, &--track-meta {
+      cursor: pointer;
+    }
   }
 }
 
