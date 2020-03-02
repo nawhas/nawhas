@@ -36,14 +36,14 @@
         </v-expand-x-transition>
         <div class="seek-bar">
           <v-progress-linear
-            :active="duration !== 0"
+            :active="(mobile && !minimized) || duration !== 0"
             v-model="progress"
             color="deep-orange"
             height="8"
             :background-opacity="hovering || mobile ? 0.3 : 0"
             class="seek-bar__progress">
           </v-progress-linear>
-          <div class="seek-bar__timestamps" v-if="duration">
+          <div class="seek-bar__timestamps">
             <div class="seek-bar__timestamps__current">{{ formattedSeek }}</div>
             <div class="seek-bar__timestamps__duration">{{ formattedDuration }}</div>
           </div>
@@ -128,6 +128,12 @@
             </v-menu>
             <v-btn @click="toggleMinimized" icon large><v-icon>picture_in_picture_alt</v-icon></v-btn>
           </div>
+        </v-expand-transition>
+      </div>
+      <div class="audio-player__up-next" v-if="mobile && !minimized">
+        <h5 class="title px-6">On the Queue</h5>
+        <v-expand-transition>
+          <queue-list @change="resetQueueMenu"></queue-list>
         </v-expand-transition>
       </div>
     </div>
@@ -366,13 +372,6 @@ export default class AudioPlayer extends Vue {
         trackObject: this.track,
       },
     }).catch(() => null);
-  }
-
-  /**
-   * Skip to the selected track in the queue
-   */
-  skipToTrack(id) {
-    this.$store.commit('player/SKIP_TO_TRACK', { id });
   }
 
   /**

@@ -72,6 +72,13 @@ export default class QueueList extends Vue {
     // resetting queueMenu back to true to re-render the height of the queue menu
     this.$emit('change');
   }
+
+  /**
+   * Skip to the selected track in the queue
+   */
+  skipToTrack(id) {
+    this.$store.commit('player/SKIP_TO_TRACK', { id });
+  }
 }
 </script>
 
