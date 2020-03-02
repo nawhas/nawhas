@@ -81,28 +81,27 @@
           >
             <v-icon :size="playbackControlSizes.standard.icon">skip_next</v-icon>
           </v-btn>
-          <v-expand-transition>
-            <v-menu
-              v-if="minimized"
-              top
-              offset-y
-              :close-on-content-click="false">
-            <template v-slot:activator="{ on }">
-                <v-btn
-                  icon large
-                  v-on="on"
-                >
-                  <v-icon>more_vert</v-icon>
-                </v-btn>
-              </template>
-              <v-card>
-                <v-list>
-                  <v-list-item @click="goToReciter">Go To Reciter</v-list-item>
-                  <v-list-item @click="goToTrack">Go To Track</v-list-item>
-                </v-list>
-              </v-card>
-            </v-menu>
-          </v-expand-transition>
+          <v-menu
+            v-if="minimized"
+            top
+            offset-y
+          >
+          <template v-slot:activator="{ on }">
+              <v-btn
+                icon large
+                v-on="on"
+              >
+                <v-icon>more_vert</v-icon>
+              </v-btn>
+            </template>
+            <v-card>
+              <v-list>
+                <v-list-item @click="goToReciter">Go to reciter</v-list-item>
+                <v-list-item @click="goToTrack">Go to track</v-list-item>
+                <v-list-item @click="toggleMinimized">Expand player</v-list-item>
+              </v-list>
+            </v-card>
+          </v-menu>
         </div>
         <v-expand-transition>
           <div class="player-sub-actions" v-if="!minimized && !mobile">
@@ -618,6 +617,7 @@ export default class AudioPlayer extends Vue {
 
 $transition: cubic-bezier(0.4, 0, 0.2, 1);
 $duration: 680ms;
+
 .audio-player {
   user-select: none;
   width: 100%;
@@ -717,6 +717,12 @@ $duration: 680ms;
     .audio-player {
       z-index: 3 !important;
     }
+}
+
+.audio-player__mobile-header {
+  width: 100%;
+  text-align: center;
+  padding: 4px;
 }
 
 .audio-player--mobile.audio-player--expanded {
