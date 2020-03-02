@@ -785,6 +785,34 @@ $duration: 680ms;
   }
 }
 
+
+@media screen and (orientation:landscape) {
+  .audio-player--mobile.audio-player--expanded {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+
+    .audio-player__mobile-header {
+      flex: none;
+      height: 60px;
+    }
+
+    .artwork {
+      padding: 24px;
+      flex-shrink: 1;
+      img {
+        width: 220px;
+      }
+    }
+    .player-content {
+      flex: 1;
+    }
+    .audio-player__up-next {
+      flex-grow: 1;
+    }
+  }
+}
+
 .audio-player--mobile.audio-player--minimized {
   height: 80px;
   bottom: 0;
