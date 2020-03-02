@@ -26,10 +26,10 @@
       <div class="player-content">
         <v-expand-x-transition>
           <div class="track-info" v-if="!minimized || mobile">
-            <div class="track-info--track-name body-1" @click="goToTrack">
+            <div class="track-info--track-name body-1" @click="onTrackTitleClicked">
               {{ track.title }}
             </div>
-            <div class="track-info--track-meta body-2">
+            <div class="track-info--track-meta body-2" @click="onReciterNameClicked">
               {{ track.reciter.name }} &bull; {{ track.year }}
             </div>
           </div>
@@ -344,12 +344,31 @@ export default class AudioPlayer extends Vue {
     this.$nextTick(() => this.queueMenu = true);
   }
 
+  onTrackTitleClicked() {
+    if (this.mobile && this.minimized) {
+      this.toggleMinimized();
+      return;
+    }
+    this.goToTrack();
+  }
+
+  onReciterNameClicked() {
+    if (this.mobile && this.minimized) {
+      this.toggleMinimized();
+      return;
+    }
+    this.goToReciter();
+  }
+
   goToReciter() {
     if (this.mobile && !this.minimized) {
       this.minimized = true;
     }
 
-    this.$router.push({ name: 'reciters.show', params: { reciter: this.track.reciter.slug } });
+    this.$router.push({
+      name: 'reciters.show',
+      params: { reciter: this.track.reciter.slug },
+    }).catch(() => null);
   }
 
   goToTrack() {
@@ -365,7 +384,7 @@ export default class AudioPlayer extends Vue {
         track: this.track.slug,
         trackObject: this.track,
       },
-    });
+    }).catch(() => null);
   }
 
   /**
