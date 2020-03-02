@@ -15,6 +15,14 @@
                 <p>{{ reciter.name }}</p>
                 <p>{{ album.year }} &bull; {{ album.title }}</p>
               </div>
+              <div class="track-hero__audio_buttons" v-if="track.media.data.length > 0">
+                <v-btn @click="playTrack" text class="track-hero__audio_buttons--play white--text">
+                  <v-icon class="track-hero__audio_buttons--icons">play_circle_filled</v-icon>Play Audio
+                </v-btn>
+                <v-btn @click="addToQueue" text class="track-hero__audio_buttons--queue white--text">
+                  <v-icon class="track-hero__audio_buttons--icons">playlist_add</v-icon>Add to Queue
+                </v-btn>
+              </div>
             </div>
           </div>
           <div class="track-hero__actions">
@@ -72,17 +80,12 @@
           <v-flex md5>
             <v-card class="track-page-content__card track-page-content__card--audio">
               <section>
-                <p>There is no track available yet</p>
-              </section>
-            </v-card>
-            <v-card class="track-page-content__card track-page-content__card--audio">
-              <section>
                 <p>There is no video available</p>
               </section>
             </v-card>
             <v-card class="track-page-content__card track-page-content__card--album">
               <v-card-title class="track-page-content__card--album--title subtitle-1">
-                <v-icon class="track-page-content__card--album--title--icon">format_list_numbered</v-icon>
+                <v-icon class="track-page-content__card--album--title--icon">format_list_bulleted</v-icon>
                 <span>More From This Album</span>
               </v-card-title>
               <v-card-text class="pa-0 subtitle-1" v-if="track && album">
@@ -119,6 +122,12 @@
         </v-layout>
       </v-container>
     </div>
+    <v-snackbar v-model="addedToQueueSnackbar" right>
+      <v-icon color="white">playlist_add_check</v-icon> Added to Queue
+      <v-btn color="deep-orange" text @click="addedToQueueSnackbar = false">
+        Close
+      </v-btn>
+    </v-snackbar>
   </div>
 </template>
 
@@ -137,9 +146,7 @@ export default {
     LyricsSkeleton,
     MoreTracksSkeleton,
   },
-  props: [
-    'trackObject',
-  ],
+  props: ['trackObject'],
 
   watch: {
     // call again the method if the route changes
@@ -151,6 +158,7 @@ export default {
       background: '#222',
       textColor: '#fff',
       track: null,
+      addedToQueueSnackbar: false,
     };
   },
 
@@ -179,10 +187,7 @@ export default {
     window.addEventListener('beforeprint', handler);
   },
   beforeDestroy() {
-    window.removeEventListener(
-      'beforeprint',
-      this.$el['__onPrintHandler__'],
-    );
+    window.removeEventListener('beforeprint', this.$el['__onPrintHandler__']);
     delete this.$el['__onPrintHandler__'];
   },
   methods: {
@@ -198,7 +203,9 @@ export default {
       }
 
       if (!this.track || !this.isSameTrack(this.$route.params)) {
-        await getTrack(reciter, album, track, { include: 'reciter,lyrics,album.tracks' }).then((r) => {
+        await getTrack(reciter, album, track, {
+          include: 'reciter,lyrics,album.tracks,media',
+        }).then((r) => {
           this.track = r.data;
         });
       }
@@ -225,9 +232,11 @@ export default {
       return content.replace(/\n/gi, '<br>');
     },
     isSameTrack({ reciter, album, track }) {
-      return this.track.reciter.slug === reciter
+      return (
+        this.track.reciter.slug === reciter
         && this.track.album.year === album
-        && this.track.slug === track;
+        && this.track.slug === track
+      );
     },
     print() {
       this.$router.replace({
@@ -239,6 +248,13 @@ export default {
           trackObject: this.track,
         },
       });
+    },
+    playTrack() {
+      this.$store.commit('player/PLAY_TRACK', { track: this.track });
+    },
+    addToQueue() {
+      this.$store.commit('player/ADD_TO_QUEUE', { track: this.track });
+      this.addedToQueueSnackbar = true;
     },
   },
 };
@@ -280,6 +296,21 @@ export default {
         font-size: 15px;
         margin: 0 0 6px 0;
         padding: 0;
+      }
+    }
+
+    .track-hero__audio_buttons {
+      &--play {
+        padding: 2px;
+        margin-right: 10px;
+      }
+
+      &--queue {
+        padding: 2px;
+      }
+
+      &--icons {
+        margin-right: 6px;
       }
     }
 

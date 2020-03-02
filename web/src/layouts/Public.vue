@@ -47,6 +47,7 @@
         <router-view></router-view>
       </v-container>
     </v-content>
+    <audio-player></audio-player>
   </v-app>
 </template>
 
@@ -54,10 +55,12 @@
 import { Component, Vue } from 'vue-property-decorator';
 import Search from '@/components/search/Search.vue';
 import navItems from '@/data/navigation';
+import AudioPlayer from '@/components/audio-player/AudioPlayer.vue';
 
 @Component({
   components: {
     Search,
+    AudioPlayer,
   },
 })
 export default class PublicVuetify extends Vue {
@@ -78,6 +81,7 @@ export default class PublicVuetify extends Vue {
 
 .main-container {
   padding: 0;
+  padding-bottom: 84px;
 }
 
 .nav__tile__action {

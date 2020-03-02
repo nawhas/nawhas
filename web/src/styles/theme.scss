@@ -1,0 +1,5 @@
+@import '~vuetify/src/styles/styles';
+
+$primary: map-deep-get($colors, 'red', 'base');
+$secondary: map-deep-get($colors, 'grey', 'darken-2');
+$accent: map-deep-get($colors, 'orange', 'accent-3');
