@@ -195,6 +195,8 @@ export default class AudioPlayer extends Vue {
   };
   /* Denote whether the menu for the queue is 'minimized' */
   private queueMenu = false;
+  /* Keep a reference to the progress bar interval to clear it when needed. */
+  private progressInterval: number|null = null;
 
   get classes() {
     return {
@@ -423,8 +425,7 @@ export default class AudioPlayer extends Vue {
     }
 
     this.howl.play();
-    this.playing = true;
-    this.setMediaSessionMetadata();
+    this.updatePlaybackStateOnMediaSession();
   }
 
   /**
@@ -437,6 +438,7 @@ export default class AudioPlayer extends Vue {
 
     this.howl.pause();
     this.playing = false;
+    this.updatePlaybackStateOnMediaSession();
   }
 
   /**
@@ -451,6 +453,10 @@ export default class AudioPlayer extends Vue {
     this.playing = false;
     this.seek = 0;
     this.duration = 0;
+    this.updatePlaybackStateOnMediaSession();
+    if (this.progressInterval !== null) {
+      window.clearInterval(this.progressInterval);
+    }
   }
 
   previous() {
@@ -484,6 +490,7 @@ export default class AudioPlayer extends Vue {
 
     this.seek = (this.howl.seek() as number);
     this.duration = this.howl.duration();
+    this.updateSeekOnMediaSession();
   }
 
   /**
@@ -503,7 +510,12 @@ export default class AudioPlayer extends Vue {
     // Register seek binding.
     howl.on('play', () => {
       this.playing = true;
-      window.setInterval(() => this.updateSeek(), 1000 / 4);
+      this.progressInterval = window.setInterval(() => this.updateSeek(), 1000 / 4);
+    });
+
+    // Set up media session API once on play.
+    howl.once('play', () => {
+      this.setMediaSessionMetadata();
     });
 
     // Register end binding.
@@ -518,6 +530,9 @@ export default class AudioPlayer extends Vue {
     // Register pause binding.
     howl.on('pause', () => {
       this.playing = false;
+      if (this.progressInterval) {
+        window.clearInterval(this.progressInterval);
+      }
     });
 
     return howl;
@@ -544,6 +559,31 @@ export default class AudioPlayer extends Vue {
     }
   }
 
+  updatePlaybackStateOnMediaSession() {
+    const nav = (navigator as any);
+    if ('mediaSession' in nav && 'playbackState' in nav.mediaSession) {
+      let state = 'none';
+      if (this.track) {
+        state = (this.playing ? 'playing' : 'paused');
+      }
+      nav.mediaSession.playbackState = state;
+    }
+  }
+
+  updateSeekOnMediaSession() {
+    if ('mediaSession' in navigator && this.track) {
+      if (typeof (navigator as any).mediaSession.setPositionState !== 'function') {
+        return;
+      }
+
+      (navigator as any).mediaSession.setPositionState({
+        duration: this.duration,
+        position: this.seek,
+        playbackRate: 1,
+      });
+    }
+  }
+
   /**
    * For development purpose only
    * stops playing and unloads howl on hot reload
@@ -552,6 +592,10 @@ export default class AudioPlayer extends Vue {
     if (this.howl) {
       this.howl.unload();
       this.howl = undefined;
+    }
+
+    if (this.progressInterval) {
+      window.clearInterval(this.progressInterval);
     }
   }
 }
