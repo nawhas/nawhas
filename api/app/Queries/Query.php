@@ -76,6 +76,16 @@ abstract class Query
         return $entity;
     }
 
+    public function count(): int
+    {
+        /** @var int $count */
+        $count = $this->builder->select('count(' . static::QUERY_ALIAS . '.id)')
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        return $count;
+    }
+
     public function all(): Collection
     {
         return collect($this->builder->getQuery()->getResult());

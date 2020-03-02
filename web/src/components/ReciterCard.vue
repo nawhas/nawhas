@@ -8,7 +8,7 @@
       </div>
       <div class="reciter-card__text" :style="{ 'color': textColor }">
         <div class="reciter-card__name body-2" :title="name">{{ name }}</div>
-        <!-- <div class="reciter-card__name caption">6 albums</div> -->
+         <div class="reciter-card__name caption">{{ related.albums | pluralize('album', 'albums') }}</div>
       </div>
     </v-card>
   </div>
@@ -19,7 +19,7 @@ import Vibrant from 'node-vibrant';
 
 export default {
   name: 'ReciterCard',
-  props: ['id', 'name', 'slug', 'avatar', 'createdAt', 'updatedAt', 'featured'],
+  props: ['id', 'name', 'slug', 'avatar', 'related', 'createdAt', 'updatedAt', 'featured'],
   mounted() {
     if (this.featured !== undefined) {
       const image = this.$refs.avatarElement;
