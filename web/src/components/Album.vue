@@ -1,7 +1,7 @@
 <template>
   <v-card class="album">
     <div class="album__header" :style="{ 'background-color': background }">
-      <v-avatar tile :size="artworkSize" :elevation="2" class="album__artwork">
+      <v-avatar tile :size="artworkSize" class="album__artwork">
         <img :src="image" :alt="album.title" ref="artwork" />
       </v-avatar>
       <div class="album__details" :style="{ color: textColor }">
@@ -170,6 +170,7 @@ export default class Album extends Vue {
   float: left;
   overflow: hidden;
   box-sizing: content-box;
+  @include elevation(3);
 }
 
 .album__details {
@@ -234,6 +235,7 @@ export default class Album extends Vue {
   .album__artwork {
     float: none;
     margin: 16px 0 16px 16px;
+    @include elevation(0);
   }
   .album__title {
     font-size: 1.15rem;

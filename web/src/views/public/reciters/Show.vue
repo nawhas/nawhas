@@ -188,6 +188,7 @@ export default class ReciterProfile extends Vue {
 
   .hero__avatar__component {
     border: 4px solid white;
+    @include elevation(4);
   }
 
   .hero__bar {
