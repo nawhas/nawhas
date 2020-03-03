@@ -35,7 +35,7 @@
 <script>
 export default {
   mounted() {
-    this.setDataFromProp()
+    this.setDataFromProp();
   },
   data() {
     return {
