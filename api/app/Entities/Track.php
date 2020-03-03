@@ -69,6 +69,11 @@ class Track implements Entity, TimestampedEntity
         return $this->lyrics;
     }
 
+    public function hasLyrics(): bool
+    {
+        return $this->lyrics !== null;
+    }
+
     public function replaceLyrics(Lyrics $lyrics): void
     {
         $this->lyrics = $lyrics;
@@ -108,5 +113,10 @@ class Track implements Entity, TimestampedEntity
             ->where(Criteria::expr()->eq('provider', MediaProvider::FILE()));
 
         return $this->media->matching($criteria);
+    }
+
+    public function hasAudioFile(): bool
+    {
+        return $this->getAudioFiles()->count() > 0;
     }
 }
