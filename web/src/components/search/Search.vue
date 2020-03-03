@@ -1,5 +1,5 @@
 <template>
-  <div v-click-outside="onClickOutside">
+  <div v-click-outside="clickOutsideConfig">
     <v-btn v-if="mobile" icon @click="activate"><v-icon>search</v-icon></v-btn>
     <div v-show="!mobile || activated"
          :class="{ search: true, 'search--focused': activated }">
@@ -58,7 +58,8 @@ import IndexHits from '@/components/search/IndexHits.vue';
 import ReciterResult from '@/components/search/ReciterResult.vue';
 import AlbumResult from '@/components/search/AlbumResult.vue';
 import TrackResult from '@/components/search/TrackResult.vue';
-import ClickOutside from '@/directives/click-outside';
+import ClickOutside, { ClickOutsideConfiguration } from '@/directives/click-outside';
+import { EventBus, Search } from '@/events';
 
 @Component({
   components: {
@@ -76,10 +77,19 @@ export default class GlobalSearch extends Vue {
   private activated = false;
   private focused = false;
   private search = '';
+  private listener: Function|null = null;
   @Ref('search') readonly input!: HTMLElement;
 
   get mobile() {
     return this.$vuetify.breakpoint.smAndDown;
+  }
+
+  mounted() {
+    this.listener = () => {
+      this.$nextTick(() => this.activate());
+    };
+
+    EventBus.$on(Search.TRIGGER, this.listener);
   }
 
   @Watch('$route')
@@ -109,8 +119,11 @@ export default class GlobalSearch extends Vue {
     this.focused = true;
   }
 
-  onClickOutside() {
-    this.activated = false;
+  get clickOutsideConfig(): ClickOutsideConfiguration {
+    return {
+      active: () => !!this.search && this.activated,
+      handler: () => this.activated = false,
+    };
   }
 
   resetSearch() {
@@ -121,7 +134,15 @@ export default class GlobalSearch extends Vue {
 
   activate() {
     this.focused = true;
-    this.$nextTick(() => this.input.focus());
+    this.$nextTick(() => {
+      this.input.focus();
+    });
+  }
+
+  beforeDestroy() {
+    if (this.listener) {
+      EventBus.$off(Search.TRIGGER, this.listener);
+    }
   }
 }
 </script>

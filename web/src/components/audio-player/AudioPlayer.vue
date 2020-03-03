@@ -348,7 +348,7 @@ export default class AudioPlayer extends Vue {
 
   goToReciter() {
     if (this.mobile && !this.minimized) {
-      this.minimized = true;
+      this.toggleMinimized();
     }
 
     this.$router.push({
@@ -359,7 +359,7 @@ export default class AudioPlayer extends Vue {
 
   goToTrack() {
     if (this.mobile && !this.minimized) {
-      this.minimized = true;
+      this.toggleMinimized();
     }
 
     this.$router.push({
@@ -415,6 +415,12 @@ export default class AudioPlayer extends Vue {
    */
   toggleMinimized() {
     this.minimized = !this.minimized;
+
+    // Try to limit scrolling when maximized.
+    document.documentElement.classList.remove('overflow-y-hidden');
+    if (!this.minimized && this.mobile) {
+      document.documentElement.classList.add('overflow-y-hidden');
+    }
   }
 
   /**
@@ -729,6 +735,7 @@ $duration: 680ms;
   height: 98%;
   border-radius: 16px 16px 0 0;
   overflow-y: auto;
+  overflow-x: hidden;
   z-index: 100 !important;
   flex-direction: column;
 
@@ -752,6 +759,7 @@ $duration: 680ms;
     padding: 24px 48px;
     position: relative;
     display: flex;
+    min-height: min-content;
     flex-direction: column;
 
     .track-info {

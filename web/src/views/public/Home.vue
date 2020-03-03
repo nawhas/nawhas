@@ -6,36 +6,35 @@
         extinguish.
       </hero-quote>
     </hero-banner>
-    <section class="page-section" id="top-reciters-section">
-      <h5 class="title">Top Reciters</h5>
-      <v-container grid-list-lg class="pa-0" fluid>
-        <template v-if="popularReciters">
-          <v-layout row wrap>
-            <v-flex xs12 sm6 md4 v-for="reciter in popularReciters" :key="reciter.id">
-              <reciter-card featured v-bind="reciter" />
-            </v-flex>
-          </v-layout>
-        </template>
-        <template v-else>
-          <six-card-skeleton />
-        </template>
-      </v-container>
-    </section>
-    <section class="page-section" id="trending-nawhas">
-      <h5 class="title">Trending Nawhas</h5>
-      <v-container grid-list-lg class="pa-0" fluid>
-        <template v-if="popularTracks">
-          <v-layout row wrap>
-            <v-flex xs12 sm6 md4 v-for="track in popularTracks" v-bind:key="track.id">
-              <track-card v-bind="track" :show-reciter="true" />
-            </v-flex>
-          </v-layout>
-        </template>
-        <template v-else>
-          <six-card-skeleton />
-        </template>
-      </v-container>
-    </section>
+    <v-container class="app__section">
+      <h5 class="section__title section__title--with-actions">
+        <div>Top Reciters</div>
+        <v-btn text :to="{ name: 'reciters.index' }">View All</v-btn>
+      </h5>
+      <template v-if="popularReciters">
+        <v-row :dense="$vuetify.breakpoint.smAndDown">
+          <v-col v-for="reciter in popularReciters" :key="reciter.id" md="4" sm="6" cols="12">
+            <reciter-card featured v-bind="reciter" />
+          </v-col>
+        </v-row>
+      </template>
+      <template v-else>
+        <skeleton-card-grid />
+      </template>
+    </v-container>
+    <v-container class="app__section">
+      <h5 class="section__title">Trending Nawhas</h5>
+      <template v-if="popularTracks">
+        <v-row :dense="$vuetify.breakpoint.smAndDown">
+          <v-col cols="12" sm="6" md="4" v-for="track in popularTracks" v-bind:key="track.id">
+            <track-card v-bind="track" :show-reciter="true" />
+          </v-col>
+        </v-row>
+      </template>
+      <template v-else>
+        <skeleton-card-grid />
+      </template>
+    </v-container>
   </div>
 </template>
 
@@ -44,7 +43,7 @@ import HeroBanner from '@/components/HeroBanner.vue';
 import HeroQuote from '@/components/HeroQuote.vue';
 import ReciterCard from '@/components/ReciterCard.vue';
 import TrackCard from '@/components/TrackCard.vue';
-import SixCardSkeleton from '@/components/SixCardSkeleton.vue';
+import SkeletonCardGrid from '@/components/loaders/SkeletonCardGrid.vue';
 import { getPopularReciters, getPopularTracks } from '@/services/popular';
 
 export default {
@@ -54,10 +53,10 @@ export default {
     HeroQuote,
     ReciterCard,
     TrackCard,
-    SixCardSkeleton,
+    SkeletonCardGrid,
   },
   mounted() {
-    getPopularReciters({ per_page: 6 }).then((response) => {
+    getPopularReciters({ per_page: 6, include: 'related' }).then((response) => {
       this.popularReciters = response.data.data;
     });
     getPopularTracks({ per_page: 6, include: 'reciter,album' }).then((response) => {
@@ -72,9 +71,3 @@ export default {
   },
 };
 </script>
-
-<style lang="scss" scoped>
-.title {
-  margin-bottom: 12px;
-}
-</style>

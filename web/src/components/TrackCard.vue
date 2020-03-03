@@ -70,6 +70,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "../styles/theme";
 .track-card {
   padding: 0;
   display: flex;
@@ -77,24 +78,32 @@ export default {
   justify-content: space-between;
   background: gray;
   cursor: pointer;
-  will-change: box-shadow, background-color;
-  // transition: background-color $transition, box-shadow $transition;
+  @include transition(box-shadow, background-color);
 
   &:hover {
-    // elevation(8);
+    @include elevation(4);
   }
 
   .track-card__text {
     padding: 16px 16px 16px 24px;
-    will-change: color;
-    // transition: color $transition;
     overflow: hidden;
+    @include transition(color);
 
     .track-card__name, .track-card__album, .track-card__reciter-year {
       white-space: nowrap;
       text-overflow: ellipsis;
       overflow: hidden;
       width: auto;
+    }
+
+    .track-card__name {
+      font-size: 0.95rem !important;
+      line-height: initial !important;
+      margin-bottom: 2px;
+    }
+
+    .track-card__reciter-year {
+      line-height: initial;
     }
   }
 
@@ -115,8 +124,7 @@ export default {
       position: absolute;
       top: 0;
       left: 0;
-      will-change: background;
-      // transition: background $transition,
+      @include transition(background);
     }
 
     > img {

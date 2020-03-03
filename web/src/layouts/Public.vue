@@ -81,7 +81,7 @@ export default class PublicVuetify extends Vue {
 
 .main-container {
   padding: 0;
-  padding-bottom: 84px;
+  min-height: calc(100vh - 64px);
 }
 
 .nav__tile__action {
@@ -128,6 +128,12 @@ export default class PublicVuetify extends Vue {
 @media #{map-get($display-breakpoints, 'md-and-down')} {
   .app-bar__left {
     flex: 0;
+  }
+}
+
+@media #{map-get($display-breakpoints, 'sm-and-down')} {
+  .main-container {
+    min-height: calc(100vh - 56px);
   }
 }
 </style>

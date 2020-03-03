@@ -134,7 +134,7 @@
 <script>
 /* eslint-disable dot-notation */
 import Vibrant from 'node-vibrant';
-import ReciterHeroSkeleton from '@/components/ReciterHeroSkeleton.vue';
+import ReciterHeroSkeleton from '@/components/loaders/ReciterHeroSkeleton.vue';
 import LyricsSkeleton from '@/components/LyricsSkeleton.vue';
 import MoreTracksSkeleton from '@/components/MoreTracksSkeleton.vue';
 import { getTrack } from '@/services/tracks';
