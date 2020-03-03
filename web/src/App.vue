@@ -58,6 +58,9 @@ body.scroll--none {
   .page-section {
     padding: 24px;
   }
+  .app__section {
+    padding: 24px;
+  }
 }
 
 .app--player-showing {
