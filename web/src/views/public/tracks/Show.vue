@@ -131,51 +131,45 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 /* eslint-disable dot-notation */
+import {
+  Component, Watch, Prop, Vue,
+} from 'vue-property-decorator';
 import Vibrant from 'node-vibrant';
 import ReciterHeroSkeleton from '@/components/loaders/ReciterHeroSkeleton.vue';
 import LyricsSkeleton from '@/components/LyricsSkeleton.vue';
 import MoreTracksSkeleton from '@/components/MoreTracksSkeleton.vue';
 import { getTrack } from '@/services/tracks';
 
-export default {
-  name: 'TrackPage',
+@Component({
   components: {
     ReciterHeroSkeleton,
     LyricsSkeleton,
     MoreTracksSkeleton,
   },
-  props: ['trackObject'],
+})
+export default class TrackPage extends Vue {
+  @Prop({ type: Object }) private trackObject!: any;
+  private background = '#222';
+  private textColor = '#fff';
+  private track: any = null;
+  private addedToQueueSnackbar = false;
 
-  watch: {
-    // call again the method if the route changes
-    $route: 'onRouteUpdate',
-  },
+  get reciter() {
+    return this.track && this.track.reciter;
+  }
 
-  data() {
-    return {
-      background: '#222',
-      textColor: '#fff',
-      track: null,
-      addedToQueueSnackbar: false,
-    };
-  },
+  get album() {
+    return this.track && this.track.album;
+  }
 
-  computed: {
-    reciter() {
-      return this.track && this.track.reciter;
-    },
-    album() {
-      return this.track && this.track.album;
-    },
-    image() {
-      if (this.album) {
-        return this.album.artwork || '/img/default-album-image.png';
-      }
-      return '/img/default-album-image.png';
-    },
-  },
+  get image() {
+    if (this.album) {
+      return this.album.artwork || '/img/default-album-image.png';
+    }
+    return '/img/default-album-image.png';
+  }
 
   mounted() {
     this.fetchData();
@@ -185,79 +179,87 @@ export default {
     };
     this.$el['__onPrintHandler__'] = handler;
     window.addEventListener('beforeprint', handler);
-  },
+  }
+
   beforeDestroy() {
     window.removeEventListener('beforeprint', this.$el['__onPrintHandler__']);
     delete this.$el['__onPrintHandler__'];
-  },
-  methods: {
-    onRouteUpdate() {
-      this.fetchData();
-    },
-    async fetchData() {
-      this.$Progress.start();
-      const { reciter, album, track } = this.$route.params;
+  }
 
-      if (this.trackObject) {
-        this.track = this.trackObject;
-      }
+  @Watch('$route')
+  onRouteUpdate() {
+    this.fetchData();
+  }
 
-      if (!this.track || !this.isSameTrack(this.$route.params)) {
-        await getTrack(reciter, album, track, {
-          include: 'reciter,lyrics,album.tracks,media',
-        }).then((r) => {
-          this.track = r.data;
-        });
-      }
+  async fetchData() {
+    this.$Progress.start();
+    const { reciter, album, track } = this.$route.params;
 
-      this.setBackgroundFromImage();
-      this.$Progress.finish();
-    },
-    setBackgroundFromImage() {
-      if (!this.track) {
-        return;
-      }
-      Vibrant.from(this.image)
-        .getPalette()
-        .then((palette) => {
-          const swatch = palette.DarkMuted;
-          if (!swatch) {
-            return;
-          }
-          this.background = swatch.getHex();
-          this.textColor = swatch.getBodyTextColor();
-        });
-    },
-    prepareLyrics(content) {
-      return content.replace(/\n/gi, '<br>');
-    },
-    isSameTrack({ reciter, album, track }) {
-      return (
-        this.track.reciter.slug === reciter
-        && this.track.album.year === album
-        && this.track.slug === track
-      );
-    },
-    print() {
-      this.$router.replace({
-        name: 'print.lyrics',
-        params: {
-          track: this.track.slug,
-          reciter: this.reciter.slug,
-          album: this.album.year,
-          trackObject: this.track,
-        },
+    if (this.trackObject) {
+      this.track = this.trackObject;
+    }
+
+    if (!this.track || !this.isSameTrack((this.$route.params as any))) {
+      await getTrack(reciter, album, track, {
+        include: 'reciter,lyrics,album.tracks,media',
+      }).then((r) => {
+        this.track = r.data;
       });
-    },
-    playTrack() {
-      this.$store.commit('player/PLAY_TRACK', { track: this.track });
-    },
-    addToQueue() {
-      this.$store.commit('player/ADD_TO_QUEUE', { track: this.track });
-      this.addedToQueueSnackbar = true;
-    },
-  },
-};
+    }
+
+    this.setBackgroundFromImage();
+    this.$Progress.finish();
+  }
+
+  setBackgroundFromImage() {
+    if (!this.track) {
+      return;
+    }
+    Vibrant.from(this.image)
+      .getPalette()
+      .then((palette) => {
+        const swatch = palette.DarkMuted;
+        if (!swatch) {
+          return;
+        }
+        this.background = swatch.getHex();
+        this.textColor = swatch.getBodyTextColor();
+      });
+  }
+
+  prepareLyrics(content) {
+    return content.replace(/\n/gi, '<br>');
+  }
+
+  isSameTrack({ reciter, album, track }) {
+    return (
+      this.track.reciter.slug === reciter
+      && this.track.album.year === album
+      && this.track.slug === track
+    );
+  }
+
+  print() {
+    this.$router.replace({
+      name: 'print.lyrics',
+      params: {
+        track: this.track.slug,
+        reciter: this.reciter.slug,
+        album: this.album.year,
+        trackObject: this.track,
+      },
+    });
+  }
+
+  playTrack() {
+    this.$store.commit('player/PLAY_TRACK', { track: this.track });
+  }
+
+  addToQueue() {
+    this.$store.commit('player/ADD_TO_QUEUE', { track: this.track });
+    this.addedToQueueSnackbar = true;
+  }
+}
 </script>
 
 <style lang="scss" scoped>
