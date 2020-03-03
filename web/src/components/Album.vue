@@ -199,10 +199,11 @@ export default class Album extends Vue {
     td:focus {
       outline: none !important;
     }
-    .album__track {
-      cursor: pointer;
-    }
   }
+}
+
+.album__track {
+  cursor: pointer;
 }
 
 .track__features {
