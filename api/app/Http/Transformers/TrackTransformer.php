@@ -7,11 +7,12 @@ namespace App\Http\Transformers;
 use App\Entities\Track;
 use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\Item;
+use League\Fractal\Resource\Primitive;
 use League\Fractal\Resource\ResourceInterface;
 
 class TrackTransformer extends Transformer
 {
-    protected $availableIncludes = ['reciter', 'album', 'lyrics', 'media'];
+    protected $availableIncludes = ['reciter', 'album', 'lyrics', 'media', 'related'];
 
     public function toArray(Track $track): array
     {
@@ -48,5 +49,13 @@ class TrackTransformer extends Transformer
     public function includeMedia(Track $track): Collection
     {
         return $this->collection($track->getMedia(), new MediaTransformer());
+    }
+
+    public function includeRelated(Track $track): Primitive
+    {
+        return $this->primitive([
+            'lyrics' => $track->hasLyrics(),
+            'audio' => $track->hasAudioFile(),
+        ]);
     }
 }

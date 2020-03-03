@@ -11,6 +11,7 @@ use League\Fractal\Resource\Primitive;
 class ReciterTransformer extends Transformer
 {
     protected $availableIncludes = ['related'];
+
     public function toArray(Reciter $reciter): array
     {
         return [
