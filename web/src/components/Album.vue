@@ -2,10 +2,10 @@
   <v-card class="album">
     <div class="album__header" :style="{ 'background-color': background }">
       <v-avatar tile size="128px" :elevation="2" class="album__artwork white">
-        <img :src="image" :alt="title" ref="artwork" />
+        <img :src="image" :alt="album.title" ref="artwork" />
       </v-avatar>
       <div class="album__details" :style="{ color: textColor }">
-        <h5 class="album__title">{{ title }}</h5>
+        <h5 class="album__title">{{ album.title }}</h5>
         <h6 class="album__release-date">
           <strong>{{ year }}</strong>
           &bull; {{ tracks.data.length }} tracks
@@ -30,73 +30,93 @@
   </v-card>
 </template>
 
-<script>
+<script lang="ts">
+import { Component, Vue, Prop } from 'vue-property-decorator';
 import Vibrant from 'node-vibrant';
 
-export default {
-  name: 'Album',
-  props: ['title', 'album', 'year', 'tracks', 'artwork', 'reciter'],
+@Component
+export default class Album extends Vue {
+  private background = '#444444';
+  private textColor = 'white';
+
+  // TODO - Replace `any` with a proper interface.
+  @Prop({ type: Object, required: true }) private album: any;
+  @Prop({ type: Object, required: true }) private reciter: any;
+  @Prop({ type: Boolean, default: true }) private showReciter!: boolean;
+
+  get headers() {
+    return [
+      {
+        text: 'Name',
+        align: 'left',
+        value: 'name',
+      },
+      {
+        text: 'Reciter',
+        align: 'left',
+        value: 'reciter.name',
+      },
+    ];
+  }
+
+  get year() {
+    return this.album.year;
+  }
+
+  get tracks() {
+    return this.album.tracks;
+  }
+
+  get reciterYear() {
+    if (this.showReciter) {
+      return `${this.reciter.name} • ${this.year}`;
+    }
+    return this.year;
+  }
+
+  get gradient() {
+    const rgb = Vibrant.Util.hexToRgb(this.background);
+
+    if (!rgb) {
+      return null;
+    }
+
+    return `linear-gradient(to right, rgba(${rgb.join(
+      ', ',
+    )}, 1), rgba(${rgb.join(', ')}, 0)`;
+  }
+
+  get artworkBackground() {
+    return `url(${this.image})`;
+  }
+
+  get image() {
+    return this.album.artwork || '/img/default-album-image.png';
+  }
+
   mounted() {
     this.setBackgroundFromImage();
-  },
-  methods: {
-    setBackgroundFromImage() {
-      Vibrant.from(this.image)
-        .getPalette()
-        .then((palette) => {
-          const swatch = palette.DarkMuted;
-          if (!swatch) {
-            return;
-          }
-          this.background = swatch.getHex();
-          this.textColor = swatch.getBodyTextColor();
-        });
-    },
-    goToTrack(track) {
-      this.$router.push(
-        `/reciters/${this.reciter.slug}/albums/${this.year}/tracks/${track.slug}`,
-      );
-    },
-  },
-  data() {
-    return {
-      headers: [
-        {
-          text: 'Name',
-          align: 'left',
-          value: 'name',
-        },
-        {
-          text: 'Reciter',
-          align: 'left',
-          value: 'reciter.name',
-        },
-      ],
-      background: '#444444',
-      textColor: 'white',
-    };
-  },
-  computed: {
-    reciterYear() {
-      if (this.showReciter) {
-        return `${this.reciter.name} • ${this.year}`;
-      }
-      return this.year;
-    },
-    gradient() {
-      const rgb = Vibrant.Util.hexToRgb(this.background);
-      return `linear-gradient(to right, rgba(${rgb.join(
-        ', ',
-      )}, 1), rgba(${rgb.join(', ')}, 0)`;
-    },
-    artworkBackground() {
-      return `url(${this.image})`;
-    },
-    image() {
-      return this.artwork || '/img/default-album-image.png';
-    },
-  },
-};
+  }
+
+  setBackgroundFromImage() {
+    Vibrant.from(this.image)
+      .getPalette()
+      .then((palette) => {
+        const swatch = palette.DarkMuted;
+        if (!swatch) {
+          return;
+        }
+        this.background = swatch.getHex();
+        this.textColor = swatch.getBodyTextColor();
+      });
+  }
+
+  goToTrack(track) {
+    this.$router.push(
+      `/reciters/${this.reciter.slug}/albums/${this.album.year}/tracks/${track.slug}`,
+    );
+  }
+}
 </script>
 
 <style lang="scss">
