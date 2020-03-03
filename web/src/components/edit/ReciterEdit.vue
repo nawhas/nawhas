@@ -60,7 +60,6 @@ export default {
       this.editedReciter.description = this.reciter.description;
     },
     submit() {
-      console.log('submitted the form');
       this.dialog = false;
     },
     clear() {

@@ -63,7 +63,6 @@ export default {
       }
     },
     submit() {
-      console.log('submitted the form');
       this.dialog = false;
     },
     clear() {

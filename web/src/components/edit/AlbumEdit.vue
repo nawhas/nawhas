@@ -52,7 +52,6 @@ export default {
       this.editedAlbum.title = this.album.title;
     },
     submit() {
-      console.log('submitted the form');
       this.dialog = false;
     },
     clear() {
