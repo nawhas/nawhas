@@ -7,7 +7,10 @@
       </hero-quote>
     </hero-banner>
     <v-container class="app__section">
-      <h5 class="headline">Top Reciters</h5>
+      <h5 class="section__title section__title--with-actions">
+        <div>Top Reciters</div>
+        <v-btn text :to="{ name: 'reciters.index' }">View All</v-btn>
+      </h5>
       <template v-if="popularReciters">
         <v-row :dense="$vuetify.breakpoint.smAndDown">
           <v-col v-for="reciter in popularReciters" :key="reciter.id" md="4" sm="6" cols="12">

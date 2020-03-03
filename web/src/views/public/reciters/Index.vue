@@ -15,7 +15,7 @@
     </v-container>
 
     <v-container class="app__section">
-      <div class="section__title d-flex align-center justify-space-between">
+      <div class="section__title section__title--with-actions">
         <div>All Reciters</div>
         <v-btn icon @click="focusSearch"><v-icon>search</v-icon></v-btn>
       </div>

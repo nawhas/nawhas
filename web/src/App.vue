@@ -34,6 +34,11 @@ export default Vue.extend({
     font-family: map-deep-get($headings, 'h5', 'font-family') !important;
     margin-bottom: 12px;
   }
+  .section__title--with-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
 }
 
 .app--xs {
