@@ -1,16 +1,25 @@
 <template>
-  <div id="app" :class="'app--' + $vuetify.breakpoint.name">
+  <div id="app" :class="classes">
     <vue-progress-bar></vue-progress-bar>
     <router-view></router-view>
   </div>
 </template>
 
-<script>
-import Vue from 'vue';
+<script lang="ts">
+import { Component, Vue } from 'vue-property-decorator';
 
-export default Vue.extend({
-  name: 'App',
-});
+@Component
+export default class App extends Vue {
+  get isPlayerShowing() {
+    return this.$store.getters['player/track'] !== null;
+  }
+  get classes() {
+    return {
+      [`app--${this.$vuetify.breakpoint.name}`]: true,
+      'app--player-showing': this.isPlayerShowing,
+    };
+  }
+}
 </script>
 
 <style lang="scss">
@@ -48,6 +57,12 @@ body.scroll--none {
 .app--xs {
   .page-section {
     padding: 24px;
+  }
+}
+
+.app--player-showing {
+  .main-container {
+    padding-bottom: 80px !important;
   }
 }
 
