@@ -35,7 +35,7 @@
 <script>
 export default {
   mounted() {
-    this.editedAlbum.title = this.album.title;
+    this.setDataFromProp()
   },
   data() {
     return {
@@ -48,11 +48,15 @@ export default {
   },
   props: ['album'],
   methods: {
+    setDataFromProp() {
+      this.editedAlbum.title = this.album.title;
+    },
     submit() {
       console.log('submitted the form');
       this.dialog = false;
     },
     clear() {
+      this.setDataFromProp();
       this.dialog = false;
     },
   },

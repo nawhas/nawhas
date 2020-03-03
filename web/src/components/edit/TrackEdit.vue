@@ -42,10 +42,7 @@
 <script>
 export default {
   mounted() {
-    this.editedTrack.title = this.track.title;
-    if (this.track.lyrics) {
-      this.editedTrack.lyrics = this.track.lyrics.content;
-    }
+    this.setDataFromProp();
   },
   data() {
     return {
@@ -59,11 +56,18 @@ export default {
   },
   props: ['track'],
   methods: {
+    setDataFromProp() {
+      this.editedTrack.title = this.track.title;
+      if (this.track.lyrics) {
+        this.editedTrack.lyrics = this.track.lyrics.content;
+      }
+    },
     submit() {
       console.log('submitted the form');
       this.dialog = false;
     },
     clear() {
+      this.setDataFromProp();
       this.dialog = false;
     },
   },

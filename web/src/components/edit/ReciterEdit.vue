@@ -41,8 +41,7 @@
 <script>
 export default {
   mounted() {
-    this.editedReciter.name = this.reciter.name;
-    this.editedReciter.description = this.reciter.description;
+    this.setDataFromProp();
   },
   data() {
     return {
@@ -56,15 +55,16 @@ export default {
   },
   props: ['reciter'],
   methods: {
+    setDataFromProp() {
+      this.editedReciter.name = this.reciter.name;
+      this.editedReciter.description = this.reciter.description;
+    },
     submit() {
       console.log('submitted the form');
       this.dialog = false;
     },
     clear() {
-      this.editedReciter = {
-        name: this.reciter.name,
-        description: this.reciter.description,
-      };
+      this.setDataFromProp();
       this.dialog = false;
     },
   },
