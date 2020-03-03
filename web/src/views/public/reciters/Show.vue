@@ -60,7 +60,7 @@
         </template>
       </template>
       <template v-else>
-        <album-table-skeleton />
+        <album-skeleton />
       </template>
     </v-container>
   </div>
@@ -70,12 +70,13 @@
 import { Component, Vue, Watch } from 'vue-property-decorator';
 import TrackCard from '@/components/TrackCard.vue';
 import SkeletonCardGrid from '@/components/loaders/SkeletonCardGrid.vue';
-import AlbumTableSkeleton from '@/components/AlbumTableSkeleton.vue';
+import AlbumSkeleton from '@/components/loaders/AlbumSkeleton.vue';
 import Album from '@/components/Album.vue';
 import HeroBanner from '@/components/HeroBanner.vue';
 import { getReciter } from '@/services/reciters';
 import { getAlbums } from '@/services/albums';
 import { getPopularTracks } from '@/services/popular';
+
 
 @Component({
   components: {
@@ -83,7 +84,7 @@ import { getPopularTracks } from '@/services/popular';
     TrackCard,
     Album,
     SkeletonCardGrid,
-    AlbumTableSkeleton,
+    AlbumSkeleton,
   },
 })
 export default class ReciterProfile extends Vue {

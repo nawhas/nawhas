@@ -16,10 +16,10 @@
       :headers="headers"
       :items="tracks.data"
       :disable-sort="true"
-      :hide-default-header="$vuetify.breakpoint.smAndDown"
+      :hide-default-header="true"
       :disable-pagination="true"
       :hide-default-footer="true"
-      class="album__tracks-1"
+      class="album__tracks"
     >
       <template v-slot:item="props">
         <tr @click="goToTrack(props.item)" class="album__track">
