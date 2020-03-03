@@ -11,6 +11,9 @@
           &bull; {{ tracks.data.length }} tracks
         </h6>
       </div>
+      <div>
+        <album-edit v-if="album" :album="album"></album-edit>
+      </div>
     </div>
     <v-data-table
       :headers="headers"
@@ -51,8 +54,13 @@
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import Vibrant from 'node-vibrant';
+import AlbumEdit from '@/components/edit/AlbumEdit.vue';
 
-@Component
+@Component({
+  components: {
+    AlbumEdit,
+  },
+})
 export default class Album extends Vue {
   private background = '#444444';
   private textColor = 'white';

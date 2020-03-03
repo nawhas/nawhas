@@ -27,6 +27,7 @@
             <v-btn dark text><v-icon left>star_outline</v-icon> Favorite</v-btn>
           </div>
           <div class="bar__actions bar__actions--overflow">
+            <reciter-edit v-if="reciter" :reciter="reciter"></reciter-edit>
             <v-btn dark icon><v-icon>more_vert</v-icon></v-btn>
           </div>
         </v-container>
@@ -73,6 +74,7 @@ import SkeletonCardGrid from '@/components/loaders/SkeletonCardGrid.vue';
 import AlbumSkeleton from '@/components/loaders/AlbumSkeleton.vue';
 import Album from '@/components/Album.vue';
 import HeroBanner from '@/components/HeroBanner.vue';
+import ReciterEdit from '@/components/edit/ReciterEdit.vue';
 import { getReciter } from '@/services/reciters';
 import { getAlbums } from '@/services/albums';
 import { getPopularTracks } from '@/services/popular';
@@ -85,6 +87,7 @@ import { getPopularTracks } from '@/services/popular';
     Album,
     SkeletonCardGrid,
     AlbumSkeleton,
+    ReciterEdit,
   },
 })
 export default class ReciterProfile extends Vue {
@@ -111,7 +114,7 @@ export default class ReciterProfile extends Vue {
   }
 
   get showToolbar() {
-    return false;
+    return true;
   }
 
   @Watch('$route')

@@ -22,6 +22,7 @@
                 <v-btn @click="addToQueue" text class="track-hero__audio_buttons--queue white--text">
                   <v-icon class="track-hero__audio_buttons--icons">playlist_add</v-icon>Add to Queue
                 </v-btn>
+                <track-edit v-if="track" :track="track"></track-edit>
               </div>
             </div>
           </div>
@@ -137,6 +138,7 @@ import Vibrant from 'node-vibrant';
 import ReciterHeroSkeleton from '@/components/loaders/ReciterHeroSkeleton.vue';
 import LyricsSkeleton from '@/components/LyricsSkeleton.vue';
 import MoreTracksSkeleton from '@/components/MoreTracksSkeleton.vue';
+import TrackEdit from '@/components/edit/TrackEdit.vue';
 import { getTrack } from '@/services/tracks';
 
 export default {
@@ -145,6 +147,7 @@ export default {
     ReciterHeroSkeleton,
     LyricsSkeleton,
     MoreTracksSkeleton,
+    TrackEdit,
   },
   props: ['trackObject'],
 
