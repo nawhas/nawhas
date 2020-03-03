@@ -51,7 +51,7 @@
       <template v-if="albums">
         <template v-if="albums.length > 0">
           <template v-for="album in albums">
-            <album :album="album" :reciter="reciter" :show-reciter="false" v-bind:key="album.id"></album>
+            <album :album="album" :reciter="reciter" :show-reciter="false" v-bind:key="album.id" />
           </template>
           <v-pagination v-model="page" :length="length" circle @input="goToPage"></v-pagination>
         </template>
