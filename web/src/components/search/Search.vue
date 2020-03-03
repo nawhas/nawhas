@@ -133,8 +133,8 @@ export default class GlobalSearch extends Vue {
   }
 
   activate() {
+    this.focused = true;
     this.$nextTick(() => {
-      this.focused = true;
       this.input.focus();
     });
   }
