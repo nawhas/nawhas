@@ -1,6 +1,9 @@
 <template>
   <div class="reciter-profile">
-    <hero-banner class="reciter-profile__hero" :background="require('../../../assets/azadari-flags.jpg')">
+    <hero-banner :class="{
+        'reciter-profile__hero': true,
+        'reciter-profile__hero--with-toolbar': showToolbar
+    }" :background="require('../../../assets/azadari-flags.jpg')">
       <div class="hero__content">
         <template v-if="reciter">
           <div class="hero__avatar">
@@ -16,6 +19,17 @@
           </div>
         </template>
         <v-skeleton-loader type="text" dark width="150px" v-else></v-skeleton-loader>
+      </div>
+      <div class="hero__bar" v-if="showToolbar">
+        <v-container class="bar__content">
+          <div class="bar__actions bar__actions--visible">
+            <v-btn dark text><v-icon left>public</v-icon> Website</v-btn>
+            <v-btn dark text><v-icon left>star_outline</v-icon> Favorite</v-btn>
+          </div>
+          <div class="bar__actions bar__actions--overflow">
+            <v-btn dark icon><v-icon>more_vert</v-icon></v-btn>
+          </div>
+        </v-container>
       </div>
     </hero-banner>
     <v-container class="app__section">
@@ -95,6 +109,10 @@ export default class ReciterProfile extends Vue {
     return 96;
   }
 
+  get showToolbar() {
+    return false;
+  }
+
   @Watch('$route')
   async fetchData() {
     this.reciter = null;
@@ -144,7 +162,8 @@ export default class ReciterProfile extends Vue {
 }
 
 .reciter-profile__hero {
-  margin-bottom: 24px;
+  position: relative;
+  margin-bottom: 36px;
 
   .hero__content {
     padding: 48px;
@@ -170,15 +189,37 @@ export default class ReciterProfile extends Vue {
   .hero__avatar__component {
     border: 4px solid white;
   }
+
+  .hero__bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    padding: 12px 24px;
+    background: map-deep-get($colors, 'deep-orange', 'darken-4');
+
+    .bar__content {
+      padding: 0;
+      display: flex;
+      justify-content: space-between;
+    }
+  }
 }
 
 @media #{map-get($display-breakpoints, 'md-and-down')} {
   .reciter-profile__hero {
-    margin-bottom: 12px;
+    margin-bottom: 24px;
 
     .hero__details {
       margin-top: 16px;
       padding: 0 16px;
+    }
+
+    &--with-toolbar {
+      .hero__details {
+        margin-bottom: 36px;
+      }
     }
   }
 }

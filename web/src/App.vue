@@ -54,7 +54,7 @@ body.scroll--none {
   }
 }
 
-.app--xs {
+.app--xs, .app--sm {
   .page-section {
     padding: 24px;
   }
