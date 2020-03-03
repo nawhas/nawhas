@@ -16,11 +16,11 @@
         </v-row>
       </template>
       <template v-else>
-        <six-card-skeleton />
+        <skeleton-card-grid />
       </template>
     </v-container>
     <v-container class="app__section">
-      <h5 class="headline">Trending Nawhas</h5>
+      <h5 class="section__title">Trending Nawhas</h5>
       <template v-if="popularTracks">
         <v-row :dense="$vuetify.breakpoint.smAndDown">
           <v-col cols="12" sm="6" md="4" v-for="track in popularTracks" v-bind:key="track.id">
@@ -29,7 +29,7 @@
         </v-row>
       </template>
       <template v-else>
-        <six-card-skeleton />
+        <skeleton-card-grid />
       </template>
     </v-container>
   </div>
@@ -40,7 +40,7 @@ import HeroBanner from '@/components/HeroBanner.vue';
 import HeroQuote from '@/components/HeroQuote.vue';
 import ReciterCard from '@/components/ReciterCard.vue';
 import TrackCard from '@/components/TrackCard.vue';
-import SixCardSkeleton from '@/components/SixCardSkeleton.vue';
+import SkeletonCardGrid from '@/components/loaders/SkeletonCardGrid.vue';
 import { getPopularReciters, getPopularTracks } from '@/services/popular';
 
 export default {
@@ -50,7 +50,7 @@ export default {
     HeroQuote,
     ReciterCard,
     TrackCard,
-    SixCardSkeleton,
+    SkeletonCardGrid,
   },
   mounted() {
     getPopularReciters({ per_page: 6, include: 'related' }).then((response) => {
@@ -68,9 +68,3 @@ export default {
   },
 };
 </script>
-
-<style lang="scss" scoped>
-.headline {
-  margin-bottom: 12px;
-}
-</style>

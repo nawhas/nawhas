@@ -28,7 +28,7 @@
           </v-layout>
         </template>
         <template v-else>
-          <six-card-skeleton />
+          <skeleton-card-grid />
         </template>
       </v-container>
     </section>
@@ -56,7 +56,7 @@
 <script>
 import TrackCard from '@/components/TrackCard.vue';
 import ReciterHeroSkeleton from '@/components/ReciterHeroSkeleton.vue';
-import SixCardSkeleton from '@/components/SixCardSkeleton.vue';
+import SkeletonCardGrid from '@/components/loaders/SkeletonCardGrid.vue';
 import AlbumTableSkeleton from '@/components/AlbumTableSkeleton.vue';
 import { getReciter } from '@/services/reciters';
 import { getAlbums } from '@/services/albums';
@@ -69,7 +69,7 @@ export default {
     TrackCard,
     Album,
     ReciterHeroSkeleton,
-    SixCardSkeleton,
+    SkeletonCardGrid,
     AlbumTableSkeleton,
   },
   watch: {

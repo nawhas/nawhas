@@ -2,7 +2,7 @@
   <div @click="goToReciter()">
     <v-card :class="classObject" :style="{ 'background-color': background }">
       <div class="reciter-card__avatar">
-        <v-avatar size="48px">
+        <v-avatar size="40">
           <img crossorigin ref="avatarElement" :src="image" :alt="name" />
         </v-avatar>
       </div>

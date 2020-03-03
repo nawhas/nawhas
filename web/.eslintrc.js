@@ -24,6 +24,7 @@ module.exports = {
       ts: 'never',
       vue: 'always',
     }],
+    'import/prefer-default-export': 0,
     'max-len': ['error', { code: 120, ignoreUrls: true }],
     'no-restricted-syntax': 0,
     'linebreak-style': 0,

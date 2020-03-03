@@ -14,7 +14,7 @@ export default Vue.extend({
 </script>
 
 <style lang="scss">
-@import "~vuetify/src/styles/styles";
+@import "./styles/theme";
 
 @import url('https://fonts.googleapis.com/css?family=Bellefair|Roboto+Condensed:300,300i,400,400i,700,700i|Roboto+Slab:100,300,400,700');
 @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css');
@@ -25,7 +25,15 @@ export default Vue.extend({
 }
 
 .app__section {
-  margin-bottom: 24px;
+  padding-bottom: 24px !important;
+  .section__title {
+    font-size: 1.4rem; // Overriding the font size.
+    font-weight: map-deep-get($headings, 'h5', 'weight');
+    line-height: map-deep-get($headings, 'h5', 'line-height');
+    letter-spacing: map-deep-get($headings, 'h5', 'letter-spacing') !important;
+    font-family: map-deep-get($headings, 'h5', 'font-family') !important;
+    margin-bottom: 12px;
+  }
 }
 
 .app--xs {
