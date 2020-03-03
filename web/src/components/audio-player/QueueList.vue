@@ -20,6 +20,7 @@
           <v-icon>remove_circle_outline</v-icon>
         </v-btn>
         <v-progress-circular
+          class="playback-progress"
           v-else
           :size="20"
           :rotate="-90"
@@ -87,5 +88,8 @@ export default class QueueList extends Vue {
 
 .queue-item--active {
   background-color: map-deep-get($colors, 'deep-orange', 'lighten-5');
+}
+.playback-progress {
+  margin-right: 8px;
 }
 </style>
