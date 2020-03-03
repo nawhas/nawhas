@@ -131,7 +131,7 @@ export default class ReciterProfile extends Vue {
     }).then((response) => {
       this.popularTracks = response.data.data;
     });
-    getAlbums(reciter, { include: 'tracks' }).then((response) => {
+    getAlbums(reciter, { include: 'tracks.related' }).then((response) => {
       this.setAlbums(response);
     });
   }
@@ -143,7 +143,7 @@ export default class ReciterProfile extends Vue {
 
   goToPage(number) {
     this.albums = null;
-    getAlbums(this.reciter.id, { include: 'tracks', page: number }).then((response) => {
+    getAlbums(this.reciter.id, { include: 'tracks.related', page: number }).then((response) => {
       this.setAlbums(response);
     });
   }

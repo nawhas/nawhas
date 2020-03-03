@@ -136,14 +136,12 @@ export default class Album extends Vue {
       });
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   hasLyrics(track) {
-    return track.title.length > 14;
+    return track.related ? track.related.lyrics === true : false;
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   hasAudioFile(track) {
-    return track.title.length > 18;
+    return track.related ? track.related.audio === true : false;
   }
 
   goToTrack(track) {
