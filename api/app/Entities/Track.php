@@ -59,6 +59,12 @@ class Track implements Entity, TimestampedEntity
         return $this->title;
     }
 
+    public function setTitle(string $title): void
+    {
+        $this->title = $title;
+        $this->slug = Str::slug($title);
+    }
+
     public function getSlug(): string
     {
         return $this->slug;
@@ -89,20 +95,17 @@ class Track implements Entity, TimestampedEntity
 
     public function addAudioFile(Media $media): void
     {
-        $existing = $this->getAudioFiles();
+        $existing = $this->getAudioFile();
 
-        if ($existing->count() >= 0) {
+        if ($existing) {
             // Remove existing audio files.
-            collect($existing->toArray())->map(fn (Media $media) => $this->media->removeElement($media));
+            $this->media->removeElement($existing);
         }
 
         $this->media->add($media);
     }
 
-    /**
-     * @return Collection|Media[]
-     */
-    public function getAudioFiles(): Collection
+    public function getAudioFile(): ?Media
     {
         if (!($this->media instanceof Selectable)) {
             throw new \BadMethodCallException('Cannot select audio files from a collection not implementing Selectable.');
@@ -112,11 +115,11 @@ class Track implements Entity, TimestampedEntity
             ->where(Criteria::expr()->eq('type', MediaType::AUDIO()))
             ->where(Criteria::expr()->eq('provider', MediaProvider::FILE()));
 
-        return $this->media->matching($criteria);
+        return $this->media->matching($criteria)->first() ?: null;
     }
 
     public function hasAudioFile(): bool
     {
-        return $this->getAudioFiles()->count() > 0;
+        return $this->getAudioFile() !== null;
     }
 }

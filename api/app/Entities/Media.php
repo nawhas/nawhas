@@ -9,6 +9,8 @@ use App\Enum\MediaProvider;
 use App\Enum\MediaType;
 use App\Entities\Contracts\{Entity, TimestampedEntity};
 use Ramsey\Uuid\{Uuid, UuidInterface};
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 use Zain\LaravelDoctrine\Jetpack\Serializer\SerializesAttributes;
 
 class Media implements Entity, TimestampedEntity
@@ -19,19 +21,19 @@ class Media implements Entity, TimestampedEntity
     private UuidInterface $id;
     private MediaType $type;
     private MediaProvider $provider;
-    private string $uri;
+    private string $path;
 
-    public function __construct(MediaType $type, MediaProvider $provider, string $uri)
+    public function __construct(MediaType $type, MediaProvider $provider, string $path)
     {
         $this->id = Uuid::uuid1();
         $this->type = $type;
         $this->provider = $provider;
-        $this->uri = $uri;
+        $this->path = $path;
     }
 
-    public static function audioFile(string $uri): self
+    public static function audioFile(string $path): self
     {
-        return new self(MediaType::AUDIO(), MediaProvider::FILE(), $uri);
+        return new self(MediaType::AUDIO(), MediaProvider::FILE(), $path);
     }
 
     public function getId(): string
@@ -49,8 +51,18 @@ class Media implements Entity, TimestampedEntity
         return $this->provider;
     }
 
+    public function getPath(): string
+    {
+        return $this->path;
+    }
+
+    public function setPath(string $path): void
+    {
+        $this->path = $path;
+    }
+
     public function getUri(): string
     {
-        return $this->uri;
+        return Storage::url($this->path);
     }
 }

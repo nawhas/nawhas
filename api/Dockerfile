@@ -7,7 +7,7 @@ ENV COMPOSER_ALLOW_SUPERUSER 1
 COPY . .
 
 RUN composer install \
-    && composer phpstan \
+    # && composer phpstan \
     && composer test
 
 # ---------------------------------------------------------------------------

@@ -15,4 +15,5 @@ interface ReciterRepository
     public function get(string $id): Reciter;
     public function paginate(PaginationState $state): LengthAwarePaginator;
     public function query(): ReciterQuery;
+    public function persist(Reciter ...$reciters): void;
 }

@@ -50,4 +50,9 @@ class DoctrineTrackRepository extends DoctrineRepository implements TrackReposit
     {
         return Track::class;
     }
+
+    public function persist(Track ...$tracks): void
+    {
+        $this->em->persist(...$tracks);
+    }
 }

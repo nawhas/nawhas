@@ -9,8 +9,10 @@ use App\Http\Controllers\Controller;
 use App\Http\Transformers\ReciterTransformer;
 use App\Repositories\ReciterRepository;
 use App\Support\Pagination\PaginationState;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 
 class RecitersController extends Controller
 {
@@ -33,6 +35,40 @@ class RecitersController extends Controller
 
     public function show(Reciter $reciter): JsonResponse
     {
+        return $this->respondWithItem($reciter);
+    }
+
+    public function update(Request $request, Reciter $reciter): JsonResponse
+    {
+        if ($request->has('name')) {
+            $reciter->setName($request->get('name'));
+        }
+
+        if ($request->has('description')) {
+            $reciter->setDescription($request->get('description'));
+        }
+
+        $this->repository->persist($reciter);
+
+        return $this->respondWithItem($reciter);
+    }
+
+    public function uploadAvatar(Request $request, Reciter $reciter): JsonResponse
+    {
+        if (!$request->file('avatar')) {
+            throw ValidationException::withMessages(['avatar' => 'An avatar file is required.']);
+        }
+
+        $existing = $reciter->getAvatar();
+        $path = $request->file('avatar')->storePublicly("reciters/{$reciter->getSlug()}");
+        $reciter->setAvatar($path);
+
+        if ($existing !== null) {
+            Storage::delete($existing);
+        }
+
+        $this->repository->persist($reciter);
+
         return $this->respondWithItem($reciter);
     }
 }
