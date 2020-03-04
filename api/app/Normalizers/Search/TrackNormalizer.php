@@ -28,7 +28,7 @@ class TrackNormalizer implements NormalizerInterface
             'album' => [
                 'title' => $object->getAlbum()->getTitle(),
                 'year' => $object->getAlbum()->getYear(),
-                'artwork' => $object->getAlbum()->getArtwork(),
+                'artwork' => $object->getAlbum()->getArtworkUrl(),
             ],
             'lyrics' => $this->normalizeLyrics($object->getLyrics()),
             'url' => sprintf(

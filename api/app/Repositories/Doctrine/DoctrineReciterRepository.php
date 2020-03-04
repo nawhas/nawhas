@@ -42,6 +42,11 @@ class DoctrineReciterRepository extends DoctrineRepository implements ReciterRep
         return $this->getPaginator($state);
     }
 
+    public function persist(Reciter ...$reciters): void
+    {
+        $this->em->persist(...$reciters);
+    }
+
     protected function entity(): string
     {
         return Reciter::class;
