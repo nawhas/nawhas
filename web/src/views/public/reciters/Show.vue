@@ -107,10 +107,10 @@ export default class ReciterProfile extends Vue {
 
   get heroAvatarSize() {
     if (this.$vuetify.breakpoint.smAndDown) {
-      return 64;
+      return 88;
     }
 
-    return 96;
+    return 128;
   }
 
   get showToolbar() {
@@ -169,6 +169,12 @@ export default class ReciterProfile extends Vue {
   position: relative;
   margin-bottom: 36px;
 
+  &--with-toolbar {
+    .hero__details {
+      margin-bottom: 48px;
+    }
+  }
+
   .hero__content {
     padding: 48px;
     display: flex;
@@ -223,7 +229,7 @@ export default class ReciterProfile extends Vue {
 
     &--with-toolbar {
       .hero__details {
-        margin-bottom: 36px;
+        margin-bottom: 48px;
       }
     }
   }
