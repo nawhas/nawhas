@@ -71,6 +71,13 @@ export default {
           formData.title = this.editedTrack.title;
         }
       }
+      if (this.track.lyrics) {
+        if (this.track.lyrics.content !== this.editedTrack.lyrics) {
+          if (this.editedTrack.lyrics) {
+            formData.lyrics = this.editedTrack.lyrics;
+          }
+        }
+      }
       const env = process.env.VUE_APP_API_DOMAIN;
       const { reciterId } = this.track;
       const { albumId } = this.track;
