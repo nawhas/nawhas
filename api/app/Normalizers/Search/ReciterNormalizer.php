@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Normalizers\Search;
 
 use App\Entities\Reciter;
+use Illuminate\Support\Facades\Storage;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Zain\LaravelDoctrine\Algolia\Searchable;
 
@@ -21,7 +22,7 @@ class ReciterNormalizer implements NormalizerInterface
             'id' => $object->getId(),
             'name' => $object->getName(),
             'description' => $object->getDescription(),
-            'avatar' => $object->getAvatar(),
+            'avatar' => Storage::url($object->getAvatar()),
             'url' => "/reciters/{$object->getSlug()}",
         ];
     }
