@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
+use Zain\LaravelDoctrine\Algolia\SearchService;
 
 class AlbumsController extends Controller
 {
@@ -55,7 +56,7 @@ class AlbumsController extends Controller
         return $this->respondWithItem($album);
     }
 
-    public function uploadArtwork(Request $request, Reciter $reciter, Album $album): JsonResponse
+    public function uploadArtwork(Request $request, Reciter $reciter, Album $album, SearchService $search): JsonResponse
     {
         if (!$request->file('artwork')) {
             throw ValidationException::withMessages(['artwork' => 'An artwork file is required.']);
@@ -70,6 +71,9 @@ class AlbumsController extends Controller
         }
 
         $this->repository->persist($album);
+
+        // Re-index associated tracks.
+        $search->index(app('em'), $album->getTracks()->toArray());
 
         return $this->respondWithItem($album);
     }
