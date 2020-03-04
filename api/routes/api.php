@@ -34,7 +34,7 @@ Route::prefix('v1')->group(function() {
         // Route::post('/', [AlbumsController::class, 'store']);
         Route::get('/{album}', [AlbumsController::class, 'show']);
         Route::patch('/{album}', [AlbumsController::class, 'update']);
-        Route::post('/{album}/artwork', [RecitersController::class, 'uploadArtwork']);
+        Route::post('/{album}/artwork', [AlbumsController::class, 'uploadArtwork']);
         // Route::delete('/{album}', [AlbumsController::class, 'destroy']);
     });
 
@@ -44,6 +44,7 @@ Route::prefix('v1')->group(function() {
         // Route::post('/', [TracksController::class, 'store']);
         Route::get('/{track}', [TracksController::class, 'show']);
         Route::patch('/{track}', [TracksController::class, 'update']);
+        Route::post('/{track}/media/audio', [TracksController::class, 'uploadTrackMedia']);
         // Route::delete('/{track}', [TracksController::class, 'destroy']);
     });
 

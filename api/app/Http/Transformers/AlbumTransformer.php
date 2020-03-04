@@ -21,7 +21,7 @@ class AlbumTransformer extends Transformer
             'reciterId' => $album->getReciter()->getId(),
             'title' => $album->getTitle(),
             'year' => $album->getYear(),
-            'artwork' => $album->getArtwork(),
+            'artwork' => $album->getArtworkUrl(),
             $this->timestamps($album),
         ];
     }

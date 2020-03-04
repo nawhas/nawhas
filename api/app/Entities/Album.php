@@ -9,6 +9,7 @@ use App\Entities\Contracts\Entity;
 use App\Entities\Contracts\TimestampedEntity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Illuminate\Support\Facades\Storage;
 use Ramsey\Uuid\{Uuid, UuidInterface};
 use Zain\LaravelDoctrine\Jetpack\Serializer\SerializesAttributes;
 
@@ -67,6 +68,11 @@ class Album implements Entity, TimestampedEntity
     public function getArtwork(): ?string
     {
         return $this->artwork;
+    }
+
+    public function getArtworkUrl(): ?string
+    {
+        return $this->artwork ? Storage::url($this->artwork) : null;
     }
 
     public function setArtwork(string $artwork): void

@@ -8,6 +8,7 @@ use App\Entities\Behaviors\HasTimestamps;
 use App\Entities\Contracts\Entity;
 use App\Entities\Contracts\TimestampedEntity;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 use Ramsey\Uuid\{Uuid, UuidInterface};
 use Zain\LaravelDoctrine\Jetpack\Serializer\SerializesAttributes;
 
@@ -70,6 +71,11 @@ class Reciter implements Entity, TimestampedEntity
     public function hasAvatar(): bool
     {
         return $this->avatar !== null;
+    }
+
+    public function getAvatarUrl(): ?string
+    {
+        return $this->avatar ? Storage::url($this->avatar) : null;
     }
 
     public function setAvatar(string $path): void

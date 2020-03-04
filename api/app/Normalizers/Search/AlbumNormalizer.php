@@ -21,7 +21,7 @@ class AlbumNormalizer implements NormalizerInterface
             'id' => $object->getId(),
             'title' => $object->getTitle(),
             'year' => $object->getYear(),
-            'artwork' => $object->getArtwork(),
+            'artwork' => $object->getArtworkUrl(),
             'reciter' => [
                 'name' => $object->getReciter()->getName(),
             ],

@@ -21,7 +21,7 @@ class MediaMapping extends EntityMapping
         $map->uuidPrimaryKey();
         $map->field(MediaType::class, 'type')->index();
         $map->field(MediaProvider::class, 'provider')->index();
-        $map->string('uri');
+        $map->string('path');
         $map->timestamps();
     }
 }

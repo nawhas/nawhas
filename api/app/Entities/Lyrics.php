@@ -39,9 +39,4 @@ class Lyrics implements Entity, TimestampedEntity
     {
         return $this->content;
     }
-
-    public function setContent(string $content): void
-    {
-        $this->content = $content;
-    }
 }
