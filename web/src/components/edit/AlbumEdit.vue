@@ -18,6 +18,13 @@
               ></v-text-field>
             </v-col>
             <v-col cols="12">
+              <v-text-field
+                v-model="editedAlbum.year"
+                label="Year"
+                required
+              ></v-text-field>
+            </v-col>
+            <v-col cols="12">
               <v-file-input v-model="editedAlbum.artwork" accept="image/*" label="Artwork"></v-file-input>
             </v-col>
           </v-row>
@@ -33,6 +40,8 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
   mounted() {
     this.setDataFromProp();
@@ -42,6 +51,7 @@ export default {
       dialog: false,
       editedAlbum: {
         title: null,
+        year: null,
         artwork: null,
       },
     };
@@ -50,9 +60,38 @@ export default {
   methods: {
     setDataFromProp() {
       this.editedAlbum.title = this.album.title;
+      this.editedAlbum.year = this.album.year;
     },
-    submit() {
+    async submit() {
+      const formData = {};
+      if (this.album.title !== this.editedAlbum.title) {
+        if (this.album.title) {
+          formData.title = this.editedAlbum.title;
+        }
+      }
+      if (this.album.year !== this.editedAlbum.year) {
+        if (this.album.year) {
+          formData.year = this.editedAlbum.year;
+        }
+      }
+      await axios.patch(
+        `${process.env.VUE_APP_API_DOMAIN}/v1/reciters/${this.album.reciterId}/albums/${this.album.id}`,
+        formData,
+      );
+
+      if (this.editedAlbum.artwork) {
+        const imageFormData = new FormData();
+        imageFormData.append('artwork', this.editedAlbum.artwork);
+        await axios.post(
+          `${process.env.VUE_APP_API_DOMAIN}/v1/reciters/${this.album.reciterId}/albums/${this.album.id}/artwork`,
+          imageFormData,
+          { headers: { 'Content-Type': 'multipart/form-data' } },
+        );
+      }
+
       this.dialog = false;
+      this.clear();
+      window.location.reload();
     },
     clear() {
       this.setDataFromProp();

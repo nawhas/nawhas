@@ -77,7 +77,7 @@ export default {
       }
 
       const response = await axios.patch(
-        `${process.env.VUE_APP_API_DOMAIN}/v1/reciters/${currentSlug}`,
+        `${process.env.VUE_APP_API_DOMAIN}/v1/reciters/${this.reciter.id}`,
         formData,
       );
       currentSlug = response.data.slug;
@@ -86,7 +86,7 @@ export default {
         const imageFormData = new FormData();
         imageFormData.append('avatar', this.editedReciter.avatar);
         await axios.post(
-          `${process.env.VUE_APP_API_DOMAIN}/v1/reciters/${currentSlug}/avatar`,
+          `${process.env.VUE_APP_API_DOMAIN}/v1/reciters/${this.reciter.id}/avatar`,
           imageFormData,
           { headers: { 'Content-Type': 'multipart/form-data' } },
         );
