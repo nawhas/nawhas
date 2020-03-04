@@ -165,7 +165,7 @@ return [
         /*
          * Package Service Providers...
          */
-        \LaravelDoctrine\Extensions\GedmoExtensionsServiceProvider::class,
+        LaravelDoctrine\Extensions\GedmoExtensionsServiceProvider::class,
 
         /*
          * Application Service Providers...

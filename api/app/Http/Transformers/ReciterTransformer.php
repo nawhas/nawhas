@@ -6,6 +6,7 @@ namespace App\Http\Transformers;
 
 use App\Entities\Reciter;
 use App\Queries\AlbumQuery;
+use Illuminate\Support\Facades\Storage;
 use League\Fractal\Resource\Primitive;
 
 class ReciterTransformer extends Transformer
@@ -18,7 +19,7 @@ class ReciterTransformer extends Transformer
             'id' => $reciter->getId(),
             'name' => $reciter->getName(),
             'slug' => $reciter->getSlug(),
-            'avatar' => $reciter->getAvatar(),
+            'avatar' => $reciter->hasAvatar() ? Storage::url($reciter->getAvatar()) : null,
             'description' => $reciter->getDescription(),
             $this->timestamps($reciter),
         ];

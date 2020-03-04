@@ -41,6 +41,12 @@ class Reciter implements Entity, TimestampedEntity
         return $this->name;
     }
 
+    public function setName(string $name): void
+    {
+        $this->name = $name;
+        $this->slug = Str::slug($name);
+    }
+
     public function getSlug(): string
     {
         return $this->slug;
@@ -59,5 +65,15 @@ class Reciter implements Entity, TimestampedEntity
     public function getAvatar(): ?string
     {
         return $this->avatar;
+    }
+
+    public function hasAvatar(): bool
+    {
+        return $this->avatar !== null;
+    }
+
+    public function setAvatar(string $path): void
+    {
+        $this->avatar = $path;
     }
 }
