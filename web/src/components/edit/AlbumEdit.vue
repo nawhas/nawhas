@@ -70,7 +70,7 @@ export default {
         }
       }
       if (this.album.year !== this.editedAlbum.year) {
-        if (this.album.year) {
+        if (this.editedAlbum.year) {
           formData.year = this.editedAlbum.year;
         }
       }

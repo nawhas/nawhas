@@ -40,6 +40,8 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
   mounted() {
     this.setDataFromProp();
@@ -62,8 +64,33 @@ export default {
         this.editedTrack.lyrics = this.track.lyrics.content;
       }
     },
-    submit() {
+    async submit() {
+      const formData = {};
+      if (this.track.title !== this.editedTrack.title) {
+        if (this.editedTrack.title) {
+          formData.title = this.editedTrack.title;
+        }
+      }
+      const env = process.env.VUE_APP_API_DOMAIN;
+      const { reciterId } = this.track;
+      const { albumId } = this.track;
+      const trackId = this.track.id;
+      await axios.patch(
+        `${env}/v1/reciters/${reciterId}/albums/${albumId}/tracks/${trackId}`,
+        formData,
+      );
+      if (this.editedTrack.audio) {
+        const audioFormData = new FormData();
+        audioFormData.append('audio', this.editedTrack.audio);
+        await axios.post(
+          `${env}/v1/reciters/${reciterId}/albums/${albumId}//tracks/${trackId}//media/audio`,
+          audioFormData,
+          { headers: { 'Content-Type': 'multipart/form-data' } },
+        );
+      }
       this.dialog = false;
+      this.clear();
+      window.location.reload();
     },
     clear() {
       this.setDataFromProp();
