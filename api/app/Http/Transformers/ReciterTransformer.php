@@ -18,7 +18,7 @@ class ReciterTransformer extends Transformer
             'id' => $reciter->getId(),
             'name' => $reciter->getName(),
             'slug' => $reciter->getSlug(),
-            'avatar' => $reciter->getAvatar(),
+            'avatar' => $reciter->getAvatarUrl(),
             'description' => $reciter->getDescription(),
             $this->timestamps($reciter),
         ];

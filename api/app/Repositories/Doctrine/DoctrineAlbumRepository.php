@@ -58,4 +58,9 @@ class DoctrineAlbumRepository extends DoctrineRepository implements AlbumReposit
     {
         return $this->query()->whereReciter($reciter)->paginate($state);
     }
+
+    public function persist(Album ...$albums): void
+    {
+        $this->em->persist(...$albums);
+    }
 }

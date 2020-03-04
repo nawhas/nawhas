@@ -15,4 +15,5 @@ interface TrackRepository
     public function getFromAlbum(Album $album, string $id): Track;
     public function allFromAlbum(Album $album): Collection;
     public function query(): TrackQuery;
+    public function persist(Track ...$tracks): void;
 }
