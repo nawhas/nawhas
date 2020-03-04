@@ -24,6 +24,9 @@
                 </v-btn>
                 <track-edit v-if="track" :track="track"></track-edit>
               </div>
+              <div class="track-hero__audio_buttons" v-else>
+                <track-edit v-if="track" :track="track"></track-edit>
+              </div>
             </div>
           </div>
           <div class="track-hero__actions">
