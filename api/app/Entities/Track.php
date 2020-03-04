@@ -115,7 +115,7 @@ class Track implements Entity, TimestampedEntity
             ->where(Criteria::expr()->eq('type', MediaType::AUDIO()))
             ->where(Criteria::expr()->eq('provider', MediaProvider::FILE()));
 
-        return $this->media->matching($criteria)->first();
+        return $this->media->matching($criteria)->first() ?: null;
     }
 
     public function hasAudioFile(): bool
