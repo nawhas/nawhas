@@ -33,8 +33,9 @@ Route::prefix('v1')->group(function() {
         Route::get('/', [AlbumsController::class, 'index']);
         // Route::post('/', [AlbumsController::class, 'store']);
         Route::get('/{album}', [AlbumsController::class, 'show']);
-        Route::patch('/{reciter}', [AlbumsController::class, 'update']);
-        // Route::delete('/{reciter}', [AlbumsController::class, 'destroy']);
+        Route::patch('/{album}', [AlbumsController::class, 'update']);
+        Route::post('/{album}/artwork', [RecitersController::class, 'uploadArtwork']);
+        // Route::delete('/{album}', [AlbumsController::class, 'destroy']);
     });
 
     // Album Tracks
@@ -42,8 +43,8 @@ Route::prefix('v1')->group(function() {
         Route::get('/', [TracksController::class, 'index']);
         // Route::post('/', [TracksController::class, 'store']);
         Route::get('/{track}', [TracksController::class, 'show']);
-        Route::patch('/{reciter}', [TracksController::class, 'update']);
-        // Route::delete('/{reciter}', [TracksController::class, 'destroy']);
+        Route::patch('/{track}', [TracksController::class, 'update']);
+        // Route::delete('/{track}', [TracksController::class, 'destroy']);
     });
 
     // Popular Routes

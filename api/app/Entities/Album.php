@@ -49,14 +49,29 @@ class Album implements Entity, TimestampedEntity
         return $this->year;
     }
 
+    public function setYear(string $year): void
+    {
+        $this->year = $year;
+    }
+
     public function getTitle(): string
     {
         return $this->title;
     }
 
+    public function setTitle(string $title): void
+    {
+        $this->title = $title;
+    }
+
     public function getArtwork(): ?string
     {
         return $this->artwork;
+    }
+
+    public function setArtwork(string $artwork): void
+    {
+        $this->artwork = $artwork;
     }
 
     /**

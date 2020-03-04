@@ -10,6 +10,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Transformers\AlbumTransformer;
 use App\Repositories\AlbumRepository;
 use App\Support\Pagination\PaginationState;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -35,6 +36,30 @@ class AlbumsController extends Controller
 
     public function show(Reciter $reciter, Album $album): JsonResponse
     {
+        return $this->respondWithItem($album);
+    }
+
+    public function update(Request $request, Reciter $reciter, Album $album): JsonResponse
+    {
+        if ($request->has('title')) {
+            $album->setTitle($request->get('title'));
+        }
+
+        $this->repository->persist($album);
+
+        return $this->respondWithItem($album);
+    }
+
+    public function updateArtwork(Request $request, Reciter $reciter, Album $album): JsonResponse
+    {
+        $existing = $album->getArtwork();
+
+        if ($existing !== null) {
+            Storage::delete($existing);
+        }
+
+        $this->repository->persist($album);
+        
         return $this->respondWithItem($album);
     }
 }
