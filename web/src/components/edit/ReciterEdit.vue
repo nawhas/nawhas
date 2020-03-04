@@ -39,6 +39,8 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
   mounted() {
     this.setDataFromProp();
@@ -59,8 +61,40 @@ export default {
       this.editedReciter.name = this.reciter.name;
       this.editedReciter.description = this.reciter.description;
     },
-    submit() {
+    async submit() {
+      let currentSlug = this.reciter.slug;
+
+      const formData = {};
+      if (this.reciter.name !== this.editedReciter.name) {
+        if (this.editedReciter.name) {
+          formData.name = this.editedReciter.name;
+        }
+      }
+      if (this.reciter.description !== this.editedReciter.description) {
+        if (this.editedReciter.description) {
+          formData.description = this.editedReciter.description;
+        }
+      }
+
+      const response = await axios.patch(
+        `${process.env.VUE_APP_API_DOMAIN}/v1/reciters/${currentSlug}`,
+        formData,
+      );
+      currentSlug = response.data.slug;
+
+      if (this.editedReciter.avatar) {
+        const imageFormData = new FormData();
+        imageFormData.append('avatar', this.editedReciter.avatar);
+        await axios.post(
+          `${process.env.VUE_APP_API_DOMAIN}/v1/reciters/${currentSlug}/avatar`,
+          imageFormData,
+          { headers: { 'Content-Type': 'multipart/form-data' } },
+        );
+      }
+
       this.dialog = false;
+      this.clear();
+      this.$router.push({ name: 'reciters.show', params: { reciter: currentSlug } });
     },
     clear() {
       this.setDataFromProp();
