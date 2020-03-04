@@ -90,7 +90,7 @@ export default {
         const audioFormData = new FormData();
         audioFormData.append('audio', this.editedTrack.audio);
         await axios.post(
-          `${env}/v1/reciters/${reciterId}/albums/${albumId}//tracks/${trackId}//media/audio`,
+          `${env}/v1/reciters/${reciterId}/albums/${albumId}/tracks/${trackId}/media/audio`,
           audioFormData,
           { headers: { 'Content-Type': 'multipart/form-data' } },
         );
