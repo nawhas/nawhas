@@ -166,6 +166,12 @@ export default class ReciterProfile extends Vue {
   position: relative;
   margin-bottom: 36px;
 
+  &--with-toolbar {
+    .hero__details {
+      margin-bottom: 48px;
+    }
+  }
+
   .hero__content {
     padding: 48px;
     display: flex;
@@ -220,7 +226,7 @@ export default class ReciterProfile extends Vue {
 
     &--with-toolbar {
       .hero__details {
-        margin-bottom: 36px;
+        margin-bottom: 48px;
       }
     }
   }
