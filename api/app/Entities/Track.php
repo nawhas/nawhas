@@ -59,6 +59,12 @@ class Track implements Entity, TimestampedEntity
         return $this->title;
     }
 
+    public function setTitle(string $title): void
+    {
+        $this->title = $title;
+        $this->slug = Str::slug($title);
+    }
+
     public function getSlug(): string
     {
         return $this->slug;

@@ -34,4 +34,22 @@ class TracksController extends Controller
     {
         return $this->respondWithItem($track);
     }
+
+    public function update(Request $request, Reciter $reciter, Album $album, Track $track): JsonResponse
+    {
+        if ($request->has('title')) {
+            $track->setTitle($request->get('title'));
+        }
+
+        $this->repository->persist($track);
+        
+        return $this->respondWithItem($track);
+    }
+
+    public function uploadTrack(Request $request, Reciter $reciter, Album $album, Track $track): JsonResponse
+    {
+        $this->repository->persist($track);
+        
+        return $this->respondWithItem($track);
+    }
 }
