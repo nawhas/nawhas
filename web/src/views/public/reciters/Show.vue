@@ -104,10 +104,10 @@ export default class ReciterProfile extends Vue {
 
   get heroAvatarSize() {
     if (this.$vuetify.breakpoint.smAndDown) {
-      return 64;
+      return 88;
     }
 
-    return 96;
+    return 128;
   }
 
   get showToolbar() {
