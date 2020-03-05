@@ -36,6 +36,17 @@ class ReciterQuery extends Query
         return $this;
     }
 
+    public function popular(): self
+    {
+        $this->builder
+            ->where($this->builder->expr()->in('t.slug', [
+                'nadeem-sarwar', 'irfan-haider', 'tejani-brothers',
+                'farhan-ali-waris', 'hassan-sadiq', 'mir-hasan-mir'
+            ]));
+
+        return $this;
+    }
+
     public function sortByName(): self
     {
         $this->builder->orderBy('t.name', 'asc');

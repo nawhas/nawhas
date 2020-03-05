@@ -21,11 +21,11 @@ class PopularEntitiesController extends Controller
 {
     public function reciters(Request $request, ReciterTransformer $transformer, ReciterRepository $repository): JsonResponse
     {
-        $reciters = $repository->query()
-            ->sortRandom()
+        $reciters = $repository->query()->popular()
+            ->sortByName()
             ->paginate(PaginationState::fromRequest($request));
 
-        return $this->respondWithPaginator($reciters, $transformer);
+        return $this->respondWithCollection($reciters, $transformer);
     }
 
     public function albums(Request $request, AlbumTransformer $transformer, ReciterRepository $reciterRepo, AlbumRepository $albumRepo): JsonResponse
