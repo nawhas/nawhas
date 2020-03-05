@@ -44,6 +44,7 @@
                 <v-list-item-title class="subtitle-1 font-weight-regular">
                   Shabbir & Abbas Tejani
                 </v-list-item-title>
+                <v-list-item-subtitle>Creators of Nawhas.com</v-list-item-subtitle>
               </v-list-item-content>
             </v-list-item>
 
@@ -70,6 +71,7 @@
                 <v-list-item-title class="subtitle-1 font-weight-regular">
                   Syed Zain Mehdi
                 </v-list-item-title>
+                <v-list-item-subtitle>Software Engineer</v-list-item-subtitle>
               </v-list-item-content>
             </v-list-item>
 
@@ -94,6 +96,7 @@
                 <v-list-item-title class="subtitle-1 font-weight-regular">
                   Syed Asif Ali
                 </v-list-item-title>
+                <v-list-item-subtitle>Software Engineer</v-list-item-subtitle>
               </v-list-item-content>
             </v-list-item>
 
@@ -192,6 +195,8 @@ export default class About extends Vue {
 </script>
 
 <style lang="scss">
+@import "../../styles/theme";
+
 .about {
   blockquote.timeline__quote {
     padding-left: 24px;
@@ -225,6 +230,17 @@ export default class About extends Vue {
   }
   .section__text {
     max-width: 800px;
+  }
+}
+
+@media #{map-get($display-breakpoints, 'xs-only')} {
+  .about {
+    .app__section--padded {
+      padding: 48px 24px !important;
+    }
+    .credit__card__text {
+      min-height: 0;
+    }
   }
 }
 </style>
