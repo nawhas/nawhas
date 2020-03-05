@@ -1,7 +1,9 @@
 <template>
   <v-row :dense="$vuetify.breakpoint.smAndDown">
     <v-col cols="12" sm="6" md="4" v-for="index in limit" :key="index">
-      <v-skeleton-loader type="list-item-avatar-two-line" elevation="2"></v-skeleton-loader>
+      <slot>
+        <v-skeleton-loader type="list-item-avatar-two-line" elevation="2"></v-skeleton-loader>
+      </slot>
     </v-col>
   </v-row>
 </template>
