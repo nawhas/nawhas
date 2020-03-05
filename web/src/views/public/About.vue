@@ -190,6 +190,7 @@ export default class About extends Vue {
       },
       {
         name: 'Asif Ali',
+        avatar: require('../../assets/credits/asif.jpg'),
         caption: 'Software Engineer',
         contributions: [
           'Devoted hundreds of hours of engineering work on the new Nawhas.com',
