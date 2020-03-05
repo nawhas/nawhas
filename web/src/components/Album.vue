@@ -236,6 +236,7 @@ export default class Album extends Vue {
   .album__artwork {
     float: none;
     margin: 16px 0 16px 16px;
+    border: 2px solid white;
     @include elevation(0);
   }
   .album__title {
