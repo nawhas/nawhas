@@ -94,7 +94,7 @@
               </v-list-item-avatar>
               <v-list-item-content>
                 <v-list-item-title class="subtitle-1 font-weight-regular">
-                  Syed Asif Ali
+                  Asif Ali
                 </v-list-item-title>
                 <v-list-item-subtitle>Software Engineer</v-list-item-subtitle>
               </v-list-item-content>
@@ -185,7 +185,7 @@ export default class About extends Vue {
         date: '2020',
         headline: 'A New Start',
         text: `
-          Syed Zain Mehdi and Syed Asif Ali finished hundreds of hours of work to completely
+          Syed Zain Mehdi and Asif Ali finished hundreds of hours of work to completely
           rebuild and modernize the site.
         `,
       },
