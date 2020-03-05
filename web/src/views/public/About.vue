@@ -33,81 +33,37 @@
     <v-container class="app__section">
       <h5 class="section__title text-center mt-4 mb-8 display-1">Credits</h5>
       <v-row>
-        <v-col cols="12" lg="4">
-          <v-card  class="credit__card" outlined>
-            <v-list-item>
-              <v-list-item-avatar>
-                <img src="../../assets/credits/tejani-brothers.jpg"
-                     alt="Tejani Brothers" />
-              </v-list-item-avatar>
-              <v-list-item-content>
-                <v-list-item-title class="subtitle-1 font-weight-regular">
-                  Shabbir & Abbas Tejani
-                </v-list-item-title>
-                <v-list-item-subtitle>Creators of Nawhas.com</v-list-item-subtitle>
-              </v-list-item-content>
-            </v-list-item>
-
-            <v-card-text class="credit__card__text">
-              <ul>
-                <li>Created & maintained Nawhas.com for over 17 years.</li>
-                <li>Wrote over 1400 write-ups</li>
-              </ul>
-            </v-card-text>
-
-            <v-card-actions>
-              <v-btn text href="http://www.tejanibrothers.com" target="_blank">Website</v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-col>
-        <v-col cols="12" lg="4">
-          <v-card  class="credit__card" outlined>
-            <v-list-item>
-              <v-list-item-avatar>
-                <img src="../../assets/credits/zain.jpg"
-                     alt="Syed Zain Mehdi" />
-              </v-list-item-avatar>
-              <v-list-item-content>
-                <v-list-item-title class="subtitle-1 font-weight-regular">
-                  Syed Zain Mehdi
-                </v-list-item-title>
-                <v-list-item-subtitle>Software Engineer</v-list-item-subtitle>
-              </v-list-item-content>
-            </v-list-item>
-
-            <v-card-text class="credit__card__text">
-              <ul>
-                <li>Designed and re-built the new Nawhas.com</li>
-                <li>Maintainer of the open source codebase.</li>
-              </ul>
-            </v-card-text>
-            <v-card-actions>
-              <v-btn text href="https://szainmehdi.me" target="_blank">Website</v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-col>
-        <v-col cols="12" lg="4">
-          <v-card  class="credit__card" outlined>
+        <v-col cols="12" lg="4" v-for="(contributor, index) in contributors" :key="index">
+          <v-card class="credit__card" outlined>
             <v-list-item>
               <v-list-item-avatar color="grey">
-                <v-icon color="white">person</v-icon>
+                <img v-if="contributor.avatar" :src="contributor.avatar" :alt="contributor.name" />
+                <v-icon v-else color="white">person</v-icon>
               </v-list-item-avatar>
               <v-list-item-content>
                 <v-list-item-title class="subtitle-1 font-weight-regular">
-                  Asif Ali
+                  {{ contributor.name }}
                 </v-list-item-title>
-                <v-list-item-subtitle>Software Engineer</v-list-item-subtitle>
+                <v-list-item-subtitle>{{ contributor.caption }}</v-list-item-subtitle>
               </v-list-item-content>
             </v-list-item>
-
             <v-card-text class="credit__card__text">
               <ul>
-                <li>Designed and re-built the new Nawhas.com</li>
-                <li>Maintainer of the open source codebase.</li>
+                <li v-for="(item, index) in contributor.contributions" :key="index">
+                  {{ item }}
+                </li>
               </ul>
             </v-card-text>
             <v-card-actions>
-              <v-btn text href="" target="_blank">Website</v-btn>
+              <v-btn v-for="(link, index) in contributor.links"
+                     text
+                     color="grey darken-2"
+                     :href="link.href"
+                     target="_blank"
+                     :key="index"
+              >
+                <v-icon left>{{ link.icon }}</v-icon> {{ link.text }}
+              </v-btn>
             </v-card-actions>
           </v-card>
         </v-col>
@@ -143,6 +99,7 @@
 </template>
 
 <script lang="ts">
+/* eslint-disable global-require */
 import { Component, Vue } from 'vue-property-decorator';
 import HeroBanner from '@/components/HeroBanner.vue';
 import HeroQuote from '@/components/HeroQuote.vue';
@@ -157,7 +114,7 @@ export default class About extends Vue {
   get timeline() {
     return [
       {
-        date: '1995',
+        date: '1997',
         headline: 'The Beginning',
         text: `
           Shabbir & Abbas Tejani, now better know as The Tejani Brothers, started a website at the
@@ -182,12 +139,65 @@ export default class About extends Vue {
         `,
       },
       {
+        date: '2017',
+        headline: 'Work Begins on Rebuilding Nawhas.com',
+        text: `
+          A young software engineer and frequent user of Nawhas.com, Syed Zain Mehdi reached out
+          from California to Shabbir & Abbas Tejani with an offer to voluntarily rebuild the
+          Nawhas.com site for the modern web. Work begins on the new site. Soon after,
+          Asif Ali from the U.K. joins the team, similarly eager to use his skills
+          to contribute back to a site he's used for years.
+        `,
+      },
+      {
         date: '2020',
         headline: 'A New Start',
         text: `
-          Syed Zain Mehdi and Asif Ali finished hundreds of hours of work to completely
-          rebuild and modernize the site.
+          After hundreds of hours of work sprinkled in between their primary responsiblities,
+          Syed Zain Mehdi and Asif Ali complete their combined efforts to rebuild and
+          modernize the site. The new version of Nawhas.com launched in March, 2020.
         `,
+      },
+    ];
+  }
+
+  get contributors() {
+    return [
+      {
+        name: 'Shabbir & Abbas Tejani',
+        avatar: require('../../assets/credits/tejani-brothers.jpg'),
+        caption: 'Creators of Nawhas.com',
+        contributions: [
+          'Created & maintained Nawhas.com for over 17 years',
+          'Wrote write-ups for over 1400 nawhas',
+        ],
+        links: [
+          { icon: 'public', text: 'Website', href: 'http://www.tejanibrothers.com' },
+        ],
+      },
+      {
+        name: 'Syed Zain Mehdi',
+        avatar: require('../../assets/credits/zain.jpg'),
+        caption: 'Software Engineer',
+        contributions: [
+          'Project lead for the new Nawhas.com',
+          'Redesigned and rebuilt the site',
+          'Maintainer of the open source codebase',
+        ],
+        links: [
+          { icon: 'public', text: 'Website', href: 'https://szainmehdi.me' },
+        ],
+      },
+      {
+        name: 'Asif Ali',
+        caption: 'Software Engineer',
+        contributions: [
+          'Devoted hundreds of hours of engineering work on the new Nawhas.com',
+          'Maintainer of the open source codebase',
+        ],
+        links: [
+          { icon: 'mdi-github-circle', text: 'Github', href: 'https://github.com/shea786' },
+        ],
       },
     ];
   }
@@ -216,7 +226,7 @@ export default class About extends Vue {
     padding: 8px;
   }
   .credit__card__text {
-    min-height: 100px;
+    min-height: 140px;
   }
   .app__section {
     margin-bottom: 48px;
@@ -238,6 +248,11 @@ export default class About extends Vue {
     .app__section--padded {
       padding: 48px 24px !important;
     }
+  }
+}
+
+@media #{map-get($display-breakpoints, 'md-and-down')} {
+  .about {
     .credit__card__text {
       min-height: 0;
     }
