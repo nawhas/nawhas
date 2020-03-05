@@ -48,6 +48,7 @@
       </v-container>
     </v-content>
     <audio-player></audio-player>
+    <update-service-worker />
   </v-app>
 </template>
 
@@ -56,9 +57,11 @@ import { Component, Vue } from 'vue-property-decorator';
 import Search from '@/components/search/Search.vue';
 import navItems from '@/data/navigation';
 import AudioPlayer from '@/components/audio-player/AudioPlayer.vue';
+import UpdateServiceWorker from '@/components/utils/UpdateServiceWorker.vue';
 
 @Component({
   components: {
+    UpdateServiceWorker,
     Search,
     AudioPlayer,
   },
