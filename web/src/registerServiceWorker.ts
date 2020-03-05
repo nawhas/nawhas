@@ -18,7 +18,6 @@ if (process.env.NODE_ENV === 'production') {
       };
       // Check for updates frequently (currently: every 5 minutes)
       setInterval(checkForUpdates, 1000 * 60 * 5);
-      checkForUpdates();
     },
     cached() {
       console.log('Content has been cached for offline use.');
