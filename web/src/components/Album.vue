@@ -48,6 +48,9 @@
         </tr>
       </template>
     </v-data-table>
+    <v-card-actions class="d-flex justify-end album__actions">
+      <edit-track-dialog :album="album" />
+    </v-card-actions>
   </v-card>
 </template>
 
@@ -55,10 +58,12 @@
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import Vibrant from 'node-vibrant';
 import EditAlbumDialog from '@/components/edit/EditAlbumDialog.vue';
+import EditTrackDialog from '@/components/edit/EditTrackDialog.vue';
 
 @Component({
   components: {
     EditAlbumDialog,
+    EditTrackDialog,
   },
 })
 export default class Album extends Vue {
@@ -235,6 +240,9 @@ export default class Album extends Vue {
   }
 }
 
+.album__actions {
+  background: rgba(0,0,0,0.1);
+}
 @media #{map-get($display-breakpoints, 'sm-and-down')} {
   .album {
     margin-top: 0;

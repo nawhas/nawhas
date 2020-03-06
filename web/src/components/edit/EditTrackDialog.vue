@@ -1,11 +1,12 @@
 <template>
   <v-dialog v-model="dialog" persistent max-width="600px">
     <template v-slot:activator="{ on }">
-      <v-btn dark icon v-on="on"><v-icon>edit</v-icon></v-btn>
+      <v-btn v-if="track" dark icon v-on="on"><v-icon>edit</v-icon></v-btn>
+      <v-btn v-else v-on="on" text>Add Track</v-btn>
     </template>
     <v-card :loading="loading">
       <v-card-title>
-        <span class="headline">Edit Track</span>
+        <span class="headline">{{ track ? 'Edit' : 'Add' }} Track</span>
       </v-card-title>
       <v-card-text class="py-4">
         <v-text-field
@@ -66,9 +67,14 @@ const defaults: Form = {
 @Component
 export default class EditTrackDialog extends Vue {
   @Prop({ type: Object }) private track;
+  @Prop({ type: Object }) private album;
   private dialog = false;
   private form: Form = { ...defaults };
   private loading = false;
+
+  get includes() {
+    return 'reciter,lyrics,album.tracks,media';
+  }
 
   @Watch('dialog')
   onDialogStateChanged(opened) {
@@ -78,17 +84,53 @@ export default class EditTrackDialog extends Vue {
   }
 
   resetForm() {
-    const { title, lyrics } = this.track;
-    this.form = {
-      ...defaults,
-      title,
-      lyrics: lyrics.content,
-    };
+    this.form = { ...defaults };
+    if (this.track) {
+      const { title, lyrics } = this.track;
+
+      this.form = {
+        ...this.form,
+        title,
+        lyrics: lyrics.content,
+      };
+    }
   }
 
   async submit() {
     this.loading = true;
-    const { slug } = this.track;
+
+    if (this.track) {
+      await this.update();
+    } else {
+      await this.create();
+    }
+
+    this.close();
+  }
+
+  async create() {
+    const data: any = {};
+    if (this.form.title) {
+      data.title = this.form.title;
+    }
+    if (this.form.lyrics) {
+      data.lyrics = this.form.lyrics;
+    }
+
+    const { reciterId } = this.album;
+    const albumId = this.album.id;
+
+    let response = await axios.post(
+      `${API_DOMAIN}/v1/reciters/${reciterId}/albums/${albumId}/tracks?include=${this.includes}`,
+      data,
+    );
+
+    response = await this.uploadAudio(reciterId, albumId, response.data.id) || response;
+
+    this.redirect(response);
+  }
+
+  async update() {
     const data: any = {};
     if (this.track.title !== this.form.title && this.form.title) {
       data.title = this.form.title;
@@ -98,35 +140,41 @@ export default class EditTrackDialog extends Vue {
     }
 
     const { id, reciterId, albumId } = this.track;
-    const includes = 'reciter,lyrics,album.tracks,media';
     let response = await axios.patch(
-      `${API_DOMAIN}/v1/reciters/${reciterId}/albums/${albumId}/tracks/${id}?include=${includes}`,
+      `${API_DOMAIN}/v1/reciters/${reciterId}/albums/${albumId}/tracks/${id}?include=${this.includes}`,
       data,
     );
 
+    response = await this.uploadAudio(reciterId, albumId, id) || response;
+
+    this.redirect(response);
+  }
+
+  async uploadAudio(reciterId, albumId, trackId) {
     if (this.form.audio) {
       const upload = new FormData();
       upload.append('audio', this.form.audio);
-      response = await axios.post(
-        `${API_DOMAIN}/v1/reciters/${reciterId}/albums/${albumId}/tracks/${id}/media/audio?include=${includes}`,
+      return axios.post(
+        `${API_DOMAIN}/v1/reciters/${reciterId}/albums/${albumId}/tracks/${trackId}/media/audio`
+        + `?include=${this.includes}`,
         upload,
         { headers: { 'Content-Type': 'multipart/form-data' } },
       );
     }
 
-    if (slug !== response.data.slug) {
-      this.$router.push({
-        name: 'tracks.show',
-        params: {
-          reciter: response.data.reciter.slug,
-          album: response.data.year,
-          track: response.data.slug,
-          trackObject: response.data,
-        },
-      }).catch(() => window.location.reload());
-    }
+    return null;
+  }
 
-    this.close();
+  redirect(response) {
+    this.$router.push({
+      name: 'tracks.show',
+      params: {
+        reciter: response.data.reciter.slug,
+        album: response.data.year,
+        track: response.data.slug,
+        trackObject: response.data,
+      },
+    }).catch(() => window.location.reload());
   }
 
   close() {
