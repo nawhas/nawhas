@@ -118,6 +118,9 @@
             <v-card-text v-else>
               <more-tracks-skeleton />
             </v-card-text>
+            <v-card-actions class="d-flex justify-end album__actions">
+              <edit-track-dialog :album="album" />
+            </v-card-actions>
           </v-card>
         </v-col>
       </v-row>
@@ -391,6 +394,10 @@ export default class TrackPage extends Vue {
     .album__track__text {
       font-weight: 600;
     }
+  }
+
+  .album__actions {
+    background-color: rgba(0,0,0,0.1);
   }
 }
 
