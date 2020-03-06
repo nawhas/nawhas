@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Database\Doctrine\Mappings;
 
 use App\Entities\Reciter;
-use App\Visits\Entities\ReciterVisit;
 use LaravelDoctrine\Fluent\{EntityMapping,Fluent};
 
 class ReciterMapping extends EntityMapping
@@ -22,7 +21,6 @@ class ReciterMapping extends EntityMapping
         $map->string('slug')->length(191)->unique();
         $map->text('description')->nullable();
         $map->string('avatar')->nullable();
-        $map->hasMany(ReciterVisit::class, 'visits')->mappedBy('reciter');
         $map->timestamps();
     }
 }

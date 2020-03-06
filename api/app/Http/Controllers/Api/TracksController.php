@@ -12,7 +12,6 @@ use App\Entities\Media;
 use App\Http\Controllers\Controller;
 use App\Http\Transformers\TrackTransformer;
 use App\Repositories\TrackRepository;
-use App\Visits\Manager as VisitsManager;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -35,10 +34,8 @@ class TracksController extends Controller
         return $this->respondWithCollection($tracks);
     }
 
-    public function show(Reciter $reciter, Album $album, Track $track, VisitsManager $visits): JsonResponse
+    public function show(Reciter $reciter, Album $album, Track $track): JsonResponse
     {
-        $visits->record($reciter, $track);
-
         return $this->respondWithItem($track);
     }
 

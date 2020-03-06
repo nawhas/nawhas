@@ -51,6 +51,7 @@ Route::prefix('v1')->group(function() {
     // Popular Routes
     Route::prefix('popular')->group(function () {
         Route::get('/reciters', [PopularEntitiesController::class, 'reciters']);
+        Route::get('/albums', [PopularEntitiesController::class, 'albums']);
         Route::get('/tracks', [PopularEntitiesController::class, 'tracks']);
     });
 });

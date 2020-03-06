@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Repositories\Doctrine;
 
 use App\Entities\Album;
-use App\Entities\Reciter;
 use App\Entities\Track;
 use App\Queries\TrackQuery;
 use App\Repositories\TrackRepository;
@@ -50,27 +49,6 @@ class DoctrineTrackRepository extends DoctrineRepository implements TrackReposit
     protected function entity(): string
     {
         return Track::class;
-    }
-
-    /**
-     * @return Collection|Track[]
-     */
-    public function popular(?Reciter $reciter = null, int $limit = 6): Collection
-    {
-        $builder = $this->repo->createQueryBuilder('t')
-            ->leftJoin('t.visits', 'v')
-            ->addSelect('COUNT(v.id) as HIDDEN visits')
-            ->groupBy('t.id')
-            ->setMaxResults($limit)
-            ->orderBy('visits', 'desc');
-
-        if ($reciter) {
-            $builder->andWhere('t.reciter = :reciter')->setParameter('reciter', $reciter);
-        }
-
-        $query = $builder->getQuery();
-
-        return collect($query->getResult());
     }
 
     public function persist(Track ...$tracks): void

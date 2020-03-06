@@ -7,16 +7,12 @@ namespace App\Entities;
 use App\Entities\Behaviors\HasTimestamps;
 use App\Entities\Contracts\Entity;
 use App\Entities\Contracts\TimestampedEntity;
-use App\Visits\Visitable;
-use App\Visits\Entities\ReciterVisit;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 use Ramsey\Uuid\{Uuid, UuidInterface};
 use Zain\LaravelDoctrine\Jetpack\Serializer\SerializesAttributes;
 
-class Reciter implements Entity, TimestampedEntity, Visitable
+class Reciter implements Entity, TimestampedEntity
 {
     use HasTimestamps;
     use SerializesAttributes;
@@ -24,11 +20,8 @@ class Reciter implements Entity, TimestampedEntity, Visitable
     private UuidInterface $id;
     private string $name;
     private string $slug;
-    private ?string $description;
-    private ?string $avatar;
-
-    /** @var Collection|ReciterVisit[] */
-    private Collection $visits;
+    private ?string $description = null;
+    private ?string $avatar = null;
 
     public function __construct(string $name, ?string $description = null, ?string $avatar = null)
     {
@@ -37,7 +30,6 @@ class Reciter implements Entity, TimestampedEntity, Visitable
         $this->slug = Str::slug($name);
         $this->description = $description;
         $this->avatar = $avatar;
-        $this->visits = new ArrayCollection();
     }
 
     public function getId(): string
@@ -89,10 +81,5 @@ class Reciter implements Entity, TimestampedEntity, Visitable
     public function setAvatar(string $path): void
     {
         $this->avatar = $path;
-    }
-
-    public function visit(): ReciterVisit
-    {
-        return new ReciterVisit($this);
     }
 }

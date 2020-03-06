@@ -21,20 +21,42 @@ class PopularEntitiesController extends Controller
 {
     public function reciters(Request $request, ReciterTransformer $transformer, ReciterRepository $repository): JsonResponse
     {
-        $reciters = $repository->popular();
+        $reciters = $repository->query()->popular()
+            ->sortByName()
+            ->paginate(PaginationState::fromRequest($request));
 
         return $this->respondWithCollection($reciters, $transformer);
     }
 
-    public function tracks(Request $request, TrackTransformer $transformer, ReciterRepository $reciterRepo, TrackRepository $trackRepo): JsonResponse
+    public function albums(Request $request, AlbumTransformer $transformer, ReciterRepository $reciterRepo, AlbumRepository $albumRepo): JsonResponse
     {
-        $reciter = null;
+        /** @var AlbumQuery $query */
+        $query = $albumRepo->query()
+            ->sortRandom();
 
         if ($request->has('reciterId')) {
             $reciter = $reciterRepo->query()->whereIdentifier($request->get('reciterId'))->get();
+            $query->whereReciter($reciter);
         }
 
-        $tracks =  $trackRepo->popular($reciter);
-        return $this->respondWithCollection($tracks, $transformer);
+        $albums = $query->paginate(PaginationState::fromRequest($request));
+
+        return $this->respondWithPaginator($albums, $transformer);
+    }
+
+    public function tracks(Request $request, TrackTransformer $transformer, ReciterRepository $reciterRepo, TrackRepository $trackRepo): JsonResponse
+    {
+        /** @var TrackQuery $query */
+        $query = $trackRepo->query()
+            ->sortRandom();
+
+        if ($request->has('reciterId')) {
+            $reciter = $reciterRepo->query()->whereIdentifier($request->get('reciterId'))->get();
+            $query->whereReciter($reciter);
+        }
+
+        $tracks = $query->paginate(PaginationState::fromRequest($request));
+
+        return $this->respondWithPaginator($tracks, $transformer);
     }
 }
