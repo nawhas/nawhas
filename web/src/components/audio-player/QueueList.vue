@@ -6,8 +6,8 @@
       @click="skipToTrack(id)"
       :class="{'queue-item': true, 'queue-item--active': isCurrentTrack(id)}"
     >
-      <v-list-item-avatar>
-        <img src="/img/default-album-image.png">
+      <v-list-item-avatar tile class="queue-item__album-art">
+        <img crossorigin :src="getTrackArtwork(track)" :alt="track.title">
       </v-list-item-avatar>
 
       <v-list-item-content>
@@ -58,6 +58,14 @@ export default class QueueList extends Vue {
     return this.$store.getters['player/progress'];
   }
 
+  getTrackArtwork(track): string {
+    if (track.album && track.album.artwork) {
+      return track.album.artwork;
+    }
+
+    return '/img/default-album-image.png';
+  }
+
   /**
    * Check to see weather a track is the current track
    */
@@ -91,5 +99,8 @@ export default class QueueList extends Vue {
 }
 .playback-progress {
   margin-right: 8px;
+}
+.queue-item__album-art {
+  border: 2px solid white;
 }
 </style>
