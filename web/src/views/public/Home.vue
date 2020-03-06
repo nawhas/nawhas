@@ -27,7 +27,7 @@
       <template v-if="popularTracks">
         <v-row :dense="$vuetify.breakpoint.smAndDown">
           <v-col cols="12" sm="6" md="4" v-for="track in popularTracks" v-bind:key="track.id">
-            <track-card v-bind="track" :show-reciter="true" />
+            <track-card v-bind="track" :colored="true" :show-reciter="true" />
           </v-col>
         </v-row>
       </template>

@@ -13,6 +13,10 @@
         </div>
       </div>
       <div class="track-card__album-art">
+        <div class="track-card__album-art-gradient"
+             v-if="colored && album.artwork"
+             :style="{background: gradient}">
+        </div>
         <img crossorigin ref="artwork" :src="artwork" :alt="title"/>
       </div>
     </v-card>
@@ -26,7 +30,7 @@ export default {
   name: 'TrackCard',
   props: ['title', 'slug', 'album', 'reciter', 'showReciter', 'colored'],
   mounted() {
-    if (this.colored) {
+    if (this.colored && this.album.artwork) {
       this.setBackgroundFromImage();
     }
   },
@@ -63,7 +67,12 @@ export default {
     },
     gradient() {
       const rgb = Vibrant.Util.hexToRgb(this.background);
-      return `linear-gradient(to right, rgba(${rgb.join(', ')}, 1), rgba(${rgb.join(', ')}, 0)`;
+      return `linear-gradient(
+        to right,
+        rgba(${rgb.join(', ')}, 1),
+        rgba(${rgb.join(', ')}, 0.7),
+        rgba(${rgb.join(', ')}, 0)
+      `;
     },
   },
 };
@@ -119,11 +128,11 @@ export default {
     background-repeat: no-repeat;
 
     .track-card__album-art-gradient {
-      width: 30%;
+      width: 28%;
       height: 100%;
       position: absolute;
       top: 0;
-      left: 0;
+      left: -2px;
       @include transition(background);
     }
 
