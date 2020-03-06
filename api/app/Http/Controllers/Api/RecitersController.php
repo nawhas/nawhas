@@ -41,6 +41,18 @@ class RecitersController extends Controller
         return $this->respondWithItem($reciter);
     }
 
+    public function store(Request $request): JsonResponse
+    {
+        $reciter = new Reciter(
+            $request->get('name'),
+            $request->get('description')
+        );
+
+        $this->repository->persist($reciter);
+
+        return $this->respondWithItem($reciter);
+    }
+
     public function update(Request $request, Reciter $reciter): JsonResponse
     {
         if ($request->has('name')) {

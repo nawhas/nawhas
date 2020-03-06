@@ -42,6 +42,17 @@ class TracksController extends Controller
         return $this->respondWithItem($track);
     }
 
+    public function store(Request $request, Reciter $reciter, Album $album): JsonResponse
+    {
+        $track = new Track(
+            $album,
+            $request->get('title')
+        );
+        $this->repository->persist($track);
+
+        return $this->respondWithItem($track);
+    }
+
     public function update(Request $request, Reciter $reciter, Album $album, Track $track): JsonResponse
     {
         if ($request->has('title')) {

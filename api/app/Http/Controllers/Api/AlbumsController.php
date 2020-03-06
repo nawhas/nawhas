@@ -36,6 +36,15 @@ class AlbumsController extends Controller
         return $this->respondWithPaginator($albums);
     }
 
+    public function store(Request $request, Reciter $reciter): JsonResponse
+    {
+        $album = new Album($reciter, $request->get('title'), $request->get('year'));
+
+        $this->repository->persist($album);
+
+        return $this->respondWithItem($album);
+    }
+
     public function show(Reciter $reciter, Album $album): JsonResponse
     {
         return $this->respondWithItem($album);
