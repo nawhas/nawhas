@@ -32,7 +32,9 @@
         </v-row>
       </template>
       <template v-else>
-        <skeleton-card-grid />
+        <skeleton-card-grid>
+          <track-card-skeleton />
+        </skeleton-card-grid>
       </template>
     </v-container>
   </div>
@@ -44,6 +46,7 @@ import HeroQuote from '@/components/HeroQuote.vue';
 import ReciterCard from '@/components/ReciterCard.vue';
 import TrackCard from '@/components/TrackCard.vue';
 import SkeletonCardGrid from '@/components/loaders/SkeletonCardGrid.vue';
+import TrackCardSkeleton from '@/components/loaders/TrackCardSkeleton.vue';
 import { getPopularReciters, getPopularTracks } from '@/services/popular';
 
 export default {
@@ -54,6 +57,7 @@ export default {
     ReciterCard,
     TrackCard,
     SkeletonCardGrid,
+    TrackCardSkeleton,
   },
   mounted() {
     getPopularReciters({ per_page: 6, include: 'related' }).then((response) => {

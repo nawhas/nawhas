@@ -43,7 +43,9 @@
         </v-row>
       </template>
       <template v-else>
-        <skeleton-card-grid />
+        <skeleton-card-grid>
+          <track-card-skeleton />
+        </skeleton-card-grid>
       </template>
     </v-container>
 
@@ -72,6 +74,7 @@ import { Component, Vue, Watch } from 'vue-property-decorator';
 import TrackCard from '@/components/TrackCard.vue';
 import SkeletonCardGrid from '@/components/loaders/SkeletonCardGrid.vue';
 import AlbumSkeleton from '@/components/loaders/AlbumSkeleton.vue';
+import TrackCardSkeleton from '@/components/loaders/TrackCardSkeleton.vue';
 import Album from '@/components/Album.vue';
 import HeroBanner from '@/components/HeroBanner.vue';
 import ReciterEdit from '@/components/edit/ReciterEdit.vue';
@@ -86,6 +89,7 @@ import { getPopularTracks } from '@/services/popular';
     TrackCard,
     Album,
     SkeletonCardGrid,
+    TrackCardSkeleton,
     AlbumSkeleton,
     ReciterEdit,
   },

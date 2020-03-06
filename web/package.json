@@ -6,6 +6,7 @@
     "serve": "vue-cli-service serve",
     "serve:share": "LIVE_SHARE=1 vue-cli-service serve",
     "build": "vue-cli-service build",
+    "build:local": "yarn build && docker-compose up -d --force-recreate web",
     "test:unit": "vue-cli-service test:unit",
     "lint": "vue-cli-service lint"
   },

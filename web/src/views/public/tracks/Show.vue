@@ -52,7 +52,7 @@
               </v-btn>
             </template>
             <template v-else>
-              <v-skeleton-loader type="text" dark width="100px" class="mt-3 mb-1"></v-skeleton-loader>
+              <v-skeleton-loader type="text" dark width="100px" class="mt-3"></v-skeleton-loader>
             </template>
           </div>
           <div class="bar__actions bar__actions--overflow">
@@ -139,9 +139,9 @@ import {
 } from 'vue-property-decorator';
 import Vibrant from 'node-vibrant';
 import ReciterHeroSkeleton from '@/components/loaders/ReciterHeroSkeleton.vue';
-import LyricsSkeleton from '@/components/LyricsSkeleton.vue';
+import LyricsSkeleton from '@/components/loaders/LyricsSkeleton.vue';
+import MoreTracksSkeleton from '@/components/loaders/MoreTracksSkeleton.vue';
 import TrackEdit from '@/components/edit/TrackEdit.vue';
-import MoreTracksSkeleton from '@/components/MoreTracksSkeleton.vue';
 import { getTrack } from '@/services/tracks';
 
 @Component({
