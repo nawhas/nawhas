@@ -27,7 +27,8 @@ return [
             'connection' => env('DB_CONNECTION', 'pgsql'),
             'namespaces' => [],
             'paths' => [
-                base_path('app/Entities')
+                base_path('app/Entities'),
+                base_path('app/Visits/Entities'),
             ],
             'repository' => Doctrine\ORM\EntityRepository::class,
             'proxies' => [
