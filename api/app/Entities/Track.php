@@ -5,18 +5,20 @@ declare(strict_types=1);
 namespace App\Entities;
 
 use App\Entities\Behaviors\HasTimestamps;
+use App\Visits\Entities\TrackVisit;
+use App\Visits\Visitable;
+use App\Entities\Contracts\{Entity, TimestampedEntity};
 use App\Enum\MediaProvider;
 use App\Enum\MediaType;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\Common\Collections\Selectable;
-use App\Entities\Contracts\{Entity, TimestampedEntity};
 use Illuminate\Support\Str;
 use Ramsey\Uuid\{Uuid, UuidInterface};
 use Zain\LaravelDoctrine\Jetpack\Serializer\SerializesAttributes;
 
-class Track implements Entity, TimestampedEntity
+class Track implements Entity, TimestampedEntity, Visitable
 {
     use HasTimestamps;
     use SerializesAttributes;
@@ -27,7 +29,12 @@ class Track implements Entity, TimestampedEntity
     private string $title;
     private string $slug;
     private ?Lyrics $lyrics = null;
+
+    /** @var Collection|Media[] */
     private Collection $media;
+
+    /** @var Collection|TrackVisit[] */
+    private Collection $visits;
 
     public function __construct(Album $album, string $title)
     {
@@ -37,6 +44,7 @@ class Track implements Entity, TimestampedEntity
         $this->title = $title;
         $this->slug = Str::slug($title);
         $this->media = new ArrayCollection();
+        $this->visits = new ArrayCollection();
     }
 
     public function getId(): string
@@ -121,5 +129,10 @@ class Track implements Entity, TimestampedEntity
     public function hasAudioFile(): bool
     {
         return $this->getAudioFile() !== null;
+    }
+
+    public function visit(): TrackVisit
+    {
+        return new TrackVisit($this);
     }
 }
