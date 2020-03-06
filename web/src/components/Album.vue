@@ -205,6 +205,10 @@ export default class Album extends Vue {
   font-size: 20px;
 }
 
+.album__edit {
+  padding: 0 16px;
+}
+
 .album__tracks {
   .datatable {
     th:focus,
