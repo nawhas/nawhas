@@ -35,20 +35,25 @@ class TracksController extends Controller
         return $this->respondWithCollection($tracks);
     }
 
-    public function show(Reciter $reciter, Album $album, Track $track, VisitsManager $visits): JsonResponse
-    {
-        $visits->record($reciter, $track);
-
-        return $this->respondWithItem($track);
-    }
-
     public function store(Request $request, Reciter $reciter, Album $album): JsonResponse
     {
         $track = new Track(
             $album,
             $request->get('title')
         );
+
+        if ($request->has('lyrics')) {
+            $track->replaceLyrics(new Lyrics($track, $request->get('lyrics')));
+        }
+
         $this->repository->persist($track);
+
+        return $this->respondWithItem($track);
+    }
+
+    public function show(Reciter $reciter, Album $album, Track $track, VisitsManager $visits): JsonResponse
+    {
+        $visits->record($reciter, $track);
 
         return $this->respondWithItem($track);
     }
