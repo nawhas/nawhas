@@ -23,7 +23,7 @@ module.exports = {
     public: process.env.LIVE_SHARE ? 'https://localhost:8080' : undefined,
   },
   pwa: {
-    name: 'Nawhas.com',
+    name: 'Nawhas',
     shortName: 'Nawhas',
     themeColor: '#da0000',
     backgroundColor: '#ff7252',
