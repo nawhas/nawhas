@@ -3,103 +3,120 @@
     <template v-slot:activator="{ on }">
       <v-btn dark text v-on="on">Edit</v-btn>
     </template>
-    <v-card>
+    <v-card :loading="loading">
       <v-card-title>
         <span class="headline">Edit {{ reciter.name }}</span>
       </v-card-title>
-      <v-card-text>
-        <v-container>
-          <v-row>
-            <v-col cols="12">
-              <v-text-field
-                v-model="editedReciter.name"
-                label="Name"
-                required
-              ></v-text-field>
-            </v-col>
-            <v-col cols="12">
-              <v-textarea
-                label="Description"
-                v-model="editedReciter.description"
-              ></v-textarea>
-            </v-col>
-            <v-col cols="12">
-              <v-file-input v-model="editedReciter.avatar" accept="image/*" label="Avatar"></v-file-input>
-            </v-col>
-          </v-row>
-        </v-container>
+      <v-card-text class="py-4">
+        <v-text-field
+          outlined
+          v-model="form.name"
+          label="Name"
+          required
+        ></v-text-field>
+        <v-textarea
+          outlined
+          label="Description"
+          v-model="form.description"
+        ></v-textarea>
+        <v-file-input v-model="form.avatar"
+                      label="Avatar"
+                      placeholder="Upload an Avatar"
+                      prepend-icon="mdi-camera"
+                      outlined
+                      accept="image/*"
+                      :show-size="1000"
+        >
+          <template v-slot:selection="{ index, text }">
+            <v-chip
+              v-if="index < 2"
+              color="deep-orange accent-4"
+              dark label small
+            >
+              {{ text }}
+            </v-chip>
+          </template>
+        </v-file-input>
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="warning" text @click="clear">Close</v-btn>
-        <v-btn color="success" text @click="submit">Update</v-btn>
+        <v-btn text @click="close">Cancel</v-btn>
+        <v-btn color="primary" text @click="submit" :loading="loading">Save</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
 </template>
 
-<script>
+<script lang="ts">
 import axios from 'axios';
+import {
+  Component, Prop, Watch, Vue,
+} from 'vue-property-decorator';
+import { API_DOMAIN } from '@/config';
 
-export default {
-  mounted() {
-    this.setDataFromProp();
-  },
-  data() {
-    return {
-      dialog: false,
-      editedReciter: {
-        name: null,
-        description: null,
-        avatar: null,
-      },
-    };
-  },
-  props: ['reciter'],
-  methods: {
-    setDataFromProp() {
-      this.editedReciter.name = this.reciter.name;
-      this.editedReciter.description = this.reciter.description;
-    },
-    async submit() {
-      let currentSlug = this.reciter.slug;
+interface Form {
+  name: string|null;
+  description: string|null;
+  avatar: string|Blob|null;
+}
 
-      const formData = {};
-      if (this.reciter.name !== this.editedReciter.name) {
-        if (this.editedReciter.name) {
-          formData.name = this.editedReciter.name;
-        }
-      }
-      if (this.reciter.description !== this.editedReciter.description) {
-        if (this.editedReciter.description) {
-          formData.description = this.editedReciter.description;
-        }
-      }
-
-      const response = await axios.patch(
-        `${process.env.VUE_APP_API_DOMAIN}/v1/reciters/${this.reciter.id}`,
-        formData,
-      );
-      currentSlug = response.data.slug;
-
-      if (this.editedReciter.avatar) {
-        const imageFormData = new FormData();
-        imageFormData.append('avatar', this.editedReciter.avatar);
-        await axios.post(
-          `${process.env.VUE_APP_API_DOMAIN}/v1/reciters/${this.reciter.id}/avatar`,
-          imageFormData,
-          { headers: { 'Content-Type': 'multipart/form-data' } },
-        );
-      }
-
-      this.dialog = false;
-      this.clear();
-      this.$router.push({ name: 'reciters.show', params: { reciter: currentSlug } });
-    },
-    clear() {
-      this.setDataFromProp();
-      this.dialog = false;
-    },
-  },
+const defaults: Form = {
+  name: null,
+  description: null,
+  avatar: null,
 };
+
+@Component
+export default class ReciterEdit extends Vue {
+  @Prop({ type: Object }) private reciter;
+  private dialog = false;
+  private form: Form = { ...defaults };
+  private loading = false;
+
+  @Watch('dialog')
+  onDialogStateChanged(opened) {
+    if (opened) {
+      this.initialize();
+    }
+  }
+
+  initialize() {
+    const { name, description } = this.reciter;
+    this.form = {
+      ...defaults,
+      name,
+      description,
+    };
+  }
+
+  async submit() {
+    this.loading = true;
+    const data: any = {};
+    if (this.reciter.name !== this.form.name && this.form.name) {
+      data.name = this.form.name;
+    }
+    if (this.reciter.description !== this.form.description && this.form.description) {
+      data.description = this.form.description;
+    }
+
+    const response = await axios.patch(`${API_DOMAIN}/v1/reciters/${this.reciter.id}`, data);
+    const { slug } = response.data;
+
+    if (this.form.avatar) {
+      const imageFormData = new FormData();
+      imageFormData.append('avatar', this.form.avatar);
+      await axios.post(
+        `${API_DOMAIN}/v1/reciters/${this.reciter.id}/avatar`,
+        imageFormData,
+        { headers: { 'Content-Type': 'multipart/form-data' } },
+      );
+    }
+
+    this.$router.push({ name: 'reciters.show', params: { reciter: slug } }).catch(() => true);
+  }
+
+  close() {
+    this.dialog = false;
+  }
+}
 </script>
