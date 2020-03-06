@@ -5,23 +5,23 @@
     </template>
     <v-card :loading="loading">
       <v-card-title>
-        <span class="headline">Edit {{ reciter.name }}</span>
+        <span class="headline">Edit {{ album.title }}</span>
       </v-card-title>
       <v-card-text class="py-4">
         <v-text-field
           outlined
-          v-model="form.name"
+          v-model="form.title"
           label="Name"
           required
         ></v-text-field>
         <v-textarea
           outlined
           label="Description"
-          v-model="form.description"
+          v-model="form.year"
         ></v-textarea>
-        <v-file-input v-model="form.avatar"
-                      label="Avatar"
-                      placeholder="Upload an Avatar"
+        <v-file-input v-model="form.artwork"
+                      label="Artwork"
+                      placeholder="Upload Album Artwork"
                       prepend-icon="mdi-camera"
                       outlined
                       accept="image/*"
@@ -55,20 +55,20 @@ import {
 import { API_DOMAIN } from '@/config';
 
 interface Form {
-  name: string|null;
-  description: string|null;
-  avatar: string|Blob|null;
+  title: string|null;
+  year: string|null;
+  artwork: string|Blob|null;
 }
 
 const defaults: Form = {
-  name: null,
-  description: null,
-  avatar: null,
+  title: null,
+  year: null,
+  artwork: null,
 };
 
 @Component
-export default class ReciterEdit extends Vue {
-  @Prop({ type: Object }) private reciter;
+export default class EditAlbumDialog extends Vue {
+  @Prop({ type: Object }) private album;
   private dialog = false;
   private form: Form = { ...defaults };
   private loading = false;
@@ -76,43 +76,44 @@ export default class ReciterEdit extends Vue {
   @Watch('dialog')
   onDialogStateChanged(opened) {
     if (opened) {
-      this.initialize();
+      this.resetForm();
     }
   }
 
-  initialize() {
-    const { name, description } = this.reciter;
+  resetForm() {
+    const { title, year } = this.album;
     this.form = {
       ...defaults,
-      name,
-      description,
+      title,
+      year,
     };
   }
 
   async submit() {
     this.loading = true;
     const data: any = {};
-    if (this.reciter.name !== this.form.name && this.form.name) {
-      data.name = this.form.name;
+    if (this.album.title !== this.form.title && this.form.title) {
+      data.title = this.form.title;
     }
-    if (this.reciter.description !== this.form.description && this.form.description) {
-      data.description = this.form.description;
+    if (this.album.year !== this.form.year && this.form.year) {
+      data.year = this.form.year;
     }
 
-    const response = await axios.patch(`${API_DOMAIN}/v1/reciters/${this.reciter.id}`, data);
-    const { slug } = response.data;
+    await axios.patch(
+      `${API_DOMAIN}/v1/reciters/${this.album.reciterId}/albums/${this.album.id}`,
+      data,
+    );
 
-    if (this.form.avatar) {
-      const imageFormData = new FormData();
-      imageFormData.append('avatar', this.form.avatar);
+    if (this.form.artwork) {
+      const upload = new FormData();
+      upload.append('artwork', this.form.artwork);
       await axios.post(
-        `${API_DOMAIN}/v1/reciters/${this.reciter.id}/avatar`,
-        imageFormData,
+        `${API_DOMAIN}/v1/reciters/${this.album.reciterId}/albums/${this.album.id}/artwork`,
+        upload,
         { headers: { 'Content-Type': 'multipart/form-data' } },
       );
     }
-
-    this.$router.push({ name: 'reciters.show', params: { reciter: slug } }).catch(() => true);
+    this.close();
   }
 
   close() {

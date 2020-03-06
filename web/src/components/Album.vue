@@ -11,8 +11,8 @@
           &bull; {{ tracks.data.length }} tracks
         </h6>
       </div>
-      <div>
-        <album-edit v-if="album" :album="album"></album-edit>
+      <div class="album__edit">
+        <edit-album-dialog v-if="album" :album="album"></edit-album-dialog>
       </div>
     </div>
     <v-data-table
@@ -54,11 +54,11 @@
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import Vibrant from 'node-vibrant';
-import AlbumEdit from '@/components/edit/AlbumEdit.vue';
+import EditAlbumDialog from '@/components/edit/EditAlbumDialog.vue';
 
 @Component({
   components: {
-    AlbumEdit,
+    EditAlbumDialog,
   },
 })
 export default class Album extends Vue {
