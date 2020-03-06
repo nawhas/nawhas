@@ -3,7 +3,7 @@
     <div class="hero" :style="{'background-color': background, color: textColor}">
       <v-container class="hero__content">
         <v-avatar :size="heroArtworkSize" class="hero__artwork" tile>
-            <img v-if="track && album" :src="image" :alt="album.name" />
+            <img v-if="track && album" crossorigin :src="image" :alt="album.name" />
         </v-avatar>
         <div class="hero__text">
           <h4 class="hero__title">
