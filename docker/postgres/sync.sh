@@ -22,6 +22,8 @@ PGPASSWORD="$STG_DB_PASS" pg_dump \
   --table lyrics \
   --table media \
   --table track_media \
+  --table reciter_visits \
+  --table track_visits \
   -f "$DUMP" \
   -Fc \
   "$POSTGRES_DB";
