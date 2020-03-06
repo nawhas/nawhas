@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Api;
 
 use App\Entities\Reciter;
-use App\Visits\Entities\ReciterVisit;
 use App\Http\Controllers\Controller;
 use App\Http\Transformers\ReciterTransformer;
 use App\Repositories\ReciterRepository;
@@ -33,6 +32,18 @@ class RecitersController extends Controller
             ->paginate(PaginationState::fromRequest($request));
 
         return $this->respondWithPaginator($reciters);
+    }
+
+    public function store(Request $request): JsonResponse
+    {
+        $reciter = new Reciter(
+            $request->get('name'),
+            $request->get('description')
+        );
+
+        $this->repository->persist($reciter);
+
+        return $this->respondWithItem($reciter);
     }
 
     public function show(Reciter $reciter, VisitsManager $visits): JsonResponse
