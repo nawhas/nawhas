@@ -44,11 +44,15 @@ export default class AlbumSkeleton extends Vue {
 
 .album-skeleton__header {
   position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding-bottom: 20px;
 }
 
 .album-skeleton__artwork {
   margin-top: -48px;
-  margin-left: 24px;
+  margin-left: 20px;
   border: 5px solid white;
   float: left;
   overflow: hidden;
@@ -63,9 +67,9 @@ export default class AlbumSkeleton extends Vue {
 }
 
 .album-skeleton__details {
-  margin-left: 128px + 24px;
-  padding: 24px 32px;
+  padding: 24px;
   color: white;
+  flex-grow: 1;
 }
 
 .album-skeleton__title {
@@ -92,6 +96,7 @@ export default class AlbumSkeleton extends Vue {
     display: flex;
     align-items: center;
     flex-direction: row;
+    padding-bottom: 0;
   }
   .album-skeleton__details {
     margin: 0;
