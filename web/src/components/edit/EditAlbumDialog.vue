@@ -16,7 +16,7 @@
         ></v-text-field>
         <v-text-field
           outlined
-          label="Description"
+          label="Release Year"
           v-model="form.year"
           required
         ></v-text-field>
@@ -120,6 +120,7 @@ export default class EditAlbumDialog extends Vue {
 
   close() {
     this.dialog = false;
+    this.loading = false;
   }
 }
 </script>

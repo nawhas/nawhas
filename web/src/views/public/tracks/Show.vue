@@ -63,7 +63,7 @@
             >
               <v-icon>print</v-icon>
             </v-btn>
-            <track-edit v-if="track" :track="track"></track-edit>
+            <edit-track-dialog v-if="track" :track="track"></edit-track-dialog>
             <v-btn dark icon v-if="false"><v-icon>more_vert</v-icon></v-btn>
           </div>
         </v-container>
@@ -141,7 +141,7 @@ import Vibrant from 'node-vibrant';
 import ReciterHeroSkeleton from '@/components/loaders/ReciterHeroSkeleton.vue';
 import LyricsSkeleton from '@/components/loaders/LyricsSkeleton.vue';
 import MoreTracksSkeleton from '@/components/loaders/MoreTracksSkeleton.vue';
-import TrackEdit from '@/components/edit/TrackEdit.vue';
+import EditTrackDialog from '@/components/edit/EditTrackDialog.vue';
 import { getTrack } from '@/services/tracks';
 
 @Component({
@@ -149,7 +149,7 @@ import { getTrack } from '@/services/tracks';
     ReciterHeroSkeleton,
     LyricsSkeleton,
     MoreTracksSkeleton,
-    TrackEdit,
+    EditTrackDialog,
   },
 })
 export default class TrackPage extends Vue {
