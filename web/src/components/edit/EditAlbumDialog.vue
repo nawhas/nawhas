@@ -5,7 +5,7 @@
     </template>
     <v-card :loading="loading">
       <v-card-title>
-        <span class="headline">Edit {{ album.title }}</span>
+        <span class="headline">Edit Album</span>
       </v-card-title>
       <v-card-text class="py-4">
         <v-text-field
@@ -14,11 +14,12 @@
           label="Name"
           required
         ></v-text-field>
-        <v-textarea
+        <v-text-field
           outlined
           label="Description"
           v-model="form.year"
-        ></v-textarea>
+          required
+        ></v-text-field>
         <v-file-input v-model="form.artwork"
                       label="Artwork"
                       placeholder="Upload Album Artwork"
@@ -114,6 +115,7 @@ export default class EditAlbumDialog extends Vue {
       );
     }
     this.close();
+    window.location.reload();
   }
 
   close() {

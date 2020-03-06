@@ -5,7 +5,7 @@
     </template>
     <v-card :loading="loading">
       <v-card-title>
-        <span class="headline">Edit {{ reciter.name }}</span>
+        <span class="headline">Edit Reciter</span>
       </v-card-title>
       <v-card-text class="py-4">
         <v-text-field
