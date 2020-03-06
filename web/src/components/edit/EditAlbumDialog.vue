@@ -1,11 +1,12 @@
 <template>
   <v-dialog v-model="dialog" persistent max-width="600px">
     <template v-slot:activator="{ on }">
-      <v-btn dark text v-on="on">Edit</v-btn>
+      <v-btn dark text v-on="on" v-if="album">Edit</v-btn>
+      <v-btn text v-on="on" v-else>Add Album</v-btn>
     </template>
     <v-card :loading="loading">
       <v-card-title>
-        <span class="headline">Edit Album</span>
+        <span class="headline">{{ album ? 'Edit' : 'Create' }} Album</span>
       </v-card-title>
       <v-card-text class="py-4">
         <v-text-field
@@ -69,6 +70,7 @@ const defaults: Form = {
 
 @Component
 export default class EditAlbumDialog extends Vue {
+  @Prop({ type: Object }) private reciter;
   @Prop({ type: Object }) private album;
   private dialog = false;
   private form: Form = { ...defaults };
@@ -82,16 +84,44 @@ export default class EditAlbumDialog extends Vue {
   }
 
   resetForm() {
-    const { title, year } = this.album;
-    this.form = {
-      ...defaults,
-      title,
-      year,
-    };
+    this.form = { ...defaults };
+    if (this.album) {
+      const { title, year } = this.album;
+      this.form = {
+        ...this.form,
+        title,
+        year,
+      };
+    }
   }
 
   async submit() {
     this.loading = true;
+
+    if (this.album) {
+      await this.update();
+    } else {
+      await this.create();
+    }
+
+    this.close();
+    window.location.reload();
+  }
+
+  async create() {
+    const data: any = {};
+    data.title = this.form.title;
+    data.year = this.form.year;
+
+    const response = await axios.post(
+      `${API_DOMAIN}/v1/reciters/${this.reciter.id}/albums`,
+      data,
+    );
+
+    await this.uploadArtwork(this.reciter.id, response.data.id);
+  }
+
+  async update() {
     const data: any = {};
     if (this.album.title !== this.form.title && this.form.title) {
       data.title = this.form.title;
@@ -105,17 +135,19 @@ export default class EditAlbumDialog extends Vue {
       data,
     );
 
+    await this.uploadArtwork(this.album.reciterId, this.album.id);
+  }
+
+  async uploadArtwork(reciterId, albumId) {
     if (this.form.artwork) {
       const upload = new FormData();
       upload.append('artwork', this.form.artwork);
       await axios.post(
-        `${API_DOMAIN}/v1/reciters/${this.album.reciterId}/albums/${this.album.id}/artwork`,
+        `${API_DOMAIN}/v1/reciters/${reciterId}/albums/${albumId}/artwork`,
         upload,
         { headers: { 'Content-Type': 'multipart/form-data' } },
       );
     }
-    this.close();
-    window.location.reload();
   }
 
   close() {

@@ -50,7 +50,10 @@
     </v-container>
 
     <v-container class="app__section">
-      <h5 class="section__title">Albums</h5>
+      <h5 class="section__title section__title--with-actions">
+        <div>Albums</div>
+        <edit-album-dialog v-if="reciter" :reciter="reciter" />
+      </h5>
       <template v-if="albums">
         <template v-if="albums.length > 0">
           <template v-for="album in albums">
@@ -78,6 +81,7 @@ import TrackCardSkeleton from '@/components/loaders/TrackCardSkeleton.vue';
 import Album from '@/components/Album.vue';
 import HeroBanner from '@/components/HeroBanner.vue';
 import EditReciterDialog from '@/components/edit/EditReciterDialog.vue';
+import EditAlbumDialog from '@/components/edit/EditAlbumDialog.vue';
 import { getReciter } from '@/services/reciters';
 import { getAlbums } from '@/services/albums';
 import { getPopularTracks } from '@/services/popular';
@@ -92,6 +96,7 @@ import { getPopularTracks } from '@/services/popular';
     TrackCardSkeleton,
     AlbumSkeleton,
     EditReciterDialog,
+    EditAlbumDialog,
   },
 })
 export default class ReciterProfile extends Vue {
