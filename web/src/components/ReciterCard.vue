@@ -24,10 +24,7 @@ export default {
   props: ['id', 'name', 'slug', 'avatar', 'related', 'createdAt', 'updatedAt', 'featured'],
   mounted() {
     if (this.featured !== undefined) {
-      const image = this.$refs.avatarElement;
-      if (image && image.src) {
-        this.setBackgroundFromImage(image);
-      }
+      this.setBackgroundFromImage();
     }
   },
   methods: {
@@ -37,8 +34,8 @@ export default {
         params: { reciter: this.slug },
       });
     },
-    setBackgroundFromImage(image) {
-      Vibrant.from(image.src)
+    setBackgroundFromImage() {
+      Vibrant.from(this.image)
         .getPalette()
         .then((palette) => {
           const swatch = palette.DarkMuted;

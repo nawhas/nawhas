@@ -2,7 +2,7 @@
   <v-card class="album">
     <div class="album__header" :style="{ 'background-color': background }">
       <v-avatar tile :size="artworkSize" class="album__artwork">
-        <img :src="image" :alt="album.title" ref="artwork" />
+        <img crossorigin :src="image" :alt="album.title" ref="artwork" />
       </v-avatar>
       <div class="album__details" :style="{ color: textColor }">
         <h5 class="album__title">{{ album.title }}</h5>

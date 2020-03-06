@@ -24,7 +24,7 @@
 </template>
 
 <script>
-import Vibrant from 'node-vibrant';
+import * as Vibrant from 'node-vibrant';
 
 export default {
   name: 'TrackCard',
@@ -36,14 +36,15 @@ export default {
   },
   methods: {
     setBackgroundFromImage() {
-      Vibrant.from(this.$refs.artwork.src).getPalette().then((palette) => {
-        const swatch = palette.DarkMuted;
-        if (!swatch) {
-          return;
-        }
-        this.background = swatch.getHex();
-        this.textColor = swatch.getBodyTextColor();
-      });
+      Vibrant.from(this.artwork)
+        .getPalette().then((palette) => {
+          const swatch = palette.DarkMuted;
+          if (!swatch) {
+            return;
+          }
+          this.background = swatch.getHex();
+          this.textColor = swatch.getBodyTextColor();
+        });
     },
     goToTrack() {
       this.$router.push(`/reciters/${this.reciter.slug}/albums/${this.album.year}/tracks/${this.slug}`);

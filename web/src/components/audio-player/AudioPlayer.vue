@@ -14,7 +14,7 @@
       <v-hover class="artwork">
         <template v-slot:default="{ hover }">
           <div @click="toggleMinimized">
-            <img :src="artwork" />
+            <img crossorigin :src="artwork" />
             <v-fade-transition>
               <v-overlay v-if="hover && minimized && !mobile" absolute>
                 <v-icon>fullscreen</v-icon>
