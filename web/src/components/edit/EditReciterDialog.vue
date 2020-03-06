@@ -115,6 +115,7 @@ export default class EditReciterDialog extends Vue {
     this.$router.push({ name: 'reciters.show', params: { reciter: slug } })
       .catch(() => window.location.reload());
     this.close();
+    this.loading = false;
   }
 
   close() {
