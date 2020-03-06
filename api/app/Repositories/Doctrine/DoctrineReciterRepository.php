@@ -9,7 +9,7 @@ use App\Exceptions\EntityNotFoundException;
 use App\Queries\ReciterQuery;
 use App\Repositories\ReciterRepository;
 use App\Support\Pagination\PaginationState;
-use Doctrine\Common\Collections\Criteria;
+use Illuminate\Support\Collection;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class DoctrineReciterRepository extends DoctrineRepository implements ReciterRepository
@@ -30,6 +30,22 @@ class DoctrineReciterRepository extends DoctrineRepository implements ReciterRep
         }
 
         return $entity;
+    }
+
+    /**
+     * @return Collection|Reciter[]
+     */
+    public function popular(int $limit = 6): Collection
+    {
+        $query = $this->repo->createQueryBuilder('t')
+            ->leftJoin('t.visits', 'v')
+            ->addSelect('COUNT(v.id) as HIDDEN visits')
+            ->groupBy('t.id')
+            ->setMaxResults($limit)
+            ->orderBy('visits', 'desc')
+            ->getQuery();
+
+        return collect($query->getResult());
     }
 
     public function query(): ReciterQuery
