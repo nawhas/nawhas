@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Api;
 
+use App\Database\Doctrine\EntityManager;
 use App\Entities\Album;
 use App\Entities\Lyrics;
 use App\Entities\Reciter;
@@ -15,17 +16,20 @@ use App\Repositories\TrackRepository;
 use App\Visits\Manager as VisitsManager;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
 
 class TracksController extends Controller
 {
     private TrackRepository $repository;
+    private EntityManager $em;
 
-    public function __construct(TrackRepository $repository, TrackTransformer $transformer)
+    public function __construct(EntityManager $em, TrackRepository $repository, TrackTransformer $transformer)
     {
         $this->transformer = $transformer;
         $this->repository = $repository;
+        $this->em = $em;
     }
 
     public function index(Reciter $reciter, Album $album, Request $request): JsonResponse
@@ -70,6 +74,20 @@ class TracksController extends Controller
         $this->repository->persist($track);
 
         return $this->respondWithItem($track);
+    }
+
+    public function destroy(Request $request, Reciter $reciter, Album $album, Track $track): Response
+    {
+        // TODO - Use events to handle this sort of stuff
+        if ($track->hasAudioFile()) {
+            $media = $track->getAudioFile();
+            logger()->debug("Deleting media file at {$media->getPath()}");
+            Storage::delete($media->getPath());
+        }
+
+        $this->repository->remove($track);
+
+        return response()->noContent();
     }
 
     public function uploadTrackMedia(Request $request, Reciter $reciter, Album $album, Track $track): JsonResponse

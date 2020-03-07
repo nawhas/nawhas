@@ -25,6 +25,13 @@ class EntityManager
         }
     }
 
+    public function remove(Entity ...$entities): void
+    {
+        foreach ($entities as $entity) {
+            $this->em->remove($entity);
+        }
+    }
+
     public function repository(string $entity): EntityRepository
     {
         /** @var EntityRepository $repo */
