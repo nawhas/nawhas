@@ -65,10 +65,24 @@ const mutations = {
     }
     state.current--;
   },
-  REMOVE_TRACK(state: PlayerState, { id }) {
-    const index = state.queue.findIndex((queued: QueuedTrack) => queued.id === id);
-    state.queue.splice(index, 1);
-    if (state.current !== null && state.current > index) {
+  REMOVE_TRACK(state: PlayerState, payload) {
+    let queueIndex;
+    if (payload.id) {
+      const { id } = payload;
+      const index = state.queue.findIndex((queued: QueuedTrack) => queued.id === id);
+      queueIndex = index;
+    }
+    if (payload.track) {
+      const { track } = payload;
+      for (let index = 0; index < state.queue.length; index++) {
+        const queue = state.queue[index];
+        if (queue.track === track) {
+          queueIndex = index;
+        }
+      }
+    }
+    state.queue.splice(queueIndex, 1);
+    if (state.current !== null && state.current > queueIndex) {
       state.current--;
     }
   },
@@ -83,17 +97,6 @@ const mutations = {
   STOP(state: PlayerState) {
     state.current = null;
     state.queue = [];
-  },
-  REMOVE_TRACK_FROM_QUEUE(state: PlayerState, { track }) {
-    for (let index = 0; index < state.queue.length; index++) {
-      const queue = state.queue[index];
-      if (queue.track === track) {
-        state.queue.splice(index);
-        if (state.current !== null && state.current > index) {
-          state.current--;
-        }
-      }
-    }
   },
 };
 

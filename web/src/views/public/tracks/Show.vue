@@ -214,7 +214,7 @@ export default class TrackPage extends Vue {
     const { player } = this.$store.state;
     for (let index = 0; index < player.queue.length; index++) {
       const element = player.queue[index];
-      if (this.track === element.track) {
+      if (element.track.id === this.track.id) {
         return true;
       }
     }
@@ -315,7 +315,7 @@ export default class TrackPage extends Vue {
   }
 
   removeFromQueue() {
-    this.$store.commit('player/REMOVE_TRACK_FROM_QUEUE', { track: this.track });
+    this.$store.commit('player/REMOVE_TRACK', { track: this.track });
   }
 }
 </script>
