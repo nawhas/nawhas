@@ -84,6 +84,17 @@ const mutations = {
     state.current = null;
     state.queue = [];
   },
+  REMOVE_TRACK_FROM_QUEUE(state: PlayerState, { track }) {
+    for (let index = 0; index < state.queue.length; index++) {
+      const queue = state.queue[index];
+      if (queue.track === track) {
+        state.queue.splice(index);
+        if (state.current !== null && state.current > index) {
+          state.current--;
+        }
+      }
+    }
+  },
 };
 
 export default {

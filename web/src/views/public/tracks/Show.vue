@@ -48,14 +48,21 @@
                     v-else-if="hasAudio && isSameTrackPlaying"
                     @click="stopPlaying"
               >
-                <v-icon>stop</v-icon>Stop Playing
+                <v-icon>stop</v-icon> Stop Playing
               </v-btn>
               <v-btn text
                      :color="this.textColor"
-                     v-if="hasAudio"
+                     v-if="hasAudio && !isInQueue"
                      @click="addToQueue"
               >
                 <v-icon left>playlist_add</v-icon> Add to Queue
+              </v-btn>
+              <v-btn text
+                     :color="this.textColor"
+                     v-else-if="hasAudio && isInQueue && !isSameTrackPlaying"
+                     @click="removeFromQueue"
+              >
+                <v-icon left>remove_circle_outline</v-icon> Remove from Queue
               </v-btn>
             </template>
             <template v-else>
@@ -203,6 +210,17 @@ export default class TrackPage extends Vue {
     return false;
   }
 
+  get isInQueue() {
+    const { player } = this.$store.state;
+    for (let index = 0; index < player.queue.length; index++) {
+      const element = player.queue[index];
+      if (this.track === element.track) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   mounted() {
     this.fetchData();
     const handler = (e) => {
@@ -294,6 +312,10 @@ export default class TrackPage extends Vue {
   addToQueue() {
     this.$store.commit('player/ADD_TO_QUEUE', { track: this.track });
     this.addedToQueueSnackbar = true;
+  }
+
+  removeFromQueue() {
+    this.$store.commit('player/REMOVE_TRACK_FROM_QUEUE', { track: this.track });
   }
 }
 </script>
