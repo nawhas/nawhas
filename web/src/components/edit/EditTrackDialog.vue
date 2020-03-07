@@ -136,7 +136,7 @@ export default class EditTrackDialog extends Vue {
     if (this.track.title !== this.form.title && this.form.title) {
       data.title = this.form.title;
     }
-    if (this.track.lyrics.content !== this.form.lyrics && this.form.lyrics) {
+    if (this.track.lyrics?.content !== this.form.lyrics && this.form.lyrics) {
       data.lyrics = this.form.lyrics;
     }
 
