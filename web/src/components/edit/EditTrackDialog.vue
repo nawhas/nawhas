@@ -37,6 +37,7 @@
         </v-file-input>
       </v-card-text>
       <v-card-actions>
+        <v-btn color="error" text @click="confirmDelete">Delete</v-btn>
         <v-spacer></v-spacer>
         <v-btn text @click="close">Cancel</v-btn>
         <v-btn color="primary" text @click="submit" :loading="loading">Save</v-btn>
@@ -91,7 +92,7 @@ export default class EditTrackDialog extends Vue {
       this.form = {
         ...this.form,
         title,
-        lyrics: lyrics.content,
+        lyrics: lyrics ? lyrics.content : null,
       };
     }
   }
@@ -175,6 +176,17 @@ export default class EditTrackDialog extends Vue {
         trackObject: response.data,
       },
     }).catch(() => window.location.reload());
+  }
+
+  async confirmDelete() {
+    // eslint-disable-next-line no-alert
+    if (window.confirm(`Are you sure you want to delete '${this.track.title}'?`)) {
+      const { id, reciterId, albumId } = this.track;
+      await axios.delete(
+        `${API_DOMAIN}/v1/reciters/${reciterId}/albums/${albumId}/tracks/${id}`,
+      );
+      this.$router.push({ name: 'reciters.show', params: { reciter: reciterId } });
+    }
   }
 
   close() {
