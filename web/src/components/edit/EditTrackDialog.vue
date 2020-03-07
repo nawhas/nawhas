@@ -185,7 +185,7 @@ export default class EditTrackDialog extends Vue {
       await axios.delete(
         `${API_DOMAIN}/v1/reciters/${reciterId}/albums/${albumId}/tracks/${id}`,
       );
-      this.$router.push({ name: 'reciters.show', params: { reciter: reciterId } });
+      this.$router.push({ name: 'reciters.show', params: { reciter: this.track.reciter.slug } });
     }
   }
 
