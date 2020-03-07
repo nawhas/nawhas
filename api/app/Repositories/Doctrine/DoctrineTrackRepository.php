@@ -79,4 +79,9 @@ class DoctrineTrackRepository extends DoctrineRepository implements TrackReposit
     {
         $this->em->persist(...$tracks);
     }
+
+    public function remove(Track $track): void
+    {
+        $this->em->remove($track);
+    }
 }
