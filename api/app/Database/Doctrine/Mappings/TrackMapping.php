@@ -18,12 +18,17 @@ class TrackMapping extends EntityMapping
     public function map(Fluent $map)
     {
         $map->uuidPrimaryKey();
-        $map->belongsTo(Album::class, 'album')->inversedBy('tracks');
+        $map->belongsTo(Album::class, 'album')
+            ->inversedBy('tracks');
         $map->belongsTo(Reciter::class, 'reciter');
-        $map->oneToOne(Lyrics::class, 'lyrics')->cascadePersist();
-        $map->manyToMany(Media::class, 'media')->cascadeAll()
-            ->joinTable('track_media');
-        $map->hasMany(TrackVisit::class, 'visits')->mappedBy('track');
+        $map->oneToOne(Lyrics::class, 'lyrics')
+            ->cascadeAll();
+        $map->manyToMany(Media::class, 'media')
+            ->joinTable('track_media')
+            ->cascadeAll();
+        $map->hasMany(TrackVisit::class, 'visits')
+            ->mappedBy('track')
+            ->cascadeAll();
         $map->string('title');
         $map->string('slug')->length(191);
         $map->unique(['album_id', 'slug'])->name('unique_album_track_slug');

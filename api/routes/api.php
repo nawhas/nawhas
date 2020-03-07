@@ -45,7 +45,7 @@ Route::prefix('v1')->group(function() {
         Route::get('/{track}', [TracksController::class, 'show']);
         Route::patch('/{track}', [TracksController::class, 'update']);
         Route::post('/{track}/media/audio', [TracksController::class, 'uploadTrackMedia']);
-        // Route::delete('/{track}', [TracksController::class, 'destroy']);
+        Route::delete('/{track}', [TracksController::class, 'destroy']);
     });
 
     // Popular Routes
