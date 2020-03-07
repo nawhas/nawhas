@@ -38,10 +38,17 @@
             <template v-if="track">
               <v-btn text
                      :color="this.textColor"
-                     v-if="hasAudio"
+                     v-if="hasAudio && !isSameTrackPlaying"
                      @click="playTrack"
               >
                 <v-icon left>play_circle_filled</v-icon> Play
+              </v-btn>
+              <v-btn text
+                    :color="this.textColor"
+                    v-else-if="hasAudio && isSameTrackPlaying"
+                    @click="stopPlaying"
+              >
+                <v-icon>stop</v-icon>Stop Playing
               </v-btn>
               <v-btn text
                      :color="this.textColor"
@@ -185,6 +192,17 @@ export default class TrackPage extends Vue {
     return this.track && this.track.media.data.length > 0;
   }
 
+  get isSameTrackPlaying() {
+    const { player } = this.$store.state;
+    if (player.queue.length) {
+      if (player.queue[player.current].track === this.track) {
+        return true;
+      }
+      return false;
+    }
+    return false;
+  }
+
   mounted() {
     this.fetchData();
     const handler = (e) => {
@@ -267,6 +285,10 @@ export default class TrackPage extends Vue {
 
   playTrack() {
     this.$store.commit('player/PLAY_TRACK', { track: this.track });
+  }
+
+  stopPlaying() {
+    this.$store.commit('player/STOP');
   }
 
   addToQueue() {

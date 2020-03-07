@@ -386,6 +386,12 @@ export default class AudioPlayer extends Vue {
       }
     }
 
+    // If we do not have any track in current then stop playing
+    if (!this.store.current) {
+      this.stop();
+      return;
+    }
+
     this.currentTrack.queued = this.currentQueuedTrack;
     this.currentTrack.index = this.store.current;
 
