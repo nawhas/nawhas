@@ -1,11 +1,11 @@
 <template>
   <v-card class="album">
     <div class="album__header" :style="{ 'background-color': background }">
-      <v-avatar tile size="128px" :elevation="2" class="album__artwork white">
-        <img :src="image" :alt="title" ref="artwork" />
+      <v-avatar tile :size="artworkSize" class="album__artwork">
+        <img crossorigin :src="image" :alt="album.title" ref="artwork" />
       </v-avatar>
       <div class="album__details" :style="{ color: textColor }">
-        <h5 class="album__title">{{ title }}</h5>
+        <h5 class="album__title">{{ album.title }}</h5>
         <h6 class="album__release-date">
           <strong>{{ year }}</strong>
           &bull; {{ tracks.data.length }} tracks
@@ -15,134 +15,240 @@
     <v-data-table
       :headers="headers"
       :items="tracks.data"
+      :disable-sort="true"
+      :hide-default-header="true"
       :disable-pagination="true"
       :hide-default-footer="true"
-      class="album__tracks-1"
+      class="album__tracks"
     >
       <template v-slot:item="props">
         <tr @click="goToTrack(props.item)" class="album__track">
           <td>{{ props.item.title }}</td>
-          <td>{{ reciter.name }}</td>
+          <td class="track__features" align="right">
+            <v-icon :class="{
+              'material-icons-outlined': true,
+              track__feature: true,
+              'track__feature--disabled': !hasLyrics(props.item)
+            }">
+              <template v-if="hasLyrics(props.item)">speaker_notes</template>
+              <template v-else>speaker_notes_off</template>
+            </v-icon>
+            <v-icon :class="{
+              'material-icons-outlined': true,
+              track__feature: true,
+              'track__feature--disabled': !hasAudioFile(props.item)
+            }">
+              <template v-if="hasAudioFile(props.item)">volume_up</template>
+              <template v-else>volume_off</template>
+            </v-icon>
+          </td>
         </tr>
       </template>
     </v-data-table>
   </v-card>
 </template>
 
-<script>
+<script lang="ts">
+import { Component, Prop, Vue } from 'vue-property-decorator';
 import Vibrant from 'node-vibrant';
 
-export default {
-  name: 'Album',
-  props: ['title', 'album', 'year', 'tracks', 'artwork', 'reciter'],
-  mounted() {
-    this.setBackgroundFromImage();
-  },
-  methods: {
-    setBackgroundFromImage() {
-      Vibrant.from(this.image)
-        .getPalette()
-        .then((palette) => {
-          const swatch = palette.DarkMuted;
-          if (!swatch) {
-            return;
-          }
-          this.background = swatch.getHex();
-          this.textColor = swatch.getBodyTextColor();
-        });
-    },
-    goToTrack(track) {
-      this.$router.push(
-        `/reciters/${this.reciter.slug}/albums/${this.year}/tracks/${track.slug}`,
-      );
-    },
-  },
-  data() {
-    return {
-      headers: [
-        {
-          text: 'Name',
-          align: 'left',
-          value: 'name',
-        },
-        {
-          text: 'Reciter',
-          align: 'left',
-          value: 'reciter.name',
-        },
-      ],
-      background: '#444444',
-      textColor: 'white',
-    };
-  },
-  computed: {
-    reciterYear() {
-      if (this.showReciter) {
-        return `${this.reciter.name} • ${this.year}`;
-      }
-      return this.year;
-    },
-    gradient() {
-      const rgb = Vibrant.Util.hexToRgb(this.background);
-      return `linear-gradient(to right, rgba(${rgb.join(
-        ', ',
-      )}, 1), rgba(${rgb.join(', ')}, 0)`;
-    },
-    artworkBackground() {
-      return `url(${this.image})`;
-    },
-    image() {
-      return this.artwork || '/img/default-album-image.png';
-    },
-  },
-};
-</script>
+@Component
+export default class Album extends Vue {
+  private background = '#444444';
+  private textColor = 'white';
 
-<style lang="scss">
-.album {
-  margin-top: 90px;
-  .album__header {
-    position: relative;
+  // TODO - Replace `any` with a proper interface.
+  @Prop({ type: Object, required: true }) private album: any;
+  @Prop({ type: Object, required: true }) private reciter: any;
+  @Prop({ type: Boolean, default: true }) private showReciter!: boolean;
 
-    .album__artwork {
-      margin-top: -48px;
-      margin-left: 24px;
-      border: 5px solid white;
-      float: left;
-      overflow: hidden;
-      box-sizing: content-box;
-    }
-
-    .album__details {
-      margin-left: 128px + 24px;
-      padding: 24px 32px;
-      color: white;
-
-      .album__title {
-        margin: 0 0 8px 0;
-        padding: 0;
-        font-weight: 700;
-        font-size: 24px;
-      }
-      .album__release-date {
-        margin: 0;
-        padding: 0;
-        font-weight: 400;
-        font-size: 20px;
-      }
-    }
+  get headers() {
+    return [
+      {
+        text: 'Name',
+        align: 'left',
+        value: 'name',
+      },
+      {
+        text: '',
+        align: 'right',
+        value: null,
+      },
+    ];
   }
 
-  .album__tracks {
-    .datatable {
-      th:focus,
-      td:focus {
-        outline: none !important;
-      }
-      .album__track {
-        cursor: pointer;
-      }
+  get year() {
+    return this.album.year;
+  }
+
+  get tracks() {
+    return this.album.tracks;
+  }
+
+  get reciterYear() {
+    if (this.showReciter) {
+      return `${this.reciter.name} • ${this.year}`;
     }
+    return this.year;
+  }
+
+  get gradient() {
+    const rgb = Vibrant.Util.hexToRgb(this.background);
+
+    if (!rgb) {
+      return null;
+    }
+
+    return `linear-gradient(to right, rgba(${rgb.join(
+      ', ',
+    )}, 1), rgba(${rgb.join(', ')}, 0)`;
+  }
+
+  get artworkBackground() {
+    return `url(${this.image})`;
+  }
+
+  get image() {
+    return this.album.artwork || '/img/default-album-image.png';
+  }
+
+  get artworkSize() {
+    if (this.$vuetify.breakpoint.smAndDown) {
+      return 48;
+    }
+    return 128;
+  }
+
+  mounted() {
+    this.setBackgroundFromImage();
+  }
+
+  setBackgroundFromImage() {
+    Vibrant.from(this.image)
+      .getPalette()
+      .then((palette) => {
+        const swatch = palette.DarkMuted;
+        if (!swatch) {
+          return;
+        }
+        this.background = swatch.getHex();
+        this.textColor = swatch.getBodyTextColor();
+      });
+  }
+
+  hasLyrics(track) {
+    return track.related ? track.related.lyrics === true : false;
+  }
+
+  hasAudioFile(track) {
+    return track.related ? track.related.audio === true : false;
+  }
+
+  goToTrack(track) {
+    this.$router.push(
+      `/reciters/${this.reciter.slug}/albums/${this.album.year}/tracks/${track.slug}`,
+    );
+  }
+}
+</script>
+
+<style lang="scss" scoped>
+@import '../styles/theme';
+
+.album {
+  margin-top: 90px;
+}
+
+.album__header {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.album__artwork {
+  margin-top: -48px;
+  margin-left: 20px;
+  border: 5px solid white;
+  float: left;
+  overflow: hidden;
+  box-sizing: content-box;
+  background-color: white;
+  @include elevation(3);
+}
+
+.album__details {
+  padding: 24px;
+  color: white;
+  flex-grow: 1;
+}
+
+.album__title {
+  margin: 0 0 8px 0;
+  padding: 0;
+  font-weight: 700;
+  font-size: 24px;
+}
+
+.album__release-date {
+  margin: 0;
+  padding: 0;
+  font-weight: 400;
+  font-size: 20px;
+}
+
+.album__tracks {
+  .datatable {
+    th:focus,
+    td:focus {
+      outline: none !important;
+    }
+  }
+}
+
+.album__track {
+  cursor: pointer;
+}
+
+.track__features {
+  white-space: nowrap;
+
+  .track__feature {
+    margin-left: 6px;
+    color: map-deep-get($colors, 'deep-orange', 'darken-3');
+  }
+
+  .track__feature--disabled {
+    color: rgba(0, 0, 0, 0.1);
+  }
+}
+
+@media #{map-get($display-breakpoints, 'sm-and-down')} {
+  .album {
+    margin-top: 0;
+    margin-bottom: 24px;
+  }
+  .album__header {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+  }
+  .album__details {
+    margin: 0;
+    padding: 16px;
+  }
+  .album__artwork {
+    float: none;
+    margin: 16px 0 16px 16px;
+    border: 2px solid white;
+    @include elevation(0);
+  }
+  .album__title {
+    font-size: 1.15rem;
+    margin: 0;
+  }
+  .album__release-date {
+    font-size: 0.95rem;
   }
 }
 </style>

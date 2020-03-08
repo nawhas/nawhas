@@ -7,8 +7,8 @@ namespace App\Repositories;
 use App\Entities\{Album, Reciter};
 use App\Queries\AlbumQuery;
 use App\Support\Pagination\PaginationState;
-use Doctrine\Common\Collections\Collection;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 
 interface AlbumRepository
 {
@@ -18,4 +18,5 @@ interface AlbumRepository
     public function allByReciter(Reciter $reciter): Collection;
     public function paginateAllByReciter(Reciter $reciter, PaginationState $state): LengthAwarePaginator;
     public function query(): AlbumQuery;
+    public function persist(Album ...$albums): void;
 }

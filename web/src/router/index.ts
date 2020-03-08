@@ -1,6 +1,8 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import Public from '@/layouts/Public.vue';
+import LyricsPrint from '@/layouts/LyricsPrint.vue';
+import goTo from 'vuetify/es5/services/goto';
 
 Vue.use(VueRouter);
 
@@ -12,7 +14,7 @@ const routes = [
       {
         path: '',
         name: 'Home',
-        component: () => import(/* webpackChunkName: "home" */'@/views/Home.vue'),
+        component: () => import(/* webpackChunkName: "home" */'@/views/public/Home.vue'),
       },
       {
         path: 'reciters',
@@ -27,17 +29,24 @@ const routes = [
       {
         path: 'reciters/:reciter/albums/:album/tracks/:track',
         name: 'tracks.show',
+        props: true,
         component: () => import(/* webpackChunkName: "tracks" */'@/views/public/tracks/Show.vue'),
+      },
+      {
+        path: 'about',
+        name: 'About',
+        // route level code-splitting
+        // this generates a separate chunk (about.[hash].js) for this route
+        // which is lazy-loaded when the route is visited.
+        component: () => import(/* webpackChunkName: "about" */ '@/views/public/About.vue'),
       },
     ],
   },
   {
-    path: '/about',
-    name: 'About',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue'),
+    path: '/print/:reciter/:album/:track',
+    name: 'print.lyrics',
+    component: LyricsPrint,
+    props: true,
   },
 ];
 
@@ -45,6 +54,17 @@ const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
   routes,
+  scrollBehavior(to, from, savedPosition) {
+    let scrollTo: number|string = 0;
+
+    if (to.hash) {
+      scrollTo = to.hash;
+    } else if (savedPosition) {
+      scrollTo = savedPosition.y;
+    }
+
+    return goTo(scrollTo);
+  },
 });
 
 export default router;

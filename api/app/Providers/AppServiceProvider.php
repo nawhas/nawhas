@@ -2,6 +2,9 @@
 
 namespace App\Providers;
 
+use App\Console\Commands\ImportDataCommand;
+use Illuminate\Contracts\Filesystem\Filesystem;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\ServiceProvider;
 use League\Fractal\Manager as Fractal;
 use League\Fractal\Serializer\ArraySerializer;

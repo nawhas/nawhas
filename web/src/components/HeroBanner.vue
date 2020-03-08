@@ -11,10 +11,12 @@
 <script>
 export default {
   name: 'hero-banner',
-  props: ['background'],
+  props: ['background', 'opacity'],
   computed: {
     style() {
-      return `background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('${this.background}')`;
+      const opacity = this.opacity || 0.63;
+      const gradient = `rgba(0, 0, 0, ${opacity})`;
+      return `background-image: linear-gradient(${gradient}, ${gradient}), url('${this.background}')`;
     },
   },
 };
@@ -33,6 +35,9 @@ export default {
   height: auto;
 }
 .hero--lg, .hero--xl {
-  height: 287px;
+  min-height: 350px;
+}
+.hero--md {
+  min-height: 300px;
 }
 </style>

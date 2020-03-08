@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace App\Queries;
 
-use App\Entities\{Album, Track};
+use App\Entities\{Album, Reciter, Track};
 use Illuminate\Support\Collection;
+use Ramsey\Uuid\Uuid;
 
 /**
  * @method Track get()
@@ -22,6 +23,14 @@ class TrackQuery extends Query
         return $this;
     }
 
+    public function whereReciter(Reciter $reciter): self
+    {
+        $this->builder->andWhere('t.reciter = :reciter')
+            ->setParameter('reciter', $reciter);
+
+        return $this;
+    }
+
     public function whereTitle(string $title): self
     {
         $this->builder->andWhere('t.title = :title')
@@ -32,10 +41,13 @@ class TrackQuery extends Query
 
     public function whereIdentifier($identifier): self
     {
-        $this->builder->andWhere($this->builder->expr()->orX(
-            $this->builder->expr()->eq('t.id', ':identifier'),
-            $this->builder->expr()->eq('t.slug', ':identifier')
-        ))->setParameter(':identifier', $identifier);
+        if (Uuid::isValid($identifier)) {
+            $this->builder->andWhere('t.id = :id');
+        } else {
+            $this->builder->andWhere('t.slug = :id');
+        }
+
+        $this->builder->setParameter(':id', $identifier);
 
         return $this;
     }

@@ -1,0 +1,58 @@
+services:
+  # Staging: Vue Frontend App
+  - type: web
+    name: staging-nawhas
+    env: static
+    buildCommand: cd web && yarn install --frozen-lockfile && yarn build
+    staticPublishPath: ./web/dist
+    pullRequestPreviewsEnabled: true
+    domains:
+      - staging.nawhas.com
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      - key: VUE_APP_API_DOMAIN
+        value: https://api.staging.nawhas.com
+  # Staging API PHP Service
+  - type: web
+    name: api-staging-nawhas
+    plan: starter
+    env: docker
+    autoDeploy: true
+    dockerfilePath: ./api/Dockerfile
+    dockerContext: ./api
+    pullRequestPreviewsEnabled: false
+    healthCheckPath: /alive
+    envVars:
+      - key: DB_DATABASE
+        value: nawhas
+      - key: DB_HOST
+        fromDatabase:
+          name: postgres-staging-nawhas
+          property: host
+      - key: DB_USERNAME
+        fromDatabase:
+          name: postgres-staging-nawhas
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: postgres-staging-nawhas
+          property: password
+      - fromGroup: staging-aws
+databases:
+  - name: postgres-staging-nawhas
+    databaseName: nawhas
+
+envVarGroups:
+  - name: staging-aws
+    envVars:
+      - key: AWS_ACCESS_KEY_ID
+        sync: false
+      - key: AWS_SECRET_ACCESS_KEY
+        sync: false
+      - key: AWS_DEFAULT_REGION
+        value: us-east-2
+      - key: AWS_BUCKET
+        value: staging.nawhas

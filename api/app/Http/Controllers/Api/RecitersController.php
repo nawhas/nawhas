@@ -9,8 +9,11 @@ use App\Http\Controllers\Controller;
 use App\Http\Transformers\ReciterTransformer;
 use App\Repositories\ReciterRepository;
 use App\Support\Pagination\PaginationState;
+use App\Visits\Manager as VisitsManager;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 
 class RecitersController extends Controller
 {
@@ -31,8 +34,55 @@ class RecitersController extends Controller
         return $this->respondWithPaginator($reciters);
     }
 
-    public function show(Reciter $reciter): JsonResponse
+    public function store(Request $request): JsonResponse
     {
+        $reciter = new Reciter(
+            $request->get('name'),
+            $request->get('description')
+        );
+
+        $this->repository->persist($reciter);
+
+        return $this->respondWithItem($reciter);
+    }
+
+    public function show(Reciter $reciter, VisitsManager $visits): JsonResponse
+    {
+        $visits->record($reciter);
+        return $this->respondWithItem($reciter);
+    }
+
+    public function update(Request $request, Reciter $reciter): JsonResponse
+    {
+        if ($request->has('name')) {
+            $reciter->setName($request->get('name'));
+        }
+
+        if ($request->has('description')) {
+            $reciter->setDescription($request->get('description'));
+        }
+
+        $this->repository->persist($reciter);
+
+        return $this->respondWithItem($reciter);
+    }
+
+    public function uploadAvatar(Request $request, Reciter $reciter): JsonResponse
+    {
+        if (!$request->file('avatar')) {
+            throw ValidationException::withMessages(['avatar' => 'An avatar file is required.']);
+        }
+
+        $existing = $reciter->getAvatar();
+        $path = $request->file('avatar')->storePublicly("reciters/{$reciter->getSlug()}");
+        $reciter->setAvatar($path);
+
+        if ($existing !== null) {
+            Storage::delete($existing);
+        }
+
+        $this->repository->persist($reciter);
+
         return $this->respondWithItem($reciter);
     }
 }

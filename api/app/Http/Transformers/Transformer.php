@@ -38,7 +38,10 @@ abstract class Transformer extends TransformerAbstract
         ]);
     }
 
-    protected function null(): Primitive
+    /**
+     * @return \League\Fractal\Resource\NullResource|Primitive
+     */
+    protected function null()
     {
         return $this->primitive(null);
     }

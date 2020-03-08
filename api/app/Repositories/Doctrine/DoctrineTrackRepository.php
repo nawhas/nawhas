@@ -5,11 +5,16 @@ declare(strict_types=1);
 namespace App\Repositories\Doctrine;
 
 use App\Entities\Album;
+use App\Entities\Reciter;
 use App\Entities\Track;
 use App\Queries\TrackQuery;
 use App\Repositories\TrackRepository;
 use Illuminate\Support\Collection;
 
+/**
+ * @method Track|null findFromRepo(string $id)
+ * @method Track getFromRepo(string $id)
+ */
 class DoctrineTrackRepository extends DoctrineRepository implements TrackRepository
 {
     public function find(string $id): ?Track
@@ -45,5 +50,38 @@ class DoctrineTrackRepository extends DoctrineRepository implements TrackReposit
     protected function entity(): string
     {
         return Track::class;
+    }
+
+    /**
+     * @return Collection|Track[]
+     */
+    public function popular(?Reciter $reciter = null, int $limit = 6): Collection
+    {
+        $builder = $this->repo->createQueryBuilder('t')
+            ->leftJoin('t.visits', 'v')
+            ->leftJoin('t.album', 'a')
+            ->addSelect('COUNT(v.id) as HIDDEN visits')
+            ->groupBy('t.id, a.year')
+            ->setMaxResults($limit)
+            ->addOrderBy('visits', 'desc')
+            ->addOrderBy('a.year', 'desc');
+
+        if ($reciter) {
+            $builder->andWhere('t.reciter = :reciter')->setParameter('reciter', $reciter);
+        }
+
+        $query = $builder->getQuery();
+
+        return collect($query->getResult());
+    }
+
+    public function persist(Track ...$tracks): void
+    {
+        $this->em->persist(...$tracks);
+    }
+
+    public function remove(Track $track): void
+    {
+        $this->em->remove($track);
     }
 }

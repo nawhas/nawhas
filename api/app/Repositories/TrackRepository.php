@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Repositories;
 
-use App\Entities\{Album, Track};
+use App\Entities\{Album, Reciter, Track};
 use App\Queries\TrackQuery;
 use Illuminate\Support\Collection;
 
@@ -15,4 +15,7 @@ interface TrackRepository
     public function getFromAlbum(Album $album, string $id): Track;
     public function allFromAlbum(Album $album): Collection;
     public function query(): TrackQuery;
+    public function popular(?Reciter $reciter = null, int $limit = 6): Collection;
+    public function persist(Track ...$tracks): void;
+    public function remove(Track $track): void;
 }

@@ -7,11 +7,16 @@ namespace App\Entities;
 use App\Entities\Behaviors\HasTimestamps;
 use App\Entities\Contracts\Entity;
 use App\Entities\Contracts\TimestampedEntity;
+use App\Visits\Visitable;
+use App\Visits\Entities\ReciterVisit;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 use Ramsey\Uuid\{Uuid, UuidInterface};
 use Zain\LaravelDoctrine\Jetpack\Serializer\SerializesAttributes;
 
-class Reciter implements Entity, TimestampedEntity
+class Reciter implements Entity, TimestampedEntity, Visitable
 {
     use HasTimestamps;
     use SerializesAttributes;
@@ -19,8 +24,11 @@ class Reciter implements Entity, TimestampedEntity
     private UuidInterface $id;
     private string $name;
     private string $slug;
-    private ?string $description = null;
-    private ?string $avatar = null;
+    private ?string $description;
+    private ?string $avatar;
+
+    /** @var Collection|ReciterVisit[] */
+    private Collection $visits;
 
     public function __construct(string $name, ?string $description = null, ?string $avatar = null)
     {
@@ -29,6 +37,7 @@ class Reciter implements Entity, TimestampedEntity
         $this->slug = Str::slug($name);
         $this->description = $description;
         $this->avatar = $avatar;
+        $this->visits = new ArrayCollection();
     }
 
     public function getId(): string
@@ -39,6 +48,12 @@ class Reciter implements Entity, TimestampedEntity
     public function getName(): string
     {
         return $this->name;
+    }
+
+    public function setName(string $name): void
+    {
+        $this->name = $name;
+        $this->slug = Str::slug($name);
     }
 
     public function getSlug(): string
@@ -59,5 +74,25 @@ class Reciter implements Entity, TimestampedEntity
     public function getAvatar(): ?string
     {
         return $this->avatar;
+    }
+
+    public function hasAvatar(): bool
+    {
+        return $this->avatar !== null;
+    }
+
+    public function getAvatarUrl(): ?string
+    {
+        return $this->avatar ? Storage::url($this->avatar) : null;
+    }
+
+    public function setAvatar(string $path): void
+    {
+        $this->avatar = $path;
+    }
+
+    public function visit(): ReciterVisit
+    {
+        return new ReciterVisit($this);
     }
 }

@@ -24,10 +24,11 @@ return [
         'default' => [
             'dev' => env('APP_DEBUG', false),
             'meta' => 'fluent',
-            'connection' => env('DB_CONNECTION', 'mysql'),
+            'connection' => env('DB_CONNECTION', 'pgsql'),
             'namespaces' => [],
             'paths' => [
-                base_path('app/Entities')
+                base_path('app/Entities'),
+                base_path('app/Visits/Entities'),
             ],
             'repository' => Doctrine\ORM\EntityRepository::class,
             'proxies' => [
@@ -46,7 +47,9 @@ return [
             */
             'events' => [
                 'listeners' => [],
-                'subscribers' => []
+                'subscribers' => [
+                    \App\Database\Doctrine\Events\MigrationEventSubscriber::class
+                ]
             ],
             'filters' => [],
             /*
@@ -97,7 +100,8 @@ return [
         //LaravelDoctrine\Extensions\Loggable\LoggableExtension::class,
         //LaravelDoctrine\Extensions\Blameable\BlameableExtension::class,
         //LaravelDoctrine\Extensions\IpTraceable\IpTraceableExtension::class,
-        //LaravelDoctrine\Extensions\Translatable\TranslatableExtension::class
+        //LaravelDoctrine\Extensions\Translatable\TranslatableExtension::class,
+        Zain\LaravelDoctrine\Algolia\AlgoliaExtension::class,
     ],
     /*
     |--------------------------------------------------------------------------
@@ -120,7 +124,9 @@ return [
     | DQL custom numeric functions
     |--------------------------------------------------------------------------
     */
-    'custom_numeric_functions' => [],
+    'custom_numeric_functions' => [
+        'RAND' => \DoctrineExtensions\Query\Mysql\Rand::class,
+    ],
     /*
     |--------------------------------------------------------------------------
     | DQL custom string functions
@@ -161,7 +167,7 @@ return [
     */
     'cache' => [
         'second_level' => false,
-        'default' => env('DOCTRINE_CACHE', 'array'),
+        'default' => env('DOCTRINE_CACHE', 'file'),
         'namespace' => null,
         'metadata' => [
             'driver' => env('DOCTRINE_METADATA_CACHE', env('DOCTRINE_CACHE', 'array')),

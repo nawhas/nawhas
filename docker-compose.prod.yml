@@ -1,0 +1,61 @@
+version: '3'
+
+networks:
+  nawhas:
+
+volumes:
+  postgres:
+
+services:
+  api:
+    build:
+      context: api
+      dockerfile: Dockerfile
+    container_name: nawhas_api
+    env_file:
+      - api/.env.production
+    networks:
+      - nawhas
+    depends_on:
+      - db
+  ingress:
+    image: nginx:stable-alpine
+    container_name: nawhas_ingress
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./docker/nginx/certs:/etc/nginx/certs
+      - ./docker/nginx/ingress.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - web
+    networks:
+      - nawhas
+  web:
+    build:
+      context: web
+      dockerfile: Dockerfile
+      args:
+        API_DOMAIN: https://api.nawhas.test
+        APP_DOMAIN: https://nawhas.test
+    container_name: nawhas_web
+    networks:
+      - nawhas
+  db:
+    image: postgres:11
+    container_name: nawhas_db
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: nawhas
+      POSTGRES_USER: docker
+      POSTGRES_PASSWORD: secret
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    networks:
+      - nawhas
+
+
+

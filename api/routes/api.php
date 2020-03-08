@@ -17,45 +17,40 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
-
 Route::prefix('v1')->group(function() {
     // Reciters
     Route::prefix('reciters')->group(function () {
         Route::get('/', [RecitersController::class, 'index']);
-        // Route::post('/', [RecitersController::class, 'store']);
+        Route::post('/', [RecitersController::class, 'store']);
         Route::get('/{reciter}', [RecitersController::class, 'show']);
-        // Route::post('/{reciter}', [RecitersController::class, 'update']);
-        // Route::patch('/{reciter}', [RecitersController::class, 'update']);
+        Route::patch('/{reciter}', [RecitersController::class, 'update']);
+        Route::post('/{reciter}/avatar', [RecitersController::class, 'uploadAvatar']);
         // Route::delete('/{reciter}', [RecitersController::class, 'destroy']);
     });
 
     // Reciter Albums
     Route::prefix('reciters/{reciter}/albums')->group(function () {
         Route::get('/', [AlbumsController::class, 'index']);
-        // Route::post('/', [RecitersController::class, 'store']);
+        Route::post('/', [AlbumsController::class, 'store']);
         Route::get('/{album}', [AlbumsController::class, 'show']);
-        // Route::post('/{reciter}', [RecitersController::class, 'update']);
-        // Route::patch('/{reciter}', [RecitersController::class, 'update']);
-        // Route::delete('/{reciter}', [RecitersController::class, 'destroy']);
+        Route::patch('/{album}', [AlbumsController::class, 'update']);
+        Route::post('/{album}/artwork', [AlbumsController::class, 'uploadArtwork']);
+        // Route::delete('/{album}', [AlbumsController::class, 'destroy']);
     });
 
     // Album Tracks
     Route::prefix('reciters/{reciter}/albums/{album}/tracks')->group(function () {
         Route::get('/', [TracksController::class, 'index']);
-        // Route::post('/', [RecitersController::class, 'store']);
+        Route::post('/', [TracksController::class, 'store']);
         Route::get('/{track}', [TracksController::class, 'show']);
-        // Route::post('/{reciter}', [RecitersController::class, 'update']);
-        // Route::patch('/{reciter}', [RecitersController::class, 'update']);
-        // Route::delete('/{reciter}', [RecitersController::class, 'destroy']);
+        Route::patch('/{track}', [TracksController::class, 'update']);
+        Route::post('/{track}/media/audio', [TracksController::class, 'uploadTrackMedia']);
+        Route::delete('/{track}', [TracksController::class, 'destroy']);
     });
 
     // Popular Routes
     Route::prefix('popular')->group(function () {
         Route::get('/reciters', [PopularEntitiesController::class, 'reciters']);
-        Route::get('/albums', [PopularEntitiesController::class, 'albums']);
         Route::get('/tracks', [PopularEntitiesController::class, 'tracks']);
     });
 });

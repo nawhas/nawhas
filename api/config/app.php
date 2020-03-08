@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'Laravel'),
+    'name' => 'Nawhas.com',
 
     /*
     |--------------------------------------------------------------------------
@@ -52,7 +52,7 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'http://localhost'),
+    'url' => env('APP_URL', 'https://' . env('APP_DOMAIN')),
 
     'asset_url' => env('ASSET_URL', null),
 
@@ -165,7 +165,7 @@ return [
         /*
          * Package Service Providers...
          */
-        \LaravelDoctrine\Extensions\GedmoExtensionsServiceProvider::class,
+        LaravelDoctrine\Extensions\GedmoExtensionsServiceProvider::class,
 
         /*
          * Application Service Providers...

@@ -2,13 +2,15 @@
   <div @click="goToReciter()">
     <v-card :class="classObject" :style="{ 'background-color': background }">
       <div class="reciter-card__avatar">
-        <v-avatar size="48px">
+        <v-avatar size="40" class="avatar">
           <img crossorigin ref="avatarElement" :src="image" :alt="name" />
         </v-avatar>
       </div>
       <div class="reciter-card__text" :style="{ 'color': textColor }">
         <div class="reciter-card__name body-2" :title="name">{{ name }}</div>
-        <!-- <div class="reciter-card__name caption">6 albums</div> -->
+         <div class="reciter-card__name caption" v-if="related">
+           {{ related.albums | pluralize('album', 'albums') }}
+         </div>
       </div>
     </v-card>
   </div>
@@ -19,13 +21,10 @@ import Vibrant from 'node-vibrant';
 
 export default {
   name: 'ReciterCard',
-  props: ['id', 'name', 'slug', 'avatar', 'createdAt', 'updatedAt', 'featured'],
+  props: ['id', 'name', 'slug', 'avatar', 'related', 'createdAt', 'updatedAt', 'featured'],
   mounted() {
     if (this.featured !== undefined) {
-      const image = this.$refs.avatarElement;
-      if (image && image.src) {
-        this.setBackgroundFromImage(image);
-      }
+      this.setBackgroundFromImage();
     }
   },
   methods: {
@@ -35,8 +34,8 @@ export default {
         params: { reciter: this.slug },
       });
     },
-    setBackgroundFromImage(image) {
-      Vibrant.from(image.src)
+    setBackgroundFromImage() {
+      Vibrant.from(this.image)
         .getPalette()
         .then((palette) => {
           const swatch = palette.DarkMuted;
@@ -76,14 +75,15 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import '../styles/theme';
+
 .reciter-card {
   padding: 16px;
   display: flex;
   align-items: center;
   cursor: pointer;
-  will-change: box-shadow, background-color;
-  // transition: background-color $transition, box-shadow $transition;
-  // elevation(0);
+  @include transition(background-color, box-shadow);
+  @include elevation(2);
 
   &:hover:not(.reciter-card--featured) {
     background-color: rgba(0, 0, 0, 0.1) !important;
@@ -91,10 +91,10 @@ export default {
 
   &--featured {
     background: gray;
-    // elevation(4);
+    @include elevation(4);
 
     &:hover {
-      // elevation(8);
+      @include elevation(8);
     }
 
     .reciter-card__text .reciter-card__name {
@@ -104,12 +104,11 @@ export default {
 
   .reciter-card__text {
     margin-left: 16px;
-    will-change: color;
-    // transition: color $transition;
     overflow: hidden;
+    @include transition(color);
 
     .reciter-card__name {
-      //      white-space nowrap;
+      white-space: nowrap;
       text-overflow: ellipsis;
       overflow: hidden;
       width: auto;

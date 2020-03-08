@@ -7,6 +7,8 @@ namespace App\Queries;
 use App\Entities\Contracts\Entity;
 use App\Exceptions\EntityNotFoundException;
 use App\Support\Pagination\PaginationState;
+use Doctrine\ORM\EntityRepository;
+use Doctrine\Persistence\ObjectRepository;
 use Illuminate\Support\Collection;
 use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\EntityManager;
@@ -33,10 +35,19 @@ abstract class Query
     {
         /** @var EntityManager $em */
         $em = app(EntityManager::class);
-        $queryBuilder = $em->getRepository(static::entity())
-            ->createQueryBuilder(static::QUERY_ALIAS);
+
+        /** @var EntityRepository $repo */
+        $repo = $em->getRepository(static::entity());
+
+        $queryBuilder = $repo->createQueryBuilder(static::QUERY_ALIAS);
 
         return new static($queryBuilder);
+    }
+
+    public function sortRandom(): self
+    {
+        // TODO - ???
+        return $this;
     }
 
     public function first(): ?Entity
@@ -63,6 +74,16 @@ abstract class Query
         }
 
         return $entity;
+    }
+
+    public function count(): int
+    {
+        /** @var int $count */
+        $count = $this->builder->select('count(' . static::QUERY_ALIAS . '.id)')
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        return $count;
     }
 
     public function all(): Collection

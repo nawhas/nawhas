@@ -6,8 +6,8 @@ import router from './router';
 import store from './store';
 import vuetify from './plugins/vuetify';
 import './plugins/progress';
-import 'material-design-icons-iconfont/dist/material-design-icons.css';
-
+import './plugins/algolia';
+import './filters';
 
 Vue.config.productionTip = false;
 

@@ -4,13 +4,17 @@ declare(strict_types=1);
 
 namespace App\Repositories\Doctrine;
 
-use App\Entities\{Album, Reciter};
+use App\Entities\{Album, Contracts\Entity, Reciter};
 use App\Queries\AlbumQuery;
 use App\Repositories\AlbumRepository;
+use Illuminate\Support\Collection;
 use App\Support\Pagination\PaginationState;
-use Doctrine\Common\Collections\Collection;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
+/**
+ * @method Album|null findFromRepo(string $id)
+ * @method Album getFromRepo(string $id)
+ */
 class DoctrineAlbumRepository extends DoctrineRepository implements AlbumRepository
 {
     use PaginatesQueries;
@@ -53,5 +57,10 @@ class DoctrineAlbumRepository extends DoctrineRepository implements AlbumReposit
     public function paginateAllByReciter(Reciter $reciter, PaginationState $state): LengthAwarePaginator
     {
         return $this->query()->whereReciter($reciter)->paginate($state);
+    }
+
+    public function persist(Album ...$albums): void
+    {
+        $this->em->persist(...$albums);
     }
 }

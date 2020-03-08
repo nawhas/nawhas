@@ -8,6 +8,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Transformers\AlbumTransformer;
 use App\Http\Transformers\ReciterTransformer;
 use App\Http\Transformers\TrackTransformer;
+use App\Queries\AlbumQuery;
+use App\Queries\TrackQuery;
 use App\Repositories\AlbumRepository;
 use App\Repositories\ReciterRepository;
 use App\Repositories\TrackRepository;
@@ -19,22 +21,20 @@ class PopularEntitiesController extends Controller
 {
     public function reciters(Request $request, ReciterTransformer $transformer, ReciterRepository $repository): JsonResponse
     {
-        $reciters = $repository->query()->paginate(PaginationState::make(1, (int)$request->get('limit', 10)));
+        $reciters = $repository->popular();
 
-        return $this->respondWithPaginator($reciters, $transformer);
+        return $this->respondWithCollection($reciters, $transformer);
     }
 
-    public function albums(Request $request, AlbumTransformer $transformer, AlbumRepository $repository): JsonResponse
+    public function tracks(Request $request, TrackTransformer $transformer, ReciterRepository $reciterRepo, TrackRepository $trackRepo): JsonResponse
     {
-        $albums = $repository->query()->paginate(PaginationState::make(1, (int)$request->get('limit', 10)));
+        $reciter = null;
 
-        return $this->respondWithPaginator($albums, $transformer);
-    }
+        if ($request->has('reciterId')) {
+            $reciter = $reciterRepo->query()->whereIdentifier($request->get('reciterId'))->get();
+        }
 
-    public function tracks(Request $request, TrackTransformer $transformer, TrackRepository $repository): JsonResponse
-    {
-        $tracks = $repository->query()->paginate(PaginationState::make(1, (int)$request->get('limit', 10)));
-
-        return $this->respondWithPaginator($tracks, $transformer);
+        $tracks =  $trackRepo->popular($reciter);
+        return $this->respondWithCollection($tracks, $transformer);
     }
 }

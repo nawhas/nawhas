@@ -52,10 +52,6 @@ class SubstituteDoctrineBindings
         $class = $parameter->getClass()->getName();
         $repository = $this->registry->getRepository($class);
 
-        if (!$repository) {
-            return;
-        }
-
         try {
             if ($parameter->getClass()->implementsInterface(UrlRoutable::class)) {
                 $name = call_user_func([$class, 'getRouteKeyName']);

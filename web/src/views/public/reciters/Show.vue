@@ -1,188 +1,238 @@
 <template>
-  <div>
-    <div class="reciter-hero" v-if="!loading">
-      <div class="reciter-hero__ribbon"></div>
-      <div class="reciter-hero__content">
-        <v-card class="reciter-hero__card">
-          <div class="reciter-hero__avatar">
-            <v-avatar size="152px" class="white">
-              <img :src="image" :alt="reciter.name" />
+  <div class="reciter-profile">
+    <hero-banner :class="{
+        'reciter-profile__hero': true,
+        'reciter-profile__hero--with-toolbar': showToolbar
+    }" :background="require('../../../assets/azadari-flags.jpg')">
+      <div class="hero__content">
+        <template v-if="reciter">
+          <div class="hero__avatar">
+            <v-avatar class="hero__avatar__component" :size="heroAvatarSize">
+              <img :src="image" :alt="reciter ? reciter.name : 'Loading'" />
             </v-avatar>
           </div>
-          <h4 class="reciter-hero__title">{{ reciter.name }}</h4>
-          <p class="reciter-hero__bio">{{ reciter.description }}</p>
-        </v-card>
-      </div>
-    </div>
-    <div v-else>
-      <reciter-hero-skeleton />
-    </div>
-    <section class="page-section" id="top-reciters-section">
-      <h5 class="title">Top Nawhas</h5>
-      <v-container grid-list-lg class="pa-0" fluid>
-        <template v-if="!loading">
-          <v-layout row wrap>
-            <v-flex xs12 sm6 md4 v-for="track in popularTracks" v-bind:key="track.id">
-              <track-card v-bind="track" :show-reciter="false"></track-card>
-            </v-flex>
-          </v-layout>
-        </template>
-        <template v-else>
-          <six-card-skeleton />
-        </template>
-      </v-container>
-    </section>
+          <div class="hero__details">
+            <div class="hero__title" v-if="reciter">{{ reciter.name }}</div>
+            <div class="hero__title" v-else>
 
-    <section class="page-section" id="all-reciters-section">
-      <h5 class="title">Albums</h5>
-      <template v-if="!loading">
+            </div>
+          </div>
+        </template>
+        <v-skeleton-loader type="text" dark width="150px" v-else></v-skeleton-loader>
+      </div>
+      <div class="hero__bar" v-if="showToolbar">
+        <v-container class="bar__content">
+          <div class="bar__actions bar__actions--visible">
+            <v-btn dark text><v-icon left>public</v-icon> Website</v-btn>
+            <v-btn dark text><v-icon left>star_outline</v-icon> Favorite</v-btn>
+          </div>
+          <div class="bar__actions bar__actions--overflow">
+            <v-btn dark icon><v-icon>more_vert</v-icon></v-btn>
+          </div>
+        </v-container>
+      </div>
+    </hero-banner>
+    <v-container class="app__section">
+      <h5 class="section__title">Top Nawhas</h5>
+      <template v-if="popularTracks">
+        <v-row :dense="$vuetify.breakpoint.smAndDown">
+          <v-col cols="12" sm="6" md="4" v-for="track in popularTracks" v-bind:key="track.id">
+            <track-card v-bind="track" :colored="true" :show-reciter="false"></track-card>
+          </v-col>
+        </v-row>
+      </template>
+      <template v-else>
+        <skeleton-card-grid>
+          <track-card-skeleton />
+        </skeleton-card-grid>
+      </template>
+    </v-container>
+
+    <v-container class="app__section">
+      <h5 class="section__title">Albums</h5>
+      <template v-if="albums">
         <template v-if="albums.length > 0">
           <template v-for="album in albums">
-            <album v-bind="album" :reciter="reciter" v-bind:key="album.id"></album>
+            <album :album="album" :reciter="reciter" :show-reciter="false" v-bind:key="album.id" />
           </template>
           <v-pagination v-model="page" :length="length" circle @input="goToPage"></v-pagination>
         </template>
         <template v-else>
-          <p>Sorry there are no albums currently.</p>
+          <p>We don't have any albums for {{ reciter.name }} yet.</p>
         </template>
       </template>
       <template v-else>
-        <album-table-skeleton />
+        <album-skeleton />
       </template>
-    </section>
+    </v-container>
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import { Component, Vue, Watch } from 'vue-property-decorator';
 import TrackCard from '@/components/TrackCard.vue';
-import ReciterHeroSkeleton from '@/components/ReciterHeroSkeleton.vue';
-import SixCardSkeleton from '@/components/SixCardSkeleton.vue';
-import AlbumTableSkeleton from '@/components/AlbumTableSkeleton.vue';
+import SkeletonCardGrid from '@/components/loaders/SkeletonCardGrid.vue';
+import AlbumSkeleton from '@/components/loaders/AlbumSkeleton.vue';
+import TrackCardSkeleton from '@/components/loaders/TrackCardSkeleton.vue';
+import Album from '@/components/Album.vue';
+import HeroBanner from '@/components/HeroBanner.vue';
 import { getReciter } from '@/services/reciters';
 import { getAlbums } from '@/services/albums';
 import { getPopularTracks } from '@/services/popular';
-import Album from '@//components/Album.vue';
 
-export default {
-  name: 'ReciterProfile',
+
+@Component({
   components: {
+    HeroBanner,
     TrackCard,
     Album,
-    ReciterHeroSkeleton,
-    SixCardSkeleton,
-    AlbumTableSkeleton,
+    SkeletonCardGrid,
+    TrackCardSkeleton,
+    AlbumSkeleton,
   },
-  async mounted() {
-    this.loading = true;
+})
+export default class ReciterProfile extends Vue {
+  private page = 1;
+  private reciter: any = null;
+  private albums: any = null;
+  private length = 0;
+  private popularTracks: any = null;
+
+  mounted() {
+    this.fetchData();
+  }
+
+  get image() {
+    return this.reciter.avatar || '/img/default-reciter-avatar.png';
+  }
+
+  get heroAvatarSize() {
+    if (this.$vuetify.breakpoint.smAndDown) {
+      return 88;
+    }
+
+    return 128;
+  }
+
+  get showToolbar() {
+    return false;
+  }
+
+  @Watch('$route')
+  async fetchData() {
+    this.reciter = null;
+    this.albums = null;
+    this.length = 0;
+    this.popularTracks = null;
+
     const { reciter } = this.$route.params;
-    const [reciterResponse, albums, popularTracks] = await Promise.all([
-      getReciter(reciter),
-      getAlbums(reciter, { include: 'tracks' }),
-      getPopularTracks({
-        limit: 6,
-        include: 'album,reciter',
-        reciterId: reciter,
-      }),
-    ]);
-    this.setData(reciterResponse, albums);
-    this.setPopularTracks(popularTracks);
-    this.loading = false;
-  },
-  computed: {
-    image() {
-      return this.avatar || '/img/default-reciter-avatar.png';
-    },
-  },
-  data() {
-    return {
-      page: 1,
-      reciter: {},
-      albums: [],
-      length: 0,
-      loading: false,
-      popularTracks: [],
-    };
-  },
-  methods: {
-    setData(reciter, albums) {
-      if (reciter) {
-        this.reciter = reciter.data;
-      }
-      this.albums = albums.data.data;
-      this.length = albums.data.meta.pagination.total_pages;
-    },
-    setPopularTracks(popularTracks) {
-      this.popularTracks = popularTracks.data.data;
-    },
-    async goToPage(number) {
-      this.loading = true;
-      const [albums] = await Promise.all([
-        getAlbums(this.reciter.id, { include: 'tracks', page: number }),
-      ]);
-      this.setData(null, albums);
-      this.loading = false;
-    },
-  },
-};
+    getReciter(reciter).then((response) => {
+      this.reciter = response.data;
+    });
+    getPopularTracks({
+      per_page: 6,
+      reciterId: reciter,
+      include: 'album,reciter',
+    }).then((response) => {
+      this.popularTracks = response.data.data;
+    });
+    getAlbums(reciter, { include: 'tracks.related' }).then((response) => {
+      this.setAlbums(response);
+    });
+  }
+
+  setAlbums(albums) {
+    this.albums = albums.data.data;
+    this.length = albums.data.meta.pagination.total_pages;
+  }
+
+  goToPage(number) {
+    this.albums = null;
+    getAlbums(this.reciter.id, { include: 'tracks.related', page: number }).then((response) => {
+      this.setAlbums(response);
+    });
+  }
+}
 </script>
 
 <style lang="scss" scoped>
-.reciter-hero {
-  .reciter-hero__ribbon {
-    width: 100%;
-    height: 220px;
-    margin-bottom: -220px;
-    background: linear-gradient(to bottom right, #e90500, #fa6000);
-  }
+@import '../../../styles/theme';
 
-  .reciter-hero__content {
-    padding: 80px 120px 24px 120px;
-  }
-
-  .reciter-hero__avatar {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    top: -80px;
-    margin-bottom: -56px;
-
-    .avatar {
-      box-sizing: content-box;
-      border: 5px solid white;
-    }
-  }
-
-  .reciter-hero__card {
-    margin-top: 36px;
-    width: 100%;
-    min-height: 20px;
-    position: relative;
-    padding: 0 36px 24px 36px;
-  }
-
-  .reciter-hero__title {
-    font-family: 'Roboto Slab', sans-serif;
-    font-weight: 600;
-    color: #2e2e2e;
-    text-align: center;
-    margin: 0;
-    padding: 0;
-  }
-
-  .reciter-hero__bio {
-    margin: 16px 0 0 0;
-    padding: 0;
-    max-height: 108px;
-    overflow: hidden;
-    position: relative;
-  }
-}
 .title {
   margin-bottom: 12px;
 }
 
 .v-pagination {
   margin-top: 16px;
+}
+
+.reciter-profile__hero {
+  position: relative;
+  margin-bottom: 36px;
+
+  &--with-toolbar {
+    .hero__details {
+      margin-bottom: 48px;
+    }
+  }
+
+  .hero__content {
+    padding: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    min-height: 112px;
+    flex-direction: column;
+  }
+
+  .hero__details {
+    margin-top: 24px;
+    padding: 0 24px;
+  }
+
+  .hero__title {
+    font-size: 1.6rem;
+    font-weight: 300;
+    text-align: center;
+  }
+
+  .hero__avatar__component {
+    border: 4px solid white;
+    @include elevation(4);
+  }
+
+  .hero__bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    padding: 12px 24px;
+    background: map-deep-get($colors, 'deep-orange', 'darken-4');
+
+    .bar__content {
+      padding: 0;
+      display: flex;
+      justify-content: space-between;
+    }
+  }
+}
+
+@media #{map-get($display-breakpoints, 'md-and-down')} {
+  .reciter-profile__hero {
+    margin-bottom: 24px;
+
+    .hero__details {
+      margin-top: 16px;
+      padding: 0 16px;
+    }
+
+    &--with-toolbar {
+      .hero__details {
+        margin-bottom: 48px;
+      }
+    }
+  }
 }
 </style>
