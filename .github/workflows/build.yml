@@ -1,0 +1,24 @@
+name: Build & Test Project
+
+on:
+  push:
+    branches-ignore:
+      - master
+
+jobs:
+  api:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: 'Build API Image'
+        run: |
+          docker build ./api --file ./api/Dockerfile
+  web:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: 'Build Web Image'
+        run: |
+          docker build ./web --file ./web/Dockerfile
