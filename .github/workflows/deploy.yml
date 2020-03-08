@@ -46,11 +46,7 @@ jobs:
       # Deploy the API container
       - name: 'Deploy API Image'
         run: |
-          gcloud run deploy api \
-            --allow-unauthenticated \
-            --platform managed
-            --region us-central1
-            --image gcr.io/$PROJECT_ID/$API_IMAGE_NAME:${GITHUB_SHA::8}
+          gcloud run deploy api --allow-unauthenticated --platform managed --region us-central1 --image gcr.io/$PROJECT_ID/$API_IMAGE_NAME:${GITHUB_SHA::8}
   web:
     name: 'Build & Deploy Web App'
     runs-on: ubuntu-latest
