@@ -12,7 +12,7 @@ env:
 
 jobs:
   api:
-    name: 'Build and Deploy API'
+    name: 'Build & Deploy API'
     runs-on: ubuntu-latest
 
     steps:
@@ -45,7 +45,7 @@ jobs:
           docker push gcr.io/$PROJECT_ID/$API_IMAGE_NAME:${GITHUB_SHA::8}
           docker push gcr.io/$PROJECT_ID/$API_IMAGE_NAME:${GITHUB_REF##*/}
   web:
-    name: 'Build and Deploy Web App'
+    name: 'Build & Deploy Web App'
     runs-on: ubuntu-latest
 
     steps:
