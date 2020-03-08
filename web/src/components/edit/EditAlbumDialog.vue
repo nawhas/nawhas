@@ -39,6 +39,16 @@
             </v-chip>
           </template>
         </v-file-input>
+        <div v-cloak @drop.prevent="addFile" @dragover.prevent>
+          <h2>Drag and drop album artwork here...</h2>
+          <p>Make sure to drag and drop one file</p>
+          <ul>
+            <li v-if="form.artwork">
+              {{ form.artwork.name }} ({{ form.artwork.size }})
+              <button @click="removeFile" title="Remove">X</button>
+            </li>
+          </ul>
+        </div>
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
@@ -81,6 +91,15 @@ export default class EditAlbumDialog extends Vue {
     if (opened) {
       this.resetForm();
     }
+  }
+
+  addFile(e) {
+    // eslint-disable-next-line prefer-destructuring
+    this.form.artwork = e.dataTransfer.files[0];
+  }
+
+  removeFile() {
+    this.form.artwork = null;
   }
 
   resetForm() {
