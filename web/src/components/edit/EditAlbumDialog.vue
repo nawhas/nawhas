@@ -94,8 +94,11 @@ export default class EditAlbumDialog extends Vue {
   }
 
   addFile(e) {
-    // eslint-disable-next-line prefer-destructuring
-    this.form.artwork = e.dataTransfer.files[0];
+    const file = e.dataTransfer.files[0];
+    if (file.type.match(/image.*/)) {
+      // eslint-disable-next-line prefer-destructuring
+      this.form.artwork = file;
+    }
   }
 
   removeFile() {
