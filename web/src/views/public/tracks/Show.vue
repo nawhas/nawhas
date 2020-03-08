@@ -52,17 +52,16 @@
               </v-btn>
               <v-btn text
                      :color="this.textColor"
-                     v-if="hasAudio && !isInQueue"
+                     v-if="hasAudio"
                      @click="addToQueue"
               >
                 <v-icon left>playlist_add</v-icon> Add to Queue
               </v-btn>
               <v-btn text
                      :color="this.textColor"
-                     v-else-if="hasAudio && isInQueue && !isSameTrackPlaying"
-                     @click="removeFromQueue"
+                     v-if="hasAudio && isInQueue"
               >
-                <v-icon left>remove_circle_outline</v-icon> Remove from Queue
+                <v-icon color="green" left>done_outline</v-icon> Added to Queue
               </v-btn>
             </template>
             <template v-else>
@@ -312,10 +311,6 @@ export default class TrackPage extends Vue {
   addToQueue() {
     this.$store.commit('player/ADD_TO_QUEUE', { track: this.track });
     this.addedToQueueSnackbar = true;
-  }
-
-  removeFromQueue() {
-    this.$store.commit('player/REMOVE_TRACK', { track: this.track });
   }
 }
 </script>
