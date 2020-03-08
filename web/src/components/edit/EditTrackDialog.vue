@@ -35,6 +35,16 @@
             </v-chip>
           </template>
         </v-file-input>
+        <div v-cloak @drop.prevent="addFile" @dragover.prevent>
+          <h2>Drag and drop track audio here...</h2>
+          <p>Make sure to drag and drop one file</p>
+          <ul>
+            <li v-if="form.audio">
+              {{ form.audio.name }} ({{ form.audio.size }})
+              <button @click="removeFile" title="Remove">X</button>
+            </li>
+          </ul>
+        </div>
       </v-card-text>
       <v-card-actions>
         <v-btn color="error" text @click="confirmDelete">Delete</v-btn>
@@ -82,6 +92,15 @@ export default class EditTrackDialog extends Vue {
     if (opened) {
       this.resetForm();
     }
+  }
+
+  addFile(e) {
+    // eslint-disable-next-line prefer-destructuring
+    this.form.audio = e.dataTransfer.files[0];
+  }
+
+  removeFile() {
+    this.form.audio = null;
   }
 
   resetForm() {
