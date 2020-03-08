@@ -95,8 +95,11 @@ export default class EditTrackDialog extends Vue {
   }
 
   addFile(e) {
-    // eslint-disable-next-line prefer-destructuring
-    this.form.audio = e.dataTransfer.files[0];
+    const file = e.dataTransfer.files[0];
+    if (file.type.match(/audio.*/)) {
+      // eslint-disable-next-line prefer-destructuring
+      this.form.audio = file;
+    }
   }
 
   removeFile() {
