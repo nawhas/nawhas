@@ -1,0 +1,80 @@
+name: Deploy Nawhas.com
+
+on:
+  push:
+    branches:
+      - master
+
+env:
+  PROJECT_ID: nawhas
+  API_IMAGE_NAME: api
+  WEB_IMAGE_NAME: web
+
+jobs:
+  api:
+    name: 'Build & Deploy API'
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      # - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+      #   with:
+      #     service_account_email: ${{ secrets.GCP_SA_EMAIL }}
+      #     service_account_key: ${{ secrets.GCP_SA_KEY }}
+
+      # - name: gcloud Set up
+      #   run: |
+      #     gcloud config set project $PROJECT_ID
+
+      # Configure docker to use the gcloud command-line tool as a credential helper
+      # - run: |
+      #     gcloud auth configure-docker
+
+      # - run: gcloud info
+
+      - name: 'Build API Image'
+        run: |
+          docker build ./api --file ./api/Dockerfile
+
+      # Push the Docker image to Google Container Registry
+      # - name: 'Publish API Image'
+      #   run: |
+      #     docker push gcr.io/$PROJECT_ID/$API_IMAGE_NAME:${GITHUB_SHA::8}
+      #     docker push gcr.io/$PROJECT_ID/$API_IMAGE_NAME:${GITHUB_REF##*/}
+
+      # Deploy the API container
+      # - name: 'Deploy API Image'
+      #   run: |
+      #     gcloud run deploy api --allow-unauthenticated --platform managed --region us-central1 --image gcr.io/$PROJECT_ID/$API_IMAGE_NAME:${GITHUB_SHA::8}
+  web:
+    name: 'Build & Deploy Web App'
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      # - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+      #   with:
+      #     service_account_email: ${{ secrets.GCP_SA_EMAIL }}
+      #     service_account_key: ${{ secrets.GCP_SA_KEY }}
+
+      # - name: gcloud Set up
+      #   run: |
+      #     gcloud config set project $PROJECT_ID
+
+      # Configure docker to use the gcloud command-line tool as a credential helper
+      # - run: |
+      #     gcloud auth configure-docker
+
+      # - run: gcloud info
+
+      - name: 'Build Web Image'
+        run: |
+          docker build ./web --file ./web/Dockerfile
+
+      # Push the Docker image to Google Container Registry
+      # - name: 'Publish Web Image'
+      #   # Only do this for the master branch for now
+      #   if: github.ref == 'refs/heads/master'
+      #   run: |
+      #     docker push gcr.io/$PROJECT_ID/$WEB_IMAGE_NAME:${GITHUB_SHA::8}
+      #     docker push gcr.io/$PROJECT_ID/$WEB_IMAGE_NAME:${GITHUB_REF##*/}
