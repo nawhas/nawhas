@@ -44,7 +44,7 @@ jobs:
           docker push gcr.io/$PROJECT_ID/$API_IMAGE_NAME:${GITHUB_REF##*/}
 
       # Deploy the API container
-      - name: 'Publish API Image'
+      - name: 'Deploy API Image'
         run: |
           gcloud run deploy api \
             --allow-unauthenticated \
