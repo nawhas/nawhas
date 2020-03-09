@@ -22,6 +22,7 @@
     "query-string": "^6.10.1",
     "register-service-worker": "^1.6.2",
     "vue": "^2.6.11",
+    "vue-gtag": "^1.6.2",
     "vue-instantsearch": "^2.7.0",
     "vue-progressbar": "^0.7.5",
     "vue-property-decorator": "^8.3.0",
