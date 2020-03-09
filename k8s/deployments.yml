@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-deployment
+  labels:
+    app: api
+    tier: backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: api
+      tier: backend
+  template:
+    metadata:
+      labels:
+        app: api
+        tier: backend
+        env: production
+    spec:
+      containers:
+        - name: api
+          image: gcr.io/GKE_PROJECT/IMAGE:TAG
+          imagePullPolicy: Always
+          envFrom:
+            - secretRef:
+                name: api.env
+          livenessProbe:
+            httpGet:
+              path: /alive
+              port: 8080
+            initialDelaySeconds: 3
+            periodSeconds: 3
+          readinessProbe:
+            httpGet:
+              path: /alive
+              port: 8080
+            initialDelaySeconds: 1
+            periodSeconds: 5
+          ports:
+            - containerPort: 8080
+        - name: cloudsql-proxy
+          image: gcr.io/cloudsql-docker/gce-proxy:1.14
+          command: ["/cloud_sql_proxy",
+                    "-instances=nawhas:us-central1:production-nawhas=tcp:5432",
+                    "-credential_file=/secrets/cloudsql/credentials.json"]
+          securityContext:
+            runAsUser: 2  # non-root user
+            allowPrivilegeEscalation: false
+          volumeMounts:
+            - name: cloudsql
+              mountPath: /secrets/cloudsql
+              readOnly: true
+      volumes:
+        - name: cloudsql
+          secret:
+            secretName: cloudsql

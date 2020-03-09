@@ -1,0 +1,7 @@
+apiVersion: networking.gke.io/v1beta1
+kind: ManagedCertificate
+metadata:
+  name: api-nawhas-cert
+spec:
+  domains:
+    - api-k8s.nawhas.com
