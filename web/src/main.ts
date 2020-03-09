@@ -14,7 +14,7 @@ Vue.config.productionTip = false;
 
 Vue.use(VueGtag, {
   config: { id: 'UA-160025735-1' },
-  enabled: process.env.VUE_APP_GTAG_ENABLED === true,
+  enabled: process.env.VUE_APP_GTAG_ENABLED === 'true',
 }, router);
 
 sync(store, router);
