@@ -137,8 +137,8 @@
 
     <v-snackbar v-model="addedToQueueSnackbar" right>
       <v-icon color="white">playlist_add_check</v-icon> Added to Queue
-      <v-btn color="deep-orange" text @click="addedToQueueSnackbar = false">
-        Close
+      <v-btn color="deep-orange" text @click="undo">
+        Undo
       </v-btn>
     </v-snackbar>
   </div>
@@ -311,6 +311,12 @@ export default class TrackPage extends Vue {
   addToQueue() {
     this.$store.commit('player/ADD_TO_QUEUE', { track: this.track });
     this.addedToQueueSnackbar = true;
+  }
+
+  undo() {
+    const { id } = this.$store.state.player.queue.slice(-1)[0];
+    this.$store.commit('player/REMOVE_TRACK', { id });
+    this.addedToQueueSnackbar = false;
   }
 }
 </script>
