@@ -61,7 +61,7 @@
                      :color="this.textColor"
                      v-if="hasAudio && addedToQueueSnackbar"
               >
-                <v-icon color="green" left>done_outline</v-icon> Added to Queue
+                <v-icon color="green" left>done</v-icon> Added to Queue
               </v-btn>
             </template>
             <template v-else>
