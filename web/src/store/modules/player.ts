@@ -80,6 +80,10 @@ const mutations = {
     state.seek = seek;
     state.duration = duration;
   },
+  STOP(state: PlayerState) {
+    state.current = null;
+    state.queue = [];
+  },
 };
 
 export default {
