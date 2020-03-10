@@ -140,6 +140,9 @@
       <v-btn color="deep-orange" text @click="undo">
         Undo
       </v-btn>
+      <v-btn color="deep-green" text @click="addedToQueueSnackbar = false">
+        Close
+      </v-btn>
     </v-snackbar>
   </div>
 </template>
