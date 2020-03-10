@@ -12,6 +12,7 @@ function generateId(): string {
 export interface PlayerState {
   current: CurrentTrackRef;
   queue: TrackQueue;
+  shuffledQueue: TrackQueue;
   seek: number;
   duration: number;
 }
@@ -21,6 +22,7 @@ const state: PlayerState = {
   seek: 0,
   duration: 0,
   queue: [],
+  shuffledQueue: [],
 };
 
 const getters = {
@@ -30,10 +32,22 @@ const getters = {
     }
     return (state.seek / state.duration) * 100;
   },
-  track: (state: PlayerState): QueuedTrack|null => (
+  queue: (state: PlayerState, getters: any): TrackQueue => {
+    if (getters.isShuffled) {
+      return state.shuffledQueue;
+    }
+    return state.queue;
+  },
+  isShuffled: (state: PlayerState): boolean => {
+    if (state.shuffledQueue.length) {
+      return true;
+    }
+    return false;
+  },
+  track: (state: PlayerState, getters: any): QueuedTrack|null => (
     state.current === null
       ? null
-      : (state.queue[state.current] || null)
+      : (getters.queue[state.current] || null)
   ),
   hasNext: (state: PlayerState) => (state.current !== null && state.queue.length > state.current + 1),
   hasPrevious: (state: PlayerState) => (state.current !== null && state.current !== 0),
@@ -65,11 +79,20 @@ const mutations = {
     }
     state.current--;
   },
-  REMOVE_TRACK(state: PlayerState, { id }) {
+  REMOVE_TRACK(state: PlayerState, getters: any, { id }) {
     const index = state.queue.findIndex((queued: QueuedTrack) => queued.id === id);
     state.queue.splice(index, 1);
-    if (state.current !== null && state.current > index) {
-      state.current--;
+    if (getters.isShuffled) {
+      const shuffledIndex = state.shuffledQueue.findIndex((queued: QueuedTrack) => queued.id === id);
+      state.shuffledQueue.splice(shuffledIndex, 1);
+      if (state.current !== null && state.current > shuffledIndex) {
+        state.current--;
+      }
+    }
+    if (!getters.isShuffled) {
+      if (state.current !== null && state.current > index) {
+        state.current--;
+      }
     }
   },
   SKIP_TO_TRACK(state: PlayerState, { id }) {
@@ -83,6 +106,28 @@ const mutations = {
   STOP(state: PlayerState) {
     state.current = null;
     state.queue = [];
+    state.shuffledQueue = [];
+  },
+  TOGGLE_SHUFFLE(state: PlayerState, getters: any) {
+    if (getters.isShuffled) {
+      const originalQueue = state.queue;
+      const shuffledQueue: TrackQueue = [];
+      while (originalQueue.length !== 0) {
+        const randomIndex = Math.floor(Math.random() * originalQueue.length);
+        shuffledQueue.push(originalQueue[randomIndex]);
+        originalQueue.splice(randomIndex, 1);
+      }
+
+      const index = state.queue.indexOf(getters.track);
+      if (index > 0) {
+        shuffledQueue.splice(index, 1);
+        shuffledQueue.unshift(state.queue[index]);
+      }
+
+      state.shuffledQueue = shuffledQueue;
+    } else {
+      state.shuffledQueue = [];
+    }
   },
 };
 
