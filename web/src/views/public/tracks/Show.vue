@@ -38,17 +38,30 @@
             <template v-if="track">
               <v-btn text
                      :color="this.textColor"
-                     v-if="hasAudio"
+                     v-if="hasAudio && !isSameTrackPlaying"
                      @click="playTrack"
               >
                 <v-icon left>play_circle_filled</v-icon> Play
               </v-btn>
               <v-btn text
+                    :color="this.textColor"
+                    v-else-if="hasAudio && isSameTrackPlaying"
+                    @click="stopPlaying"
+              >
+                <v-icon>stop</v-icon> Stop Playing
+              </v-btn>
+              <v-btn text
                      :color="this.textColor"
-                     v-if="hasAudio"
+                     v-if="hasAudio && !addedToQueueSnackbar"
                      @click="addToQueue"
               >
                 <v-icon left>playlist_add</v-icon> Add to Queue
+              </v-btn>
+              <v-btn text
+                     :color="this.textColor"
+                     v-if="hasAudio && addedToQueueSnackbar"
+              >
+                <v-icon color="green" left>done</v-icon> Added to Queue
               </v-btn>
             </template>
             <template v-else>
@@ -124,8 +137,8 @@
 
     <v-snackbar v-model="addedToQueueSnackbar" right>
       <v-icon color="white">playlist_add_check</v-icon> Added to Queue
-      <v-btn color="deep-orange" text @click="addedToQueueSnackbar = false">
-        Close
+      <v-btn color="deep-orange" text @click="undo">
+        Undo
       </v-btn>
     </v-snackbar>
   </div>
@@ -183,6 +196,28 @@ export default class TrackPage extends Vue {
 
   get hasAudio() {
     return this.track && this.track.media.data.length > 0;
+  }
+
+  get isSameTrackPlaying() {
+    const { player } = this.$store.state;
+    if (player.queue.length) {
+      if (player.queue[player.current].track === this.track) {
+        return true;
+      }
+      return false;
+    }
+    return false;
+  }
+
+  get isInQueue() {
+    const { player } = this.$store.state;
+    for (let index = 0; index < player.queue.length; index++) {
+      const element = player.queue[index];
+      if (element.track.id === this.track.id) {
+        return true;
+      }
+    }
+    return false;
   }
 
   mounted() {
@@ -269,9 +304,19 @@ export default class TrackPage extends Vue {
     this.$store.commit('player/PLAY_TRACK', { track: this.track });
   }
 
+  stopPlaying() {
+    this.$store.commit('player/STOP');
+  }
+
   addToQueue() {
     this.$store.commit('player/ADD_TO_QUEUE', { track: this.track });
     this.addedToQueueSnackbar = true;
+  }
+
+  undo() {
+    const { id } = this.$store.state.player.queue.slice(-1)[0];
+    this.$store.commit('player/REMOVE_TRACK', { id });
+    this.addedToQueueSnackbar = false;
   }
 }
 </script>
