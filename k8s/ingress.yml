@@ -1,0 +1,11 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: nawhas-ingress
+  annotations:
+    kubernetes.io/ingress.global-static-ip-name: production-api-nawhas
+    networking.gke.io/managed-certificates: api-nawhas-cert
+spec:
+  backend:
+    serviceName: api
+    servicePort: 80
