@@ -137,7 +137,9 @@ const mutations = {
     } else {
       if (state.current) {
         const currentIndex: number = state.current;
-        const index = state.queue.findIndex((queued: QueuedTrack) => queued.id === state.shuffledQueue[currentIndex].id);
+        const index = state.queue.findIndex(
+          (queued: QueuedTrack) => queued.id === state.shuffledQueue[currentIndex].id,
+        );
         state.current = index;
       }
       state.shuffledQueue = [];
