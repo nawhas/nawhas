@@ -52,14 +52,14 @@
               </v-btn>
               <v-btn text
                      :color="this.textColor"
-                     v-if="hasAudio"
+                     v-if="hasAudio && !addedToQueueSnackbar"
                      @click="addToQueue"
               >
                 <v-icon left>playlist_add</v-icon> Add to Queue
               </v-btn>
               <v-btn text
                      :color="this.textColor"
-                     v-if="hasAudio && isInQueue"
+                     v-if="hasAudio && addedToQueueSnackbar"
               >
                 <v-icon color="green" left>done_outline</v-icon> Added to Queue
               </v-btn>
