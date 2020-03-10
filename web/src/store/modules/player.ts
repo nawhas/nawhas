@@ -114,7 +114,7 @@ const mutations = {
   TOGGLE_SHUFFLE(state: PlayerState) {
     state.isShuffled = !state.isShuffled;
     if (state.isShuffled) {
-      const originalIndex: number = state.current;
+      const originalIndex: any = state.current;
       let shuffledIndex: number|null = null;
       const shuffledQueue: TrackQueue = [];
       // eslint-disable-next-line guard-for-in
@@ -135,13 +135,11 @@ const mutations = {
       state.current = 0;
       state.shuffledQueue = shuffledQueue;
     } else {
-      console.log('Here is the original queue');
-      console.log(state.queue);
-      console.log('Here is the shuffled queue');
-      console.log(state.shuffledQueue);
-      console.log(`The current track that is playing from the shuffled queue is ID: ${state.current}`);
-      const index = state.queue.findIndex((queued: QueuedTrack) => queued.id === state.shuffledQueue[state.current].id);
-      state.current = index;
+      if (state.current) {
+        const currentIndex: number = state.current;
+        const index = state.queue.findIndex((queued: QueuedTrack) => queued.id === state.shuffledQueue[currentIndex].id);
+        state.current = index;
+      }
       state.shuffledQueue = [];
     }
   },
