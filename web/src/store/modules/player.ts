@@ -28,7 +28,7 @@ function getTrackIndexById(state: PlayerState, id: string) {
     return state.shuffled.findIndex((queued: QueuedTrack) => queued.id === id);
   }
 
-  return state.queue.findIndex((queued: QueuedTrack) => queued.id === id); 
+  return state.queue.findIndex((queued: QueuedTrack) => queued.id === id);
 }
 
 export interface PlayerState {
