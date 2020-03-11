@@ -48,7 +48,7 @@
                     v-else-if="hasAudio && isSameTrackPlaying"
                     @click="stopPlaying"
               >
-                <v-icon>stop</v-icon> Stop Playing
+                <v-icon>stop</v-icon> Stop
               </v-btn>
               <v-btn text
                      :color="this.textColor"
