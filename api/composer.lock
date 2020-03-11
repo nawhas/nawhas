@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a617198725fb33fc40331ed2629aa17a",
+    "content-hash": "b75b7041941af1710ff1460e313dc0ff",
     "packages": [
         {
             "name": "acelaya/doctrine-enum-type",
@@ -2835,16 +2835,16 @@
         },
         {
             "name": "laravel/airlock",
-            "version": "v0.2.1",
+            "version": "v1.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/airlock.git",
-                "reference": "af0a5623697e340f7f6587ad3712a19586c82fff"
+                "reference": "3eae16b5691f0954c60b31726fe5a40ece4c7c47"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/airlock/zipball/af0a5623697e340f7f6587ad3712a19586c82fff",
-                "reference": "af0a5623697e340f7f6587ad3712a19586c82fff",
+                "url": "https://api.github.com/repos/laravel/airlock/zipball/3eae16b5691f0954c60b31726fe5a40ece4c7c47",
+                "reference": "3eae16b5691f0954c60b31726fe5a40ece4c7c47",
                 "shasum": ""
             },
             "require": {
@@ -2856,7 +2856,7 @@
             },
             "require-dev": {
                 "mockery/mockery": "^1.0",
-                "orchestra/testbench": "^4.0",
+                "orchestra/testbench": "^4.0|^5.0",
                 "phpunit/phpunit": "^8.0"
             },
             "type": "library",
@@ -2891,7 +2891,7 @@
                 "auth",
                 "laravel"
             ],
-            "time": "2020-02-12T13:58:42+00:00"
+            "time": "2020-03-03T13:58:32+00:00"
         },
         {
             "name": "laravel/framework",
