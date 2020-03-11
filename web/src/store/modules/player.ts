@@ -9,10 +9,32 @@ function generateId(): string {
   return Math.random().toString(36).substr(2, 9);
 }
 
+/**
+ * Shuffle an array using the Fisher-Yates Shuffle algorithm
+ */
+function shuffle(arr: Array<any>): Array<any> {
+  const shuffled = [...arr];
+
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+
+  return shuffled;
+}
+
+function getTrackIndexById(state: PlayerState, id: string) {
+  if (state.isShuffled) {
+    return state.shuffled.findIndex((queued: QueuedTrack) => queued.id === id);
+  }
+
+  return state.queue.findIndex((queued: QueuedTrack) => queued.id === id); 
+}
+
 export interface PlayerState {
   current: CurrentTrackRef;
   queue: TrackQueue;
-  shuffledQueue: TrackQueue;
+  shuffled: TrackQueue;
   seek: number;
   duration: number;
   isShuffled: boolean;
@@ -23,7 +45,7 @@ const state: PlayerState = {
   seek: 0,
   duration: 0,
   queue: [],
-  shuffledQueue: [],
+  shuffled: [],
   isShuffled: false,
 };
 
@@ -36,7 +58,7 @@ const getters = {
   },
   queue: (state: PlayerState): TrackQueue => {
     if (state.isShuffled) {
-      return state.shuffledQueue;
+      return state.shuffled;
     }
     return state.queue;
   },
@@ -80,8 +102,8 @@ const mutations = {
     const index = state.queue.findIndex((queued: QueuedTrack) => queued.id === id);
     state.queue.splice(index, 1);
     if (state.isShuffled) {
-      const shuffledIndex = state.shuffledQueue.findIndex((queued: QueuedTrack) => queued.id === id);
-      state.shuffledQueue.splice(shuffledIndex, 1);
+      const shuffledIndex = state.shuffled.findIndex((queued: QueuedTrack) => queued.id === id);
+      state.shuffled.splice(shuffledIndex, 1);
       if (state.current !== null && state.current > shuffledIndex) {
         state.current--;
       }
@@ -93,13 +115,8 @@ const mutations = {
     }
   },
   SKIP_TO_TRACK(state: PlayerState, { id }) {
-    if (state.isShuffled) {
-      const index = state.shuffledQueue.findIndex((queued: QueuedTrack) => queued.id === id);
-      state.current = index;
-    } else {
-      const index = state.queue.findIndex((queued: QueuedTrack) => queued.id === id);
-      state.current = index;
-    }
+    const index = getTrackIndexById(state, id);
+    state.current = index;
   },
   UPDATE_TRACK_PROGRESS(state: PlayerState, { seek, duration }) {
     state.seek = seek;
@@ -108,42 +125,45 @@ const mutations = {
   STOP(state: PlayerState) {
     state.current = null;
     state.queue = [];
-    state.shuffledQueue = [];
+    state.shuffled = [];
     state.isShuffled = false;
   },
   TOGGLE_SHUFFLE(state: PlayerState) {
-    state.isShuffled = !state.isShuffled;
-    if (state.isShuffled) {
-      const originalIndex: any = state.current;
-      let shuffledIndex: number|null = null;
-      const shuffledQueue: TrackQueue = [];
-      // eslint-disable-next-line guard-for-in
-      for (const i in state.queue) {
-        let randomIndex = Math.floor(Math.random() * state.queue.length);
-        while (shuffledQueue.includes(state.queue[randomIndex])) {
-          randomIndex = Math.floor(Math.random() * state.queue.length);
-        }
-        shuffledQueue[i] = state.queue[randomIndex];
+    const payload = {
+      isShuffled: !state.isShuffled,
+      current: state.current,
+      shuffled: state.shuffled,
+    };
+
+    if (payload.isShuffled) {
+      const tracks = [...state.queue];
+
+      // Don't include the current track in the list to be shuffled.
+      if (state.current !== null) {
+        tracks.splice(state.current, 1);
       }
 
-      shuffledIndex = shuffledQueue.findIndex((queued: QueuedTrack) => queued.id === state.queue[originalIndex].id);
-      if (shuffledIndex > 0) {
-        shuffledQueue.splice(shuffledIndex, 1);
-        shuffledQueue.unshift(state.queue[originalIndex]);
+      const shuffled = shuffle(tracks);
+
+      if (state.current !== null) {
+        shuffled.unshift(state.queue[state.current]);
       }
 
-      state.current = 0;
-      state.shuffledQueue = shuffledQueue;
+      payload.current = 0;
+      payload.shuffled = shuffled;
     } else {
-      if (state.current) {
-        const currentIndex: number = state.current;
+      if (state.current !== null) {
         const index = state.queue.findIndex(
-          (queued: QueuedTrack) => queued.id === state.shuffledQueue[currentIndex].id,
+          (queued: QueuedTrack) => queued.id === state.shuffled[(state.current as number)].id,
         );
-        state.current = index;
+        payload.current = index;
       }
-      state.shuffledQueue = [];
+      payload.shuffled = [];
     }
+
+    state.current = payload.current;
+    state.shuffled = payload.shuffled;
+    state.isShuffled = payload.isShuffled;
   },
 };
 
