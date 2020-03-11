@@ -41,7 +41,7 @@ export default class QueueList extends Vue {
    * Gets the current queue from the player store
    */
   get queue(): TrackQueue {
-    return this.$store.state.player.queue;
+    return this.$store.getters['player/queue'];
   }
 
   /**

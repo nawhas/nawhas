@@ -49,6 +49,15 @@
           </div>
         </div>
         <div class="player-actions">
+          <v-btn icon
+            v-if="!minimized"
+            :height="playbackControlSizes.standard.button"
+            :width="playbackControlSizes.standard.button"
+            @click="toggleShuffle"
+            :color="shuffled ? 'deep-orange' : 'secondary'"
+          >
+            <v-icon>shuffle</v-icon>
+          </v-btn>
           <v-btn
             v-if="!mobile || !minimized"
             icon
@@ -252,7 +261,7 @@ export default class AudioPlayer extends Vue {
    * Gets the current queue from the player store
    */
   get queue(): TrackQueue {
-    return this.store.queue;
+    return this.$store.getters['player/queue'];
   }
 
   get artwork(): string {
@@ -293,14 +302,18 @@ export default class AudioPlayer extends Vue {
    * Get the duration from the store.
    */
   get duration(): number {
-    return this.$store.state.player.duration;
+    return this.store.duration;
   }
 
   /**
    * Get the seek from the store
    */
   get seek(): number {
-    return this.$store.state.player.seek;
+    return this.store.seek;
+  }
+
+  get shuffled(): boolean {
+    return this.store.isShuffled;
   }
 
   get formattedSeek() {
@@ -421,6 +434,13 @@ export default class AudioPlayer extends Vue {
     if (!this.minimized && this.mobile) {
       document.documentElement.classList.add('overflow-y-hidden');
     }
+  }
+
+  /**
+   * Toggles the shuffle
+   */
+  toggleShuffle() {
+    this.$store.commit('player/TOGGLE_SHUFFLE');
   }
 
   /**
