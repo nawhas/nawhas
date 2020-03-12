@@ -80,11 +80,6 @@ class Album implements Entity, TimestampedEntity
         $this->artwork = $artwork;
     }
 
-    public function hasArtwork(): bool
-    {
-        return $this->getArtwork() !== null;
-    }
-
     /**
      * @return Collection|Track[]
      */

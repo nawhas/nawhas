@@ -19,5 +19,4 @@ interface AlbumRepository
     public function paginateAllByReciter(Reciter $reciter, PaginationState $state): LengthAwarePaginator;
     public function query(): AlbumQuery;
     public function persist(Album ...$albums): void;
-    public function remove(Album $album): void;
 }
