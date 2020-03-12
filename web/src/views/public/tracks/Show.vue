@@ -111,7 +111,7 @@
               <v-icon class="card__title__icon">format_list_bulleted</v-icon>
               <div>More From This Album</div>
             </v-card-title>
-            <v-card-text class="pa-0" v-if="track && album">
+            <v-card-text class="pa-0" v-if="track && albumTracks">
               <router-link
                 v-for="(albumTrack, index) in album.tracks.data"
                 :key="albumTrack.id"
@@ -130,6 +130,9 @@
             <v-card-text v-else>
               <more-tracks-skeleton />
             </v-card-text>
+            <v-card-actions>
+              <v-btn text @click="addAlbumToQueue">Add Album to Queue</v-btn>
+            </v-card-actions>
           </v-card>
         </v-col>
       </v-row>
@@ -156,7 +159,7 @@ import Vibrant from 'node-vibrant';
 import ReciterHeroSkeleton from '@/components/loaders/ReciterHeroSkeleton.vue';
 import LyricsSkeleton from '@/components/loaders/LyricsSkeleton.vue';
 import MoreTracksSkeleton from '@/components/loaders/MoreTracksSkeleton.vue';
-import { getTrack } from '@/services/tracks';
+import { getTracks, getTrack } from '@/services/tracks';
 
 @Component({
   components: {
@@ -170,6 +173,7 @@ export default class TrackPage extends Vue {
   private background = 'rgb(150, 37, 2)';
   private textColor = '#fff';
   private track: any = null;
+  private albumTracks: any = null;
   private addedToQueueSnackbar = false;
 
   get reciter() {
@@ -258,6 +262,11 @@ export default class TrackPage extends Vue {
         this.track = r.data;
       });
     }
+    await getTracks(reciter, album, {
+      include: 'reciter,lyrics,album,media',
+    }).then((r) => {
+      this.albumTracks = r.data.data;
+    });
 
     this.setBackgroundFromImage();
     this.$Progress.finish();
@@ -314,6 +323,10 @@ export default class TrackPage extends Vue {
   addToQueue() {
     this.$store.commit('player/ADD_TO_QUEUE', { track: this.track });
     this.addedToQueueSnackbar = true;
+  }
+
+  async addAlbumToQueue() {
+    this.$store.commit('player/ADD_ALBUM_TO_QUEUE', { tracks: this.albumTracks });
   }
 
   undo() {

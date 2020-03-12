@@ -86,6 +86,15 @@ const mutations = {
       id: generateId(),
     });
   },
+  ADD_ALBUM_TO_QUEUE(state: PlayerState, { tracks }) {
+    for (let index = 0; index < tracks.length; index++) {
+      const track = tracks[index];
+      state.queue.push({
+        track,
+        id: generateId(),
+      });
+    }
+  },
   NEXT(state: PlayerState) {
     if (state.current === null) {
       return;
