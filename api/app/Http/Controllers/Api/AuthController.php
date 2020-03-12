@@ -10,6 +10,7 @@ use App\Http\Transformers\UserTransformer;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Contracts\Auth\{Factory as AuthFactory, StatefulGuard};
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response;
 
 class AuthController extends Controller
 {
@@ -28,6 +29,13 @@ class AuthController extends Controller
         }
 
         return $this->respondWithItem($this->guard->user());
+    }
+
+    public function logout(): Response
+    {
+        $this->guard->logout();
+
+        return response()->noContent();
     }
 
     public function user(): JsonResponse
