@@ -6,7 +6,7 @@
           <v-icon>person</v-icon>
         </v-btn>
       </template>
-      <v-card min-width="300px">
+      <v-card width="350px">
         <template v-if="initialized">
           <v-list>
             <v-list-item>
@@ -39,7 +39,6 @@
             <v-btn v-if="authenticated" color="primary" text @click="logout">Log Out</v-btn>
             <template v-else>
               <v-btn color="primary" text @click="login">Log In</v-btn>
-              <v-btn color="primary" text @click="register">Register</v-btn>
             </template>
           </v-card-actions>
         </template>
