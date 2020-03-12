@@ -63,4 +63,9 @@ class DoctrineAlbumRepository extends DoctrineRepository implements AlbumReposit
     {
         $this->em->persist(...$albums);
     }
+
+    public function remove(Album $albums): void
+    {
+        $this->em->remove($albums);
+    }
 }
