@@ -5,39 +5,34 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Transformers\UserTransformer;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Contracts\Auth\Factory as AuthFactory;
 use Illuminate\Contracts\Auth\StatefulGuard;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
-use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
-    private AuthFactory $auth;
+    private StatefulGuard $guard;
 
-    public function __construct(AuthFactory $auth)
+    public function __construct(AuthFactory $auth, UserTransformer $transformer)
     {
-        $this->auth = $auth;
+        $this->guard = $auth->guard('web');
+        $this->transformer = $transformer;
     }
 
-    public function login(Request $request): Response
+    public function login(Request $request): JsonResponse
     {
-        if (!$this->guard('web')->attempt($request->only(['email', 'password']))) {
+        if (!$this->guard->attempt($request->only(['email', 'password']))) {
             throw new AuthenticationException(__('auth.failed'));
         }
 
-        return response()->noContent();
+        return $this->respondWithItem($this->guard->user());
     }
 
     public function user()
     {
-        return $this->guard('web')->user();
-    }
-
-    private function guard(?string $driver = null): StatefulGuard
-    {
-        return $this->auth->guard($driver);
+        return $this->guard->user();
     }
 }
