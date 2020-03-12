@@ -5,8 +5,8 @@
         <h2 class="card-title">Welcome Back</h2>
       </v-card-title>
       <v-card-text>
-        <v-alert type="error" v-if="error">
-          I'm an error alert.
+        <v-alert type="error" v-if="error" outlined class="mb-6">
+          {{ error }}
         </v-alert>
         <v-text-field outlined label="Email" v-model="email" :error-messages="invalid.email" />
         <v-text-field outlined label="Password" type="password" v-model="password" :error-messages="invalid.password" />
@@ -38,6 +38,7 @@ export default class LoginForm extends Vue {
 
   async submit() {
     this.invalid = {};
+    this.error = null;
     this.loading = true;
     try {
       await this.$store.dispatch('auth/login', { email: this.email, password: this.password });
