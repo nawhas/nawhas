@@ -40,7 +40,7 @@ Route::prefix('v1')->group(function() {
             Route::post('/', [AlbumsController::class, 'store']);
             Route::patch('/{album}', [AlbumsController::class, 'update']);
             Route::post('/{album}/artwork', [AlbumsController::class, 'uploadArtwork']);
-            // Route::delete('/{album}', [AlbumsController::class, 'destroy']);
+            Route::delete('/{album}', [AlbumsController::class, 'destroy']);
         }
     });
 
