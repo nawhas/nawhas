@@ -5,12 +5,11 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Transformers\UserTransformer;
 use Illuminate\Auth\AuthenticationException;
-use Illuminate\Contracts\Auth\Factory as AuthFactory;
-use Illuminate\Contracts\Auth\StatefulGuard;
+use Illuminate\Contracts\Auth\{Factory as AuthFactory, StatefulGuard};
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
 class AuthController extends Controller
 {
@@ -22,17 +21,17 @@ class AuthController extends Controller
         $this->transformer = $transformer;
     }
 
-    public function login(Request $request): JsonResponse
+    public function login(LoginRequest $request): JsonResponse
     {
-        if (!$this->guard->attempt($request->only(['email', 'password']))) {
+        if (!$this->guard->attempt($request->credentials(), $request->shouldRemember())) {
             throw new AuthenticationException(__('auth.failed'));
         }
 
         return $this->respondWithItem($this->guard->user());
     }
 
-    public function user()
+    public function user(): JsonResponse
     {
-        return $this->guard->user();
+        return $this->respondWithItem($this->guard->user());
     }
 }
