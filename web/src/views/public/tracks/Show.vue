@@ -130,7 +130,7 @@
             <v-card-text v-else>
               <more-tracks-skeleton />
             </v-card-text>
-            <v-card-actions>
+            <v-card-actions class="d-flex justify-end album-tracks__actions">
               <v-btn text @click="addAlbumToQueue">Add Album to Queue</v-btn>
             </v-card-actions>
           </v-card>
@@ -449,6 +449,9 @@ export default class TrackPage extends Vue {
     .album__track__text {
       font-weight: 600;
     }
+  }
+  .album-tracks__actions {
+    background: rgba(0,0,0,0.1);
   }
 }
 
