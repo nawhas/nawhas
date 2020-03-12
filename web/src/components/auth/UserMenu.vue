@@ -80,7 +80,7 @@ export default class UserMenu extends Vue {
   }
 
   logout() {
-    // todo
+    this.$store.dispatch('auth/logout');
   }
 
   register() {

@@ -18,14 +18,20 @@ const mutations = {
   LOGIN(state: AuthState, { user }) {
     state.user = user;
   },
+  LOGOUT(state: AuthState) {
+    state.user = null;
+  },
 };
 
 const actions = {
   async login({ commit }, { email, password }) {
-    await client.get('/airlock/csrf-cookie');
     const response = await client.post('/v1/auth/login', { email, password });
 
     commit('LOGIN', { user: response.data });
+  },
+  async logout({ commit }) {
+    commit('LOGOUT');
+    client.post('/v1/auth/logout');
   },
   async check({ commit }) {
     await client.get('/airlock/csrf-cookie');
