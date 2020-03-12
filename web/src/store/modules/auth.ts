@@ -1,5 +1,13 @@
 import client from '@/services/client';
 
+export const Role = {
+  MODERATOR: 'moderator',
+  CONTRIBUTOR: 'contributor',
+  GUEST: 'guest',
+};
+
+export type RoleValue = 'moderator' | 'contributor' | 'guest';
+
 export interface AuthState {
   user: any;
   initialized: boolean;
@@ -49,8 +57,8 @@ const getters = {
   authenticated(state: AuthState): boolean {
     return state.user !== null;
   },
-  role(state: AuthState): string {
-    return state.user ? state.user.role : null;
+  role(state: AuthState): RoleValue {
+    return state.user ? state.user.role : Role.GUEST;
   },
 };
 
