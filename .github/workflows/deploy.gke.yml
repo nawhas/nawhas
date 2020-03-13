@@ -1,9 +1,10 @@
+# Disabled
 name: Deploy Nawhas.com to GKE
 
 on:
   push:
-    branches:
-      - master
+    branches-ignore:
+      - '**'
 
 env:
   IMAGE: api
