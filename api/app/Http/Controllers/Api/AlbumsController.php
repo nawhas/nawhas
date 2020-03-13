@@ -9,6 +9,7 @@ use App\Entities\Reciter;
 use App\Http\Controllers\Controller;
 use App\Http\Transformers\AlbumTransformer;
 use App\Repositories\AlbumRepository;
+use App\Repositories\TrackRepository;
 use App\Support\Pagination\PaginationState;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\JsonResponse;
@@ -21,11 +22,10 @@ class AlbumsController extends Controller
 {
     private AlbumRepository $repository;
 
-    public function __construct(AlbumRepository $repository, AlbumTransformer $transformer, TrackRepository $trackRepository)
+    public function __construct(AlbumRepository $repository, AlbumTransformer $transformer)
     {
         $this->transformer = $transformer;
         $this->repository = $repository;
-        $this->trackRepository = $trackRepository;
     }
 
     public function index(Reciter $reciter, Request $request): JsonResponse
@@ -67,7 +67,7 @@ class AlbumsController extends Controller
         return $this->respondWithItem($album);
     }
 
-    public function destroy(Request $request, Reciter $reciter, Album $album): Response
+    public function destroy(Request $request, Reciter $reciter, Album $album, TrackRepository $trackRepository): Response
     {
         if ($album->hasArtwork()) {
             $media = $album->getArtwork();
@@ -82,7 +82,7 @@ class AlbumsController extends Controller
                 Storage::delete($media->getPath());
             }
     
-            $this->trackRepository->remove($track);
+            $trackRepository->remove($track);
         }
 
         $this->repository->remove($album);
