@@ -1,5 +1,4 @@
-# Disabled
-name: Deploy Nawhas.com to DigitalOcean K8S
+name: Deploy Nawhas.com to K8S
 
 on:
   push:
