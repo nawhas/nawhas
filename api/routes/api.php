@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AlbumsController;
+use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\PopularEntitiesController;
 use App\Http\Controllers\Api\RecitersController;
 use App\Http\Controllers\Api\TracksController;
@@ -17,7 +18,14 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::prefix('v1')->group(function() {
+Route::prefix('v1')->group(function () {
+    // Auth
+    Route::prefix('auth')->group(function () {
+        Route::post('login', [AuthController::class, 'login']);
+        Route::post('logout', [AuthController::class, 'logout'])->middleware('auth:airlock');
+        Route::get('user', [AuthController::class, 'user'])->middleware('auth:airlock');
+    });
+
     // Reciters
     Route::prefix('reciters')->group(function () {
         Route::get('/', [RecitersController::class, 'index']);

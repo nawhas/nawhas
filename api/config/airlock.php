@@ -14,7 +14,8 @@ return [
     */
 
     'stateful' => [
-        'nawhas.test', 'nawhas.com'
+        env('APP_DOMAIN'),
+        env('APP_ENV') === 'local' ? 'localhost' : null,
     ],
 
     /*
