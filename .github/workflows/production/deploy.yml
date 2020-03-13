@@ -1,9 +1,9 @@
-name: Deploy Nawhas.com to K8S
+name: Production Deploy
 
 on:
   push:
     branches:
-      - digital-ocean-k8s
+      - master
 
 env:
   API_IMAGE: nawhas/api
