@@ -62,7 +62,7 @@ jobs:
       - name: Deploy
         working-directory: ./k8s
         run: |
-          ./kustomize edit set image gcr.io/GKE_PROJECT/IMAGE:TAG=$API_IMAGE:${GITHUB_SHA::8}
+          ./kustomize edit set image IMAGE:TAG=$API_IMAGE:${GITHUB_SHA::8}
           ./kustomize build . | kubectl apply -f -
           kubectl rollout status deployment/api-deployment
           kubectl get services -o wide
