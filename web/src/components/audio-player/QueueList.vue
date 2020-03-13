@@ -1,5 +1,5 @@
 <template>
-  <v-list>
+  <v-list class="queue">
     <v-list-item
       v-for="{ id, track } in queue"
       :key="id"
@@ -93,6 +93,11 @@ export default class QueueList extends Vue {
 
 <style lang="scss" scoped>
 @import '@/styles/theme';
+
+.queue {
+  max-height: 600px;
+  overflow-y:scroll;
+}
 
 .queue-item--active {
   background-color: map-deep-get($colors, 'deep-orange', 'lighten-5');
