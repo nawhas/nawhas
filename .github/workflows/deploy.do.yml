@@ -63,6 +63,6 @@ jobs:
         working-directory: ./k8s
         run: |
           ./kustomize edit set image IMAGE:TAG=$API_IMAGE:${GITHUB_SHA::8}
-          ./kustomize build . | kubectl apply -f -
-          kubectl rollout status deployment/api-deployment
-          kubectl get services -o wide
+          ./kustomize build . | kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig apply -f -
+          kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig rollout status deployment/api-deployment
+          kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig get services -o wide
