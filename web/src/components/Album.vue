@@ -12,6 +12,23 @@
         </h6>
       </div>
     </div>
+    <div class="album__actions">
+      <v-btn
+        @click="addAlbumToQueue"
+        style="background-color: white;"
+        icon
+      >
+        <v-icon>playlist_add</v-icon>
+      </v-btn>
+      <v-btn
+        @click="playAlbum"
+        color="deep-orange"
+        x-large
+        icon
+      >
+        <v-icon size="50">play_circle_filled</v-icon>
+      </v-btn>
+    </div>
     <v-data-table
       :headers="headers"
       :items="tracks.data"
@@ -149,6 +166,14 @@ export default class Album extends Vue {
       `/reciters/${this.reciter.slug}/albums/${this.album.year}/tracks/${track.slug}`,
     );
   }
+
+  playAlbum() {
+    this.$store.commit('player/PLAY_ALBUM', { tracks: this.album.tracks.data });
+  }
+
+  addAlbumToQueue() {
+    this.$store.commit('player/ADD_ALBUM_TO_QUEUE', { tracks: this.album.tracks.data });
+  }
 }
 </script>
 
@@ -195,6 +220,14 @@ export default class Album extends Vue {
   padding: 0;
   font-weight: 400;
   font-size: 20px;
+}
+
+.album__actions {
+  position: absolute;
+  left: 80%;
+  right: 0%;
+  top: 14%;
+  bottom: 0%;
 }
 
 .album__tracks {
@@ -249,6 +282,10 @@ export default class Album extends Vue {
   }
   .album__release-date {
     font-size: 0.95rem;
+  }
+  .album__actions {
+     left: 75%;
+    top: 9%;
   }
 }
 </style>
