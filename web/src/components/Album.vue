@@ -22,12 +22,22 @@
               <v-icon v-else>play_arrow</v-icon>
             </v-btn>
           </template>
-          <v-btn fab small @click="playAlbum">
-            <v-icon>play_arrow</v-icon>
-          </v-btn>
-          <v-btn fab small @click="addAlbumToQueue">
-            <v-icon>playlist_add</v-icon>
-          </v-btn>
+          <v-tooltip top>
+            <template v-slot:activator="{ on }">
+              <v-btn fab small @click="playAlbum" v-on="on">
+                <v-icon>play_arrow</v-icon>
+              </v-btn>
+            </template>
+            <span>Play Album</span>
+          </v-tooltip>
+          <v-tooltip top>
+            <template v-slot:activator="{ on }">
+              <v-btn fab small @click="addAlbumToQueue" v-on="on">
+                <v-icon>playlist_add</v-icon>
+              </v-btn>
+            </template>
+            <span>Add Album to Queue</span>
+          </v-tooltip>
         </v-speed-dial>
       </div>
     </div>
