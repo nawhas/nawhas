@@ -11,23 +11,25 @@
           &bull; {{ tracks.data.length }} tracks
         </h6>
       </div>
-    </div>
-    <div class="album__actions">
-      <v-btn
-        @click="addAlbumToQueue"
-        style="background-color: white;"
-        icon
-      >
-        <v-icon>playlist_add</v-icon>
-      </v-btn>
-      <v-btn
-        @click="playAlbum"
-        color="deep-orange"
-        x-large
-        icon
-      >
-        <v-icon size="50">play_circle_filled</v-icon>
-      </v-btn>
+
+      <div class="album__actions">
+        <v-speed-dial class="album__action__fab" absolute
+                      v-model="fab" :open-on-hover="$vuetify.breakpoint.mdAndUp"
+                      right bottom direction="left">
+          <template v-slot:activator>
+            <v-btn :small="$vuetify.breakpoint.smAndDown" v-model="fab" fab :color="fabColor">
+              <v-icon v-if="fab">close</v-icon>
+              <v-icon v-else>play_arrow</v-icon>
+            </v-btn>
+          </template>
+          <v-btn fab small @click="playAlbum">
+            <v-icon>play_arrow</v-icon>
+          </v-btn>
+          <v-btn fab small @click="addAlbumToQueue">
+            <v-icon>playlist_add</v-icon>
+          </v-btn>
+        </v-speed-dial>
+      </div>
     </div>
     <v-data-table
       :headers="headers"
@@ -73,6 +75,8 @@ import Vibrant from 'node-vibrant';
 export default class Album extends Vue {
   private background = '#444444';
   private textColor = 'white';
+  private fabColor = 'white';
+  private fab = false;
 
   // TODO - Replace `any` with a proper interface.
   @Prop({ type: Object, required: true }) private album: any;
@@ -150,6 +154,11 @@ export default class Album extends Vue {
         }
         this.background = swatch.getHex();
         this.textColor = swatch.getBodyTextColor();
+
+        const light = palette.LightVibrant;
+        if (light) {
+          this.fabColor = light.getHex();
+        }
       });
   }
 
@@ -222,14 +231,6 @@ export default class Album extends Vue {
   font-size: 20px;
 }
 
-.album__actions {
-  position: absolute;
-  left: 80%;
-  right: 0%;
-  top: 14%;
-  bottom: 0%;
-}
-
 .album__tracks {
   .datatable {
     th:focus,
@@ -241,6 +242,12 @@ export default class Album extends Vue {
 
 .album__track {
   cursor: pointer;
+}
+
+.album__action__fab {
+  right: 80px;
+  bottom: -24px;
+  z-index: 1;
 }
 
 .track__features {
@@ -283,9 +290,10 @@ export default class Album extends Vue {
   .album__release-date {
     font-size: 0.95rem;
   }
-  .album__actions {
-     left: 75%;
-    top: 9%;
+
+  .album__action__fab {
+    right: 24px;
+    bottom: -16px;
   }
 }
 </style>
