@@ -35,11 +35,11 @@
       <div class="hero__bar">
         <v-container class="bar__content">
           <div class="bar__actions bar__actions--visible">
-            <template v-if="track">
+            <template v-if="track && albumTracks">
               <v-btn text
                      :color="this.textColor"
-                     v-if="hasAudio && !isSameTrackPlaying"
-                     @click="playTrack"
+                     v-if="hasAudio && albumTracks && !isSameTrackPlaying"
+                     @click="playAlbum"
               >
                 <v-icon left>play_circle_filled</v-icon> Play
               </v-btn>
@@ -52,7 +52,7 @@
               </v-btn>
               <v-btn text
                      :color="this.textColor"
-                     v-if="hasAudio && !addedToQueueSnackbar"
+                     v-if="hasAudio && !addedToQueueSnackbar && albumTracks"
                      @click="addToQueue"
               >
                 <v-icon left>playlist_add</v-icon> Add to Queue
@@ -130,9 +130,6 @@
             <v-card-text v-else>
               <more-tracks-skeleton />
             </v-card-text>
-            <v-card-actions class="d-flex justify-end album-tracks__actions">
-              <v-btn text @click="addAlbumToQueue">Add Album to Queue</v-btn>
-            </v-card-actions>
           </v-card>
         </v-col>
       </v-row>
@@ -312,8 +309,8 @@ export default class TrackPage extends Vue {
     });
   }
 
-  playTrack() {
-    this.$store.commit('player/PLAY_TRACK', { track: this.track });
+  playAlbum() {
+    this.$store.commit('player/PLAY_ALBUM', { tracks: this.albumTracks, start: this.track });
   }
 
   stopPlaying() {
@@ -323,10 +320,6 @@ export default class TrackPage extends Vue {
   addToQueue() {
     this.$store.commit('player/ADD_TO_QUEUE', { track: this.track });
     this.addedToQueueSnackbar = true;
-  }
-
-  async addAlbumToQueue() {
-    this.$store.commit('player/ADD_ALBUM_TO_QUEUE', { tracks: this.albumTracks });
   }
 
   undo() {

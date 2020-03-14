@@ -1,7 +1,7 @@
 import client from './client';
 
 /**
- * Get a single track
+ * Get all tracks for an album.
  * @param {string|int} reciter - Reciter ID
  * @param {string|int} album - Album ID
  * @param {object} [options]
