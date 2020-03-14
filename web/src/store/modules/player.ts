@@ -188,12 +188,12 @@ const mutations = {
   TOGGLE_REPEAT(state: PlayerState) {
     let repeat: RepeatType = null;
     if (state.repeat === null) {
-      repeat = 'one';
-    }
-    if (state.repeat === 'one') {
       repeat = 'all';
     }
     if (state.repeat === 'all') {
+      repeat = 'one';
+    }
+    if (state.repeat === 'one') {
       repeat = null;
     }
     state.repeat = repeat;

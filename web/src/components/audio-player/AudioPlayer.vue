@@ -49,14 +49,8 @@
           </div>
         </div>
         <div class="player-actions">
-          <v-btn @click="toggleRepeat" icon :color="repeat ? 'deep-orange' : 'secondary'">
-            <v-icon v-if="repeat === null || repeat === 'all'">repeat</v-icon>
-            <v-icon v-else>repeat_one</v-icon>
-          </v-btn>
           <v-btn icon
             v-if="!minimized"
-            :height="playbackControlSizes.standard.button"
-            :width="playbackControlSizes.standard.button"
             @click="toggleShuffle"
             :color="shuffled ? 'deep-orange' : 'secondary'"
           >
@@ -93,6 +87,13 @@
             :disabled="!hasNext"
           >
             <v-icon :size="playbackControlSizes.standard.icon">skip_next</v-icon>
+          </v-btn>
+          <v-btn @click="toggleRepeat"
+                 icon
+                 v-if="!minimized"
+                 :color="repeat ? 'deep-orange' : 'secondary'">
+            <v-icon v-if="repeat === null || repeat === 'all'">repeat</v-icon>
+            <v-icon v-else>repeat_one</v-icon>
           </v-btn>
           <v-menu
             v-if="minimized"
@@ -727,7 +728,7 @@ $duration: 680ms;
   }
   .player-actions {
     margin: auto;
-    justify-content: center;
+    justify-content: space-around;
     display: flex;
     align-items: center;
   }
@@ -842,7 +843,7 @@ $duration: 680ms;
       align-items: center;
       justify-content: space-between;
       width: 100%;
-      padding: 0 24px;
+      padding: 0;
     }
   }
 }
