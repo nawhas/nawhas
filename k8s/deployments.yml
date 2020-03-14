@@ -20,7 +20,7 @@ spec:
     spec:
       containers:
         - name: api
-          image: IMAGE:TAG
+          image: gcr.io/GKE_PROJECT/IMAGE:TAG
           imagePullPolicy: Always
           envFrom:
             - secretRef:
@@ -39,3 +39,19 @@ spec:
             periodSeconds: 5
           ports:
             - containerPort: 8080
+        - name: cloudsql-proxy
+          image: gcr.io/cloudsql-docker/gce-proxy:1.14
+          command: ["/cloud_sql_proxy",
+                    "-instances=nawhas:us-central1:production-nawhas=tcp:5432",
+                    "-credential_file=/secrets/cloudsql/credentials.json"]
+          securityContext:
+            runAsUser: 2  # non-root user
+            allowPrivilegeEscalation: false
+          volumeMounts:
+            - name: cloudsql
+              mountPath: /secrets/cloudsql
+              readOnly: true
+      volumes:
+        - name: cloudsql
+          secret:
+            secretName: cloudsql

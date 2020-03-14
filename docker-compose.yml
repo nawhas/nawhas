@@ -61,7 +61,5 @@ services:
     volumes:
       - postgres:/var/lib/postgresql/data
       - ./docker/postgres/sync.sh:/usr/bin/syncdb
-      - ./docker/postgres/import-to-production.sh:/usr/bin/import-prod
-      - ./docker/postgres/dumps:/opt
     networks:
       - nawhas
