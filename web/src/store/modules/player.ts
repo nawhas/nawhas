@@ -81,6 +81,9 @@ const mutations = {
     state.current = 0;
   },
   ADD_TO_QUEUE(state: PlayerState, { track }) {
+    if (state.queue.length === 0) {
+      state.current = 0;
+    }
     state.queue.push({
       track,
       id: generateId(),
