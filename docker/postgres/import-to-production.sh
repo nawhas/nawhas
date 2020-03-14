@@ -20,6 +20,7 @@ fi
 echo "Importing $DUMP to production database.";
 
 pg_restore -d "$PROD_CONNECTION" \
+  --clean --if-exists \
   --no-privileges \
   --no-acl \
   --no-owner \
@@ -27,4 +28,5 @@ pg_restore -d "$PROD_CONNECTION" \
   --schema=public \
   "$DUMP";
 
+psql "$PROD_CONNECTION" -c 'GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO "nawhas-production-2020-03-14";'
 echo "Done!";
