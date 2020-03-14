@@ -11,6 +11,35 @@
           &bull; {{ tracks.data.length }} tracks
         </h6>
       </div>
+
+      <div class="album__actions">
+        <v-speed-dial class="album__action__fab" absolute
+                      v-model="fab" :open-on-hover="$vuetify.breakpoint.mdAndUp"
+                      right bottom direction="left">
+          <template v-slot:activator>
+            <v-btn :small="$vuetify.breakpoint.smAndDown" v-model="fab" fab :color="fabColor">
+              <v-icon v-if="fab">close</v-icon>
+              <v-icon v-else>play_arrow</v-icon>
+            </v-btn>
+          </template>
+          <v-tooltip top>
+            <template v-slot:activator="{ on }">
+              <v-btn fab small @click="playAlbum" v-on="on">
+                <v-icon>play_arrow</v-icon>
+              </v-btn>
+            </template>
+            <span>Play Album</span>
+          </v-tooltip>
+          <v-tooltip top>
+            <template v-slot:activator="{ on }">
+              <v-btn fab small @click="addAlbumToQueue" v-on="on">
+                <v-icon>playlist_add</v-icon>
+              </v-btn>
+            </template>
+            <span>Add Album to Queue</span>
+          </v-tooltip>
+        </v-speed-dial>
+      </div>
     </div>
     <v-data-table
       :headers="headers"
@@ -56,6 +85,8 @@ import Vibrant from 'node-vibrant';
 export default class Album extends Vue {
   private background = '#444444';
   private textColor = 'white';
+  private fabColor = 'white';
+  private fab = false;
 
   // TODO - Replace `any` with a proper interface.
   @Prop({ type: Object, required: true }) private album: any;
@@ -133,6 +164,11 @@ export default class Album extends Vue {
         }
         this.background = swatch.getHex();
         this.textColor = swatch.getBodyTextColor();
+
+        const light = palette.LightVibrant;
+        if (light) {
+          this.fabColor = light.getHex();
+        }
       });
   }
 
@@ -148,6 +184,14 @@ export default class Album extends Vue {
     this.$router.push(
       `/reciters/${this.reciter.slug}/albums/${this.album.year}/tracks/${track.slug}`,
     );
+  }
+
+  playAlbum() {
+    this.$store.commit('player/PLAY_ALBUM', { tracks: this.album.tracks.data });
+  }
+
+  addAlbumToQueue() {
+    this.$store.commit('player/ADD_ALBUM_TO_QUEUE', { tracks: this.album.tracks.data });
   }
 }
 </script>
@@ -210,6 +254,12 @@ export default class Album extends Vue {
   cursor: pointer;
 }
 
+.album__action__fab {
+  right: 80px;
+  bottom: -24px;
+  z-index: 1;
+}
+
 .track__features {
   white-space: nowrap;
 
@@ -249,6 +299,11 @@ export default class Album extends Vue {
   }
   .album__release-date {
     font-size: 0.95rem;
+  }
+
+  .album__action__fab {
+    right: 24px;
+    bottom: -16px;
   }
 }
 </style>

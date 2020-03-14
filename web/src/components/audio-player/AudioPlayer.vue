@@ -119,6 +119,7 @@
               top
               :nudge-left="300"
               offset-y
+              allow-overflow
               :close-on-content-click="false"
             >
               <template v-slot:activator="{ on }">
@@ -130,7 +131,10 @@
                 </v-btn>
               </template>
 
-              <v-card>
+              <v-card class="queue-list-menu">
+                <v-card-title class="queue-list-menu__title">
+                  On the Queue
+                </v-card-title>
                 <queue-list @change="resetQueueMenu"></queue-list>
               </v-card>
             </v-menu>
@@ -816,6 +820,21 @@ $duration: 680ms;
       width: 100%;
       padding: 0 24px;
     }
+  }
+}
+
+.queue-list-menu {
+  max-height: calc(100vh - 180px);
+  position: relative;
+
+  .queue-list-menu__title {
+    background: white;
+    position: sticky;
+    padding: 16px 16px 8px;
+    top: 0;
+    z-index: 1;
+    margin-bottom: -8px;
+    border-bottom: 1px solid rgba(0,0,0,0.1);
   }
 }
 

@@ -81,10 +81,27 @@ const mutations = {
     state.current = 0;
   },
   ADD_TO_QUEUE(state: PlayerState, { track }) {
+    if (state.queue.length === 0) {
+      state.current = 0;
+    }
     state.queue.push({
       track,
       id: generateId(),
     });
+  },
+  PLAY_ALBUM(state: PlayerState, { tracks, start }) {
+    const queue: TrackQueue = [];
+    tracks.map((track) => queue.push({ track, id: generateId() }));
+
+    const current = start ? queue.findIndex((queued: QueuedTrack) => start.id === (queued.track as any).id) : 0;
+    state.queue = queue;
+    state.current = current;
+  },
+  ADD_ALBUM_TO_QUEUE(state: PlayerState, { tracks }) {
+    tracks.map((track) => state.queue.push({
+      track,
+      id: generateId(),
+    }));
   },
   NEXT(state: PlayerState) {
     if (state.current === null) {

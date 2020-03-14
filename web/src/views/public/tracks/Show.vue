@@ -35,11 +35,11 @@
       <div class="hero__bar">
         <v-container class="bar__content">
           <div class="bar__actions bar__actions--visible">
-            <template v-if="track">
+            <template v-if="track && albumTracks">
               <v-btn text
                      :color="this.textColor"
-                     v-if="hasAudio && !isSameTrackPlaying"
-                     @click="playTrack"
+                     v-if="hasAudio && albumTracks && !isSameTrackPlaying"
+                     @click="playAlbum"
               >
                 <v-icon left>play_circle_filled</v-icon> Play
               </v-btn>
@@ -52,7 +52,7 @@
               </v-btn>
               <v-btn text
                      :color="this.textColor"
-                     v-if="hasAudio && !addedToQueueSnackbar"
+                     v-if="hasAudio && !addedToQueueSnackbar && albumTracks"
                      @click="addToQueue"
               >
                 <v-icon left>playlist_add</v-icon> Add to Queue
@@ -111,7 +111,7 @@
               <v-icon class="card__title__icon">format_list_bulleted</v-icon>
               <div>More From This Album</div>
             </v-card-title>
-            <v-card-text class="pa-0" v-if="track && album">
+            <v-card-text class="pa-0" v-if="track && albumTracks">
               <router-link
                 v-for="(albumTrack, index) in album.tracks.data"
                 :key="albumTrack.id"
@@ -156,7 +156,7 @@ import Vibrant from 'node-vibrant';
 import ReciterHeroSkeleton from '@/components/loaders/ReciterHeroSkeleton.vue';
 import LyricsSkeleton from '@/components/loaders/LyricsSkeleton.vue';
 import MoreTracksSkeleton from '@/components/loaders/MoreTracksSkeleton.vue';
-import { getTrack } from '@/services/tracks';
+import { getTracks, getTrack } from '@/services/tracks';
 
 @Component({
   components: {
@@ -170,6 +170,7 @@ export default class TrackPage extends Vue {
   private background = 'rgb(150, 37, 2)';
   private textColor = '#fff';
   private track: any = null;
+  private albumTracks: any = null;
   private addedToQueueSnackbar = false;
 
   get reciter() {
@@ -258,6 +259,11 @@ export default class TrackPage extends Vue {
         this.track = r.data;
       });
     }
+    await getTracks(reciter, album, {
+      include: 'reciter,lyrics,album,media',
+    }).then((r) => {
+      this.albumTracks = r.data.data;
+    });
 
     this.setBackgroundFromImage();
     this.$Progress.finish();
@@ -303,8 +309,8 @@ export default class TrackPage extends Vue {
     });
   }
 
-  playTrack() {
-    this.$store.commit('player/PLAY_TRACK', { track: this.track });
+  playAlbum() {
+    this.$store.commit('player/PLAY_ALBUM', { tracks: this.albumTracks, start: this.track });
   }
 
   stopPlaying() {
@@ -436,6 +442,9 @@ export default class TrackPage extends Vue {
     .album__track__text {
       font-weight: 600;
     }
+  }
+  .album-tracks__actions {
+    background: rgba(0,0,0,0.1);
   }
 }
 

@@ -136,7 +136,7 @@ export default class ReciterProfile extends Vue {
     }).then((response) => {
       this.popularTracks = response.data.data;
     });
-    getAlbums(reciter, { include: 'tracks.related' }).then((response) => {
+    getAlbums(reciter, { include: 'tracks.media,tracks.reciter,tracks.album,tracks.related' }).then((response) => {
       this.setAlbums(response);
     });
   }
