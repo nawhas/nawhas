@@ -49,6 +49,10 @@
           </div>
         </div>
         <div class="player-actions">
+          <v-btn @click="toggleRepeat" icon :color="repeat ? 'deep-orange' : 'secondary'">
+            <v-icon v-if="repeat === null || repeat === 'all'">repeat</v-icon>
+            <v-icon v-else>repeat_one</v-icon>
+          </v-btn>
           <v-btn icon
             v-if="!minimized"
             :height="playbackControlSizes.standard.button"
@@ -157,7 +161,9 @@ import { Component, Vue, Watch } from 'vue-property-decorator';
 import { Howl } from 'howler';
 import * as moment from 'moment';
 import QueueList from '@/components/audio-player/QueueList.vue';
-import { PlayerState, QueuedTrack, TrackQueue } from '@/store/modules/player';
+import {
+  PlayerState, QueuedTrack, TrackQueue, RepeatType,
+} from '@/store/modules/player';
 
 interface CachedTrackReference {
   queued: QueuedTrack|null;
@@ -320,6 +326,10 @@ export default class AudioPlayer extends Vue {
     return this.store.isShuffled;
   }
 
+  get repeat(): RepeatType {
+    return this.store.repeat;
+  }
+
   get formattedSeek() {
     return moment.utc(moment.duration(this.seek, 'seconds').asMilliseconds()).format('m:ss');
   }
@@ -448,6 +458,13 @@ export default class AudioPlayer extends Vue {
   }
 
   /**
+   * Toggle the repeat
+   */
+  toggleRepeat() {
+    this.$store.commit('player/TOGGLE_REPEAT');
+  }
+
+  /**
    * Start playing the current track.
    * If no player is initialized, initialize Howler.
    */
@@ -480,7 +497,6 @@ export default class AudioPlayer extends Vue {
     if (!this.howl) {
       return;
     }
-
     this.howl.stop();
     this.playing = false;
     const seek = 0;
@@ -555,9 +571,17 @@ export default class AudioPlayer extends Vue {
 
     // Register end binding.
     howl.on('end', () => {
+      if (this.repeat === 'one') {
+        this.play();
+        return;
+      }
       if (this.hasNext) {
         this.next();
       } else {
+        if (this.repeat === 'all') {
+          this.$store.commit('player/SKIP_TO_TRACK', { id: this.queue[0].id });
+          return;
+        }
         this.stop();
       }
     });
