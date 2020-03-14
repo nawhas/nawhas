@@ -4,11 +4,7 @@ resources:
   - deployments.yml
   - services.yml
   - ingress.yml
-  - certs/api.yml
 secretGenerator:
   - name: api.env
     envs:
       - secrets/api.env
-  - name: cloudsql
-    files:
-      - secrets/cloudsql/credentials.json
