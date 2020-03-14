@@ -1,5 +1,6 @@
 export type CurrentTrackRef = number|null;
 export type TrackQueue = Array<QueuedTrack>;
+export type RepeatType = null|'one'|'all';
 export interface QueuedTrack {
   track: object;
   id: string;
@@ -38,6 +39,7 @@ export interface PlayerState {
   seek: number;
   duration: number;
   isShuffled: boolean;
+  repeat: RepeatType;
 }
 
 const state: PlayerState = {
@@ -47,6 +49,7 @@ const state: PlayerState = {
   queue: [],
   shuffled: [],
   isShuffled: false,
+  repeat: null,
 };
 
 const getters = {
@@ -181,6 +184,19 @@ const mutations = {
     state.current = payload.current;
     state.shuffled = payload.shuffled;
     state.isShuffled = payload.isShuffled;
+  },
+  TOGGLE_REPEAT(state: PlayerState) {
+    let repeat: RepeatType = null;
+    if (state.repeat === null) {
+      repeat = 'all';
+    }
+    if (state.repeat === 'all') {
+      repeat = 'one';
+    }
+    if (state.repeat === 'one') {
+      repeat = null;
+    }
+    state.repeat = repeat;
   },
 };
 
