@@ -1,4 +1,5 @@
 import Vue from 'vue';
+import axios from 'axios';
 import VueGtag from 'vue-gtag';
 import { sync } from 'vuex-router-sync';
 import App from './App.vue';
@@ -9,6 +10,8 @@ import vuetify from './plugins/vuetify';
 import './plugins/progress';
 import './plugins/algolia';
 import './filters';
+
+axios.defaults.withCredentials = true;
 
 Vue.config.productionTip = false;
 

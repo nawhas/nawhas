@@ -150,6 +150,7 @@ export default class GlobalSearch extends Vue {
 <style lang="scss" scoped>
 @import '~vuetify/src/styles/styles';
 
+$width: 400px;
 .search {
   $easing: cubic-bezier(0.4, 0, 0.2, 1);
   $duration: 280ms;
@@ -158,7 +159,7 @@ export default class GlobalSearch extends Vue {
   display: flex;
   flex-direction: column;
   background: rgba(0, 0, 0, 0.1);
-  width: 450px;
+  width: $width;
   border-radius: 4px;
   margin-top: 4px;
 
@@ -174,7 +175,7 @@ export default class GlobalSearch extends Vue {
   }
 
   .search__container {
-    width: 450px;
+    width: $width;
     background-color: white;
     max-height: calc(100vh - 100px);
     overflow-y: auto;
@@ -203,6 +204,7 @@ export default class GlobalSearch extends Vue {
       position: fixed;
       top: 0;
       left: 0;
+      z-index: 1;
     }
     .search__container {
       width: 100%;

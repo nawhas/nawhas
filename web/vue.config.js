@@ -14,6 +14,7 @@ module.exports = {
   productionSourceMap: false,
   devServer: {
     https,
+    host: 'nawhas.test',
     proxy: {
       '/api': {
         target: 'https://api.nawhas.test',

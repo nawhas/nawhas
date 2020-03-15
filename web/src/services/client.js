@@ -1,6 +1,5 @@
 import axios from 'axios';
 import { API_DOMAIN } from '../config';
-import { getAccessToken } from './auth';
 
 class Client {
   constructor() {
@@ -47,11 +46,6 @@ class Client {
       Accept: 'application/json',
       'Content-Type': 'application/json',
     };
-
-    const token = getAccessToken();
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
 
     return axios(config);
   }
