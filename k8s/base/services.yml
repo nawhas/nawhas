@@ -4,13 +4,11 @@ metadata:
   name: api
   labels:
     tier: backend
-    env: production
 spec:
   type: NodePort
   selector:
     app: api
     tier: backend
-    env: production
   ports:
     - name: 'php'
       port: 9000

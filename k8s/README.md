@@ -10,11 +10,11 @@ BRANCH=$(git rev-parse --abbrev-ref HEAD)
 IMAGE=nawhas/api
 
 # Build the docker image and tag them
-docker build --file ../../api/Dockerfile \
+docker build --file ../api/Dockerfile \
   -t "$IMAGE:$SHA" \
   -t "$IMAGE:$BRANCH" \
   --build-arg GITHUB_SHA=$SHA \
-  ../../api
+  ../api
 
 # Push images to docker hub
 docker push "$IMAGE:$SHA" && docker push "$IMAGE:$BRANCH"
@@ -59,4 +59,22 @@ kubectl create -f certs/issuer.yml
 # +     cert-manager.io/cluster-issuer: "letsencrypt-prod"
 
 kubectl apply -f ingress.yml
+```
+
+### Kustomize for Staging
+
+```shell script
+kustomize edit set namespace stg
+kustomize edit add resource ingress.staging.yml
+kustomize edit add secret api.staging.env --from-env-file secrets/api.staging.env
+kustomize edit set image "IMAGE:TAG=$IMAGE:$SHA"
+
+# 
+secretGenerator:
+  - name: api.env
+    envs:
+      - secrets/api.env
+  - name: api.staging.env
+    envs:
+      - secrets/api.staging.env
 ```

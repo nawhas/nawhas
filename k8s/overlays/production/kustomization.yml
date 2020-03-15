@@ -1,13 +1,13 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
+  - ../../base
+patchesStrategicMerge:
   - deployments.yml
-  - services.yml
   - ingress.yml
+commonLabels:
+  env: production
 secretGenerator:
   - name: api.env
     envs:
-      - secrets/api.env
-  - name: api.staging.env
-    envs:
-      - secrets/api.staging.env
+      - api.env
