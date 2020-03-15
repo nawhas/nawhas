@@ -269,7 +269,7 @@ export default class TrackPage extends Vue {
       });
     }
     await getTracks(reciter, album, {
-      include: 'reciter,lyrics,album,media',
+      include: 'reciter,lyrics,album,media,related',
     }).then((r) => {
       this.albumTracks = r.data.data;
     });
