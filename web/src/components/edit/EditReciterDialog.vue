@@ -103,7 +103,7 @@ export default class EditReciterDialog extends Vue {
         { headers: { 'Content-Type': 'multipart/form-data' } },
       );
     }
-    this.$router.push({ name: 'reciters.show', params: { reciter: slug } })
+    this.$router.replace({ name: 'reciters.show', params: { reciter: slug } })
       .catch(() => window.location.reload());
     this.close();
     this.loading = false;
