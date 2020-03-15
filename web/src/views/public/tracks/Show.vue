@@ -35,11 +35,11 @@
       <div class="hero__bar">
         <v-container class="bar__content">
           <div class="bar__actions bar__actions--visible">
-            <template v-if="track">
+            <template v-if="track && albumTracks">
               <v-btn text
                      :color="this.textColor"
-                     v-if="hasAudio && !isSameTrackPlaying"
-                     @click="playTrack"
+                     v-if="hasAudio && albumTracks && !isSameTrackPlaying"
+                     @click="playAlbum"
               >
                 <v-icon left>play_circle_filled</v-icon> Play
               </v-btn>
@@ -48,11 +48,11 @@
                     v-else-if="hasAudio && isSameTrackPlaying"
                     @click="stopPlaying"
               >
-                <v-icon>stop</v-icon> Stop Playing
+                <v-icon>stop</v-icon> Stop
               </v-btn>
               <v-btn text
                      :color="this.textColor"
-                     v-if="hasAudio && !addedToQueueSnackbar"
+                     v-if="hasAudio && !addedToQueueSnackbar && albumTracks"
                      @click="addToQueue"
               >
                 <v-icon left>playlist_add</v-icon> Add to Queue
@@ -76,6 +76,7 @@
             >
               <v-icon>print</v-icon>
             </v-btn>
+            <edit-track-dialog v-if="track && isModerator" :track="track"></edit-track-dialog>
             <v-btn dark icon v-if="false"><v-icon>more_vert</v-icon></v-btn>
           </div>
         </v-container>
@@ -111,7 +112,7 @@
               <v-icon class="card__title__icon">format_list_bulleted</v-icon>
               <div>More From This Album</div>
             </v-card-title>
-            <v-card-text class="pa-0" v-if="track && album">
+            <v-card-text class="pa-0" v-if="track && albumTracks">
               <router-link
                 v-for="(albumTrack, index) in album.tracks.data"
                 :key="albumTrack.id"
@@ -130,6 +131,9 @@
             <v-card-text v-else>
               <more-tracks-skeleton />
             </v-card-text>
+            <v-card-actions v-if="album && isModerator" class="d-flex justify-end album__actions">
+              <edit-track-dialog :album="album" />
+            </v-card-actions>
           </v-card>
         </v-col>
       </v-row>
@@ -139,6 +143,9 @@
       <v-icon color="white">playlist_add_check</v-icon> Added to Queue
       <v-btn color="deep-orange" text @click="undo">
         Undo
+      </v-btn>
+      <v-btn color="green" text @click="addedToQueueSnackbar = false">
+        Close
       </v-btn>
     </v-snackbar>
   </div>
@@ -153,13 +160,15 @@ import Vibrant from 'node-vibrant';
 import ReciterHeroSkeleton from '@/components/loaders/ReciterHeroSkeleton.vue';
 import LyricsSkeleton from '@/components/loaders/LyricsSkeleton.vue';
 import MoreTracksSkeleton from '@/components/loaders/MoreTracksSkeleton.vue';
-import { getTrack } from '@/services/tracks';
+import EditTrackDialog from '@/components/edit/EditTrackDialog.vue';
+import { getTracks, getTrack } from '@/services/tracks';
 
 @Component({
   components: {
     ReciterHeroSkeleton,
     LyricsSkeleton,
     MoreTracksSkeleton,
+    EditTrackDialog,
   },
 })
 export default class TrackPage extends Vue {
@@ -167,6 +176,7 @@ export default class TrackPage extends Vue {
   private background = 'rgb(150, 37, 2)';
   private textColor = '#fff';
   private track: any = null;
+  private albumTracks: any = null;
   private addedToQueueSnackbar = false;
 
   get reciter() {
@@ -199,12 +209,11 @@ export default class TrackPage extends Vue {
   }
 
   get isSameTrackPlaying() {
-    const { player } = this.$store.state;
-    if (player.queue.length) {
-      if (player.queue[player.current].track === this.track) {
+    const currentTrack = this.$store.getters['player/track'];
+    if (currentTrack) {
+      if (this.track.id === currentTrack.track.id) {
         return true;
       }
-      return false;
     }
     return false;
   }
@@ -218,6 +227,10 @@ export default class TrackPage extends Vue {
       }
     }
     return false;
+  }
+
+  get isModerator() {
+    return this.$store.getters['auth/isModerator'];
   }
 
   mounted() {
@@ -255,6 +268,11 @@ export default class TrackPage extends Vue {
         this.track = r.data;
       });
     }
+    await getTracks(reciter, album, {
+      include: 'reciter,lyrics,album,media,related',
+    }).then((r) => {
+      this.albumTracks = r.data.data;
+    });
 
     this.setBackgroundFromImage();
     this.$Progress.finish();
@@ -300,8 +318,8 @@ export default class TrackPage extends Vue {
     });
   }
 
-  playTrack() {
-    this.$store.commit('player/PLAY_TRACK', { track: this.track });
+  playAlbum() {
+    this.$store.commit('player/PLAY_ALBUM', { tracks: this.albumTracks, start: this.track });
   }
 
   stopPlaying() {
@@ -433,6 +451,13 @@ export default class TrackPage extends Vue {
     .album__track__text {
       font-weight: 600;
     }
+  }
+  .album-tracks__actions {
+    background: rgba(0,0,0,0.1);
+  }
+
+  .album__actions {
+    background-color: rgba(0,0,0,0.1);
   }
 }
 

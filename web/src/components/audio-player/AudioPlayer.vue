@@ -49,6 +49,13 @@
           </div>
         </div>
         <div class="player-actions">
+          <v-btn icon
+            v-if="!minimized"
+            @click="toggleShuffle"
+            :color="shuffled ? 'deep-orange' : 'secondary'"
+          >
+            <v-icon>shuffle</v-icon>
+          </v-btn>
           <v-btn
             v-if="!mobile || !minimized"
             icon
@@ -81,6 +88,13 @@
           >
             <v-icon :size="playbackControlSizes.standard.icon">skip_next</v-icon>
           </v-btn>
+          <v-btn @click="toggleRepeat"
+                 icon
+                 v-if="!minimized"
+                 :color="repeat ? 'deep-orange' : 'secondary'">
+            <v-icon v-if="repeat === null || repeat === 'all'">repeat</v-icon>
+            <v-icon v-else>repeat_one</v-icon>
+          </v-btn>
           <v-menu
             v-if="minimized"
             top
@@ -110,6 +124,7 @@
               top
               :nudge-left="300"
               offset-y
+              allow-overflow
               :close-on-content-click="false"
             >
               <template v-slot:activator="{ on }">
@@ -121,7 +136,10 @@
                 </v-btn>
               </template>
 
-              <v-card>
+              <v-card class="queue-list-menu">
+                <v-card-title class="queue-list-menu__title">
+                  On the Queue
+                </v-card-title>
                 <queue-list @change="resetQueueMenu"></queue-list>
               </v-card>
             </v-menu>
@@ -144,7 +162,9 @@ import { Component, Vue, Watch } from 'vue-property-decorator';
 import { Howl } from 'howler';
 import * as moment from 'moment';
 import QueueList from '@/components/audio-player/QueueList.vue';
-import { PlayerState, QueuedTrack, TrackQueue } from '@/store/modules/player';
+import {
+  PlayerState, QueuedTrack, TrackQueue, RepeatType,
+} from '@/store/modules/player';
 
 interface CachedTrackReference {
   queued: QueuedTrack|null;
@@ -252,7 +272,7 @@ export default class AudioPlayer extends Vue {
    * Gets the current queue from the player store
    */
   get queue(): TrackQueue {
-    return this.store.queue;
+    return this.$store.getters['player/queue'];
   }
 
   get artwork(): string {
@@ -293,14 +313,22 @@ export default class AudioPlayer extends Vue {
    * Get the duration from the store.
    */
   get duration(): number {
-    return this.$store.state.player.duration;
+    return this.store.duration;
   }
 
   /**
    * Get the seek from the store
    */
   get seek(): number {
-    return this.$store.state.player.seek;
+    return this.store.seek;
+  }
+
+  get shuffled(): boolean {
+    return this.store.isShuffled;
+  }
+
+  get repeat(): RepeatType {
+    return this.store.repeat;
   }
 
   get formattedSeek() {
@@ -424,6 +452,20 @@ export default class AudioPlayer extends Vue {
   }
 
   /**
+   * Toggles the shuffle
+   */
+  toggleShuffle() {
+    this.$store.commit('player/TOGGLE_SHUFFLE');
+  }
+
+  /**
+   * Toggle the repeat
+   */
+  toggleRepeat() {
+    this.$store.commit('player/TOGGLE_REPEAT');
+  }
+
+  /**
    * Start playing the current track.
    * If no player is initialized, initialize Howler.
    */
@@ -456,7 +498,6 @@ export default class AudioPlayer extends Vue {
     if (!this.howl) {
       return;
     }
-
     this.howl.stop();
     this.playing = false;
     const seek = 0;
@@ -531,9 +572,17 @@ export default class AudioPlayer extends Vue {
 
     // Register end binding.
     howl.on('end', () => {
+      if (this.repeat === 'one') {
+        this.play();
+        return;
+      }
       if (this.hasNext) {
         this.next();
       } else {
+        if (this.repeat === 'all') {
+          this.$store.commit('player/SKIP_TO_TRACK', { id: this.queue[0].id });
+          return;
+        }
         this.stop();
       }
     });
@@ -679,7 +728,7 @@ $duration: 680ms;
   }
   .player-actions {
     margin: auto;
-    justify-content: center;
+    justify-content: space-around;
     display: flex;
     align-items: center;
   }
@@ -794,8 +843,23 @@ $duration: 680ms;
       align-items: center;
       justify-content: space-between;
       width: 100%;
-      padding: 0 24px;
+      padding: 0;
     }
+  }
+}
+
+.queue-list-menu {
+  max-height: calc(100vh - 180px);
+  position: relative;
+
+  .queue-list-menu__title {
+    background: white;
+    position: sticky;
+    padding: 16px 16px 8px;
+    top: 0;
+    z-index: 1;
+    margin-bottom: -8px;
+    border-bottom: 1px solid rgba(0,0,0,0.1);
   }
 }
 

@@ -10,6 +10,9 @@ import { Component, Vue } from 'vue-property-decorator';
 
 @Component
 export default class App extends Vue {
+  created() {
+    this.$store.dispatch('auth/check');
+  }
   get isPlayerShowing() {
     return this.$store.getters['player/track'] !== null;
   }

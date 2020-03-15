@@ -40,6 +40,7 @@
       </div>
       <div class="app-bar__right nav__search">
         <search />
+        <user-menu class="user-menu" />
       </div>
     </v-app-bar>
     <v-content>
@@ -57,6 +58,7 @@ import { Component, Vue } from 'vue-property-decorator';
 import Search from '@/components/search/Search.vue';
 import navItems from '@/data/navigation';
 import AudioPlayer from '@/components/audio-player/AudioPlayer.vue';
+import UserMenu from '@/components/auth/UserMenu.vue';
 import UpdateServiceWorker from '@/components/utils/UpdateServiceWorker.vue';
 
 @Component({
@@ -64,6 +66,7 @@ import UpdateServiceWorker from '@/components/utils/UpdateServiceWorker.vue';
     UpdateServiceWorker,
     Search,
     AudioPlayer,
+    UserMenu,
   },
 })
 export default class PublicVuetify extends Vue {
@@ -120,12 +123,17 @@ export default class PublicVuetify extends Vue {
 .app-bar__left, .app-bar__right {
   flex: 1;
   display: flex;
+  align-items: center;
 }
 .app-bar__left {
   justify-content: flex-start;
 }
 .app-bar__right {
   justify-content: flex-end;
+}
+.user-menu {
+  align-self: flex-start;
+  margin: 4px 0 0 4px;
 }
 
 @media #{map-get($display-breakpoints, 'md-and-down')} {
@@ -137,6 +145,11 @@ export default class PublicVuetify extends Vue {
 @media #{map-get($display-breakpoints, 'sm-and-down')} {
   .main-container {
     min-height: calc(100vh - 56px);
+  }
+
+  .user-menu {
+    margin: 0;
+    align-self: center;
   }
 }
 </style>

@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: api-deployment
+  name: api
   labels:
     app: api
     tier: backend
@@ -16,15 +16,11 @@ spec:
       labels:
         app: api
         tier: backend
-        env: production
     spec:
       containers:
         - name: api
           image: IMAGE:TAG
           imagePullPolicy: Always
-          envFrom:
-            - secretRef:
-                name: api.env
           livenessProbe:
             httpGet:
               path: /alive

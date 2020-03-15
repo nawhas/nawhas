@@ -13,6 +13,7 @@ IMAGE=nawhas/api
 docker build --file ../api/Dockerfile \
   -t "$IMAGE:$SHA" \
   -t "$IMAGE:$BRANCH" \
+  --build-arg GITHUB_SHA=$SHA \
   ../api
 
 # Push images to docker hub

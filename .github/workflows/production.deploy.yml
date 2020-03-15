@@ -54,26 +54,26 @@ jobs:
 
       # Set up kustomize
       - name: Set up Kustomize
-        working-directory: ./k8s
+        working-directory: ./k8s/overlays/production
         run: |
           curl -o kustomize --location https://github.com/kubernetes-sigs/kustomize/releases/download/v3.1.0/kustomize_3.1.0_linux_amd64
           chmod u+x ./kustomize
 
       # Update secrets.
       - name: Update secrets
-        working-directory: ./k8s/secrets
+        working-directory: ./k8s/overlays/production
         run: |
-          ./decrypt.sh
+          gpg --quiet --batch --yes --decrypt --passphrase="$GPG_KEY" --output api.env api.env.gpg
         env:
           GPG_KEY: ${{ secrets.GPG_KEY }}
 
       # Deploy the Docker image to the GKE cluster
       - name: Deploy
-        working-directory: ./k8s
+        working-directory: ./k8s/overlays/production
         run: |
           ./kustomize edit set image IMAGE:TAG=$API_IMAGE:${GITHUB_SHA::8}
           ./kustomize build . | kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig apply -f -
-          kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig rollout status deployment/api-deployment
+          kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig rollout status deployment/api
           kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig get services -o wide
 
       - name: Notify Build Success

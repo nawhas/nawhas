@@ -23,6 +23,8 @@ return [
             'https://localhost:8080',
             'https://*.onrender.com',
             'https://' . env('APP_DOMAIN'),
+            'https://*.' . env('APP_DOMAIN'),
+            'https://' . env('APP_DOMAIN') . ':8080',
         ],
 
         'allow_methods' => [
@@ -39,6 +41,7 @@ return [
             'X-Auth-Token',
             'Origin',
             'Authorization',
+            'X-XSRF-Token',
         ],
 
         'expose_headers' => [
