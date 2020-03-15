@@ -94,17 +94,26 @@ const mutations = {
   },
   PLAY_ALBUM(state: PlayerState, { tracks, start }) {
     const queue: TrackQueue = [];
-    tracks.map((track) => queue.push({ track, id: generateId() }));
+    tracks.map((track) => {
+      if (track.related.audio) {
+        queue.push({ track, id: generateId() });
+        return true;
+      }
+      return false;
+    });
 
     const current = start ? queue.findIndex((queued: QueuedTrack) => start.id === (queued.track as any).id) : 0;
     state.queue = queue;
     state.current = current;
   },
   ADD_ALBUM_TO_QUEUE(state: PlayerState, { tracks }) {
-    tracks.map((track) => state.queue.push({
-      track,
-      id: generateId(),
-    }));
+    tracks.map((track) => {
+      if (track.related.audio) {
+        state.queue.push({ track, id: generateId() });
+        return true;
+      }
+      return false;
+    });
   },
   NEXT(state: PlayerState) {
     if (state.current === null) {
