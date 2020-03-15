@@ -35,7 +35,7 @@ jobs:
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
-        run: docker login -u $DOCKER_USERNAME -p $GITHUB_TOKEN
+        run: docker login docker.pkg.github.com -u $DOCKER_USERNAME -p $GITHUB_TOKEN
 
       - name: Build
         run: |
