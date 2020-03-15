@@ -5,10 +5,10 @@ metadata:
 spec:
   tls:
     - hosts:
-      - api.stg.k8s.nawhas.com
+      - api.staging.nawhas.com
       secretName: nawhas-tls
   rules:
-    - host: api.stg.k8s.nawhas.com
+    - host: api.staging.nawhas.com
       http:
         paths:
           - backend:
