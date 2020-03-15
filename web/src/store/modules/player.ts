@@ -95,7 +95,7 @@ const mutations = {
   PLAY_ALBUM(state: PlayerState, { tracks, start }) {
     const queue: TrackQueue = [];
     tracks.map((track) => {
-      if (track.media.data.length > 0) {
+      if (track.related.audio) {
         queue.push({ track, id: generateId() });
         return true;
       }
@@ -108,7 +108,7 @@ const mutations = {
   },
   ADD_ALBUM_TO_QUEUE(state: PlayerState, { tracks }) {
     tracks.map((track) => {
-      if (track.media.data.length > 0) {
+      if (track.related.audio) {
         state.queue.push({ track, id: generateId() });
         return true;
       }
