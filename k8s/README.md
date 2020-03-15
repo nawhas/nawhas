@@ -60,21 +60,3 @@ kubectl create -f certs/issuer.yml
 
 kubectl apply -f ingress.yml
 ```
-
-### Kustomize for Staging
-
-```shell script
-kustomize edit set namespace stg
-kustomize edit add resource ingress.staging.yml
-kustomize edit add secret api.staging.env --from-env-file secrets/api.staging.env
-kustomize edit set image "IMAGE:TAG=$IMAGE:$SHA"
-
-# 
-secretGenerator:
-  - name: api.env
-    envs:
-      - secrets/api.env
-  - name: api.staging.env
-    envs:
-      - secrets/api.staging.env
-```
