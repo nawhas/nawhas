@@ -23,6 +23,7 @@ return [
             'https://localhost:8080',
             'https://*.onrender.com',
             'https://' . env('APP_DOMAIN'),
+            'https://*.' . env('APP_DOMAIN'),
             'https://' . env('APP_DOMAIN') . ':8080',
         ],
 
