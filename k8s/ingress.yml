@@ -8,16 +8,9 @@ metadata:
 spec:
   tls:
     - hosts:
-      - api.k8s.nawhas.com
       - api.nawhas.com
       secretName: nawhas-tls
   rules:
-    - host: api.k8s.nawhas.com
-      http:
-        paths:
-          - backend:
-              serviceName: api
-              servicePort: 80
     - host: api.nawhas.com
       http:
         paths:

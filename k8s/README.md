@@ -10,10 +10,11 @@ BRANCH=$(git rev-parse --abbrev-ref HEAD)
 IMAGE=nawhas/api
 
 # Build the docker image and tag them
-docker build --file ../api/Dockerfile \
+docker build --file ../../api/Dockerfile \
   -t "$IMAGE:$SHA" \
   -t "$IMAGE:$BRANCH" \
-  ../api
+  --build-arg GITHUB_SHA=$SHA \
+  ../../api
 
 # Push images to docker hub
 docker push "$IMAGE:$SHA" && docker push "$IMAGE:$BRANCH"
