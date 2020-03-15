@@ -16,68 +16,91 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+/* eslint-disable dot-notation */
+import { Component, Vue, Prop } from 'vue-property-decorator';
 import Vibrant from 'node-vibrant';
 
-export default {
-  name: 'ReciterCard',
-  props: ['id', 'name', 'slug', 'avatar', 'related', 'createdAt', 'updatedAt', 'featured'],
-  mounted() {
-    if (this.isDark) {
-      this.background = null;
-      this.textColor = null;
+@Component
+export default class ReciterCard extends Vue {
+  @Prop({ type: String }) private id!: any;
+  @Prop({ type: String }) private name!: any;
+  @Prop({ type: String }) private slug!: any;
+  @Prop({ type: String }) private avatar!: any;
+  @Prop({ type: Object }) private related!: any;
+  @Prop({ type: String }) private createdAt!: any;
+  @Prop({ type: String }) private updatedAt!: any;
+  @Prop() private featured!: any;
+
+  private backgroundColorTemp: null|string = null;
+  private textColorTemp: null|string = null;
+
+  get image() {
+    return this.avatar || '/img/default-reciter-avatar.png';
+  }
+  get classObject() {
+    return {
+      'reciter-card': true,
+      'reciter-card--featured': this.featured !== undefined,
+    };
+  }
+
+  get isDark() {
+    return this.$vuetify.theme.dark;
+  }
+
+  get background() {
+    if (this.backgroundColorTemp !== null) {
+      return this.backgroundColorTemp;
     }
+    if (this.isDark) {
+      return null;
+    }
+    if (this.featured !== undefined) {
+      return '#444444';
+    }
+    return 'white';
+  }
+
+  get textColor() {
+    if (this.textColorTemp !== null) {
+      return this.textColorTemp;
+    }
+    if (this.isDark) {
+      return null;
+    }
+    if (this.featured !== undefined) {
+      return 'white';
+    }
+    return '#333';
+  }
+
+  mounted() {
     if (this.featured !== undefined) {
       this.setBackgroundFromImage();
     }
-  },
-  methods: {
-    goToReciter() {
-      this.$router.push({
-        name: 'reciters.show',
-        params: { reciter: this.slug },
+  }
+
+  goToReciter() {
+    this.$router.push({
+      name: 'reciters.show',
+      params: { reciter: this.slug },
+    });
+  }
+
+  setBackgroundFromImage() {
+    Vibrant.from(this.image)
+      .getPalette()
+      .then((palette) => {
+        const swatch = palette.DarkMuted;
+        if (!swatch) {
+          return;
+        }
+        this.backgroundColorTemp = swatch.getHex();
+        this.textColorTemp = swatch.getBodyTextColor();
       });
-    },
-    setBackgroundFromImage() {
-      Vibrant.from(this.image)
-        .getPalette()
-        .then((palette) => {
-          const swatch = palette.DarkMuted;
-          if (!swatch) {
-            return;
-          }
-          this.background = swatch.getHex();
-          this.textColor = swatch.getBodyTextColor();
-        });
-    },
-  },
-  data() {
-    if (this.featured !== undefined) {
-      return {
-        background: '#444444',
-        textColor: 'white',
-      };
-    }
-    return {
-      background: 'white',
-      textColor: '#333',
-    };
-  },
-  computed: {
-    image() {
-      return this.avatar || '/img/default-reciter-avatar.png';
-    },
-    classObject() {
-      return {
-        'reciter-card': true,
-        'reciter-card--featured': this.featured !== undefined,
-      };
-    },
-    isDark() {
-      return this.$vuetify.theme.dark;
-    },
-  },
-};
+  }
+}
 </script>
 
 <style lang="scss" scoped>
