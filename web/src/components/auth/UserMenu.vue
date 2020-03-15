@@ -67,7 +67,7 @@ export default class UserMenu extends Vue {
   }
 
   get authenticated() {
-    return this.user !== null;
+    return this.$store.getters['auth/authenticated'];
   }
 
   get initialized() {
