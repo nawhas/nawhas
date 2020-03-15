@@ -1,5 +1,6 @@
 export type CurrentTrackRef = number|null;
 export type TrackQueue = Array<QueuedTrack>;
+export type RepeatType = null|'one'|'all';
 export interface QueuedTrack {
   track: object;
   id: string;
@@ -38,6 +39,7 @@ export interface PlayerState {
   seek: number;
   duration: number;
   isShuffled: boolean;
+  repeat: RepeatType;
 }
 
 const state: PlayerState = {
@@ -47,6 +49,7 @@ const state: PlayerState = {
   queue: [],
   shuffled: [],
   isShuffled: false,
+  repeat: null,
 };
 
 const getters = {
@@ -81,10 +84,27 @@ const mutations = {
     state.current = 0;
   },
   ADD_TO_QUEUE(state: PlayerState, { track }) {
+    if (state.queue.length === 0) {
+      state.current = 0;
+    }
     state.queue.push({
       track,
       id: generateId(),
     });
+  },
+  PLAY_ALBUM(state: PlayerState, { tracks, start }) {
+    const queue: TrackQueue = [];
+    tracks.map((track) => queue.push({ track, id: generateId() }));
+
+    const current = start ? queue.findIndex((queued: QueuedTrack) => start.id === (queued.track as any).id) : 0;
+    state.queue = queue;
+    state.current = current;
+  },
+  ADD_ALBUM_TO_QUEUE(state: PlayerState, { tracks }) {
+    tracks.map((track) => state.queue.push({
+      track,
+      id: generateId(),
+    }));
   },
   NEXT(state: PlayerState) {
     if (state.current === null) {
@@ -164,6 +184,19 @@ const mutations = {
     state.current = payload.current;
     state.shuffled = payload.shuffled;
     state.isShuffled = payload.isShuffled;
+  },
+  TOGGLE_REPEAT(state: PlayerState) {
+    let repeat: RepeatType = null;
+    if (state.repeat === null) {
+      repeat = 'all';
+    }
+    if (state.repeat === 'all') {
+      repeat = 'one';
+    }
+    if (state.repeat === 'one') {
+      repeat = null;
+    }
+    state.repeat = repeat;
   },
 };
 

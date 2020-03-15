@@ -9,10 +9,12 @@ use App\Entities\Reciter;
 use App\Http\Controllers\Controller;
 use App\Http\Transformers\AlbumTransformer;
 use App\Repositories\AlbumRepository;
+use App\Repositories\TrackRepository;
 use App\Support\Pagination\PaginationState;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Validation\ValidationException;
 use Zain\LaravelDoctrine\Algolia\SearchService;
 
@@ -63,6 +65,29 @@ class AlbumsController extends Controller
         $this->repository->persist($album);
 
         return $this->respondWithItem($album);
+    }
+
+    public function destroy(Request $request, Reciter $reciter, Album $album, TrackRepository $trackRepository): Response
+    {
+        if ($album->hasArtwork()) {
+            $media = $album->getArtwork();
+            logger()->debug("Deleting media file at {$media->getPath()}");
+            Storage::delete($media->getPath());
+        }
+
+        foreach($album->getTracks() as $track) {
+            if ($track->hasAudioFile()) {
+                $media = $track->getAudioFile();
+                logger()->debug("Deleting media file at {$media->getPath()}");
+                Storage::delete($media->getPath());
+            }
+    
+            $trackRepository->remove($track);
+        }
+
+        $this->repository->remove($album);
+
+        return response()->noContent();
     }
 
     public function uploadArtwork(Request $request, Reciter $reciter, Album $album, SearchService $search): JsonResponse
