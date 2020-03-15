@@ -78,6 +78,9 @@
         </tr>
       </template>
     </v-data-table>
+    <v-card-actions class="d-flex justify-end album__actions">
+      <edit-track-dialog v-if="album && isModerator" :album="album" />
+    </v-card-actions>
   </v-card>
 </template>
 
@@ -256,6 +259,10 @@ export default class Album extends Vue {
   font-size: 20px;
 }
 
+.album__edit {
+  padding: 0 16px;
+}
+
 .album__tracks {
   .datatable {
     th:focus,
@@ -286,6 +293,10 @@ export default class Album extends Vue {
   .track__feature--disabled {
     color: rgba(0, 0, 0, 0.1);
   }
+}
+
+.album__actions {
+  background: rgba(0,0,0,0.1);
 }
 
 @media #{map-get($display-breakpoints, 'sm-and-down')} {
