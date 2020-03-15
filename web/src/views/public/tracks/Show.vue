@@ -76,6 +76,7 @@
             >
               <v-icon>print</v-icon>
             </v-btn>
+            <edit-track-dialog v-if="track && isModerator" :track="track"></edit-track-dialog>
             <v-btn dark icon v-if="false"><v-icon>more_vert</v-icon></v-btn>
           </div>
         </v-container>
@@ -130,6 +131,9 @@
             <v-card-text v-else>
               <more-tracks-skeleton />
             </v-card-text>
+            <v-card-actions v-if="album && isModerator" class="d-flex justify-end album__actions">
+              <edit-track-dialog :album="album" />
+            </v-card-actions>
           </v-card>
         </v-col>
       </v-row>
@@ -156,6 +160,7 @@ import Vibrant from 'node-vibrant';
 import ReciterHeroSkeleton from '@/components/loaders/ReciterHeroSkeleton.vue';
 import LyricsSkeleton from '@/components/loaders/LyricsSkeleton.vue';
 import MoreTracksSkeleton from '@/components/loaders/MoreTracksSkeleton.vue';
+import EditTrackDialog from '@/components/edit/EditTrackDialog.vue';
 import { getTracks, getTrack } from '@/services/tracks';
 
 @Component({
@@ -163,6 +168,7 @@ import { getTracks, getTrack } from '@/services/tracks';
     ReciterHeroSkeleton,
     LyricsSkeleton,
     MoreTracksSkeleton,
+    EditTrackDialog,
   },
 })
 export default class TrackPage extends Vue {
@@ -203,12 +209,11 @@ export default class TrackPage extends Vue {
   }
 
   get isSameTrackPlaying() {
-    const { player } = this.$store.state;
-    if (player.queue.length) {
-      if (player.queue[player.current].track === this.track) {
+    const currentTrack = this.$store.getters['player/track'];
+    if (currentTrack) {
+      if (this.track.id === currentTrack.track.id) {
         return true;
       }
-      return false;
     }
     return false;
   }
@@ -222,6 +227,10 @@ export default class TrackPage extends Vue {
       }
     }
     return false;
+  }
+
+  get isModerator() {
+    return this.$store.getters['auth/isModerator'];
   }
 
   mounted() {
@@ -445,6 +454,10 @@ export default class TrackPage extends Vue {
   }
   .album-tracks__actions {
     background: rgba(0,0,0,0.1);
+  }
+
+  .album__actions {
+    background-color: rgba(0,0,0,0.1);
   }
 }
 

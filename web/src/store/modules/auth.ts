@@ -60,6 +60,9 @@ const getters = {
   role(state: AuthState): RoleValue {
     return state.user ? state.user.role : Role.GUEST;
   },
+  isModerator(state: AuthState): boolean {
+    return (state.user && state.user.role === Role.MODERATOR);
+  },
 };
 
 export default {

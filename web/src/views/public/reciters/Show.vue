@@ -27,6 +27,7 @@
             <v-btn dark text><v-icon left>star_outline</v-icon> Favorite</v-btn>
           </div>
           <div class="bar__actions bar__actions--overflow">
+            <edit-reciter-dialog v-if="reciter && isModerator" :reciter="reciter"></edit-reciter-dialog>
             <v-btn dark icon><v-icon>more_vert</v-icon></v-btn>
           </div>
         </v-container>
@@ -49,7 +50,10 @@
     </v-container>
 
     <v-container class="app__section">
-      <h5 class="section__title">Albums</h5>
+      <h5 class="section__title section__title--with-actions">
+        <div>Albums</div>
+        <edit-album-dialog v-if="reciter && isModerator" :reciter="reciter" />
+      </h5>
       <template v-if="albums">
         <template v-if="albums.length > 0">
           <template v-for="album in albums">
@@ -74,6 +78,8 @@ import TrackCard from '@/components/TrackCard.vue';
 import SkeletonCardGrid from '@/components/loaders/SkeletonCardGrid.vue';
 import AlbumSkeleton from '@/components/loaders/AlbumSkeleton.vue';
 import TrackCardSkeleton from '@/components/loaders/TrackCardSkeleton.vue';
+import EditReciterDialog from '@/components/edit/EditReciterDialog.vue';
+import EditAlbumDialog from '@/components/edit/EditAlbumDialog.vue';
 import Album from '@/components/Album.vue';
 import HeroBanner from '@/components/HeroBanner.vue';
 import { getReciter } from '@/services/reciters';
@@ -89,6 +95,8 @@ import { getPopularTracks } from '@/services/popular';
     SkeletonCardGrid,
     TrackCardSkeleton,
     AlbumSkeleton,
+    EditReciterDialog,
+    EditAlbumDialog,
   },
 })
 export default class ReciterProfile extends Vue {
@@ -114,8 +122,12 @@ export default class ReciterProfile extends Vue {
     return 128;
   }
 
+  get isModerator() {
+    return this.$store.getters['auth/isModerator'];
+  }
+
   get showToolbar() {
-    return false;
+    return !!(this.isModerator);
   }
 
   @Watch('$route')
@@ -148,7 +160,10 @@ export default class ReciterProfile extends Vue {
 
   goToPage(number) {
     this.albums = null;
-    getAlbums(this.reciter.id, { include: 'tracks.related', page: number }).then((response) => {
+    getAlbums(this.reciter.id, {
+      include: 'tracks.media,tracks.reciter,tracks.album,tracks.related',
+      page: number,
+    }).then((response) => {
       this.setAlbums(response);
     });
   }

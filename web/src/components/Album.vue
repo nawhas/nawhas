@@ -12,8 +12,12 @@
         </h6>
       </div>
 
+      <div class="album__edit">
+        <edit-album-dialog v-if="album && isModerator" :album="album"></edit-album-dialog>
+      </div>
+
       <div class="album__actions">
-        <v-speed-dial class="album__action__fab" absolute
+        <v-speed-dial v-if="showSpeedPlay" class="album__action__fab" absolute
                       v-model="fab" :open-on-hover="$vuetify.breakpoint.mdAndUp"
                       right bottom direction="left">
           <template v-slot:activator>
@@ -74,14 +78,24 @@
         </tr>
       </template>
     </v-data-table>
+    <v-card-actions v-if="album && isModerator" class="d-flex justify-end album__actions">
+      <edit-track-dialog :album="album" />
+    </v-card-actions>
   </v-card>
 </template>
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import Vibrant from 'node-vibrant';
+import EditAlbumDialog from '@/components/edit/EditAlbumDialog.vue';
+import EditTrackDialog from '@/components/edit/EditTrackDialog.vue';
 
-@Component
+@Component({
+  components: {
+    EditAlbumDialog,
+    EditTrackDialog,
+  },
+})
 export default class Album extends Vue {
   private background = '#444444';
   private textColor = 'white';
@@ -148,6 +162,21 @@ export default class Album extends Vue {
       return 48;
     }
     return 128;
+  }
+
+  get isModerator() {
+    return this.$store.getters['auth/isModerator'];
+  }
+
+  get showSpeedPlay(): boolean {
+    let hasAudio = false;
+    this.tracks.data.map((track) => {
+      if (this.hasAudioFile(track)) {
+        hasAudio = true;
+      }
+      return true;
+    });
+    return hasAudio;
   }
 
   mounted() {
@@ -241,6 +270,10 @@ export default class Album extends Vue {
   font-size: 20px;
 }
 
+.album__edit {
+  padding: 0 16px;
+}
+
 .album__tracks {
   .datatable {
     th:focus,
@@ -271,6 +304,10 @@ export default class Album extends Vue {
   .track__feature--disabled {
     color: rgba(0, 0, 0, 0.1);
   }
+}
+
+.album__actions {
+  background: rgba(0,0,0,0.1);
 }
 
 @media #{map-get($display-breakpoints, 'sm-and-down')} {
