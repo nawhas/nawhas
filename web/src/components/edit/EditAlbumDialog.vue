@@ -82,6 +82,7 @@ export default class EditAlbumDialog extends Vue {
   private dialog = false;
   private form: Form = { ...defaults };
   private loading = false;
+
   @Watch('dialog')
   onDialogStateChanged(opened) {
     if (opened) {
@@ -117,7 +118,8 @@ export default class EditAlbumDialog extends Vue {
       await this.create();
     }
     this.close();
-    window.location.reload();
+    this.$router.replace({ name: 'reciters.show', params: { reciter: this.reciter.slug } })
+      .catch(() => window.location.reload());
   }
   async create() {
     const data: any = {};
