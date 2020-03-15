@@ -23,6 +23,10 @@ export default {
   name: 'ReciterCard',
   props: ['id', 'name', 'slug', 'avatar', 'related', 'createdAt', 'updatedAt', 'featured'],
   mounted() {
+    if (this.isDark) {
+      this.background = 'black';
+      this.textColor = 'white';
+    }
     if (this.featured !== undefined) {
       this.setBackgroundFromImage();
     }
@@ -54,7 +58,6 @@ export default {
         textColor: 'white',
       };
     }
-
     return {
       background: 'white',
       textColor: '#333',
@@ -69,6 +72,9 @@ export default {
         'reciter-card': true,
         'reciter-card--featured': this.featured !== undefined,
       };
+    },
+    isDark() {
+      return this.$vuetify.theme.dark;
     },
   },
 };
