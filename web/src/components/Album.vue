@@ -12,6 +12,10 @@
         </h6>
       </div>
 
+      <div class="album__edit">
+        <edit-album-dialog v-if="album && isModerator" :album="album"></edit-album-dialog>
+      </div>
+
       <div class="album__actions">
         <v-speed-dial class="album__action__fab" absolute
                       v-model="fab" :open-on-hover="$vuetify.breakpoint.mdAndUp"
@@ -80,8 +84,15 @@
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import Vibrant from 'node-vibrant';
+import EditAlbumDialog from '@/components/edit/EditAlbumDialog.vue';
+import EditTrackDialog from '@/components/edit/EditTrackDialog.vue';
 
-@Component
+@Component({
+  components: {
+    EditAlbumDialog,
+    EditTrackDialog,
+  },
+})
 export default class Album extends Vue {
   private background = '#444444';
   private textColor = 'white';
@@ -148,6 +159,10 @@ export default class Album extends Vue {
       return 48;
     }
     return 128;
+  }
+
+  get isModerator() {
+    return this.$store.getters['auth/isModerator'];
   }
 
   mounted() {

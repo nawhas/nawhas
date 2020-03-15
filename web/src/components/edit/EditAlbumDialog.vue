@@ -82,7 +82,7 @@ export default class EditAlbumDialog extends Vue {
   private dialog = false;
   private form: Form = { ...defaults };
   private loading = false;
-  
+
   @Watch('dialog')
   onDialogStateChanged(opened) {
     if (opened) {
