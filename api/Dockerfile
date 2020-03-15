@@ -19,6 +19,11 @@ WORKDIR /var/www/api
 ENV APP_ENV production
 ENV COMPOSER_ALLOW_SUPERUSER 1
 
+ARG GITHUB_SHA
+ARG GITHUB_REF
+ENV GIT_SHA $GITHUB_SHA
+ENV GIT_BRANCH $GITHUB_REF
+
 COPY . .
 
 RUN composer install -n --no-dev --prefer-dist --no-scripts --no-autoloader \
