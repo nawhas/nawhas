@@ -51,6 +51,7 @@
         </div>
       </v-card-text>
       <v-card-actions>
+        <v-btn v-if="album" color="error" text @click="confirmDelete">Delete</v-btn>
         <v-spacer></v-spacer>
         <v-btn text @click="close">Cancel</v-btn>
         <v-btn color="primary" text @click="submit" :loading="loading">Save</v-btn>
@@ -153,6 +154,16 @@ export default class EditAlbumDialog extends Vue {
         upload,
         { headers: { 'Content-Type': 'multipart/form-data' } },
       );
+    }
+  }
+  async confirmDelete() {
+    // eslint-disable-next-line no-alert
+    if (window.confirm(`Are you sure you want to delete '${this.album.title} - ${this.album.year}'?`)) {
+      const { id, reciterId } = this.album;
+      await Client.delete(
+        `/v1/reciters/${reciterId}/albums/${id}`,
+      );
+      window.location.reload();
     }
   }
   close() {
