@@ -1,9 +1,8 @@
 name: Production Deploy
 
 on:
-  push:
-    branches:
-      - master
+  release:
+    types: [published]
 
 env:
   API_IMAGE: nawhas/api
