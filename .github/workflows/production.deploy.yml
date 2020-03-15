@@ -16,6 +16,15 @@ jobs:
       - name: Checkout
         uses: actions/checkout@master
 
+      - name: Notify Build Started
+        uses: voxmedia/github-action-slack-notify-build@v1
+        with:
+          channel: alerts
+          status: STARTED
+          color: warning
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+
       - name: Save DigitalOcean kubeconfig
         uses: digitalocean/action-doctl@master
         env:
@@ -66,3 +75,23 @@ jobs:
           ./kustomize build . | kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig apply -f -
           kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig rollout status deployment/api-deployment
           kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig get services -o wide
+
+      - name: Notify Build Success
+        if: success()
+        uses: voxmedia/github-action-slack-notify-build@v1
+        with:
+          channel: alerts
+          status: SUCCESS
+          color: good
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+
+      - name: Notify Build Failure
+        if: failure()
+        uses: voxmedia/github-action-slack-notify-build@v1
+        with:
+          channel: alerts
+          status: FAILED
+          color: danger
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
