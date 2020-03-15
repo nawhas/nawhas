@@ -209,12 +209,11 @@ export default class TrackPage extends Vue {
   }
 
   get isSameTrackPlaying() {
-    const { player } = this.$store.state;
-    if (player.queue.length) {
-      if (player.queue[player.current].track === this.track) {
+    const currentTrack = this.$store.getters['player/track'];
+    if (currentTrack) {
+      if (this.track.id === currentTrack.track.id) {
         return true;
       }
-      return false;
     }
     return false;
   }

@@ -160,7 +160,10 @@ export default class ReciterProfile extends Vue {
 
   goToPage(number) {
     this.albums = null;
-    getAlbums(this.reciter.id, { include: 'tracks.related', page: number }).then((response) => {
+    getAlbums(this.reciter.id, {
+      include: 'tracks.media,tracks.reciter,tracks.album,tracks.related',
+      page: number,
+    }).then((response) => {
       this.setAlbums(response);
     });
   }

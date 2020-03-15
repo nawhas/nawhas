@@ -17,7 +17,7 @@
       </div>
 
       <div class="album__actions">
-        <v-speed-dial class="album__action__fab" absolute
+        <v-speed-dial v-if="showSpeedPlay" class="album__action__fab" absolute
                       v-model="fab" :open-on-hover="$vuetify.breakpoint.mdAndUp"
                       right bottom direction="left">
           <template v-slot:activator>
@@ -166,6 +166,17 @@ export default class Album extends Vue {
 
   get isModerator() {
     return this.$store.getters['auth/isModerator'];
+  }
+
+  get showSpeedPlay(): boolean {
+    let hasAudio = false;
+    this.tracks.data.map((track) => {
+      if (this.hasAudioFile(track)) {
+        hasAudio = true;
+      }
+      return true;
+    });
+    return hasAudio;
   }
 
   mounted() {

@@ -115,15 +115,10 @@ class Track implements Entity, TimestampedEntity, Visitable
 
     public function getAudioFile(): ?Media
     {
-        if (!($this->media instanceof Selectable)) {
-            throw new \BadMethodCallException('Cannot select audio files from a collection not implementing Selectable.');
-        }
-
-        $criteria = Criteria::create()
-            ->where(Criteria::expr()->eq('type', MediaType::AUDIO()))
-            ->where(Criteria::expr()->eq('provider', MediaProvider::FILE()));
-
-        return $this->media->matching($criteria)->first() ?: null;
+        return $this->media->filter(fn (Media $m) => (
+            $m->getType()->equals(MediaType::AUDIO())
+            && $m->getProvider()->equals(MediaProvider::FILE())
+        ))->first() ?: null;
     }
 
     public function hasAudioFile(): bool
