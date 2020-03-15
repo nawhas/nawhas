@@ -61,10 +61,7 @@ const getters = {
     return state.user ? state.user.role : Role.GUEST;
   },
   isModerator(state: AuthState): boolean {
-    if (state.user && state.user.role === Role.MODERATOR) {
-      return true;
-    }
-    return false;
+    return (state.user && state.user.role === Role.MODERATOR);
   },
 };
 
