@@ -5,7 +5,7 @@ on:
     types: [published]
 
 env:
-  API_IMAGE: nawhas/api
+  API_IMAGE: docker.pkg.github.com/nawhas/nawhas/api
 
 jobs:
   build:
@@ -34,8 +34,8 @@ jobs:
       - name: Docker Login
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-        run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+        run: docker login -u $DOCKER_USERNAME -p $GITHUB_TOKEN
 
       - name: Build
         run: |
@@ -50,6 +50,8 @@ jobs:
         run: |
           docker push $API_IMAGE:${GITHUB_SHA::8}
           docker push $API_IMAGE:${GITHUB_REF##*/}
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
       # Set up kustomize
       - name: Set up Kustomize
