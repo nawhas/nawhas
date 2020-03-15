@@ -70,7 +70,7 @@ jobs:
       - name: Deploy
         working-directory: ./k8s/overlays/production
         run: |
-          ./kustomize edit set image IMAGE:TAG=$API_IMAGE:${GITHUB_SHA::8}
+          ./kustomize edit set image IMAGE:TAG=$API_IMAGE:${GITHUB_REF##*/}
           ./kustomize build . | kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig apply -f -
           kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig rollout status deployment/api
           kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig get services -o wide
