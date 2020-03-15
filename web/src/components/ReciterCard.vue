@@ -24,8 +24,8 @@ export default {
   props: ['id', 'name', 'slug', 'avatar', 'related', 'createdAt', 'updatedAt', 'featured'],
   mounted() {
     if (this.isDark) {
-      this.background = 'black';
-      this.textColor = 'white';
+      this.background = null;
+      this.textColor = null;
     }
     if (this.featured !== undefined) {
       this.setBackgroundFromImage();
