@@ -78,8 +78,8 @@
         </tr>
       </template>
     </v-data-table>
-    <v-card-actions class="d-flex justify-end album__actions">
-      <edit-track-dialog v-if="album && isModerator" :album="album" />
+    <v-card-actions v-if="album && isModerator" class="d-flex justify-end album__actions">
+      <edit-track-dialog :album="album" />
     </v-card-actions>
   </v-card>
 </template>
