@@ -15,24 +15,14 @@ class CreateUserCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'user:create {--name=} {--email=} {--moderator} {--contributor}';
+    protected $signature = 'user:create {--name=} {--email=} {--moderator}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Create a user depending on the role';
-
-    /**
-     * Create a new command instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        parent::__construct();
-    }
+    protected $description = 'Provision a user account.';
 
     /**
      * Execute the console command.
@@ -44,26 +34,7 @@ class CreateUserCommand extends Command
         // Get variables from input scrypt
         $name = $this->option('name');
         $email = $this->option('email');
-        $moderator = $this->option('moderator');
-        $contributor = $this->option('contributor');
-        $role = null;
-
-        // Check to see if a role has been passed
-        if (!$moderator and !$contributor) {
-            $this->info('Moderator or Contributor was not passed');
-            return false;
-        }
-        if ($moderator and $contributor) {
-            $this->info('Moderator and Contributor were both passed. Please pass only one');
-            return false;
-        }
-
-        // Assign $role the correct information
-        if ($moderator) {
-            $role = Role::MODERATOR();
-        } else if($contributor) {
-            $role = Role::CONTRIBUTOR();
-        }
+        $role = $this->option('moderator') ? Role::MODERATOR() : Role::CONTRIBUTOR();
 
         $password = $this->ask('What is the password? Press [Enter] if you would like to generate a random password');
         if (!$password) {
@@ -76,17 +47,16 @@ class CreateUserCommand extends Command
         $this->comment("Email: $email");
         $this->comment("Role: $role");
         $this->comment("Password: $password");
-        $isDetailsCorrect = $this->choice('Are the details displayed above correct?', ['No', 'Yes'], 0);
 
-        if ($isDetailsCorrect === 'Yes') {
-            $password = bcrypt($password);
-            // Create a new user with the information supplied
-            $user = new User($role, $name, $email, $password);
-            $em->persist($user);
-            $em->flush();
-        } else {
+        $confirmed = $this->confirm('Are the details displayed above correct?');
+        if (!$confirmed) {
             return false;
         }
+        $password = bcrypt($password);
+        // Create a new user with the information supplied
+        $user = new User($role, $name, $email, $password);
+        $em->persist($user);
+        $em->flush();
         return true;
     }
 }
