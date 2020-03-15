@@ -34,6 +34,12 @@
 
           <v-divider></v-divider>
 
+          <v-card-text>
+            <v-switch v-model="$vuetify.theme.dark" :label="'Dark Mode: '"></v-switch>
+          </v-card-text>
+
+          <v-divider></v-divider>
+
           <v-card-actions>
             <v-spacer></v-spacer>
             <v-btn v-if="authenticated" color="primary" text @click="logout">Log Out</v-btn>
