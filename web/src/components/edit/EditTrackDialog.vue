@@ -47,7 +47,7 @@
         </div>
       </v-card-text>
       <v-card-actions>
-        <v-btn color="error" text @click="confirmDelete">Delete</v-btn>
+        <v-btn v-if="track" color="error" text @click="confirmDelete">Delete</v-btn>
         <v-spacer></v-spacer>
         <v-btn text @click="close">Cancel</v-btn>
         <v-btn color="primary" text @click="submit" :loading="loading">Save</v-btn>
