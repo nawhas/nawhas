@@ -27,6 +27,7 @@
             <v-btn dark text><v-icon left>star_outline</v-icon> Favorite</v-btn>
           </div>
           <div class="bar__actions bar__actions--overflow">
+            <edit-reciter-dialog v-if="reciter && isModerator" :reciter="reciter"></edit-reciter-dialog>
             <v-btn dark icon><v-icon>more_vert</v-icon></v-btn>
           </div>
         </v-container>
@@ -74,6 +75,7 @@ import TrackCard from '@/components/TrackCard.vue';
 import SkeletonCardGrid from '@/components/loaders/SkeletonCardGrid.vue';
 import AlbumSkeleton from '@/components/loaders/AlbumSkeleton.vue';
 import TrackCardSkeleton from '@/components/loaders/TrackCardSkeleton.vue';
+import EditReciterDialog from '@/components/edit/EditReciterDialog.vue';
 import Album from '@/components/Album.vue';
 import HeroBanner from '@/components/HeroBanner.vue';
 import { getReciter } from '@/services/reciters';
@@ -89,6 +91,7 @@ import { getPopularTracks } from '@/services/popular';
     SkeletonCardGrid,
     TrackCardSkeleton,
     AlbumSkeleton,
+    EditReciterDialog,
   },
 })
 export default class ReciterProfile extends Vue {
@@ -114,8 +117,12 @@ export default class ReciterProfile extends Vue {
     return 128;
   }
 
+  get isModerator() {
+    return this.$store.getters['auth/isModerator'];
+  }
+
   get showToolbar() {
-    return false;
+    return !!(this.isModerator);
   }
 
   @Watch('$route')
