@@ -47,7 +47,7 @@ jobs:
             -t $API_IMAGE:${GITHUB_SHA::8} \
             -t $API_IMAGE:${GITHUB_REF##*/} \
             -t $GH_API_IMAGE:${GITHUB_SHA::8} \
-            -t $GH_API_IMAGE:${GITHUB_REF##*/}
+            -t $GH_API_IMAGE:${GITHUB_REF##*/} \
             --build-arg GITHUB_SHA="$GITHUB_SHA" \
             --build-arg GITHUB_REF="${GITHUB_REF##*/}" \
             ./api
