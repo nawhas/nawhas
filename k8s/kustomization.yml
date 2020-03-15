@@ -8,3 +8,6 @@ secretGenerator:
   - name: api.env
     envs:
       - secrets/api.env
+  - name: api.staging.env
+    envs:
+      - secrets/api.staging.env
