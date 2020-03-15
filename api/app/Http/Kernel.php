@@ -41,7 +41,7 @@ class Kernel extends HttpKernel
 
         'api' => [
             \Laravel\Airlock\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
-            'throttle:60,1',
+            // 'throttle:60,1', // TODO - Make this work with proxies.
             // TODO - Make this work with lower precedence than the explicit binding
              \App\Http\Middleware\SubstituteDoctrineBindings::class,
         ],
