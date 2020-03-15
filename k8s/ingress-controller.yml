@@ -4,7 +4,7 @@ metadata:
   name: ingress-nginx
   annotations:
     # See https://github.com/digitalocean/digitalocean-cloud-controller-manager/blob/master/docs/controllers/services/examples/README.md#accessing-pods-over-a-managed-load-balancer-from-inside-the-cluster
-    service.beta.kubernetes.io/do-loadbalancer-hostname: "api.k8s.nawhas.com"
+    service.beta.kubernetes.io/do-loadbalancer-hostname: "api.nawhas.com"
   namespace: ingress-nginx
   labels:
     app.kubernetes.io/name: ingress-nginx
