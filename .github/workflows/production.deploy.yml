@@ -5,7 +5,8 @@ on:
     types: [published]
 
 env:
-  API_IMAGE: docker.pkg.github.com/nawhas/nawhas/api
+  API_IMAGE: nawhas/api
+  GH_API_IMAGE: docker.pkg.github.com/nawhas/nawhas/api
 
 jobs:
   build:
@@ -34,14 +35,19 @@ jobs:
       - name: Docker Login
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
-        run: docker login docker.pkg.github.com -u $DOCKER_USERNAME -p $GITHUB_TOKEN
+        run: |
+          docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+          docker login docker.pkg.github.com -u $DOCKER_USERNAME -p $GITHUB_TOKEN
 
       - name: Build
         run: |
           docker build --file ./api/Dockerfile \
             -t $API_IMAGE:${GITHUB_SHA::8} \
             -t $API_IMAGE:${GITHUB_REF##*/} \
+            -t $GH_API_IMAGE:${GITHUB_SHA::8} \
+            -t $GH_API_IMAGE:${GITHUB_REF##*/}
             --build-arg GITHUB_SHA="$GITHUB_SHA" \
             --build-arg GITHUB_REF="${GITHUB_REF##*/}" \
             ./api
@@ -50,6 +56,8 @@ jobs:
         run: |
           docker push $API_IMAGE:${GITHUB_SHA::8}
           docker push $API_IMAGE:${GITHUB_REF##*/}
+          docker push $GH_API_IMAGE:${GITHUB_SHA::8}
+          docker push $GH_API_IMAGE:${GITHUB_REF##*/}
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
