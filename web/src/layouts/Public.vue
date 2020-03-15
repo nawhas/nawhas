@@ -19,7 +19,7 @@
         </v-list-item>
       </v-list>
     </v-navigation-drawer>
-    <v-app-bar class="app-bar" color="white" app fixed elevate-on-scroll>
+    <v-app-bar class="app-bar" app fixed elevate-on-scroll>
       <div class="app-bar__left">
         <nav class="nav__buttons" v-if="$vuetify.breakpoint.lgAndUp">
           <v-btn text v-for="(link) in navigation" class="nav__btn" :key="link.to" :to="link.to">
@@ -44,7 +44,7 @@
       </div>
     </v-app-bar>
     <v-content>
-      <v-container fluid class="grey lighten-5 main-container">
+      <v-container fluid :class="{ 'grey lighten-5': !isDark }" class="main-container">
         <router-view></router-view>
       </v-container>
     </v-content>
@@ -78,6 +78,10 @@ export default class PublicVuetify extends Vue {
 
   get navigation() {
     return navItems;
+  }
+
+  get isDark() {
+    return this.$vuetify.theme.dark;
   }
 }
 </script>
