@@ -63,7 +63,9 @@ jobs:
       - name: Create Namespace
         working-directory: ./k8s/overlays/integration
         run: |
-          echo $(kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig get namespace | grep "$NAMESPACE")
+          NS_EXISTS=$(kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig get namespace | grep "$NAMESPACE")
+
+          echo $NS_EXISTS
 
 #      - name: Prepare Secrets
 #        working-directory: ./k8s/overlays/integration/secrets
