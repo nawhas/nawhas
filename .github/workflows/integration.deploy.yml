@@ -122,8 +122,8 @@ jobs:
         working-directory: ./k8s/overlays/integration
         run: |
           ./kustomize build . \
-            | sed "s/APP_DOMAIN/$APP_DOMAIN/g" \
-            | sed "s/API_DOMAIN/$API_DOMAIN/g" \
+            | sed "s/ING_APP_DOMAIN/$APP_DOMAIN/g" \
+            | sed "s/ING_API_DOMAIN/$API_DOMAIN/g" \
             | kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig apply -f -
 
           kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig rollout status --timeout=2m deployment/api -n $NAMESPACE

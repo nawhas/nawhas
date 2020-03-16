@@ -5,17 +5,17 @@ metadata:
 spec:
   tls:
     - hosts:
-      - API_DOMAIN
-      - APP_DOMAIN
+      - ING_API_DOMAIN
+      - ING_APP_DOMAIN
       secretName: nawhas-tls
   rules:
-    - host: API_DOMAIN
+    - host: ING_API_DOMAIN
       http:
         paths:
           - backend:
               serviceName: api
               servicePort: 80
-    - host: APP_DOMAIN
+    - host: ING_APP_DOMAIN
       http:
         paths:
           - backend:
