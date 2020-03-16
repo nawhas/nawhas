@@ -60,6 +60,12 @@ jobs:
           echo "::set-env name=API_DOMAIN::$API_DOMAIN"
           echo "::set-env name=APP_DOMAIN::$APP_DOMAIN"
 
+      - name: Prepare Secrets
+        working-directory: ./k8s/overlays/integrations/secrets
+        run: |
+          echo "API_DOMAIN=$API_DOMAIN\n" >> api.integration.env
+          echo "ALGOLIA_PREFIX=${NAMESPACE}_\n" >> api.integration.env
+
       - name: Build API
         run: |
           docker build --file ./api/Dockerfile \
@@ -106,7 +112,11 @@ jobs:
           NS_EXISTS=$(kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig get namespace | grep "$NAMESPACE")
           [ ! -z "$NS_EXIST" ] || kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig create namespace $NAMESPACE
 
-          ./kustomize build . | kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig apply -f -
+          ./kustomize build . \
+            | sed "s/APP_DOMAIN/$APP_DOMAIN/g" \
+            | sed "s/API_DOMAIN/$API_DOMAIN/g" \
+            | kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig apply -f -
+
           kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig rollout status deployment/api -n $NAMESPACE
           kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig rollout status deployment/web -n $NAMESPACE
           kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig get services -o wide -n $NAMESPACE
