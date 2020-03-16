@@ -2,11 +2,14 @@ apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
   name: nawhas-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/from-to-www-redirect: "true"
 spec:
   tls:
     - hosts:
       - api.nawhas.com
       - nawhas.com
+      - www.nawhas.com
       secretName: nawhas-tls
   rules:
     - host: api.nawhas.com
