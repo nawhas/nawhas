@@ -7,7 +7,8 @@
         </v-avatar>
       </div>
       <div class="reciter-result__text">
-        <div class="reciter-result__name body-1" :title="reciter.name">
+        <div :class="{ 'reciter-result__name--dark': isDark }"
+             class="reciter-result__name body-1" :title="reciter.name">
           <ais-highlight :hit="reciter" attribute="name" />
         </div>
       </div>
@@ -22,6 +23,9 @@ export default {
   computed: {
     image() {
       return this.reciter.avatar || '/img/default-reciter-avatar.png';
+    },
+    isDark() {
+      return this.$vuetify.theme.dark;
     },
   },
 };
@@ -60,6 +64,14 @@ export default {
         background: none;
         padding-bottom: 1px;
         border-bottom: 2px solid orangered;
+      }
+    }
+
+    .reciter-result__name--dark {
+      color: white !important;
+
+      em, mark {
+        color: wheat !important;
       }
     }
   }
