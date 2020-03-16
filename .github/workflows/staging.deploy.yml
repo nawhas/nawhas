@@ -39,6 +39,7 @@ jobs:
         working-directory: ./k8s/overlays/staging
         run: |
           gpg --quiet --batch --yes --decrypt --passphrase="$GPG_KEY" --output api.staging.env api.staging.env.gpg
+          gpg --quiet --batch --yes --decrypt --passphrase="$GPG_KEY" --output web.staging.env web.staging.env.gpg
         env:
           GPG_KEY: ${{ secrets.GPG_KEY }}
 
