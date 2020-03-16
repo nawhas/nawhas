@@ -139,6 +139,14 @@ jobs:
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
 
+      - name: Post Link on PR
+        if: success()
+        uses: unsplash/comment-on-pr@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          msg: "Your integration branch has been deployed to https://${{ env.APP_DOMAIN }}"
+
       - name: Notify Build Failure
         if: failure()
         uses: voxmedia/github-action-slack-notify-build@v1
