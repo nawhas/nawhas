@@ -35,7 +35,7 @@ jobs:
           args: kubernetes cluster kubeconfig show k8s-nawhas > $GITHUB_WORKSPACE/.kubeconfig
 
       - name: Decrypt secrets
-        working-directory: ./k8s/overlays/production
+        working-directory: ./k8s/overlays/production/secrets
         run: |
           gpg --quiet --batch --yes --decrypt --passphrase="$GPG_KEY" --output api.env api.env.gpg
           gpg --quiet --batch --yes --decrypt --passphrase="$GPG_KEY" --output web.env web.env.gpg
@@ -74,7 +74,7 @@ jobs:
       - name: Build Web
         run: |
           set -a
-          . ./k8s/overlays/production/web.env
+          . ./k8s/overlays/production/secrets/web.env
           set +a
           docker build --file ./web/Dockerfile \
           -t $WEB_IMAGE:${GITHUB_SHA::8} \

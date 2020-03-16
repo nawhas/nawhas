@@ -10,7 +10,7 @@ commonLabels:
 secretGenerator:
   - name: api.env
     envs:
-      - api.env
+      - secrets/api.env
   - name: web.env
     envs:
-      - web.env
+      - secrets/web.env
