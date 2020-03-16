@@ -51,7 +51,7 @@ jobs:
           BRANCH_PREFIX=$(echo "$BRANCH" | sed "s/-integration//")
           PR_NUM=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
           NAMESPACE="intg-$PR_NUM"
-          API_DOMAIN="https://api.pr-$PR_NUM.intg.k8s.nawhas.com"
+          API_DOMAIN="api.pr-$PR_NUM.intg.k8s.nawhas.com"
           APP_DOMAIN="pr-$PR_NUM.intg.k8s.nawhas.com"
 
           echo "::set-env name=NAMESPACE::$NAMESPACE"
@@ -81,7 +81,7 @@ jobs:
             -t $WEB_IMAGE:$NAMESPACE-${GITHUB_SHA::8} \
             --build-arg ALGOLIA_APP_ID=$VUE_APP_ALGOLIA_APP_ID \
             --build-arg ALGOLIA_SEARCH_KEY=$VUE_APP_ALGOLIA_SEARCH_KEY \
-            --build-arg API_DOMAIN=$API_DOMAIN \
+            --build-arg API_DOMAIN="https://$API_DOMAIN" \
             ./web
 
       - name: Publish Web

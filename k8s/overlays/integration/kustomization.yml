@@ -10,7 +10,7 @@ patchesStrategicMerge:
   - ingress.yml
 commonLabels:
   env: integration
-namespace: intg-5261d622
+namespace: intg-
 secretGenerator:
   - name: api.integration.env
     envs:

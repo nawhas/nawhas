@@ -5,17 +5,17 @@ metadata:
 spec:
   tls:
     - hosts:
-      - api.dark-mode.intg.k8s.nawhas.com
-      - dark-mode.intg.k8s.nawhas.com
+      - API_DOMAIN
+      - APP_DOMAIN
       secretName: nawhas-tls
   rules:
-    - host: api.dark-mode.intg.k8s.nawhas.com
+    - host: API_DOMAIN
       http:
         paths:
           - backend:
               serviceName: api
               servicePort: 80
-    - host: dark-mode.intg.k8s.nawhas.com
+    - host: APP_DOMAIN
       http:
         paths:
           - backend:
