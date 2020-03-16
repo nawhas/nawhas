@@ -8,10 +8,12 @@ on:
 env:
   API_IMAGE: nawhas/api
   GH_API_IMAGE: docker.pkg.github.com/nawhas/nawhas/api
+  WEB_IMAGE: nawhas/web
+  GH_WEB_IMAGE: docker.pkg.github.com/nawhas/nawhas/web
 
 jobs:
   build:
-    name: Build & Deploy API
+    name: Build & Deploy Nawhas.com
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -33,6 +35,14 @@ jobs:
         with:
           args: kubernetes cluster kubeconfig show k8s-nawhas > $GITHUB_WORKSPACE/.kubeconfig
 
+      - name: Decrypt secrets
+        working-directory: ./k8s/overlays/staging/secrets
+        run: |
+          gpg --quiet --batch --yes --decrypt --passphrase="$GPG_KEY" --output api.staging.env api.staging.env.gpg
+          gpg --quiet --batch --yes --decrypt --passphrase="$GPG_KEY" --output web.staging.env web.staging.env.gpg
+        env:
+          GPG_KEY: ${{ secrets.GPG_KEY }}
+
       - name: Docker Login
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
@@ -42,7 +52,7 @@ jobs:
           docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
           docker login docker.pkg.github.com -u $DOCKER_USERNAME -p $GITHUB_TOKEN
 
-      - name: Build
+      - name: Build API
         run: |
           docker build --file ./api/Dockerfile \
             -t $API_IMAGE:dev-${GITHUB_SHA::8} \
@@ -53,12 +63,34 @@ jobs:
             --build-arg GITHUB_REF=develop \
             ./api
 
-      - name: Publish
+      - name: Publish API
         run: |
           docker push $API_IMAGE:dev-${GITHUB_SHA::8}
           docker push $API_IMAGE:develop
           docker push $GH_API_IMAGE:dev-${GITHUB_SHA::8}
           docker push $GH_API_IMAGE:develop
+
+      - name: Build Web
+        run: |
+          set -a
+          . ./k8s/overlays/staging/secrets/web.staging.env
+          set +a
+          docker build --file ./web/Dockerfile \
+            -t $WEB_IMAGE:dev-${GITHUB_SHA::8} \
+            -t $WEB_IMAGE:develop \
+            -t $GH_WEB_IMAGE:dev-${GITHUB_SHA::8} \
+            -t $GH_WEB_IMAGE:develop \
+            --build-arg ALGOLIA_APP_ID=$VUE_APP_ALGOLIA_APP_ID \
+            --build-arg ALGOLIA_SEARCH_KEY=$VUE_APP_ALGOLIA_SEARCH_KEY \
+            --build-arg API_DOMAIN=$VUE_APP_API_DOMAIN \
+            ./web
+
+      - name: Publish Web
+        run: |
+          docker push $WEB_IMAGE:dev-${GITHUB_SHA::8}
+          docker push $WEB_IMAGE:develop
+          docker push $GH_WEB_IMAGE:dev-${GITHUB_SHA::8}
+          docker push $GH_WEB_IMAGE:develop
 
       # Set up kustomize
       - name: Set up Kustomize
@@ -67,21 +99,15 @@ jobs:
           curl -o kustomize --location https://github.com/kubernetes-sigs/kustomize/releases/download/v3.1.0/kustomize_3.1.0_linux_amd64
           chmod u+x ./kustomize
 
-      # Update secrets.
-      - name: Update secrets
-        working-directory: ./k8s/overlays/staging
-        run: |
-          gpg --quiet --batch --yes --decrypt --passphrase="$GPG_KEY" --output api.staging.env api.staging.env.gpg
-        env:
-          GPG_KEY: ${{ secrets.GPG_KEY }}
-
       # Deploy the Docker image to the GKE cluster
       - name: Deploy
         working-directory: ./k8s/overlays/staging
         run: |
           ./kustomize edit set image IMAGE:TAG=$API_IMAGE:dev-${GITHUB_SHA::8}
+          ./kustomize edit set image WEB:TAG=$WEB_IMAGE:dev-${GITHUB_SHA::8}
           ./kustomize build . | kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig apply -f -
           kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig rollout status deployment/api -n stg
+          kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig rollout status deployment/web -n stg
           kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig get services -o wide -n stg
 
       - name: Notify Build Success

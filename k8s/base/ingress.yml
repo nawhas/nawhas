@@ -7,8 +7,15 @@ metadata:
     cert-manager.io/cluster-issuer: "letsencrypt-prod"
 spec:
   rules:
-     - http:
+    - host: api.nawhas.com
+      http:
         paths:
           - backend:
               serviceName: api
+              servicePort: 80
+    - host: nawhas.com
+      http:
+        paths:
+          - backend:
+              serviceName: web
               servicePort: 80
