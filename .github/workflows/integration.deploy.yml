@@ -64,7 +64,7 @@ jobs:
       - name: Prepare Secrets
         working-directory: ./k8s/overlays/integration/secrets
         run: |
-          printf "\nAPI_DOMAIN=$API_DOMAIN" >> api.integration.env
+          printf "\nAPP_DOMAIN=$APP_DOMAIN" >> api.integration.env
           printf "\nALGOLIA_PREFIX=intg_${PR_NUM}_" >> api.integration.env
 
       - name: Build API
