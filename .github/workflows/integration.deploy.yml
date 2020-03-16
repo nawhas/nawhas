@@ -61,7 +61,7 @@ jobs:
           echo "::set-env name=APP_DOMAIN::$APP_DOMAIN"
 
       - name: Prepare Secrets
-        working-directory: ./k8s/overlays/integrations/secrets
+        working-directory: ./k8s/overlays/integration/secrets
         run: |
           echo "API_DOMAIN=$API_DOMAIN\n" >> api.integration.env
           echo "ALGOLIA_PREFIX=${NAMESPACE}_\n" >> api.integration.env
