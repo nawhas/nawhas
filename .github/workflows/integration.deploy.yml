@@ -47,8 +47,6 @@ jobs:
 
       - name: Prepare Environment
         run: |
-          BRANCH=${GITHUB_HEAD_REF##*/}
-          BRANCH_PREFIX=$(echo "$BRANCH" | sed "s/-integration//")
           PR_NUM=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
           NAMESPACE="intg-$PR_NUM"
           API_DOMAIN="api.pr-$PR_NUM.intg.k8s.nawhas.com"
@@ -56,8 +54,6 @@ jobs:
 
           echo "::set-env name=NAMESPACE::$NAMESPACE"
           echo "::set-env name=PR_NUM::$PR_NUM"
-          echo "::set-env name=BRANCH::$BRANCH"
-          echo "::set-env name=BRANCH_PREFIX::$BRANCH_PREFIX"
           echo "::set-env name=API_DOMAIN::$API_DOMAIN"
           echo "::set-env name=APP_DOMAIN::$APP_DOMAIN"
 
