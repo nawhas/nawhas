@@ -4,7 +4,7 @@
     <div v-show="!mobile || activated"
          :class="{
            search: true,
-           'search--focused': !isDark && activated,
+           'search--focused': activated,
            'search--focused--dark': isDark && activated
           }">
       <div class="search__bar">
