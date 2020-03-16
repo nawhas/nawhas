@@ -1,5 +1,5 @@
 <template>
-    <div :class="classes"
+    <v-sheet :class="classes"
          @mouseenter="hovering = true"
          @mouseleave="hovering = false"
          v-if="track"
@@ -153,7 +153,7 @@
           <queue-list @change="resetQueueMenu"></queue-list>
         </v-expand-transition>
       </div>
-    </div>
+    </v-sheet>
 </template>
 
 <script lang="ts">

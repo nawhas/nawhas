@@ -2,7 +2,11 @@
   <div v-click-outside="clickOutsideConfig">
     <v-btn v-if="mobile" icon @click="activate"><v-icon>search</v-icon></v-btn>
     <div v-show="!mobile || activated"
-         :class="{ search: true, 'search--focused': activated }">
+         :class="{
+           search: true,
+           'search--focused': !isDark && activated,
+           'search--focused--dark': isDark && activated
+          }">
       <div class="search__bar">
         <v-btn v-if="mobile" icon @click="resetSearch"><v-icon>arrow_back</v-icon></v-btn>
         <v-text-field solo flat single-line hide-details
@@ -21,7 +25,11 @@
         ></v-text-field>
       </div>
       <v-expand-transition>
-        <div class="search__container" v-show="activated">
+        <div class="search__container"
+            :style="{
+              background: $vuetify.theme.currentTheme.background,
+            }"
+            v-show="activated">
           <index-hits :client="client" :search="search" index="reciters" caption="Reciters">
             <reciter-result slot-scope="{ item }" :reciter="item" />
           </index-hits>
@@ -35,7 +43,7 @@
               />
             </template>
           </index-hits>
-          <div class="search__footer">
+          <div class="search__footer" :class="{ 'white--text': isDark }">
             <div class="search__footer-hint body-2" v-if="!search">
               Start typing to see results...
             </div>
@@ -82,6 +90,10 @@ export default class GlobalSearch extends Vue {
 
   get mobile() {
     return this.$vuetify.breakpoint.smAndDown;
+  }
+
+  get isDark() {
+    return this.$vuetify.theme.dark;
   }
 
   mounted() {
@@ -167,6 +179,10 @@ $width: 400px;
     background-color: white;
     @include elevation(4);
   }
+  &--focused--dark {
+    background-color: #1E1E1E;
+    @include elevation(4);
+  }
 
   .search__bar {
     display: flex;
@@ -176,7 +192,6 @@ $width: 400px;
 
   .search__container {
     width: $width;
-    background-color: white;
     max-height: calc(100vh - 100px);
     overflow-y: auto;
     border-top: 1px solid rgba(0, 0, 0, 0.06);
