@@ -63,7 +63,7 @@ jobs:
       - name: Create Namespace
         working-directory: ./k8s/overlays/integration
         run: |
-          if [ $(kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig get namespace | grep "$NAMESPACE") == "" ]; then
+          if [[ $(kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig get namespace | grep "$NAMESPACE") == "" ]]; then
             echo "Namespace does not exist!";
           fi
 
