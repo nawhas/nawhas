@@ -101,17 +101,23 @@ jobs:
           curl -o kustomize --location https://github.com/kubernetes-sigs/kustomize/releases/download/v3.1.0/kustomize_3.1.0_linux_amd64
           chmod u+x ./kustomize
 
+      - name: Prepare Kustomization
+        working-directory: ./k8s/overlays/integration
+        run: |
+            ./kustomize edit set image "IMAGE:TAG=$API_IMAGE:$NAMESPACE-${GITHUB_SHA::8}"
+            ./kustomize edit set image "WEB:TAG=$WEB_IMAGE:$NAMESPACE-${GITHUB_SHA::8}"
+            ./kustomize edit set namespace "$NAMESPACE"
+
+      - name: Create Namespace
+        working-directory: ./k8s/overlays/integration
+        run: |
+          NS_EXISTS=$(kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig get namespace | grep "$NAMESPACE")
+          [ ! -z "$NS_EXIST" ] || kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig create namespace $NAMESPACE
+
       # Deploy the Docker image to the GKE cluster
       - name: Deploy
         working-directory: ./k8s/overlays/integration
         run: |
-          ./kustomize edit set image IMAGE:TAG=$API_IMAGE:$NAMESPACE-${GITHUB_SHA::8}
-          ./kustomize edit set image WEB:TAG=$WEB_IMAGE:$NAMESPACE-${GITHUB_SHA::8}
-          ./kustomize edit set namespace $NAMESPACE
-
-          NS_EXISTS=$(kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig get namespace | grep "$NAMESPACE")
-          [ ! -z "$NS_EXIST" ] || kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig create namespace $NAMESPACE
-
           ./kustomize build . \
             | sed "s/APP_DOMAIN/$APP_DOMAIN/g" \
             | sed "s/API_DOMAIN/$API_DOMAIN/g" \
