@@ -12,3 +12,6 @@ secretGenerator:
   - name: api.staging.env
     envs:
       - api.staging.env
+  - name: web.staging.env
+    envs:
+      - web.staging.env

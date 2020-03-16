@@ -14,3 +14,9 @@ spec:
           - backend:
               serviceName: api
               servicePort: 80
+    - host: nawhas.com
+      http:
+        paths:
+          - backend:
+              serviceName: web
+              servicePort: 80

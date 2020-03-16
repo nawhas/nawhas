@@ -6,6 +6,7 @@ spec:
   tls:
     - hosts:
       - api.staging.nawhas.com
+      - staging.nawhas.com
       secretName: nawhas-tls
   rules:
     - host: api.staging.nawhas.com
@@ -13,4 +14,10 @@ spec:
         paths:
           - backend:
               serviceName: api
+              servicePort: 80
+    - host: staging.nawhas.com
+      http:
+        paths:
+          - backend:
+              serviceName: web
               servicePort: 80

@@ -8,10 +8,12 @@ on:
 env:
   API_IMAGE: nawhas/api
   GH_API_IMAGE: docker.pkg.github.com/nawhas/nawhas/api
+  WEB_IMAGE: nawhas/web
+  GH_WEB_IMAGE: docker.pkg.github.com/nawhas/nawhas/web
 
 jobs:
   build:
-    name: Build & Deploy API
+    name: Build & Deploy Nawhas.com
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -42,7 +44,7 @@ jobs:
           docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
           docker login docker.pkg.github.com -u $DOCKER_USERNAME -p $GITHUB_TOKEN
 
-      - name: Build
+      - name: Build API
         run: |
           docker build --file ./api/Dockerfile \
             -t $API_IMAGE:dev-${GITHUB_SHA::8} \
@@ -53,12 +55,30 @@ jobs:
             --build-arg GITHUB_REF=develop \
             ./api
 
-      - name: Publish
+      - name: Publish API
         run: |
           docker push $API_IMAGE:dev-${GITHUB_SHA::8}
           docker push $API_IMAGE:develop
           docker push $GH_API_IMAGE:dev-${GITHUB_SHA::8}
           docker push $GH_API_IMAGE:develop
+
+      - name: Build Web
+        run: |
+          docker build --file ./web/Dockerfile \
+            -t $WEB_IMAGE:dev-${GITHUB_SHA::8} \
+            -t $WEB_IMAGE:develop \
+            -t $GH_WEB_IMAGE:dev-${GITHUB_SHA::8} \
+            -t $GH_WEB_IMAGE:develop \
+            --build-arg GITHUB_SHA="$GITHUB_SHA" \
+            --build-arg GITHUB_REF=develop \
+            ./web
+
+      - name: Publish Web
+        run: |
+          docker push $WEB_IMAGE:dev-${GITHUB_SHA::8}
+          docker push $WEB_IMAGE:develop
+          docker push $GH_WEB_IMAGE:dev-${GITHUB_SHA::8}
+          docker push $GH_WEB_IMAGE:develop
 
       # Set up kustomize
       - name: Set up Kustomize
@@ -80,8 +100,9 @@ jobs:
         working-directory: ./k8s/overlays/staging
         run: |
           ./kustomize edit set image IMAGE:TAG=$API_IMAGE:dev-${GITHUB_SHA::8}
+          ./kustomize edit set image WEB:TAG=$WEB_IMAGE:dev-${GITHUB_SHA::8}
           ./kustomize build . | kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig apply -f -
-          kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig rollout status deployment/api -n stg
+          kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig rollout status -n stg -k='.'
           kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig get services -o wide -n stg
 
       - name: Notify Build Success
