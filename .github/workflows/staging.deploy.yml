@@ -64,13 +64,17 @@ jobs:
 
       - name: Build Web
         run: |
+          set -a
+          . ./k8s/overlays/staging/web.staging.env
+          set +a
           docker build --file ./web/Dockerfile \
             -t $WEB_IMAGE:dev-${GITHUB_SHA::8} \
             -t $WEB_IMAGE:develop \
             -t $GH_WEB_IMAGE:dev-${GITHUB_SHA::8} \
             -t $GH_WEB_IMAGE:develop \
-            --build-arg GITHUB_SHA="$GITHUB_SHA" \
-            --build-arg GITHUB_REF=develop \
+            --build-arg ALGOLIA_APP_ID=$VUE_APP_ALGOLIA_APP_ID \
+            --build-arg ALGOLIA_SEARCH_KEY=$VUE_APP_ALGOLIA_SEARCH_KEY \
+            --build-arg API_DOMAIN=$VUE_APP_API_DOMAIN \
             ./web
 
       - name: Publish Web
@@ -102,7 +106,8 @@ jobs:
           ./kustomize edit set image IMAGE:TAG=$API_IMAGE:dev-${GITHUB_SHA::8}
           ./kustomize edit set image WEB:TAG=$WEB_IMAGE:dev-${GITHUB_SHA::8}
           ./kustomize build . | kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig apply -f -
-          kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig rollout status -n stg -k='.'
+          kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig rollout status deployment/api -n stg
+          kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig rollout status deployment/web -n stg
           kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig get services -o wide -n stg
 
       - name: Notify Build Success
