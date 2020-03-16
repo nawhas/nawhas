@@ -112,7 +112,10 @@ jobs:
         working-directory: ./k8s/overlays/integration
         run: |
           NS_EXISTS=$(kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig get namespace | grep "$NAMESPACE")
-          [ ! -z "$NS_EXIST" ] || kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig create namespace $NAMESPACE
+          if [ ! -z "$NS_EXISTS" ]
+          then
+            kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig create namespace $NAMESPACE
+          fi
 
       # Deploy the Docker image to the GKE cluster
       - name: Deploy
