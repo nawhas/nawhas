@@ -35,6 +35,13 @@ jobs:
         with:
           args: kubernetes cluster kubeconfig show k8s-nawhas > $GITHUB_WORKSPACE/.kubeconfig
 
+      - name: Decrypt secrets
+        working-directory: ./k8s/overlays/staging
+        run: |
+          gpg --quiet --batch --yes --decrypt --passphrase="$GPG_KEY" --output api.staging.env api.staging.env.gpg
+        env:
+          GPG_KEY: ${{ secrets.GPG_KEY }}
+
       - name: Docker Login
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
@@ -90,14 +97,6 @@ jobs:
         run: |
           curl -o kustomize --location https://github.com/kubernetes-sigs/kustomize/releases/download/v3.1.0/kustomize_3.1.0_linux_amd64
           chmod u+x ./kustomize
-
-      # Update secrets.
-      - name: Update secrets
-        working-directory: ./k8s/overlays/staging
-        run: |
-          gpg --quiet --batch --yes --decrypt --passphrase="$GPG_KEY" --output api.staging.env api.staging.env.gpg
-        env:
-          GPG_KEY: ${{ secrets.GPG_KEY }}
 
       # Deploy the Docker image to the GKE cluster
       - name: Deploy
