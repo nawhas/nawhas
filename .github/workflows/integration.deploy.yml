@@ -55,6 +55,7 @@ jobs:
           APP_DOMAIN="pr-$PR_NUM.intg.k8s.nawhas.com"
 
           echo "::set-env name=NAMESPACE::$NAMESPACE"
+          echo "::set-env name=PR_NUM::$PR_NUM"
           echo "::set-env name=BRANCH::$BRANCH"
           echo "::set-env name=BRANCH_PREFIX::$BRANCH_PREFIX"
           echo "::set-env name=API_DOMAIN::$API_DOMAIN"
@@ -63,8 +64,8 @@ jobs:
       - name: Prepare Secrets
         working-directory: ./k8s/overlays/integration/secrets
         run: |
-          echo "API_DOMAIN=$API_DOMAIN\n" >> api.integration.env
-          echo "ALGOLIA_PREFIX=${NAMESPACE}_\n" >> api.integration.env
+          echo "\nAPI_DOMAIN=$API_DOMAIN" >> api.integration.env
+          echo "\nALGOLIA_PREFIX=intg_${PR_NUM}_" >> api.integration.env
 
       - name: Build API
         run: |
