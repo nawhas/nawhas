@@ -49,71 +49,67 @@ jobs:
         run: |
           BRANCH=${GITHUB_HEAD_REF##*/}
           BRANCH_PREFIX=$(echo "$BRANCH" | sed "s/-integration//")
-          NS_SUFFIX=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
-          NAMESPACE="intg-$NS_SUFFIX"
+          PR_NUM=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
+          NAMESPACE="intg-$PR_NUM"
+          API_DOMAIN="https://api.pr-$PR_NUM.intg.k8s.nawhas.com"
+          APP_DOMAIN="pr-$PR_NUM.intg.k8s.nawhas.com"
 
           echo "::set-env name=NAMESPACE::$NAMESPACE"
           echo "::set-env name=BRANCH::$BRANCH"
           echo "::set-env name=BRANCH_PREFIX::$BRANCH_PREFIX"
+          echo "::set-env name=API_DOMAIN::$API_DOMAIN"
+          echo "::set-env name=APP_DOMAIN::$APP_DOMAIN"
 
-      - name: Test Environment Setup
+      - name: Build API
         run: |
-          echo $BRANCH
-          echo $NAMESPACE
-          echo $BRANCH_PREFIX
-#      - name: Build API
-#        run: |
-#          docker build --file ./api/Dockerfile \
-#            -t $API_IMAGE:dev-${GITHUB_SHA::8} \
-#            -t $API_IMAGE:develop \
-#            --build-arg GITHUB_SHA="$GITHUB_SHA" \
-#            --build-arg GITHUB_REF=develop \
-#            ./api
-#
-#      - name: Publish API
-#        run: |
-#          docker push $API_IMAGE:dev-${GITHUB_SHA::8}
-#          docker push $API_IMAGE:develop
-#
-#      - name: Build Web
-#        run: |
-#          set -a
-#          . ./k8s/overlays/integration/secrets/web.integration.env
-#          set +a
-#          docker build --file ./web/Dockerfile \
-#            -t $WEB_IMAGE:dev-${GITHUB_SHA::8} \
-#            -t $WEB_IMAGE:develop \
-#            -t $GH_WEB_IMAGE:dev-${GITHUB_SHA::8} \
-#            -t $GH_WEB_IMAGE:develop \
-#            --build-arg ALGOLIA_APP_ID=$VUE_APP_ALGOLIA_APP_ID \
-#            --build-arg ALGOLIA_SEARCH_KEY=$VUE_APP_ALGOLIA_SEARCH_KEY \
-#            --build-arg API_DOMAIN=$VUE_APP_API_DOMAIN \
-#            ./web
-#
-#      - name: Publish Web
-#        run: |
-#          docker push $WEB_IMAGE:dev-${GITHUB_SHA::8}
-#          docker push $WEB_IMAGE:develop
-#          docker push $GH_WEB_IMAGE:dev-${GITHUB_SHA::8}
-#          docker push $GH_WEB_IMAGE:develop
-#
-#      # Set up kustomize
-#      - name: Set up Kustomize
-#        working-directory: ./k8s/overlays/integration
-#        run: |
-#          curl -o kustomize --location https://github.com/kubernetes-sigs/kustomize/releases/download/v3.1.0/kustomize_3.1.0_linux_amd64
-#          chmod u+x ./kustomize
-#
-#      # Deploy the Docker image to the GKE cluster
-#      - name: Deploy
-#        working-directory: ./k8s/overlays/integration
-#        run: |
-#          ./kustomize edit set image IMAGE:TAG=$API_IMAGE:dev-${GITHUB_SHA::8}
-#          ./kustomize edit set image WEB:TAG=$WEB_IMAGE:dev-${GITHUB_SHA::8}
-#          ./kustomize build . | kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig apply -f -
-#          kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig rollout status deployment/api -n stg
-#          kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig rollout status deployment/web -n stg
-#          kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig get services -o wide -n stg
+          docker build --file ./api/Dockerfile \
+            -t $API_IMAGE:$NAMESPACE-${GITHUB_SHA::8} \
+            --build-arg GITHUB_SHA="$GITHUB_SHA" \
+            --build-arg GITHUB_REF=$NAMESPACE \
+            ./api
+
+      - name: Publish API
+        run: |
+          docker push $API_IMAGE:$NAMESPACE-${GITHUB_SHA::8}
+
+      - name: Build Web
+        run: |
+          set -a
+          . ./k8s/overlays/integration/secrets/web.integration.env
+          set +a
+          docker build --file ./web/Dockerfile \
+            -t $WEB_IMAGE:$NAMESPACE-${GITHUB_SHA::8} \
+            --build-arg ALGOLIA_APP_ID=$VUE_APP_ALGOLIA_APP_ID \
+            --build-arg ALGOLIA_SEARCH_KEY=$VUE_APP_ALGOLIA_SEARCH_KEY \
+            --build-arg API_DOMAIN=$API_DOMAIN \
+            ./web
+
+      - name: Publish Web
+        run: |
+          docker push $WEB_IMAGE:$NAMESPACE-${GITHUB_SHA::8}
+
+      # Set up kustomize
+      - name: Set up Kustomize
+        working-directory: ./k8s/overlays/integration
+        run: |
+          curl -o kustomize --location https://github.com/kubernetes-sigs/kustomize/releases/download/v3.1.0/kustomize_3.1.0_linux_amd64
+          chmod u+x ./kustomize
+
+      # Deploy the Docker image to the GKE cluster
+      - name: Deploy
+        working-directory: ./k8s/overlays/integration
+        run: |
+          ./kustomize edit set image IMAGE:TAG=$API_IMAGE:$NAMESPACE-${GITHUB_SHA::8}
+          ./kustomize edit set image WEB:TAG=$WEB_IMAGE:$NAMESPACE-${GITHUB_SHA::8}
+          ./kustomize edit set namespace $NAMESPACE
+
+          NS_EXISTS=$(kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig get namespace | grep "$NAMESPACE")
+          [ ! -z "$NS_EXIST" ] || kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig create namespace $NAMESPACE
+
+          ./kustomize build . | kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig apply -f -
+          kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig rollout status deployment/api -n $NAMESPACE
+          kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig rollout status deployment/web -n $NAMESPACE
+          kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig get services -o wide -n $NAMESPACE
 
       - name: Notify Build Success
         if: success()
