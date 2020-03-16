@@ -50,8 +50,9 @@ jobs:
           BRANCH=${GITHUB_HEAD_REF##*/}
           BRANCH_PREFIX=$(echo "$BRANCH" | sed "s/-integration//")
           NS_SUFFIX=$(echo $BRANCH | md5 | cut -c 1-8)
+          NAMESPACE="intg-$NS_SUFFIX"
 
-          echo "::set-env name=NAMESPACE::intg-$NS_SUFFIX"
+          echo "::set-env name=NAMESPACE::$NAMESPACE"
           echo "::set-env name=BRANCH::$BRANCH"
           echo "::set-env name=BRANCH_PREFIX::$BRANCH_PREFIX"
 
