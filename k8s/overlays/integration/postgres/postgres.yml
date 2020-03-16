@@ -5,11 +5,12 @@ metadata:
   labels:
     app: postgres
 spec:
-  type: NodePort
+  clusterIP: None
   selector:
     app: postgres
   ports:
     - port: 5432
+      targetPort: 5432
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -32,6 +33,7 @@ spec:
           image: postgres:11
           ports:
             - containerPort: 5432
+              name: postgres
           envFrom:
             - configMapRef:
                 name: postgres-config
@@ -41,4 +43,4 @@ spec:
       volumes:
         - name: postgres-data
           persistentVolumeClaim:
-            claimName: postgress-volume
+            claimName: postgres-volume
