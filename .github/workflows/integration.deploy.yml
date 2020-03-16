@@ -49,7 +49,7 @@ jobs:
         run: |
           BRANCH=${GITHUB_HEAD_REF##*/}
           BRANCH_PREFIX=$(echo "$BRANCH" | sed "s/-integration//")
-          NS_SUFFIX=$(echo $BRANCH | md5 | cut -c 1-8)
+          NS_SUFFIX=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
           NAMESPACE="intg-$NS_SUFFIX"
 
           echo "::set-env name=NAMESPACE::$NAMESPACE"
