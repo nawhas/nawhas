@@ -10,3 +10,16 @@ spec:
           envFrom:
             - secretRef:
                 name: api.env
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web
+spec:
+  template:
+    spec:
+      containers:
+        - name: web
+          envFrom:
+            - secretRef:
+                name: web.env

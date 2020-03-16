@@ -11,3 +11,6 @@ secretGenerator:
   - name: api.env
     envs:
       - api.env
+  - name: web.env
+    envs:
+      - web.env
