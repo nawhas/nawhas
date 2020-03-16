@@ -11,7 +11,7 @@ namespace: stg
 secretGenerator:
   - name: api.staging.env
     envs:
-      - api.staging.env
+      - secrets/api.staging.env
   - name: web.staging.env
     envs:
-      - web.staging.env
+      - secrets/web.staging.env
