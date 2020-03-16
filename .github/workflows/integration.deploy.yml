@@ -126,8 +126,8 @@ jobs:
             | sed "s/API_DOMAIN/$API_DOMAIN/g" \
             | kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig apply -f -
 
-          kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig rollout status deployment/api -n $NAMESPACE
-          kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig rollout status deployment/web -n $NAMESPACE
+          kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig rollout status --timeout=2m deployment/api -n $NAMESPACE
+          kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig rollout status --timeout=2m deployment/web -n $NAMESPACE
           kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig get services -o wide -n $NAMESPACE
 
       - name: Notify Build Success

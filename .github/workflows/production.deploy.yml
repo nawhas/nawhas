@@ -107,8 +107,8 @@ jobs:
           ./kustomize edit set image IMAGE:TAG=$API_IMAGE:${GITHUB_REF##*/}
           ./kustomize edit set image WEB:TAG=$WEB_IMAGE:${GITHUB_REF##*/}
           ./kustomize build . | kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig apply -f -
-          kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig rollout status deployment/api
-          kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig rollout status deployment/web
+          kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig rollout status --timeout=2m deployment/api
+          kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig rollout status --timeout=2m deployment/web
           kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig get services -o wide
 
       - name: Notify Build Success
