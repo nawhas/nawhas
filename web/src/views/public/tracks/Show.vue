@@ -97,7 +97,9 @@
                   <div v-html="prepareLyrics(track.lyrics.content)"></div>
                 </div>
                 <div class="lyrics__empty" v-else>
-                  <div class="lyrics__empty-message">We don't have a write-up for this nawha yet.</div>
+                  <div class="lyrics__empty-message"
+                       :class="{ 'lyrics__empty-message--dark': isDark }"
+                  >We don't have a write-up for this nawha yet.</div>
                 </div>
               </template>
               <div v-else>
@@ -486,6 +488,10 @@ export default class TrackPage extends Vue {
       display: flex;
       margin: auto;
       align-self: center;
+
+      &--dark {
+        color: white;
+      }
     }
   }
 }
