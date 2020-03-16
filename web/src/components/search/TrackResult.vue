@@ -1,6 +1,6 @@
 <template>
   <router-link :to="track.url" class="link">
-    <div class="track-result white--text">
+    <div class="track-result">
       <div class="track-result__artwork">
         <v-avatar tile size="40">
           <img crossorigin :src="image" :alt="track.title" />
