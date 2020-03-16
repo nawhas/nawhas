@@ -195,6 +195,10 @@ export default class AudioPlayer extends Vue {
   /* Keep a reference to the progress bar interval to clear it when needed. */
   private progressInterval: number|null = null;
 
+  get isDark() {
+    return this.$vuetify.theme.dark;
+  }
+
   get classes() {
     return {
       'audio-player': true,
@@ -677,7 +681,6 @@ $duration: 680ms;
   user-select: none;
   width: 100%;
   height: 80px;
-  background: white;
   position: fixed;
   bottom: 0;
   right: 0;
@@ -853,7 +856,6 @@ $duration: 680ms;
   position: relative;
 
   .queue-list-menu__title {
-    background: white;
     position: sticky;
     padding: 16px 16px 8px;
     top: 0;
