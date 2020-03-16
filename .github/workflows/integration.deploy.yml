@@ -1,0 +1,135 @@
+name: Integration Deploy
+
+on: [pull_request]
+
+env:
+  API_IMAGE: nawhas/api
+  WEB_IMAGE: nawhas/web
+
+jobs:
+  build:
+    name: Build & Deploy to Integration
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@master
+
+      - name: Notify Build Started
+        uses: voxmedia/github-action-slack-notify-build@v1
+        with:
+          channel: alerts
+          status: STARTED
+          color: warning
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+
+      - name: Save DigitalOcean kubeconfig
+        uses: digitalocean/action-doctl@v1.7.0
+        env:
+          DIGITALOCEAN_ACCESS_TOKEN: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+        with:
+          args: kubernetes cluster kubeconfig show k8s-nawhas > $GITHUB_WORKSPACE/.kubeconfig
+
+      - name: Decrypt secrets
+        working-directory: ./k8s/overlays/integration/secrets
+        run: |
+          gpg --quiet --batch --yes --decrypt --passphrase="$GPG_KEY" --output api.integration.env api.integration.env.gpg
+          gpg --quiet --batch --yes --decrypt --passphrase="$GPG_KEY" --output web.integration.env web.integration.env.gpg
+        env:
+          GPG_KEY: ${{ secrets.GPG_KEY }}
+
+      - name: Docker Login
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+        run: |
+          docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+
+      - name: Prepare Environment
+        run: |
+          BRANCH=${GITHUB_HEAD_REF##*/}
+          BRANCH_PREFIX=$(echo "$BRANCH" | sed "s/-integration//")
+          NS_SUFFIX=$(echo $BRANCH | md5 | cut -c 1-8)
+
+          echo "::set-env name=NAMESPACE::intg-$NS_SUFFIX"
+          echo "::set-env name=BRANCH::$BRANCH"
+          echo "::set-env name=BRANCH_PREFIX::$BRANCH_PREFIX"
+
+      - name: Test Environment Setup
+        run: |
+          echo $BRANCH
+          echo $NAMESPACE
+          echo $BRANCH_PREFIX
+#      - name: Build API
+#        run: |
+#          docker build --file ./api/Dockerfile \
+#            -t $API_IMAGE:dev-${GITHUB_SHA::8} \
+#            -t $API_IMAGE:develop \
+#            --build-arg GITHUB_SHA="$GITHUB_SHA" \
+#            --build-arg GITHUB_REF=develop \
+#            ./api
+#
+#      - name: Publish API
+#        run: |
+#          docker push $API_IMAGE:dev-${GITHUB_SHA::8}
+#          docker push $API_IMAGE:develop
+#
+#      - name: Build Web
+#        run: |
+#          set -a
+#          . ./k8s/overlays/integration/secrets/web.integration.env
+#          set +a
+#          docker build --file ./web/Dockerfile \
+#            -t $WEB_IMAGE:dev-${GITHUB_SHA::8} \
+#            -t $WEB_IMAGE:develop \
+#            -t $GH_WEB_IMAGE:dev-${GITHUB_SHA::8} \
+#            -t $GH_WEB_IMAGE:develop \
+#            --build-arg ALGOLIA_APP_ID=$VUE_APP_ALGOLIA_APP_ID \
+#            --build-arg ALGOLIA_SEARCH_KEY=$VUE_APP_ALGOLIA_SEARCH_KEY \
+#            --build-arg API_DOMAIN=$VUE_APP_API_DOMAIN \
+#            ./web
+#
+#      - name: Publish Web
+#        run: |
+#          docker push $WEB_IMAGE:dev-${GITHUB_SHA::8}
+#          docker push $WEB_IMAGE:develop
+#          docker push $GH_WEB_IMAGE:dev-${GITHUB_SHA::8}
+#          docker push $GH_WEB_IMAGE:develop
+#
+#      # Set up kustomize
+#      - name: Set up Kustomize
+#        working-directory: ./k8s/overlays/integration
+#        run: |
+#          curl -o kustomize --location https://github.com/kubernetes-sigs/kustomize/releases/download/v3.1.0/kustomize_3.1.0_linux_amd64
+#          chmod u+x ./kustomize
+#
+#      # Deploy the Docker image to the GKE cluster
+#      - name: Deploy
+#        working-directory: ./k8s/overlays/integration
+#        run: |
+#          ./kustomize edit set image IMAGE:TAG=$API_IMAGE:dev-${GITHUB_SHA::8}
+#          ./kustomize edit set image WEB:TAG=$WEB_IMAGE:dev-${GITHUB_SHA::8}
+#          ./kustomize build . | kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig apply -f -
+#          kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig rollout status deployment/api -n stg
+#          kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig rollout status deployment/web -n stg
+#          kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig get services -o wide -n stg
+
+      - name: Notify Build Success
+        if: success()
+        uses: voxmedia/github-action-slack-notify-build@v1
+        with:
+          channel: alerts
+          status: SUCCESS
+          color: good
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+
+      - name: Notify Build Failure
+        if: failure()
+        uses: voxmedia/github-action-slack-notify-build@v1
+        with:
+          channel: alerts
+          status: FAILED
+          color: danger
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
