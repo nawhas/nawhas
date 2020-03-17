@@ -30,10 +30,10 @@
               background: $vuetify.theme.currentTheme.background,
             }"
             v-show="activated">
-          <index-hits :client="client" :search="search" index="reciters" caption="Reciters">
+          <index-hits :client="client" :search="search" :index="indices.reciters" caption="Reciters">
             <reciter-result slot-scope="{ item }" :reciter="item" />
           </index-hits>
-          <index-hits :client="client" :search="search" index="tracks" caption="Tracks">
+          <index-hits :client="client" :search="search" :index="indices.tracks" caption="Tracks">
             <track-result slot-scope="{ item }" :track="item" />
             <template v-slot:configure>
               <ais-configure :query="search"
@@ -61,7 +61,7 @@ import {
   Component, Ref, Vue, Watch,
 } from 'vue-property-decorator';
 import algolia from 'algoliasearch/lite';
-import { ALGOLIA_APP_ID, ALGOLIA_SEARCH_KEY } from '@/config';
+import { ALGOLIA_APP_ID, ALGOLIA_SEARCH_KEY, ALGOLIA_INDEX_PREFIX } from '@/config';
 import IndexHits from '@/components/search/IndexHits.vue';
 import ReciterResult from '@/components/search/ReciterResult.vue';
 import AlbumResult from '@/components/search/AlbumResult.vue';
@@ -87,6 +87,13 @@ export default class GlobalSearch extends Vue {
   private search = '';
   private listener: Function|null = null;
   @Ref('search') readonly input!: HTMLElement;
+
+  get indices() {
+    return {
+      reciters: `${ALGOLIA_INDEX_PREFIX}reciters`,
+      tracks: `${ALGOLIA_INDEX_PREFIX}tracks`,
+    };
+  }
 
   get mobile() {
     return this.$vuetify.breakpoint.smAndDown;

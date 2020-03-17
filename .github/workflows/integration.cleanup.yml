@@ -1,0 +1,39 @@
+name: Clean Up Integration Build
+
+on:
+  pull_request:
+    types: [closed]
+
+env:
+  API_IMAGE: nawhas/api
+  WEB_IMAGE: nawhas/web
+
+jobs:
+  clean:
+    name: Clean Up Integration Branch
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@master
+
+      - name: Save DigitalOcean kubeconfig
+        uses: digitalocean/action-doctl@v1.7.0
+        env:
+          DIGITALOCEAN_ACCESS_TOKEN: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+        with:
+          args: kubernetes cluster kubeconfig show k8s-nawhas > $GITHUB_WORKSPACE/.kubeconfig
+
+      - name: Prepare Environment
+        run: |
+          PR_NUM=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
+          NAMESPACE="intg-$PR_NUM"
+
+          echo "::set-env name=NAMESPACE::$NAMESPACE"
+          echo "::set-env name=PR_NUM::$PR_NUM"
+
+      - name: Delete Namespace
+        working-directory: ./k8s/overlays/integration
+        run: |
+          if [[ $(kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig get namespace | grep "$NAMESPACE") != "" ]]; then
+            kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig delete namespace "$NAMESPACE"
+          fi

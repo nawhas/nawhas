@@ -1,0 +1,20 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ../../base
+  - ./postgres/config.yml
+  - ./postgres/postgres.yml
+  - ./postgres/volume.yml
+patchesStrategicMerge:
+  - deployments.yml
+  - ingress.yml
+commonLabels:
+  env: integration
+namespace: intg-
+secretGenerator:
+  - name: api.integration.env
+    envs:
+      - secrets/api.integration.env
+  - name: web.integration.env
+    envs:
+      - secrets/web.integration.env
