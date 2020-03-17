@@ -12,11 +12,7 @@ import { Component, Vue } from 'vue-property-decorator';
 export default class App extends Vue {
   created() {
     this.$store.dispatch('auth/check');
-
-    // This will check to see if the user has Dark Mode on their OS
-    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-      this.$vuetify.theme.dark = true;
-    }
+    this.determineTheme();
   }
   get isPlayerShowing() {
     return this.$store.getters['player/track'] !== null;
@@ -26,6 +22,18 @@ export default class App extends Vue {
       [`app--${this.$vuetify.breakpoint.name}`]: true,
       'app--player-showing': this.isPlayerShowing,
     };
+  }
+  determineTheme() {
+    // This will check to see if the user has Dark Mode on their OS
+    if (!window.matchMedia) {
+      return;
+    }
+    if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      this.$vuetify.theme.dark = true;
+    }
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+      this.$vuetify.theme.dark = e.matches || false;
+    });
   }
 }
 </script>
