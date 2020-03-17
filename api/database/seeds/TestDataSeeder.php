@@ -26,7 +26,7 @@ class TestDataSeeder extends Seeder
             return;
         }
 
-        $data = file_get_contents(database_path('seeds/seed.json'), true);
+        $data = json_decode(file_get_contents(database_path('seeds/seed.json')), true);
 
         $mod = new User(Role::MODERATOR(), 'Moderator', 'moderator@nawhas.com', 'secret');
         $contrib = new User(Role::CONTRIBUTOR(), 'Contributor', 'contributor@nawhas.com', 'secret');
