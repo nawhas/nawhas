@@ -31,7 +31,7 @@ jobs:
           echo "::set-env name=NAMESPACE::$NAMESPACE"
           echo "::set-env name=PR_NUM::$PR_NUM"
 
-      - name: Create Namespace
+      - name: Delete Namespace
         working-directory: ./k8s/overlays/integration
         run: |
           if [[ $(kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig get namespace | grep "$NAMESPACE") != "" ]]; then
