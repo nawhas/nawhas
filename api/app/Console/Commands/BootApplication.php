@@ -36,7 +36,7 @@ class BootApplication extends Command
             );
 
             if ($app->environment('integration')) {
-                $this->all('db:seed');
+                $this->all('db:seed', 'search:import');
             }
         } catch (Exception $e) {
             $this->error("Failed to boot application.\n{$e->getMessage()}");
