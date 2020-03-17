@@ -34,6 +34,10 @@ class BootApplication extends Command
                 'doctrine:generate:proxies',
                 'search:settings:push',
             );
+
+            if ($app->environment('integration')) {
+                $this->all('db:seed');
+            }
         } catch (Exception $e) {
             $this->error("Failed to boot application.\n{$e->getMessage()}");
             return 1;

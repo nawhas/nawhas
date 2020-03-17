@@ -3,8 +3,11 @@
 use App\Database\Doctrine\EntityManager;
 use App\Entities\Album;
 use App\Entities\Lyrics;
+use App\Entities\Media;
 use App\Entities\Reciter;
 use App\Entities\Track;
+use App\Entities\User;
+use App\Enum\Role;
 use Illuminate\Database\Seeder;
 
 class TestDataSeeder extends Seeder
@@ -16,19 +19,41 @@ class TestDataSeeder extends Seeder
      */
     public function run(EntityManager $em)
     {
-        $reciter = new Reciter('Nadeem Sarwar', 'Top Reciter');
-        $album = new Album($reciter, 'Ya Hussain', '2019');
-        $track = new Track($album, 'Ya Ali Ya Hussain');
+        $existing = $em->repository(User::class)->count([]);
 
-        // Lyrics have to be handled a bit differently.
-        // The idea is that many lyrics objects can stand own their
-        // own with a reference back to the track they're related to.
-        // But the Track object only cares about one lyric object.
-        // This association must be made separately.
-        $lyrics = new Lyrics($track, 'Hello World');
-        $track->replaceLyrics($lyrics);
+        if ($existing > 0) {
+            logger()->debug('Database already seeded. Exiting');
+            return;
+        }
 
-        $em->persist($reciter, $album, $track, $lyrics);
-        app('em')->flush();
+        $data = file_get_contents(database_path('seeds/seed.json'));
+
+        $mod = new User(Role::MODERATOR(), 'Moderator', 'moderator@nawhas.com', 'secret');
+        $contrib = new User(Role::CONTRIBUTOR(), 'Contributor', 'contributor@nawhas.com', 'secret');
+
+        $em->persist($mod, $contrib);
+
+        foreach ($data as $r) {
+            $reciter = new Reciter($r['name'], $r['description'], $r['avatar']);
+            $em->persist($reciter);
+
+            foreach ($r['albums'] as $a) {
+                $album = new Album($reciter, $a['title'], $a['year'], $a['artwork']);
+                $em->persist($album);
+
+                foreach ($a['tracks'] as $t) {
+                    $track = new Track($album, $t['title']);
+                    if ($t['lyrics']) {
+                        $track->replaceLyrics(new Lyrics($track, $t['lyrics']));
+                    }
+                    if ($t['audio']) {
+                        $track->addAudioFile(Media::audioFile($t['audio']));
+                    }
+                    $em->persist($track);
+                }
+            }
+        }
+
+        $em->flush();
     }
 }
