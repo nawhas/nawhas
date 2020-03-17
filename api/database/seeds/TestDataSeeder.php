@@ -28,8 +28,8 @@ class TestDataSeeder extends Seeder
 
         $data = json_decode(file_get_contents(database_path('seeds/seed.json')), true);
 
-        $mod = new User(Role::MODERATOR(), 'Moderator', 'moderator@nawhas.com', 'secret');
-        $contrib = new User(Role::CONTRIBUTOR(), 'Contributor', 'contributor@nawhas.com', 'secret');
+        $mod = new User(Role::MODERATOR(), 'Moderator', 'moderator@nawhas.com', bcrypt('secret'));
+        $contrib = new User(Role::CONTRIBUTOR(), 'Contributor', 'contributor@nawhas.com', bcrypt('secret'));
 
         $em->persist($mod, $contrib);
 
