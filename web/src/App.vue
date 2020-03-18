@@ -91,4 +91,10 @@ body.scroll--none {
   left: -10000px;
   z-index: -1;
 }
+
+@media (prefers-color-scheme: dark) {
+  body, html {
+    background-color: map-deep-get($material-dark, 'background');
+  }
+}
 </style>
