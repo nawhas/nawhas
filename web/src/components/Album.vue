@@ -52,7 +52,7 @@
       :hide-default-header="true"
       :disable-pagination="true"
       :hide-default-footer="true"
-      class="album__tracks"
+      :class="{'album__tracks': true, 'album__tracks--dark': isDark}"
     >
       <template v-slot:item="props">
         <tr @click="goToTrack(props.item)" class="album__track">
@@ -135,6 +135,10 @@ export default class Album extends Vue {
       return `${this.reciter.name} • ${this.year}`;
     }
     return this.year;
+  }
+
+  get isDark() {
+    return this.$vuetify.theme.dark;
   }
 
   get gradient() {
@@ -279,6 +283,12 @@ export default class Album extends Vue {
     th:focus,
     td:focus {
       outline: none !important;
+    }
+  }
+
+  &--dark {
+    tr:hover {
+      background-color: map-deep-get($material-dark, 'background') !important;
     }
   }
 }
