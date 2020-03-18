@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-menu>
+    <v-menu :close-on-content-click="false" v-model="open">
       <template v-slot:activator="{ on }">
         <v-btn icon class="user-menu" v-on="on">
           <v-icon>person</v-icon>
@@ -34,9 +34,31 @@
 
           <v-divider></v-divider>
 
-          <v-card-text>
-            <v-switch v-model="$vuetify.theme.dark" :label="'Dark Mode: '"></v-switch>
-          </v-card-text>
+          <div class="preferences">
+            <v-list>
+              <v-subheader style="height: 36px">PREFERENCES</v-subheader>
+              <v-list-item-group>
+                <v-list-item :ripple="false" inactive>
+                  <v-list-item-content>
+                    <v-list-item-title>Theme</v-list-item-title>
+                  </v-list-item-content>
+                  <v-list-item-action>
+                    <v-btn-toggle mandatory dense v-model="theme">
+                      <v-btn value="light">
+                        <v-icon>wb_sunny</v-icon>
+                      </v-btn>
+                      <v-btn value="auto">
+                        <v-icon>brightness_auto</v-icon>
+                      </v-btn>
+                      <v-btn value="dark">
+                        <v-icon>nights_stay</v-icon>
+                      </v-btn>
+                    </v-btn-toggle>
+                  </v-list-item-action>
+                </v-list-item>
+              </v-list-item-group>
+            </v-list>
+          </div>
 
           <v-divider></v-divider>
 
@@ -66,6 +88,7 @@ import LoginForm from '@/views/public/auth/LoginForm.vue';
   components: { LoginForm },
 })
 export default class UserMenu extends Vue {
+  private open = false;
   private showLoginDialog = false;
 
   get user() {
@@ -80,12 +103,26 @@ export default class UserMenu extends Vue {
     return this.$store.state.auth.initialized;
   }
 
+  get theme() {
+    return this.$store.state.preferences.theme;
+  }
+
+  set theme(value) {
+    this.$store.commit('preferences/SET_THEME', value);
+  }
+
   login() {
     this.showLoginDialog = true;
+    this.open = false;
   }
 
   logout() {
     this.$store.dispatch('auth/logout');
+    this.open = false;
+  }
+
+  setTheme(value) {
+    console.log(value);
   }
 
   register() {

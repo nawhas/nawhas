@@ -6,13 +6,14 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Watch, Vue } from 'vue-property-decorator';
 
 @Component
 export default class App extends Vue {
   created() {
     this.$store.dispatch('auth/check');
     this.determineTheme();
+    this.installThemeEventListener();
   }
   get isPlayerShowing() {
     return this.$store.getters['player/track'] !== null;
@@ -23,16 +24,42 @@ export default class App extends Vue {
       'app--player-showing': this.isPlayerShowing,
     };
   }
+
+  get theme() {
+    return this.$store.state.preferences.theme;
+  }
+
+  @Watch('theme')
+  onThemeChanged() {
+    this.determineTheme();
+  }
+
   determineTheme() {
-    // This will check to see if the user has Dark Mode on their OS
+    const preference = this.theme;
+
+    if (preference === 'dark') {
+      this.$vuetify.theme.dark = true;
+      return;
+    }
+
+    if (preference === 'light') {
+      this.$vuetify.theme.dark = false;
+      return;
+    }
+
+    if (preference === 'auto' && window.matchMedia) {
+      // This will check to see if the user has Dark Mode on their OS
+      this.$vuetify.theme.dark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    }
+  }
+
+  installThemeEventListener() {
     if (!window.matchMedia) {
       return;
     }
-    if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-      this.$vuetify.theme.dark = true;
-    }
-    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
-      this.$vuetify.theme.dark = e.matches || false;
+
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+      this.determineTheme();
     });
   }
 }
