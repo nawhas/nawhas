@@ -24,18 +24,7 @@ class DoctrineServiceProvider extends ServiceProvider
      */
     public function register()
     {
-         $this->bindRepositories();
          $this->registerEnumTypes();
-    }
-
-    /**
-     * @throws BindingResolutionException
-     */
-    private function bindRepositories(): void
-    {
-        $this->app->bind(ReciterRepository::class, DoctrineReciterRepository::class);
-        $this->app->bind(AlbumRepository::class, DoctrineAlbumRepository::class);
-        $this->app->bind(TrackRepository::class, DoctrineTrackRepository::class);
     }
 
     private function registerEnumTypes(): void
