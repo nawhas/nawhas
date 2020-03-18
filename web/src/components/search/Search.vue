@@ -21,7 +21,7 @@
                       @keydown.esc="onEsc"
                       placeholder="Search for nawhas, reciters, or lyrics..."
                       v-model="search"
-                      class="search__input"
+                      :class="{'search__input': true, 'search__input--dark': isDark}"
         ></v-text-field>
       </div>
       <v-expand-transition>
@@ -187,7 +187,7 @@ $width: 400px;
     @include elevation(4);
   }
   &--focused--dark {
-    background-color: #1E1E1E;
+    background-color: map-get($material-dark-elevation-colors, '8');
     @include elevation(4);
   }
 
@@ -195,6 +195,10 @@ $width: 400px;
     display: flex;
     flex-direction: row;
     align-items: center;
+
+    .search__input--dark {
+      background-color: map-get($material-dark-elevation-colors, '8');
+    }
   }
 
   .search__container {
