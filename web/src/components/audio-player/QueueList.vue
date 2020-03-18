@@ -106,7 +106,7 @@ export default class QueueList extends Vue {
   background-color: map-deep-get($colors, 'deep-orange', 'lighten-5');
 }
 .queue-item--active--dark {
-  background-color: map-deep-get($colors, 'deep-orange', 'lighten-1');
+  background-color: map-deep-get($colors, 'deep-orange', 'lighten-3');
 }
 .playback-progress {
   margin-right: 8px;
