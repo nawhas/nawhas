@@ -22,8 +22,8 @@
                       right bottom direction="left">
           <template v-slot:activator>
             <v-btn :small="$vuetify.breakpoint.smAndDown" v-model="fab" fab :color="fabColor">
-              <v-icon v-if="fab">close</v-icon>
-              <v-icon v-else>play_arrow</v-icon>
+              <v-icon v-if="fab" color="black">close</v-icon>
+              <v-icon v-else color="black">play_arrow</v-icon>
             </v-btn>
           </template>
           <v-tooltip top>
