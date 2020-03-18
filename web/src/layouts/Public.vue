@@ -19,7 +19,7 @@
         </v-list-item>
       </v-list>
     </v-navigation-drawer>
-    <v-app-bar class="app-bar" app fixed elevate-on-scroll>
+    <v-app-bar class="app-bar" :color="(!isDark) ? 'white' : null" app fixed elevate-on-scroll>
       <div class="app-bar__left">
         <nav class="nav__buttons" v-if="$vuetify.breakpoint.lgAndUp">
           <v-btn text v-for="(link) in navigation" class="nav__btn" :key="link.to" :to="link.to">
