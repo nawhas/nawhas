@@ -288,7 +288,7 @@ export default class Album extends Vue {
 
   &--dark {
     tr:hover {
-      background-color: map-deep-get($material-dark, 'background') !important;
+      background-color: map-get($material-dark-elevation-colors, '8') !important;
     }
   }
 }
