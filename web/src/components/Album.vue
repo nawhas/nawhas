@@ -61,7 +61,8 @@
             <v-icon :class="{
               'material-icons-outlined': true,
               track__feature: true,
-              'track__feature--disabled': !hasLyrics(props.item)
+              'track__feature--disabled': !hasLyrics(props.item) && !isDark,
+              'track__feature--disabled--dark': !hasLyrics(props.item) && isDark
             }">
               <template v-if="hasLyrics(props.item)">speaker_notes</template>
               <template v-else>speaker_notes_off</template>
@@ -69,7 +70,8 @@
             <v-icon :class="{
               'material-icons-outlined': true,
               track__feature: true,
-              'track__feature--disabled': !hasAudioFile(props.item)
+              'track__feature--disabled': !hasAudioFile(props.item) && !isDark,
+              'track__feature--disabled--dark': !hasAudioFile(props.item) && isDark
             }">
               <template v-if="hasAudioFile(props.item)">volume_up</template>
               <template v-else>volume_off</template>
@@ -313,6 +315,9 @@ export default class Album extends Vue {
 
   .track__feature--disabled {
     color: rgba(0, 0, 0, 0.1);
+  }
+  .track__feature--disabled--dark {
+    color: rgba(map-get($shades, 'white'), 0.5);
   }
 }
 

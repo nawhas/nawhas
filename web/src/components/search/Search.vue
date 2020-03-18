@@ -196,10 +196,6 @@ $width: 400px;
     flex-direction: row;
     align-items: center;
 
-    .search__input {
-      // background-color: transparent;
-    }
-
     .search__input--dark {
       background-color: map-get($material-dark-elevation-colors, '8');
     }
