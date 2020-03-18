@@ -32,8 +32,8 @@ export default class ReciterCard extends Vue {
   @Prop({ type: String }) private updatedAt!: any;
   @Prop() private featured!: any;
 
-  private backgroundColorTemp: null|string = null;
-  private textColorTemp: null|string = null;
+  private vibrantBackgroundColor: null|string = null;
+  private vibrantTextColor: null|string = null;
 
   get image() {
     return this.avatar || '/img/default-reciter-avatar.png';
@@ -50,8 +50,8 @@ export default class ReciterCard extends Vue {
   }
 
   get background() {
-    if (this.backgroundColorTemp !== null) {
-      return this.backgroundColorTemp;
+    if (this.vibrantBackgroundColor !== null) {
+      return this.vibrantBackgroundColor;
     }
     if (this.isDark) {
       return null;
@@ -63,8 +63,8 @@ export default class ReciterCard extends Vue {
   }
 
   get textColor() {
-    if (this.textColorTemp !== null) {
-      return this.textColorTemp;
+    if (this.vibrantTextColor !== null) {
+      return this.vibrantTextColor;
     }
     if (this.isDark) {
       return null;
@@ -96,8 +96,8 @@ export default class ReciterCard extends Vue {
         if (!swatch) {
           return;
         }
-        this.backgroundColorTemp = swatch.getHex();
-        this.textColorTemp = swatch.getBodyTextColor();
+        this.vibrantBackgroundColor = swatch.getHex();
+        this.vibrantTextColor = swatch.getBodyTextColor();
       });
   }
 }
