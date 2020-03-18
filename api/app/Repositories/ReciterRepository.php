@@ -14,7 +14,6 @@ interface ReciterRepository
 {
     public function find(string $id): ?Reciter;
     public function get(string $id): Reciter;
-    public function popular(int $limit = 6): Collection;
     public function paginate(PaginationState $state): LengthAwarePaginator;
     public function query(): ReciterQuery;
     public function persist(Reciter ...$reciters): void;

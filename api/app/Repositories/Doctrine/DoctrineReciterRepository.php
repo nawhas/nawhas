@@ -32,22 +32,6 @@ class DoctrineReciterRepository extends DoctrineRepository implements ReciterRep
         return $entity;
     }
 
-    /**
-     * @return Collection|Reciter[]
-     */
-    public function popular(int $limit = 6): Collection
-    {
-        $query = $this->repo->createQueryBuilder('t')
-            ->leftJoin('t.visits', 'v')
-            ->addSelect('COUNT(v.id) as HIDDEN visits')
-            ->groupBy('t.id')
-            ->setMaxResults($limit)
-            ->orderBy('visits', 'desc')
-            ->getQuery();
-
-        return collect($query->getResult());
-    }
-
     public function query(): ReciterQuery
     {
         return ReciterQuery::make();

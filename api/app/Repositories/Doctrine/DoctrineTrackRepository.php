@@ -52,29 +52,6 @@ class DoctrineTrackRepository extends DoctrineRepository implements TrackReposit
         return Track::class;
     }
 
-    /**
-     * @return Collection|Track[]
-     */
-    public function popular(?Reciter $reciter = null, int $limit = 6): Collection
-    {
-        $builder = $this->repo->createQueryBuilder('t')
-            ->leftJoin('t.visits', 'v')
-            ->leftJoin('t.album', 'a')
-            ->addSelect('COUNT(v.id) as HIDDEN visits')
-            ->groupBy('t.id, a.year')
-            ->setMaxResults($limit)
-            ->addOrderBy('visits', 'desc')
-            ->addOrderBy('a.year', 'desc');
-
-        if ($reciter) {
-            $builder->andWhere('t.reciter = :reciter')->setParameter('reciter', $reciter);
-        }
-
-        $query = $builder->getQuery();
-
-        return collect($query->getResult());
-    }
-
     public function persist(Track ...$tracks): void
     {
         $this->em->persist(...$tracks);

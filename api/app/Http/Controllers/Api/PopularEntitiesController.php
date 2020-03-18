@@ -11,6 +11,7 @@ use App\Http\Transformers\TrackTransformer;
 use App\Queries\AlbumQuery;
 use App\Queries\TrackQuery;
 use App\Repositories\AlbumRepository;
+use App\Repositories\PopularEntitiesRepository;
 use App\Repositories\ReciterRepository;
 use App\Repositories\TrackRepository;
 use App\Support\Pagination\PaginationState;
@@ -19,14 +20,19 @@ use Illuminate\Http\Request;
 
 class PopularEntitiesController extends Controller
 {
-    public function reciters(Request $request, ReciterTransformer $transformer, ReciterRepository $repository): JsonResponse
-    {
-        $reciters = $repository->popular();
+    private PopularEntitiesRepository $repository;
 
-        return $this->respondWithCollection($reciters, $transformer);
+    public function __construct(PopularEntitiesRepository $repository)
+    {
+        $this->repository = $repository;
     }
 
-    public function tracks(Request $request, TrackTransformer $transformer, ReciterRepository $reciterRepo, TrackRepository $trackRepo): JsonResponse
+    public function reciters(Request $request, ReciterTransformer $transformer): JsonResponse
+    {
+        return $this->respondWithCollection($this->repository->reciters(), $transformer);
+    }
+
+    public function tracks(Request $request, TrackTransformer $transformer, ReciterRepository $reciterRepo): JsonResponse
     {
         $reciter = null;
 
@@ -34,7 +40,6 @@ class PopularEntitiesController extends Controller
             $reciter = $reciterRepo->query()->whereIdentifier($request->get('reciterId'))->get();
         }
 
-        $tracks =  $trackRepo->popular($reciter);
-        return $this->respondWithCollection($tracks, $transformer);
+        return $this->respondWithCollection($this->repository->tracks($reciter), $transformer);
     }
 }
