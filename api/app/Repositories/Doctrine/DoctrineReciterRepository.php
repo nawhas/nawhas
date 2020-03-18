@@ -21,6 +21,15 @@ class DoctrineReciterRepository extends DoctrineRepository implements ReciterRep
         return $this->query()->whereIdentifier($id)->first();
     }
 
+    public function all(string ...$ids): Collection
+    {
+        $builder = $this->repo->createQueryBuilder('r');
+
+        $result = $builder->where($builder->expr()->in('r.id', $ids))->getQuery()->getResult();
+
+        return collect($result);
+    }
+
     public function get(string $id): Reciter
     {
         $entity = $this->find($id);
@@ -30,22 +39,6 @@ class DoctrineReciterRepository extends DoctrineRepository implements ReciterRep
         }
 
         return $entity;
-    }
-
-    /**
-     * @return Collection|Reciter[]
-     */
-    public function popular(int $limit = 6): Collection
-    {
-        $query = $this->repo->createQueryBuilder('t')
-            ->leftJoin('t.visits', 'v')
-            ->addSelect('COUNT(v.id) as HIDDEN visits')
-            ->groupBy('t.id')
-            ->setMaxResults($limit)
-            ->orderBy('visits', 'desc')
-            ->getQuery();
-
-        return collect($query->getResult());
     }
 
     public function query(): ReciterQuery

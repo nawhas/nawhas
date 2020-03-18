@@ -5,6 +5,7 @@ namespace App\Console\Commands\Seed;
 use App\Database\Doctrine\EntityManager;
 use App\Entities\Reciter;
 use App\Queries\ReciterQuery;
+use App\Repositories\Doctrine\DoctrinePopularEntitiesRepository;
 use App\Repositories\ReciterRepository;
 use App\Visits\Entities\ReciterVisit;
 use App\Visits\Manager;
@@ -32,14 +33,14 @@ class PopularEntities extends Command
      *
      * @return mixed
      */
-    public function handle(EntityManager $em, ReciterRepository $repo)
+    public function handle(EntityManager $em, DoctrinePopularEntitiesRepository $repository)
     {
-        $this->seedPopularReciters($em, $repo);
+        $this->seedPopularReciters($em, $repository);
     }
 
-    protected function seedPopularReciters(EntityManager $em, ReciterRepository $repo): void
+    protected function seedPopularReciters(EntityManager $em, DoctrinePopularEntitiesRepository $repository): void
     {
-        $popular = $repo->popular()->map(fn (Reciter $reciter) => [$reciter->getName()])->toArray();
+        $popular = $repository->reciters()->map(fn (Reciter $reciter) => [$reciter->getName()])->toArray();
         $this->table(['Starting Point'], $popular);
 
         $slugs = [
@@ -59,7 +60,7 @@ class PopularEntities extends Command
 
         $this->info('Done!');
 
-        $popular = $repo->popular()->map(fn (Reciter $reciter) => [$reciter->getName()])->toArray();
+        $popular = $repository->reciters()->map(fn (Reciter $reciter) => [$reciter->getName()])->toArray();
         $this->table(['Starting Point'], $popular);
     }
 }
