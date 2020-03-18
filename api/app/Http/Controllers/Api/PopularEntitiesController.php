@@ -21,7 +21,7 @@ use Illuminate\Http\Request;
 
 class PopularEntitiesController extends Controller
 {
-    private const CACHE_TTL = 60 * 30; // 30 minutes.
+    private const CACHE_TTL = 60 * 60 * 24; // 24 hours
     private PopularEntitiesRepository $repository;
     private Cache $cache;
 
