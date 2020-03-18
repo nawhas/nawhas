@@ -13,7 +13,7 @@ const getters = {
 const mutations = {
   SET_THEME(state: UserPreferences, { isDark }) {
     state.theme = (isDark) ? 'dark' : 'light';
-    this.$vuetify.theme.dark = !!(isDark);
+    localStorage.setItem('theme', state.theme);
   },
 };
 
