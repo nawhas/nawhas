@@ -121,10 +121,6 @@ export default class UserMenu extends Vue {
     this.open = false;
   }
 
-  setTheme(value) {
-    console.log(value);
-  }
-
   register() {
     // todo
   }
