@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-var-requires,@typescript-eslint/camelcase */
+/* eslint-disable */
 const fs = require('fs');
 const path = require('path');
 
@@ -8,6 +8,17 @@ const https = process.env.NODE_ENV === 'production' ? false : {
 };
 
 module.exports = {
+  chainWebpack: (config) => {
+    // Custom SVG Loader for .svgx files
+    config.module
+      .rule('svgx')
+      .test(/\.svgx$/)
+      .use('babel-loader')
+        .loader('babel-loader')
+        .end()
+      .use('vue-svg-loader')
+        .loader('vue-svg-loader');
+  },
   transpileDependencies: [
     'vuetify',
   ],

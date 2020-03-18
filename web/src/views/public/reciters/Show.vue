@@ -59,7 +59,7 @@
           <template v-for="album in albums">
             <album :album="album" :reciter="reciter" :show-reciter="false" v-bind:key="album.id" />
           </template>
-          <v-pagination v-model="page" :length="length" circle @input="goToPage"></v-pagination>
+          <v-pagination color="deep-orange" v-model="page" :length="length" circle @input="goToPage"></v-pagination>
         </template>
         <template v-else>
           <p>We don't have any albums for {{ reciter.name }} yet.</p>

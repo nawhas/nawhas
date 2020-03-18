@@ -22,8 +22,8 @@
                       right bottom direction="left">
           <template v-slot:activator>
             <v-btn :small="$vuetify.breakpoint.smAndDown" v-model="fab" fab :color="fabColor">
-              <v-icon v-if="fab">close</v-icon>
-              <v-icon v-else>play_arrow</v-icon>
+              <v-icon v-if="fab" color="black">close</v-icon>
+              <v-icon v-else color="black">play_arrow</v-icon>
             </v-btn>
           </template>
           <v-tooltip top>
@@ -52,7 +52,7 @@
       :hide-default-header="true"
       :disable-pagination="true"
       :hide-default-footer="true"
-      class="album__tracks"
+      :class="{'album__tracks': true, 'album__tracks--dark': isDark}"
     >
       <template v-slot:item="props">
         <tr @click="goToTrack(props.item)" class="album__track">
@@ -61,7 +61,8 @@
             <v-icon :class="{
               'material-icons-outlined': true,
               track__feature: true,
-              'track__feature--disabled': !hasLyrics(props.item)
+              'track__feature--disabled': !hasLyrics(props.item) && !isDark,
+              'track__feature--disabled--dark': !hasLyrics(props.item) && isDark
             }">
               <template v-if="hasLyrics(props.item)">speaker_notes</template>
               <template v-else>speaker_notes_off</template>
@@ -69,7 +70,8 @@
             <v-icon :class="{
               'material-icons-outlined': true,
               track__feature: true,
-              'track__feature--disabled': !hasAudioFile(props.item)
+              'track__feature--disabled': !hasAudioFile(props.item) && !isDark,
+              'track__feature--disabled--dark': !hasAudioFile(props.item) && isDark
             }">
               <template v-if="hasAudioFile(props.item)">volume_up</template>
               <template v-else>volume_off</template>
@@ -135,6 +137,10 @@ export default class Album extends Vue {
       return `${this.reciter.name} • ${this.year}`;
     }
     return this.year;
+  }
+
+  get isDark() {
+    return this.$vuetify.theme.dark;
   }
 
   get gradient() {
@@ -281,6 +287,12 @@ export default class Album extends Vue {
       outline: none !important;
     }
   }
+
+  &--dark {
+    tr:hover {
+      background-color: map-get($material-dark-elevation-colors, '8') !important;
+    }
+  }
 }
 
 .album__track {
@@ -303,6 +315,9 @@ export default class Album extends Vue {
 
   .track__feature--disabled {
     color: rgba(0, 0, 0, 0.1);
+  }
+  .track__feature--disabled--dark {
+    color: rgba(map-get($shades, 'white'), 0.5);
   }
 }
 

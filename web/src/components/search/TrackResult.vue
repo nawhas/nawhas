@@ -6,19 +6,23 @@
           <img crossorigin :src="image" :alt="track.title" />
         </v-avatar>
       </div>
-      <div class="track-result__text">
+      <div class="track-result__text" :class="{ 'track-result__text--dark': isDark }">
         <div class="track-result__name body-1" :title="track.title">
-          <div class="track-result__title">
+          <div class="track-result__title"
+               :class="{ 'track-result__title--dark': isDark }">
             <ais-highlight :hit="track" attribute="title" />
           </div>
-          <div class="track-result__year body-2">
+          <div class="track-result__year body-2"
+               :class="{ 'track-result__year--dark': isDark }">
             <ais-highlight :hit="track" attribute="album.year" />
           </div>
         </div>
-        <div class="track-result__reciter body-2">
+        <div class="track-result__reciter body-2"
+             :class="{ 'track-result__reciter--dark': isDark }">
           <ais-highlight :hit="track" attribute="reciter.name" />
         </div>
-        <div class="track-result__lyrics body-2">
+        <div class="track-result__lyrics body-2"
+             :class="{ 'track-result__lyrics--dark': isDark }">
           <ais-snippet v-if="track.lyrics" :hit="track" attribute="lyrics" />
           <span v-else :hit="track">No lyrics available</span>
         </div>
@@ -34,6 +38,9 @@ export default {
   computed: {
     image() {
       return this.track.album.artwork || '/img/default-album-image.png';
+    },
+    isDark() {
+      return this.$vuetify.theme.dark;
     },
   },
 };
@@ -70,19 +77,43 @@ export default {
       padding-bottom: 1px;
       border-bottom: 2px solid orangered;
     }
+    &--dark {
+      color: white;
+      em, mark {
+        color: wheat;
+      }
+    }
     .track-result__name {
       justify-content: space-between;
       align-items: baseline;
       display: flex;
       width: 100%;
+      &--dark {
+        color: white;
+        em, mark {
+          color: wheat;
+        }
+      }
     }
     .track-result__year {
       display: block;
       color: rgba(0,0,0,0.67);
+      &--dark {
+        color: white;
+        em, mark {
+          color: wheat;
+        }
+      }
     }
     .track-result__reciter {
       color: rgba(0,0,0,0.67);
       margin-bottom: 2px;
+      &--dark {
+        color: white;
+        em, mark {
+          color: wheat;
+        }
+      }
     }
     .track-result__lyrics {
       color: rgba(0,0,0,0.67);
@@ -90,6 +121,12 @@ export default {
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
+      &--dark {
+        color: white;
+        em, mark {
+          color: wheat;
+        }
+      }
     }
   }
 }

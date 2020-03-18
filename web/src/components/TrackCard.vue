@@ -42,8 +42,8 @@ export default {
           if (!swatch) {
             return;
           }
-          this.background = swatch.getHex();
-          this.textColor = swatch.getBodyTextColor();
+          this.vibrantBackgroundColor = swatch.getHex();
+          this.vibrantTextColor = swatch.getBodyTextColor();
         });
     },
     goToTrack() {
@@ -52,11 +52,32 @@ export default {
   },
   data() {
     return {
-      background: '#ffffff',
-      textColor: '#333',
+      vibrantBackgroundColor: '#ffffff',
+      vibrantTextColor: null,
     };
   },
   computed: {
+    background() {
+      if (this.vibrantBackgroundColor !== '#ffffff') {
+        return this.vibrantBackgroundColor;
+      }
+      if (this.isDark) {
+        return null;
+      }
+      return '#ffffff';
+    },
+    textColor() {
+      if (this.vibrantTextColor !== null) {
+        return this.vibrantTextColor;
+      }
+      if (this.isDark) {
+        return null;
+      }
+      return '#333';
+    },
+    isDark() {
+      return this.$vuetify.theme.dark;
+    },
     artwork() {
       return this.album.artwork || '/img/default-album-image.png';
     },
@@ -67,7 +88,7 @@ export default {
       return this.album.year;
     },
     gradient() {
-      const rgb = Vibrant.Util.hexToRgb(this.background);
+      const rgb = Vibrant.Util.hexToRgb(this.vibrantBackgroundColor);
       return `linear-gradient(
         to right,
         rgba(${rgb.join(', ')}, 1),
@@ -86,7 +107,6 @@ export default {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: gray;
   cursor: pointer;
   @include transition(box-shadow, background-color);
 

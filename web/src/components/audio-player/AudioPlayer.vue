@@ -1,5 +1,5 @@
 <template>
-    <div :class="classes"
+    <v-sheet :class="classes"
          @mouseenter="hovering = true"
          @mouseleave="hovering = false"
          v-if="track"
@@ -43,7 +43,7 @@
             :background-opacity="hovering || mobile ? 0.3 : 0"
             class="seek-bar__progress">
           </v-progress-linear>
-          <div class="seek-bar__timestamps">
+          <div :class="{'seek-bar__timestamps': true, 'seek-bar__timestamps--disabled': isDark}">
             <div class="seek-bar__timestamps__current">{{ formattedSeek }}</div>
             <div class="seek-bar__timestamps__duration">{{ formattedDuration }}</div>
           </div>
@@ -153,7 +153,7 @@
           <queue-list @change="resetQueueMenu"></queue-list>
         </v-expand-transition>
       </div>
-    </div>
+    </v-sheet>
 </template>
 
 <script lang="ts">
@@ -194,6 +194,10 @@ export default class AudioPlayer extends Vue {
   private queueMenu = false;
   /* Keep a reference to the progress bar interval to clear it when needed. */
   private progressInterval: number|null = null;
+
+  get isDark() {
+    return this.$vuetify.theme.dark;
+  }
 
   get classes() {
     return {
@@ -677,7 +681,6 @@ $duration: 680ms;
   user-select: none;
   width: 100%;
   height: 80px;
-  background: white;
   position: fixed;
   bottom: 0;
   right: 0;
@@ -835,6 +838,10 @@ $duration: 680ms;
         font-size: 13px;
         color: rgba(0, 0, 0, 0.6);
         margin-top: 4px;
+
+        &--disabled {
+          color: white !important;
+        }
       }
     }
 
@@ -853,7 +860,6 @@ $duration: 680ms;
   position: relative;
 
   .queue-list-menu__title {
-    background: white;
     position: sticky;
     padding: 16px 16px 8px;
     top: 0;

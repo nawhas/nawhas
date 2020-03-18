@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-content class="content" v-if="data">
+    <v-content  class="content" v-if="data">
       <div class="print__header">
         <div class="print__header__title">
           <div class="print__header__title--track--name">{{ data.title }}</div>
@@ -16,7 +16,7 @@
         We don't have a write-up of this nawha yet.
       </div>
     </v-content>
-    <v-content v-else>Loading...</v-content>
+    <v-content class="content" v-else>Loading...</v-content>
   </v-app>
 </template>
 
@@ -133,8 +133,11 @@ export default {
 }
 
 .content {
+  background: white;
+  color: black;
   padding: 24px !important;
 }
+
 @media print {
   .content {
     padding: 0 !important;

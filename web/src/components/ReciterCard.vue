@@ -16,62 +16,91 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+/* eslint-disable dot-notation */
+import { Component, Vue, Prop } from 'vue-property-decorator';
 import Vibrant from 'node-vibrant';
 
-export default {
-  name: 'ReciterCard',
-  props: ['id', 'name', 'slug', 'avatar', 'related', 'createdAt', 'updatedAt', 'featured'],
+@Component
+export default class ReciterCard extends Vue {
+  @Prop({ type: String }) private id!: any;
+  @Prop({ type: String }) private name!: any;
+  @Prop({ type: String }) private slug!: any;
+  @Prop({ type: String }) private avatar!: any;
+  @Prop({ type: Object }) private related!: any;
+  @Prop({ type: String }) private createdAt!: any;
+  @Prop({ type: String }) private updatedAt!: any;
+  @Prop() private featured!: any;
+
+  private vibrantBackgroundColor: null|string = null;
+  private vibrantTextColor: null|string = null;
+
+  get image() {
+    return this.avatar || '/img/default-reciter-avatar.png';
+  }
+  get classObject() {
+    return {
+      'reciter-card': true,
+      'reciter-card--featured': this.featured !== undefined,
+    };
+  }
+
+  get isDark() {
+    return this.$vuetify.theme.dark;
+  }
+
+  get background() {
+    if (this.vibrantBackgroundColor !== null) {
+      return this.vibrantBackgroundColor;
+    }
+    if (this.isDark) {
+      return null;
+    }
+    if (this.featured !== undefined) {
+      return '#444444';
+    }
+    return 'white';
+  }
+
+  get textColor() {
+    if (this.vibrantTextColor !== null) {
+      return this.vibrantTextColor;
+    }
+    if (this.isDark) {
+      return null;
+    }
+    if (this.featured !== undefined) {
+      return 'white';
+    }
+    return '#333';
+  }
+
   mounted() {
     if (this.featured !== undefined) {
       this.setBackgroundFromImage();
     }
-  },
-  methods: {
-    goToReciter() {
-      this.$router.push({
-        name: 'reciters.show',
-        params: { reciter: this.slug },
-      });
-    },
-    setBackgroundFromImage() {
-      Vibrant.from(this.image)
-        .getPalette()
-        .then((palette) => {
-          const swatch = palette.DarkMuted;
-          if (!swatch) {
-            return;
-          }
-          this.background = swatch.getHex();
-          this.textColor = swatch.getBodyTextColor();
-        });
-    },
-  },
-  data() {
-    if (this.featured !== undefined) {
-      return {
-        background: '#444444',
-        textColor: 'white',
-      };
-    }
+  }
 
-    return {
-      background: 'white',
-      textColor: '#333',
-    };
-  },
-  computed: {
-    image() {
-      return this.avatar || '/img/default-reciter-avatar.png';
-    },
-    classObject() {
-      return {
-        'reciter-card': true,
-        'reciter-card--featured': this.featured !== undefined,
-      };
-    },
-  },
-};
+  goToReciter() {
+    this.$router.push({
+      name: 'reciters.show',
+      params: { reciter: this.slug },
+    });
+  }
+
+  setBackgroundFromImage() {
+    Vibrant.from(this.image)
+      .getPalette()
+      .then((palette) => {
+        const swatch = palette.DarkMuted;
+        if (!swatch) {
+          return;
+        }
+        this.vibrantBackgroundColor = swatch.getHex();
+        this.vibrantTextColor = swatch.getBodyTextColor();
+      });
+  }
+}
 </script>
 
 <style lang="scss" scoped>

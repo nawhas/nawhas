@@ -91,13 +91,15 @@
               <v-icon class="card__title__icon material-icons-outlined">speaker_notes</v-icon>
               <div>Write-Up</div>
             </v-card-title>
-            <v-card-text class="lyrics__content">
+            <v-card-text class="lyrics__content" :class="{ 'black--text': !isDark }">
               <template v-if="track">
                 <div v-if="track.lyrics">
                   <div v-html="prepareLyrics(track.lyrics.content)"></div>
                 </div>
                 <div class="lyrics__empty" v-else>
-                  <div class="lyrics__empty-message">We don't have a write-up for this nawha yet.</div>
+                  <div class="lyrics__empty-message"
+                       :class="{ 'lyrics__empty-message--dark': isDark }"
+                  >We don't have a write-up for this nawha yet.</div>
                 </div>
               </template>
               <div v-else>
@@ -231,6 +233,10 @@ export default class TrackPage extends Vue {
 
   get isModerator() {
     return this.$store.getters['auth/isModerator'];
+  }
+
+  get isDark() {
+    return this.$vuetify.theme.dark;
   }
 
   mounted() {
@@ -465,7 +471,6 @@ export default class TrackPage extends Vue {
   .lyrics__content {
     padding: 24px;
     font-weight: 400;
-    color: rgba(0, 0, 0, 0.76);
     font-family: 'Roboto Slab', sans-serif;
     line-height: 2rem;
     font-size: 1rem;
@@ -483,6 +488,10 @@ export default class TrackPage extends Vue {
       display: flex;
       margin: auto;
       align-self: center;
+
+      &--dark {
+        color: white;
+      }
     }
   }
 }

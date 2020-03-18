@@ -19,7 +19,7 @@
         </v-list-item>
       </v-list>
     </v-navigation-drawer>
-    <v-app-bar class="app-bar" color="white" app fixed elevate-on-scroll>
+    <v-app-bar class="app-bar" :color="(!isDark) ? 'white' : null" app fixed elevate-on-scroll>
       <div class="app-bar__left">
         <nav class="nav__buttons" v-if="$vuetify.breakpoint.lgAndUp">
           <v-btn text v-for="(link) in navigation" class="nav__btn" :key="link.to" :to="link.to">
@@ -31,10 +31,8 @@
       <div class="app-bar__center">
         <v-toolbar-title class="nav__title">
           <router-link to="/" tag="div" class="masthead__logo">
-            <img class="masthead__logo"
-                 :src="require('../assets/logo.svg')"
-                 alt="Nawhas.com"
-            />
+            <logo-icon class="masthead__logo__icon" />
+            <logo-wordmark :class="{ 'masthead__logo__wordmark': true, 'masthead__logo__wordmark--dark': isDark }" />
           </router-link>
         </v-toolbar-title>
       </div>
@@ -44,7 +42,7 @@
       </div>
     </v-app-bar>
     <v-content>
-      <v-container fluid class="grey lighten-5 main-container">
+      <v-container fluid :class="{ 'grey lighten-5': !isDark }" class="main-container">
         <router-view></router-view>
       </v-container>
     </v-content>
@@ -60,6 +58,8 @@ import navItems from '@/data/navigation';
 import AudioPlayer from '@/components/audio-player/AudioPlayer.vue';
 import UserMenu from '@/components/auth/UserMenu.vue';
 import UpdateServiceWorker from '@/components/utils/UpdateServiceWorker.vue';
+import LogoIcon from '@/assets/icon.svgx';
+import LogoWordmark from '@/assets/wordmark.svgx';
 
 @Component({
   components: {
@@ -67,6 +67,8 @@ import UpdateServiceWorker from '@/components/utils/UpdateServiceWorker.vue';
     Search,
     AudioPlayer,
     UserMenu,
+    LogoIcon,
+    LogoWordmark,
   },
 })
 export default class PublicVuetify extends Vue {
@@ -79,11 +81,15 @@ export default class PublicVuetify extends Vue {
   get navigation() {
     return navItems;
   }
+
+  get isDark() {
+    return this.$vuetify.theme.dark;
+  }
 }
 </script>
 
 <style lang="scss" scoped>
-@import "~vuetify/src/styles/styles";
+@import "../styles/theme";
 
 .main-container {
   padding: 0;
@@ -111,6 +117,22 @@ export default class PublicVuetify extends Vue {
 .masthead__logo {
   height: 38px;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+
+  &__icon {
+    height: 38px;
+  }
+  &__wordmark {
+    height: 16px;
+    margin-left: 8px;
+    > path {
+      fill: $wordmark;
+    }
+  }
+  &__wordmark--dark > path {
+    fill: rgba(255, 255, 255, 0.93);
+  }
 }
 .nav__btn {
   text-transform: none;

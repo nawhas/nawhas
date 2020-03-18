@@ -4,7 +4,11 @@
       v-for="{ id, track } in queue"
       :key="id"
       @click="skipToTrack(id)"
-      :class="{'queue-item': true, 'queue-item--active': isCurrentTrack(id)}"
+      :class="{
+        'queue-item': true,
+        'queue-item--active': isCurrentTrack(id),
+        'queue-item--dark': isDark,
+      }"
     >
       <v-list-item-avatar tile class="queue-item__album-art">
         <img crossorigin :src="getTrackArtwork(track)" :alt="track.title">
@@ -25,7 +29,7 @@
           :size="20"
           :rotate="-90"
           :value="progress"
-          color="primary" />
+          :color="isDark ? 'accent' : 'primary'" />
       </v-list-item-action>
     </v-list-item>
   </v-list>
@@ -56,6 +60,10 @@ export default class QueueList extends Vue {
    */
   get progress(): number {
     return this.$store.getters['player/progress'];
+  }
+
+  get isDark(): boolean {
+    return this.$vuetify.theme.dark;
   }
 
   getTrackArtwork(track): string {
@@ -96,6 +104,9 @@ export default class QueueList extends Vue {
 
 .queue-item--active {
   background-color: map-deep-get($colors, 'deep-orange', 'lighten-5');
+}
+.queue-item--dark.queue-item--active {
+  background-color: darken($secondary, 18%);
 }
 .playback-progress {
   margin-right: 8px;
