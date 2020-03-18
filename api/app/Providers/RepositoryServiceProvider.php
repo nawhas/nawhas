@@ -22,14 +22,18 @@ class RepositoryServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->when(CachedPopularEntitiesRepository::class)
-            ->needs(PopularEntitiesRepository::class)
-            ->give(DoctrinePopularEntitiesRepository::class);
-
         $this->app->bind(ReciterRepository::class, DoctrineReciterRepository::class);
         $this->app->bind(AlbumRepository::class, DoctrineAlbumRepository::class);
         $this->app->bind(TrackRepository::class, DoctrineTrackRepository::class);
+        $this->app->bind(PopularEntitiesRepository::class, DoctrinePopularEntitiesRepository::class);
+
+        // Cached Repositories
+        /*
         $this->app->bind(PopularEntitiesRepository::class, CachedPopularEntitiesRepository::class);
+        $this->app->when(CachedPopularEntitiesRepository::class)
+            ->needs(PopularEntitiesRepository::class)
+            ->give(DoctrinePopularEntitiesRepository::class);
+        */
     }
 
     /**
