@@ -5,6 +5,7 @@ networks:
 
 volumes:
   postgres:
+  redis:
 
 services:
   api:
@@ -63,3 +64,10 @@ services:
       - ./docker/postgres/sync.sh:/usr/bin/syncdb
     networks:
       - nawhas
+  cache:
+    image: redis:5
+    container_name: nawhas_cache
+    networks:
+      - nawhas
+    volumes:
+      - redis:/data
