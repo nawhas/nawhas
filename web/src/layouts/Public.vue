@@ -31,7 +31,11 @@
       <div class="app-bar__center">
         <v-toolbar-title class="nav__title">
           <router-link to="/" tag="div" class="masthead__logo">
-            <img class="masthead__logo"
+            <img v-if="isDark" class="masthead__logo"
+                 :src="require('../assets/logo.dark.svg')"
+                 alt="Nawhas.com"
+            />
+            <img v-else class="masthead__logo"
                  :src="require('../assets/logo.svg')"
                  alt="Nawhas.com"
             />
