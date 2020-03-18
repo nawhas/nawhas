@@ -127,7 +127,7 @@ export default class PublicVuetify extends Vue {
     height: 16px;
     margin-left: 8px;
     > path {
-      fill: $primary;
+      fill: $wordmark;
     }
   }
   &__wordmark--dark > path {
