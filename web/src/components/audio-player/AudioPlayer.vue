@@ -43,7 +43,7 @@
             :background-opacity="hovering || mobile ? 0.3 : 0"
             class="seek-bar__progress">
           </v-progress-linear>
-          <div class="seek-bar__timestamps">
+          <div :class="{'seek-bar__timestamps': true, 'seek-bar__timestamps--disabled': isDark}">
             <div class="seek-bar__timestamps__current">{{ formattedSeek }}</div>
             <div class="seek-bar__timestamps__duration">{{ formattedDuration }}</div>
           </div>
@@ -838,6 +838,10 @@ $duration: 680ms;
         font-size: 13px;
         color: rgba(0, 0, 0, 0.6);
         margin-top: 4px;
+
+        &--disabled {
+          color: white !important;
+        }
       }
     }
 
