@@ -40,6 +40,13 @@ class EntityManager
         return $repo;
     }
 
+    public function detach(Entity ...$entities): void
+    {
+        foreach ($entities as $entity) {
+            $this->em->detach($entity);
+        }
+    }
+
     public function flush(): void
     {
         $this->em->flush();

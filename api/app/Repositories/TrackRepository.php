@@ -11,10 +11,21 @@ use Illuminate\Support\Collection;
 interface TrackRepository
 {
     public function find(string $id): ?Track;
+
+    /**
+     * @return Collection|Track[]
+     */
+    public function all(string ...$ids): Collection;
+
     public function get(string $id): Track;
+
     public function getFromAlbum(Album $album, string $id): Track;
+
     public function allFromAlbum(Album $album): Collection;
+
     public function query(): TrackQuery;
+
     public function persist(Track ...$tracks): void;
+
     public function remove(Track $track): void;
 }

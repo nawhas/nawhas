@@ -21,6 +21,15 @@ class DoctrineReciterRepository extends DoctrineRepository implements ReciterRep
         return $this->query()->whereIdentifier($id)->first();
     }
 
+    public function all(string ...$ids): Collection
+    {
+        $builder = $this->repo->createQueryBuilder('r');
+
+        $result = $builder->where($builder->expr()->in('r.id', $ids))->getQuery()->getResult();
+
+        return collect($result);
+    }
+
     public function get(string $id): Reciter
     {
         $entity = $this->find($id);

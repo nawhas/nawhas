@@ -22,6 +22,15 @@ class DoctrineTrackRepository extends DoctrineRepository implements TrackReposit
         return $this->findFromRepo($id);
     }
 
+    public function all(string ...$ids): Collection
+    {
+        $builder = $this->repo->createQueryBuilder('t');
+
+        $result = $builder->where($builder->expr()->in('t.id', $ids))->getQuery()->getResult();
+
+        return collect($result);
+    }
+
     public function get(string $id): Track
     {
         return $this->getFromRepo($id);
