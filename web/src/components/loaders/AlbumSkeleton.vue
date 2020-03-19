@@ -2,7 +2,7 @@
   <v-card class="album-skeleton">
     <div class="album-skeleton__header">
       <v-skeleton-loader type="avatar" tile :width="artworkSize" :height="artworkSize"
-                         class="album-skeleton__artwork">
+                         :class="{ 'album-skeleton__artwork': true, 'album-skeleton__artwork--dark': isDark }">
       </v-skeleton-loader>
       <div class="album-skeleton__details">
         <h5 class="album-skeleton__title">
@@ -31,6 +31,9 @@ export default class AlbumSkeleton extends Vue {
       return 48;
     }
     return 128;
+  }
+  get isDark() {
+    return this.$vuetify.theme.dark;
   }
 }
 </script>
@@ -63,6 +66,11 @@ export default class AlbumSkeleton extends Vue {
   > div {
     width: 100%;
     height: 100%;
+  }
+
+  &.album-skeleton__artwork--dark {
+    background: #1E1E1E;
+    border-color: #bbb;
   }
 }
 

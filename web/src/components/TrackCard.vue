@@ -147,6 +147,7 @@ export default {
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
+    flex: none;
 
     .track-card__album-art-gradient {
       width: 28%;

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div :class="{ 'track-page': true, 'track-page--dark': isDark }">
     <div class="hero" :style="{'background-color': background, color: textColor}">
       <v-container class="hero__content">
         <v-avatar :size="heroArtworkSize" class="hero__artwork" tile>
@@ -509,6 +509,13 @@ export default class TrackPage extends Vue {
         color: white;
       }
     }
+  }
+}
+
+.track-page--dark {
+  .hero__artwork {
+    background: #1E1E1E;
+    border-color: #1e1e1e;
   }
 }
 

@@ -37,7 +37,12 @@ class TestDataSeeder extends Seeder
             $reciter = new Reciter($r['name'], $r['description'], $r['avatar']);
             $em->persist($reciter);
 
+            $albums = 0;
             foreach ($r['albums'] as $a) {
+                if ($albums >= 10) {
+                    break;
+                }
+
                 $album = new Album($reciter, $a['title'], $a['year'], $a['artwork']);
                 $em->persist($album);
 
@@ -51,9 +56,12 @@ class TestDataSeeder extends Seeder
                     }
                     $em->persist($track);
                 }
+                $albums++;
             }
         }
 
         $em->flush();
+
+        Artisan::call('search:import');
     }
 }

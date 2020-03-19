@@ -12,7 +12,7 @@
             <v-list-item>
               <v-list-item-avatar color="grey lighten-2">
                 <img v-if="authenticated" crossorigin :src="user.avatar" :alt="user.name">
-                <v-icon v-else>person</v-icon>
+                <v-icon v-else light>person</v-icon>
               </v-list-item-avatar>
 
               <v-list-item-content v-if="authenticated">
