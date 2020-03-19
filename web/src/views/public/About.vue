@@ -57,7 +57,6 @@
             <v-card-actions>
               <v-btn v-for="(link, index) in contributor.links"
                      text
-                     color="grey darken-2"
                      :href="link.href"
                      target="_blank"
                      :key="index"
@@ -89,7 +88,7 @@
           </p>
           <div class="text-center mt-8">
             <v-btn large href="https://github.com/nawhas/nawhas" target="_blank">
-              <v-icon color="black" left>mdi-github-circle</v-icon> Github
+              <v-icon left>mdi-github</v-icon> Github
             </v-btn>
           </div>
         </div>
@@ -197,7 +196,7 @@ export default class About extends Vue {
           'Maintainer of the open source codebase',
         ],
         links: [
-          { icon: 'mdi-github-circle', text: 'Github', href: 'https://github.com/shea786' },
+          { icon: 'mdi-github', text: 'Github', href: 'https://github.com/shea786' },
         ],
       },
     ];
