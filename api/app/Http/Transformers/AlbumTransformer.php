@@ -7,11 +7,12 @@ namespace App\Http\Transformers;
 use App\Entities\Album;
 use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\Item;
+use League\Fractal\Resource\Primitive;
 
 class AlbumTransformer extends Transformer
 {
     protected $availableIncludes = [
-        'reciter', 'tracks'
+        'reciter', 'tracks', 'related'
     ];
 
     public function toArray(Album $album): array
@@ -34,5 +35,12 @@ class AlbumTransformer extends Transformer
     public function includeTracks(Album $album): Collection
     {
         return $this->collection($album->getTracks(), new TrackTransformer());
+    }
+
+    public function includeRelated(Album $album): Primitive
+    {
+        return $this->primitive([
+           'tracks' => $album->getTracks()->count(),
+        ]);
     }
 }

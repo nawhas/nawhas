@@ -1,11 +1,13 @@
 <template>
   <v-card class="album">
     <div class="album__header" :style="{ 'background-color': background }">
-      <v-avatar tile :size="artworkSize" :class="{ 'album__artwork': true, 'album__artwork--dark': isDark }">
+      <v-avatar tile :size="artworkSize"
+                :class="{ 'album__artwork': true, 'album__artwork--dark': isDark }"
+                @click="$router.push(link)">
         <img crossorigin :src="image" :alt="album.title" ref="artwork" />
       </v-avatar>
       <div class="album__details" :style="{ color: textColor }">
-        <h5 class="album__title">{{ album.title }}</h5>
+        <router-link tag="h5" :to="link" class="album__title">{{ album.title }}</router-link>
         <h6 class="album__release-date">
           <strong>{{ year }}</strong>
           &bull; {{ tracks.data.length }} tracks
@@ -143,6 +145,20 @@ export default class Album extends Vue {
     return this.$vuetify.theme.dark;
   }
 
+  get link() {
+    if (!this.reciter || !this.album) {
+      return '';
+    }
+
+    return {
+      name: 'albums.show',
+      params: {
+        reciter: this.reciter.slug,
+        album: this.album.year,
+      },
+    };
+  }
+
   get gradient() {
     const rgb = Vibrant.Util.hexToRgb(this.background);
 
@@ -246,6 +262,7 @@ export default class Album extends Vue {
 }
 
 .album__artwork {
+  cursor: pointer;
   margin-top: -48px;
   margin-left: 20px;
   border: 5px solid white;
@@ -268,6 +285,7 @@ export default class Album extends Vue {
 }
 
 .album__title {
+  cursor: pointer;
   margin: 0 0 8px 0;
   padding: 0;
   font-weight: 700;

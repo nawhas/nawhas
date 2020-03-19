@@ -21,9 +21,12 @@
                 <span class="meta__line__text">{{ reciter.name }}</span>
               </router-link>
               <br>
-              <div class="meta__line">
+              <router-link class="meta__line"
+                           :to="albumLink"
+                           exact
+              >
                 <span class="meta__line__text">{{ album.year }} &bull; {{ album.title }}</span>
-              </div>
+              </router-link>
             </template>
             <template v-else>
               <v-skeleton-loader type="text" dark width="150px" class="my-2"></v-skeleton-loader>
@@ -110,7 +113,7 @@
         </v-col>
         <v-col cols="12" md="4">
           <v-card class="card card--album">
-            <v-card-title class="card__title subtitle-1">
+            <v-card-title class="card__title subtitle-1 card__title--link" @click="$router.push(albumLink)">
               <v-icon class="card__title__icon">format_list_bulleted</v-icon>
               <div>More From This Album</div>
             </v-card-title>
@@ -204,6 +207,16 @@ export default class TrackPage extends Vue {
       return 128;
     }
     return 192;
+  }
+
+  get albumLink() {
+    if (!this.album || !this.reciter) {
+      return '';
+    }
+    return {
+      name: 'albums.show',
+      params: { reciter: this.reciter.slug, album: this.album.year },
+    };
   }
 
   get hasAudio() {
@@ -415,6 +428,9 @@ export default class TrackPage extends Vue {
 
   .card__title__icon {
     margin-right: 14px;
+  }
+  &.card__title--link {
+    cursor: pointer;
   }
 }
 

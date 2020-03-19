@@ -14,7 +14,7 @@ export function getAlbums(reciter, options = {}) {
 }
 
 /**
- * Get a Album
+ * Get an Album
  * @param {string|int} reciter
  * @param {string} album
  * @param {object} [options]

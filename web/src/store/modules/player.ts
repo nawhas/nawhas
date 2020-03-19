@@ -107,6 +107,9 @@ const mutations = {
     state.current = current;
   },
   ADD_ALBUM_TO_QUEUE(state: PlayerState, { tracks }) {
+    if (state.queue.length === 0) {
+      state.current = 0;
+    }
     tracks.map((track) => {
       if (track.related.audio) {
         state.queue.push({ track, id: generateId() });
