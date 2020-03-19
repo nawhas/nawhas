@@ -1,7 +1,7 @@
 <template>
   <v-card class="album">
     <div class="album__header" :style="{ 'background-color': background }">
-      <v-avatar tile :size="artworkSize" class="album__artwork">
+      <v-avatar tile :size="artworkSize" :class="{ 'album__artwork': true, 'album__artwork--dark': isDark }">
         <img crossorigin :src="image" :alt="album.title" ref="artwork" />
       </v-avatar>
       <div class="album__details" :style="{ color: textColor }">
@@ -254,6 +254,11 @@ export default class Album extends Vue {
   box-sizing: content-box;
   background-color: white;
   @include elevation(3);
+
+  &.album__artwork--dark {
+    background: #1E1E1E;
+    border-color: #bbb;
+  }
 }
 
 .album__details {
