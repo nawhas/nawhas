@@ -55,5 +55,7 @@ class TestDataSeeder extends Seeder
         }
 
         $em->flush();
+
+        Artisan::call('search:import');
     }
 }
