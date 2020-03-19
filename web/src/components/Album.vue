@@ -1,7 +1,7 @@
 <template>
   <v-card class="album">
     <div class="album__header" :style="{ 'background-color': background }">
-      <v-avatar tile :size="artworkSize" 
+      <v-avatar tile :size="artworkSize"
                 :class="{ 'album__artwork': true, 'album__artwork--dark': isDark }"
                 @click="$router.push(link)">
         <img crossorigin :src="image" :alt="album.title" ref="artwork" />
