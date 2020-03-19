@@ -27,10 +27,20 @@ const routes = [
         component: () => import(/* webpackChunkName: "reciter" */'@/views/public/reciters/Show.vue'),
       },
       {
+        path: 'reciters/:reciter/albums',
+        name: 'albums.index',
+        redirect: { name: 'reciters.show' },
+      },
+      {
         path: 'reciters/:reciter/albums/:album',
         name: 'albums.show',
         props: true,
         component: () => import(/* webpackChunkName: "albums" */'@/views/public/albums/Show.vue'),
+      },
+      {
+        path: 'reciters/:reciter/albums/:album/tracks',
+        name: 'tracks.index',
+        redirect: { name: 'albums.show' },
       },
       {
         path: 'reciters/:reciter/albums/:album/tracks/:track',
