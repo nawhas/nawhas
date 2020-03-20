@@ -96,8 +96,20 @@
             </v-card-title>
             <v-card-text class="lyrics__content" :class="{ 'black--text': !isDark }">
               <template v-if="track">
-                <div v-if="track.lyrics">
+                <div v-if="track.lyrics && track.slug != 'shia'">
                   <div v-html="prepareLyrics(track.lyrics.content)"></div>
+                </div>
+                <div v-if="track.slug === 'shia'">
+                  <div v-for="(line, index) in prepareLyrics(track.lyrics.content)"
+                       :key="line.timestamp"
+                       :class="{'lyrics__content--active': isCurrentLyric(line, index)}">
+                    <span class="lyrics__content__timestamp">{{ line.timestamp }}</span>
+                    <span class="lyrics__content__text">{{ line.text }}</span>
+                    <span v-if="line.type">{{ line.type }}</span>
+                    <template v-if="line.type && line.type === 'chorus'">
+                      <br><br>
+                    </template>
+                  </div>
                 </div>
                 <div class="lyrics__empty" v-else>
                   <div class="lyrics__empty-message"
@@ -162,6 +174,7 @@ import {
   Component, Watch, Prop, Vue,
 } from 'vue-property-decorator';
 import Vibrant from 'node-vibrant';
+import * as moment from 'moment';
 import ReciterHeroSkeleton from '@/components/loaders/ReciterHeroSkeleton.vue';
 import LyricsSkeleton from '@/components/loaders/LyricsSkeleton.vue';
 import MoreTracksSkeleton from '@/components/loaders/MoreTracksSkeleton.vue';
@@ -252,6 +265,27 @@ export default class TrackPage extends Vue {
     return this.$vuetify.theme.dark;
   }
 
+  get seek() {
+    return this.$store.state.player.seek;
+  }
+
+  get formattedSeek() {
+    return moment.utc(moment.duration(this.seek, 'seconds').asMilliseconds()).format('mm:ss');
+  }
+
+  isCurrentLyric(lyric, index) {
+    if (lyric.timestamp < this.formattedSeek) {
+      const nextLyric = this.prepareLyrics(this.track.lyrics.content)[index + 1].timestamp;
+      if (lyric.timestamp < nextLyric) {
+        if (nextLyric < this.formattedSeek) {
+          return false;
+        }
+        return true;
+      }
+    }
+    return false;
+  }
+
   mounted() {
     this.fetchData();
     const handler = (e) => {
@@ -314,6 +348,9 @@ export default class TrackPage extends Vue {
   }
 
   prepareLyrics(content) {
+    if (this.track.slug === 'shia') {
+      return JSON.parse(content);
+    }
     return content.replace(/\n/gi, '<br>');
   }
 
@@ -490,6 +527,16 @@ export default class TrackPage extends Vue {
     font-family: 'Roboto Slab', sans-serif;
     line-height: 2rem;
     font-size: 1rem;
+
+    .lyrics__content--active {
+      background: rgba(255, 122, 0, 0.29);
+      padding: 11px 0px;
+    }
+
+    .lyrics__content__timestamp {
+      color: #A6A6A6;
+      margin-right: 16px;
+    }
   }
 
   .lyrics__empty {
