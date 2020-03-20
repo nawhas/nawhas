@@ -3,7 +3,7 @@
     <div class="hero" :style="{'background-color': background, color: textColor}">
       <v-container class="hero__content">
         <v-avatar :size="heroArtworkSize" class="hero__artwork" tile>
-            <img v-if="track && album" crossorigin :src="image" :alt="album.name" />
+          <img v-if="track && album" crossorigin :src="image" :alt="album.name" />
         </v-avatar>
         <div class="hero__text">
           <h4 class="hero__title">
@@ -14,17 +14,15 @@
           </h4>
           <div class="hero__meta">
             <template v-if="reciter && album">
-              <router-link class="meta__line"
-                           :to="{ name: 'reciters.show', params: { reciter: reciter.slug } }"
-                           exact
+              <router-link
+                class="meta__line"
+                :to="{ name: 'reciters.show', params: { reciter: reciter.slug } }"
+                exact
               >
                 <span class="meta__line__text">{{ reciter.name }}</span>
               </router-link>
-              <br>
-              <router-link class="meta__line"
-                           :to="albumLink"
-                           exact
-              >
+              <br />
+              <router-link class="meta__line" :to="albumLink" exact>
                 <span class="meta__line__text">{{ album.year }} &bull; {{ album.title }}</span>
               </router-link>
             </template>
@@ -39,32 +37,32 @@
         <v-container class="bar__content">
           <div class="bar__actions bar__actions--visible">
             <template v-if="track && albumTracks">
-              <v-btn text
-                     :color="this.textColor"
-                     v-if="hasAudio && albumTracks && !isSameTrackPlaying"
-                     @click="playAlbum"
+              <v-btn
+                text
+                :color="this.textColor"
+                v-if="hasAudio && albumTracks && !isSameTrackPlaying"
+                @click="playAlbum"
               >
-                <v-icon left>play_circle_filled</v-icon> Play
+                <v-icon left>play_circle_filled</v-icon>Play
               </v-btn>
-              <v-btn text
-                    :color="this.textColor"
-                    v-else-if="hasAudio && isSameTrackPlaying"
-                    @click="stopPlaying"
+              <v-btn
+                text
+                :color="this.textColor"
+                v-else-if="hasAudio && isSameTrackPlaying"
+                @click="stopPlaying"
               >
-                <v-icon>stop</v-icon> Stop
+                <v-icon>stop</v-icon>Stop
               </v-btn>
-              <v-btn text
-                     :color="this.textColor"
-                     v-if="hasAudio && !addedToQueueSnackbar && albumTracks"
-                     @click="addToQueue"
+              <v-btn
+                text
+                :color="this.textColor"
+                v-if="hasAudio && !addedToQueueSnackbar && albumTracks"
+                @click="addToQueue"
               >
-                <v-icon left>playlist_add</v-icon> Add to Queue
+                <v-icon left>playlist_add</v-icon>Add to Queue
               </v-btn>
-              <v-btn text
-                     :color="this.textColor"
-                     v-if="hasAudio && addedToQueueSnackbar"
-              >
-                <v-icon color="green" left>done</v-icon> Added to Queue
+              <v-btn text :color="this.textColor" v-if="hasAudio && addedToQueueSnackbar">
+                <v-icon color="green" left>done</v-icon>Added to Queue
               </v-btn>
             </template>
             <template v-else>
@@ -72,15 +70,13 @@
             </template>
           </div>
           <div class="bar__actions bar__actions--overflow">
-            <v-btn icon
-                   :color="textColor"
-                   v-if="track && track.lyrics"
-                   @click="print"
-            >
+            <v-btn icon :color="textColor" v-if="track && track.lyrics" @click="print">
               <v-icon>print</v-icon>
             </v-btn>
             <edit-track-dialog v-if="track && isModerator" :track="track"></edit-track-dialog>
-            <v-btn dark icon v-if="false"><v-icon>more_vert</v-icon></v-btn>
+            <v-btn dark icon v-if="false">
+              <v-icon>more_vert</v-icon>
+            </v-btn>
           </div>
         </v-container>
       </div>
@@ -96,24 +92,32 @@
             </v-card-title>
             <v-card-text class="lyrics__content" :class="{ 'black--text': !isDark }">
               <template v-if="track">
-                <div v-if="track.lyrics && track.slug != 'shia'">
+                <div v-if="track.lyrics && !isLyricsJson">
                   <div v-html="prepareLyrics(track.lyrics.content)"></div>
                 </div>
-                <div v-if="track.slug === 'shia'">
-                  <div v-for="(line, index) in prepareLyrics(track.lyrics.content)"
-                       :key="line.timestamp"
-                       :class="{'lyrics__content--active': isCurrentLyric(line, index)}">
+                <div v-else-if="track.lyrics && isLyricsJson">
+                  <div
+                    v-for="(line, index) in prepareLyrics(track.lyrics.content)"
+                    :key="line.timestamp"
+                    :class="{'lyrics__content--active': isCurrentLyric(line, index)}"
+                  >
                     <span class="lyrics__content__timestamp">{{ line.timestamp }}</span>
-                    <span class="lyrics__content__text" v-for="({text}, idx) in line.lines" :key="idx">{{ text }}</span>
+                    <span
+                      class="lyrics__content__text"
+                      v-for="({text}, idx) in line.lines"
+                      :key="idx"
+                    >{{ text }}</span>
                     <span class="lyrics__content__repeat" v-if="line.repeat">x{{ line.repeat }}</span>
                     <template v-if="line.type && line.type === 'chorus'">
-                      <br><br>
+                      <br />
+                      <br />
                     </template>
                   </div>
                 </div>
                 <div class="lyrics__empty" v-else>
-                  <div class="lyrics__empty-message"
-                       :class="{ 'lyrics__empty-message--dark': isDark }"
+                  <div
+                    class="lyrics__empty-message"
+                    :class="{ 'lyrics__empty-message--dark': isDark }"
                   >We don't have a write-up for this nawha yet.</div>
                 </div>
               </template>
@@ -125,7 +129,10 @@
         </v-col>
         <v-col cols="12" md="4">
           <v-card class="card card--album">
-            <v-card-title class="card__title subtitle-1 card__title--link" @click="$router.push(albumLink)">
+            <v-card-title
+              class="card__title subtitle-1 card__title--link"
+              @click="$router.push(albumLink)"
+            >
               <v-icon class="card__title__icon">format_list_bulleted</v-icon>
               <div>More From This Album</div>
             </v-card-title>
@@ -157,13 +164,9 @@
     </v-container>
 
     <v-snackbar v-model="addedToQueueSnackbar" right>
-      <v-icon color="white">playlist_add_check</v-icon> Added to Queue
-      <v-btn color="deep-orange" text @click="undo">
-        Undo
-      </v-btn>
-      <v-btn color="green" text @click="addedToQueueSnackbar = false">
-        Close
-      </v-btn>
+      <v-icon color="white">playlist_add_check</v-icon>Added to Queue
+      <v-btn color="deep-orange" text @click="undo">Undo</v-btn>
+      <v-btn color="green" text @click="addedToQueueSnackbar = false">Close</v-btn>
     </v-snackbar>
   </div>
 </template>
@@ -270,12 +273,25 @@ export default class TrackPage extends Vue {
   }
 
   get formattedSeek() {
-    return moment.utc(moment.duration(this.seek, 'seconds').asMilliseconds()).format('mm:ss');
+    return moment
+      .utc(moment.duration(this.seek, 'seconds').asMilliseconds())
+      .format('mm:ss');
+  }
+
+  get isLyricsJson() {
+    if (this.track.lyrics === null) {
+      return false;
+    }
+    if (this.track.lyrics.content.startsWith('[')) {
+      return true;
+    }
+    return false;
   }
 
   isCurrentLyric(lyric, index) {
     if (lyric.timestamp < this.formattedSeek) {
-      const nextLyric = this.prepareLyrics(this.track.lyrics.content)[index + 1].timestamp;
+      const nextLyric = this.prepareLyrics(this.track.lyrics.content)[index + 1]
+        .timestamp;
       if (lyric.timestamp < nextLyric) {
         if (nextLyric < this.formattedSeek) {
           return false;
@@ -314,7 +330,7 @@ export default class TrackPage extends Vue {
       this.track = this.trackObject;
     }
 
-    if (!this.track || !this.isSameTrack((this.$route.params as any))) {
+    if (!this.track || !this.isSameTrack(this.$route.params as any)) {
       await getTrack(reciter, album, track, {
         include: 'reciter,lyrics,album.tracks,media',
       }).then((r) => {
@@ -348,7 +364,7 @@ export default class TrackPage extends Vue {
   }
 
   prepareLyrics(content) {
-    if (this.track.slug === 'shia') {
+    if (this.isLyricsJson) {
       return JSON.parse(content);
     }
     return content.replace(/\n/gi, '<br>');
@@ -375,7 +391,10 @@ export default class TrackPage extends Vue {
   }
 
   playAlbum() {
-    this.$store.commit('player/PLAY_ALBUM', { tracks: this.albumTracks, start: this.track });
+    this.$store.commit('player/PLAY_ALBUM', {
+      tracks: this.albumTracks,
+      start: this.track,
+    });
   }
 
   stopPlaying() {
@@ -396,7 +415,7 @@ export default class TrackPage extends Vue {
 </script>
 
 <style lang="scss" scoped>
-@import "../../../styles/theme";
+@import '../../../styles/theme';
 
 .hero {
   width: 100%;
@@ -512,11 +531,11 @@ export default class TrackPage extends Vue {
     }
   }
   .album-tracks__actions {
-    background: rgba(0,0,0,0.1);
+    background: rgba(0, 0, 0, 0.1);
   }
 
   .album__actions {
-    background-color: rgba(0,0,0,0.1);
+    background-color: rgba(0, 0, 0, 0.1);
   }
 }
 
@@ -534,13 +553,13 @@ export default class TrackPage extends Vue {
     }
 
     .lyrics__content__timestamp {
-      color: #A6A6A6;
+      color: #a6a6a6;
       margin-right: 16px;
     }
 
     .lyrics__content__repeat {
       margin-left: 10px;
-      background: #C4C4C4;
+      background: #c4c4c4;
       border-radius: 8px;
       padding: 3px 10px;
     }
@@ -568,7 +587,7 @@ export default class TrackPage extends Vue {
 
 .track-page--dark {
   .hero__artwork {
-    background: #1E1E1E;
+    background: #1e1e1e;
     border-color: #1e1e1e;
   }
 }
