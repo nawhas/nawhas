@@ -96,23 +96,18 @@
                   <div v-html="prepareLyrics(track.lyrics.content)"></div>
                 </div>
                 <div v-else-if="track.lyrics && isLyricsJson">
-                  <div
-                    v-for="(line, index) in prepareLyrics(track.lyrics.content)"
-                    :key="line.timestamp"
-                    :class="{'lyrics__content--active': isCurrentLyric(line, index)}"
-                  >
-                    <span class="lyrics__content__timestamp">{{ line.timestamp }}</span>
-                    <span
-                      class="lyrics__content__text"
-                      v-for="({text}, idx) in line.lines"
-                      :key="idx"
-                    >{{ text }}</span>
-                    <span class="lyrics__content__repeat" v-if="line.repeat">x{{ line.repeat }}</span>
-                    <template v-if="line.type && line.type === 'chorus'">
-                      <br />
-                      <br />
-                    </template>
-                  </div>
+                  <template v-for="(lyric, index) in prepareLyrics(track.lyrics.content)">
+                    <div class="lyrics__content__group" :key="index">
+                      <div class="lyrics__content__group__timestamp">{{ lyric.timestamp }}</div>
+                      <div class="lyrics__content__group__lines">
+                        <span
+                          class="lyrics__content__group__lines__line"
+                          v-for="line in lyric.lines"
+                          :key="line.text"
+                        >{{ line.text }}</span>
+                      </div>
+                    </div>
+                  </template>
                 </div>
                 <div class="lyrics__empty" v-else>
                   <div
@@ -547,21 +542,20 @@ export default class TrackPage extends Vue {
     line-height: 2rem;
     font-size: 1rem;
 
-    .lyrics__content--active {
-      background: rgba(255, 122, 0, 0.29);
-      padding: 11px 0px;
-    }
+    .lyrics__content__group {
+      display: flex;
+      // margin-bottom: 15px;
 
-    .lyrics__content__timestamp {
-      color: #a6a6a6;
-      margin-right: 16px;
-    }
+      .lyrics__content__group__timestamp {
+        color: #a6a6a6;
+        margin-right: 16px;
+      }
 
-    .lyrics__content__repeat {
-      margin-left: 10px;
-      background: #c4c4c4;
-      border-radius: 8px;
-      padding: 3px 10px;
+      .lyrics__content__group__lines {
+        .lyrics__content__group__lines__line {
+          display: block;
+        }
+      }
     }
   }
 
@@ -614,9 +608,5 @@ export default class TrackPage extends Vue {
   .hero__meta .meta__line {
     padding: 2px 0;
   }
-}
-
-.lyrics__content__text {
-  display: block;
 }
 </style>
