@@ -92,29 +92,7 @@
             </v-card-title>
             <v-card-text class="lyrics__content" :class="{ 'black--text': !isDark }">
               <template v-if="track">
-                <div v-if="track.lyrics && !isLyricsJson">
-                  <div v-html="prepareLyrics(track.lyrics.content)"></div>
-                </div>
-                <div v-else-if="track.lyrics && isLyricsJson">
-                  <template v-for="(lyric, index) in prepareLyrics(track.lyrics.content)">
-                    <div class="lyrics__content__group" :key="index">
-                      <div class="lyrics__content__group__timestamp">{{ lyric.timestamp }}</div>
-                      <div class="lyrics__content__group__lines">
-                        <span
-                          class="lyrics__content__group__lines__line"
-                          v-for="line in lyric.lines"
-                          :key="line.text"
-                        >
-                          <span>{{ line.text }}</span>
-                          <span
-                            class="lyrics__content__group__lines__line__repeat"
-                            v-if="line.repeat"
-                          >x{{ line.repeat }}</span>
-                        </span>
-                      </div>
-                    </div>
-                  </template>
-                </div>
+                <lyrics v-if="track.lyrics" :lyricObject="track.lyrics.content"></lyrics>
                 <div class="lyrics__empty" v-else>
                   <div
                     class="lyrics__empty-message"
@@ -178,8 +156,8 @@ import {
   Component, Watch, Prop, Vue,
 } from 'vue-property-decorator';
 import Vibrant from 'node-vibrant';
-import * as moment from 'moment';
 import ReciterHeroSkeleton from '@/components/loaders/ReciterHeroSkeleton.vue';
+import Lyrics from '@/components/Lyrics.vue';
 import LyricsSkeleton from '@/components/loaders/LyricsSkeleton.vue';
 import MoreTracksSkeleton from '@/components/loaders/MoreTracksSkeleton.vue';
 import EditTrackDialog from '@/components/edit/EditTrackDialog.vue';
@@ -191,6 +169,7 @@ import { getTracks, getTrack } from '@/services/tracks';
     LyricsSkeleton,
     MoreTracksSkeleton,
     EditTrackDialog,
+    Lyrics,
   },
 })
 export default class TrackPage extends Vue {
@@ -269,40 +248,6 @@ export default class TrackPage extends Vue {
     return this.$vuetify.theme.dark;
   }
 
-  get seek() {
-    return this.$store.state.player.seek;
-  }
-
-  get formattedSeek() {
-    return moment
-      .utc(moment.duration(this.seek, 'seconds').asMilliseconds())
-      .format('mm:ss');
-  }
-
-  get isLyricsJson() {
-    if (this.track.lyrics === null) {
-      return false;
-    }
-    if (this.track.lyrics.content.startsWith('[')) {
-      return true;
-    }
-    return false;
-  }
-
-  isCurrentLyric(lyric, index) {
-    if (lyric.timestamp < this.formattedSeek) {
-      const nextLyric = this.prepareLyrics(this.track.lyrics.content)[index + 1]
-        .timestamp;
-      if (lyric.timestamp < nextLyric) {
-        if (nextLyric < this.formattedSeek) {
-          return false;
-        }
-        return true;
-      }
-    }
-    return false;
-  }
-
   mounted() {
     this.fetchData();
     const handler = (e) => {
@@ -362,13 +307,6 @@ export default class TrackPage extends Vue {
         this.background = swatch.getHex();
         this.textColor = swatch.getBodyTextColor();
       });
-  }
-
-  prepareLyrics(content) {
-    if (this.isLyricsJson) {
-      return JSON.parse(content);
-    }
-    return content.replace(/\n/gi, '<br>');
   }
 
   isSameTrack({ reciter, album, track }) {
@@ -547,30 +485,6 @@ export default class TrackPage extends Vue {
     font-family: 'Roboto Slab', sans-serif;
     line-height: 2rem;
     font-size: 1rem;
-
-    .lyrics__content__group {
-      display: flex;
-      // margin-bottom: 15px;
-
-      .lyrics__content__group__timestamp {
-        color: #a6a6a6;
-        margin-right: 16px;
-      }
-
-      .lyrics__content__group__lines {
-        .lyrics__content__group__lines__line {
-          display: block;
-
-          .lyrics__content__group__lines__line__repeat {
-            margin-left: 10px;
-            background-color: #c4c4c4;
-            padding: 3px 6px;
-            border-radius: 8px;
-            color: black;
-          }
-        }
-      }
-    }
   }
 
   .lyrics__empty {
