@@ -1,317 +1,394 @@
 [
-    {
-        "timestamp": "00:00",
-        "lines": [
-            { "text": "Hello", "repeat": 2 },
-            { "text": "How are you" }
-        ],
-        "type": "chorus"
-    },
-    {
-        "timestamp": "00:14",
+  {
+    "timestamp": "00:14",
+    "lines": [
+      {
         "text": "Roze alast mei mujhse sawaal ye kiya gaya"
-    },
-    {
-        "timestamp": "00:18",
+      }
+    ]
+  },
+  {
+    "timestamp": "00:18",
+    "lines": [
+      {
         "text": "Kya tumko hai qubool aliyyun waliyullah"
-    },
-    {
-        "timestamp": "00:23",
+      }
+    ]
+  },
+  {
+    "timestamp": "00:23",
+    "lines": [
+      {
         "text": "Maine kiya iqrar aur dil shaad huwa tha"
-    },
-    {
-        "timestamp": "00:27",
+      }
+    ]
+  },
+  {
+    "timestamp": "00:27",
+    "lines": [
+      {
         "text": "Honton se mere bas yahi aati thi ik sada"
-    },
-    {
-        "timestamp": "00:32",
+      }
+    ]
+  },
+  {
+    "timestamp": "00:32",
+    "lines": [
+      {
         "text": "Aur aaj bhi zubaan ke saath dil hai bolta"
-    },
-    {
-        "timestamp": "00:36",
+      }
+    ]
+  },
+  {
+    "timestamp": "00:36",
+    "lines": [
+      {
         "text": "Hai fakhr mujhko bus yahi main hu tera shia"
-    },
-    {
-        "timestamp": "00:40",
-        "text": "Jo wahaan kaha tha, wo ab bhi kahunga"
-    },
-    {
-        "timestamp": "00:49",
-        "text": "Mai hu, mai hu tera shia",
-        "type": "chorus",
+      }
+    ]
+  },
+  {
+    "timestamp": "00:40",
+    "lines": [
+      {
+        "text": "Jo wahaan kaha tha, wo ab bhi kahunga",
+        "repeat": 2
+      }
+    ]
+  },
+  {
+    "timestamp": "00:49",
+    "lines": [
+      {
+        "text": "Mai hu, mai hu, mai hu tera shia",
+        "repeat": 2
+      }
+    ]
+  },
+  {
+    "timestamp": "00:58",
+    "lines": [
+      {
+        "text": "Mujhe darr nahi lagta"
+      },
+      {
+        "text": "Mai dil se hu kehta"
+      }
+    ]
+  },
+  {
+    "timestamp": "01:04",
+    "lines": [
+      {
+        "text": "Ye ishqay Ali me"
+      },
+      {
+        "text": "Taqqaya nahi hota"
+      }
+    ]
+  },
+  {
+    "timestamp": "01:08",
+    "lines": [
+      {
+        "text": "Mai hu, mai hu, mai hu tera shia",
         "repeat": 4
-    },
-    {
-        "type": "break"
-    },
-    {
-        "timestamp": "00:58",
-        "text": "Mujhe darr nahi lagta mai dil se hu kehta ye ishqay Ali me taqqaya nahi hota."
-    },
-    {
-        "timestamp": "01:07",
-        "text": "Mai hu, mai hu tera shia",
-        "type": "chorus",
+      }
+    ],
+    "type": "chorus"
+  },
+  {
+    "timestamp": "01:25",
+    "lines": [
+      {
+        "text": "Zehra ki Dua hai"
+      },
+      {
+        "text": "Sarwar ki ata hai",
+        "repeat": 2
+      }
+    ]
+  },
+  {
+    "timestamp": "01:32",
+    "lines": [
+      {
+        "text": "Ye dil nahi Mera"
+      },
+      {
+        "text": "ye karbobala hai",
+        "repeat": 2
+      }
+    ]
+  },
+  {
+    "timestamp": "01:39",
+    "lines": [
+      {
+        "text": "Ye zikr se jaari"
+      },
+      {
+        "text": "Har gham ki dawa hai"
+      }
+    ]
+  },
+  {
+    "timestamp": "01:45",
+    "lines": [
+      {
+        "text": "Matam gham e shabbir"
+      },
+      {
+        "text": "Ye rab ki riza hai"
+      }
+    ]
+  },
+  {
+    "timestamp": "01:08",
+    "lines": [
+      {
+        "text": "Mai hu, mai hu, mai hu tera shia",
         "repeat": 4
-    },
-    {
-        "timestamp": "01:25",
-        "text": "zehra ki Dua hai sarwar ki ata hai"
-    },
-    {
-        "timestamp": "01:32",
-        "text": "Ye dil nahi Mera ye karbobala hai"
-    },
-    {
-        "timestamp": "01:39",
-        "text": "Ye zikr se jaari har gham ki dawa hai"
-    },
-    {
-        "timestamp": "01:45",
-        "text": "Matam gham e shabbir ye rab ki riza hai"
-    },
-    {
-        "timestamp": "01:51",
-        "text": "Mai hu, mai hu tera shia",
-        "type": "chorus",
-        "repeat": 4
-    },
-    {
-        "timestamp": "02:09",
-        "text": "haq per tu Amal Kar na fatway lagakar,"
-    },
-    {
-        "timestamp": "02:15",
-        "text": "Abbas ka parcham hatoh me uthakar,"
-    },
-    {
-        "timestamp": "02:22",
-        "text": "Dil se tu wafakar har mord pe aakar"
-    },
-    {
-        "timestamp": "02:28",
-        "text": "Jagg jeetlay Sara duniya ko batakari"
-    },
-    {
-        "timestamp": "02:34",
-        "text": "Mujhe darr nahi lagta mai dil se hu kehta ye ishqay Ali me taqqaya nahi hota."
-    },
-    {
-        "timestamp": "02:43",
-        "text": "Mai hu, mai hu tera shia",
-        "type": "chorus",
-        "repeat": 4
-    },
-    {
-        "timestamp": "03:01",
-        "text": "Ye sab ko batao khud se na chupao,"
-    },
-    {
-        "timestamp": "03:08",
-        "text": "Zalim hai Jo qatil sar uska jhukao,"
-    },
-    {
-        "timestamp": "03:14",
-        "text": "Quran ke Ghar ka dar jisne jalaya,"
-    },
-    {
-        "timestamp": "03:21",
-        "text": "Tum karke tabarah usay qaak milao"
-    },
-    {
-        "timestamp": "03:32",
-        "text": "Mai hu, mai hu tera shia",
-        "type": "chorus",
-        "repeat": 4
-    },
-    {
-        "timestamp": "03:41",
-        "text": "Hindu o musalman har eik Qabeela"
-    },
-    {
-        "timestamp": "03:48",
-        "text": "Shabbir ke gham me kehta hai khudara,"
-    },
-    {
-        "timestamp": "03:55",
-        "text": "Matam Meri taqdeer matam Meri qismat"
-    },
-    {
-        "timestamp": "04:02",
-        "text": "matam Meri tafseer turbat ka ujala"
-    },
-    {
-        "timestamp": "04:08",
-        "text": "Mai hu, mai hu tera shia",
-        "type": "chorus",
-        "repeat": 4
-    },
-    {
-        "timestamp": "04:25",
-        "text": "mujhper ye bharam hai zehra ka Karam hai,"
-    },
-    {
-        "timestamp": "04:32",
-        "text": "Uncha ye rahega sarwar ka Alam hai,"
-    },
-    {
-        "timestamp": "04:39",
-        "text": "Ye ashk e aza hai har aankh Jo num hai"
-    },
-    {
-        "timestamp": "04:45",
-        "text": "Ye Rona hamara batil pe sitam hai...."
-    },
-    {
-        "timestamp": "04:50",
-        "text": "Mujhe darr nahi lagta mai dil se hu kehta ye ishqay Ali me taqqaya nahi hota."
-    },
-    {
-        "timestamp": "04:59",
-        "text": "Mai hu, mai hu tera shia",
-        "type": "chorus",
-        "repeat": 4
-    },
-    {
-        "timestamp": "05:17",
-        "text": "pardtay hai namazein karbal ka hai sadqa,"
-    },
-    {
-        "timestamp": "05:24",
-        "text": "Hoti hai azaa-n jab hota hai khulasa,"
-    },
-    {
-        "timestamp": "05:31",
-        "text": "Ya Fatima zehra hum Nasir e moula,"
-    },
-    {
-        "timestamp": "05:37",
-        "text": "Markar Jo shaheedoh ka kehta hai rudba"
-    },
-    {
-        "timestamp": "05:43",
-        "text": "Mai hu, mai hu tera shia",
-        "type": "chorus",
-        "repeat": 4
-    },
-    {
-        "timestamp": "06:01",
-        "text": "Ulfat hai Ali se seerat pe Amal Kar"
-    },
-    {
-        "timestamp": "06:07",
-        "text": "Mushkil khushai se fatwoh ko tu Hal kar,"
-    },
-    {
-        "timestamp": "06:14",
-        "text": "Ye qaulay nabi hai aur qaulay Ali hai"
-    },
-    {
-        "timestamp": "06:20",
-        "text": "muhib Meray wo hai Jo rehtay hai milkar"
-    },
-    {
-        "timestamp": "06:26",
-        "text": "Mai hu, mai hu tera shia",
-        "type": "chorus",
-        "repeat": 4
-    },
-    {
-        "timestamp": "06:44",
-        "text": "Ae saniye haider labbaik ya Hussain,"
-    },
-    {
-        "timestamp": "06:49",
-        "text": "Ae saqiy e kausar labbaik ya Hussain,"
-    },
-    {
-        "timestamp": "06:53",
-        "text": "Likha mere Dil per labbaik ya Hussain"
-    },
-    {
-        "timestamp": "06:57",
-        "text": "Hum hai Tere naukar labbaik ya Hussain"
-    },
-    {
-        "timestamp": "07:02",
-        "text": "labbaik ya Hussain, labbaik labbaik labbaik Ya Hussain"
-    },
-    {
-        "timestamp": "07:15",
-        "text": "hum aashiqay Hyder hum aashiqay sarwar"
-    },
-    {
-        "timestamp": "07:22",
-        "text": "katjaye zuban gar ho daar pe manzar"
-    },
-    {
-        "timestamp": "07:29",
-        "text": "Meesam ki tarah ho ye ishqay samundar"
-    },
-    {
-        "timestamp": "07:35",
-        "text": "Hokar Jo be-zubaan laata hai zubah per"
-    },
-    {
-        "timestamp": "07:41",
-        "text": "Mujhe darr nahi lagta mai dil se hu kehta ye ishqay Ali me taqqaya nahi hota."
-    },
-    {
-        "timestamp": "07:51",
-        "text": "Mai hu, mai hu tera shia",
-        "type": "chorus",
-        "repeat": 4
-    },
-    {
-        "timestamp": "08:08",
-        "text": "zulmat ko mitana Ghar apna lutana"
-    },
-    {
-        "timestamp": "08:15",
-        "text": "Aur sar ko katana Quran bachana,"
-    },
-    {
-        "timestamp": "08:22",
-        "text": "Islam ki khatir ye jazba dikhana"
-    },
-    {
-        "timestamp": "08:28",
-        "text": "Har dour me sheh ka goonjega tarana"
-    },
-    {
-        "timestamp": "08:34",
-        "text": "Mai hu, mai hu tera shia",
-        "type": "chorus",
-        "repeat": 4
-    },
-    {
-        "timestamp": "08:51",
-        "text": "har nasl kahegi har dour me aakar"
-    },
-    {
-        "timestamp": "08:59",
-        "text": "Qismat hai Tejani hum hyderi naukar,"
-    },
-    {
-        "timestamp": "09:05",
-        "text": "Khushbaqt hai Akbar jumla Tera sunkar"
-    },
-    {
-        "timestamp": "09:12",
-        "text": "Kehta hai zamana shabbir ke dar per"
-    },
-    {
-        "timestamp": "09:17",
-        "text": "Mujhe darr nahi lagta mai dil se hu kehta ye ishqay Ali me taqqaya nahi hota."
-    },
-    {
-        "timestamp": "09:26",
-        "text": "Mai hu, mai hu tera shia",
-        "type": "chorus",
-        "repeat": 4
-    },
-    {
-        "timestamp": "09:45",
-        "text": "Ali Un Wali Allah"
-    }
+      }
+    ],
+    "type": "chorus"
+  },
+  {
+    "timestamp": "02:09",
+    "text": "haq per tu Amal Kar na fatway lagakar,"
+  },
+  {
+    "timestamp": "02:15",
+    "text": "Abbas ka parcham hatoh me uthakar,"
+  },
+  {
+    "timestamp": "02:22",
+    "text": "Dil se tu wafakar har mord pe aakar"
+  },
+  {
+    "timestamp": "02:28",
+    "text": "Jagg jeetlay Sara duniya ko batakari"
+  },
+  {
+    "timestamp": "02:34",
+    "text": "Mujhe darr nahi lagta mai dil se hu kehta ye ishqay Ali me taqqaya nahi hota."
+  },
+  {
+    "timestamp": "02:43",
+    "text": "Mai hu, mai hu tera shia",
+    "type": "chorus",
+    "repeat": 4
+  },
+  {
+    "timestamp": "03:01",
+    "text": "Ye sab ko batao khud se na chupao,"
+  },
+  {
+    "timestamp": "03:08",
+    "text": "Zalim hai Jo qatil sar uska jhukao,"
+  },
+  {
+    "timestamp": "03:14",
+    "text": "Quran ke Ghar ka dar jisne jalaya,"
+  },
+  {
+    "timestamp": "03:21",
+    "text": "Tum karke tabarah usay qaak milao"
+  },
+  {
+    "timestamp": "03:32",
+    "text": "Mai hu, mai hu tera shia",
+    "type": "chorus",
+    "repeat": 4
+  },
+  {
+    "timestamp": "03:41",
+    "text": "Hindu o musalman har eik Qabeela"
+  },
+  {
+    "timestamp": "03:48",
+    "text": "Shabbir ke gham me kehta hai khudara,"
+  },
+  {
+    "timestamp": "03:55",
+    "text": "Matam Meri taqdeer matam Meri qismat"
+  },
+  {
+    "timestamp": "04:02",
+    "text": "matam Meri tafseer turbat ka ujala"
+  },
+  {
+    "timestamp": "04:08",
+    "text": "Mai hu, mai hu tera shia",
+    "type": "chorus",
+    "repeat": 4
+  },
+  {
+    "timestamp": "04:25",
+    "text": "mujhper ye bharam hai zehra ka Karam hai,"
+  },
+  {
+    "timestamp": "04:32",
+    "text": "Uncha ye rahega sarwar ka Alam hai,"
+  },
+  {
+    "timestamp": "04:39",
+    "text": "Ye ashk e aza hai har aankh Jo num hai"
+  },
+  {
+    "timestamp": "04:45",
+    "text": "Ye Rona hamara batil pe sitam hai...."
+  },
+  {
+    "timestamp": "04:50",
+    "text": "Mujhe darr nahi lagta mai dil se hu kehta ye ishqay Ali me taqqaya nahi hota."
+  },
+  {
+    "timestamp": "04:59",
+    "text": "Mai hu, mai hu tera shia",
+    "type": "chorus",
+    "repeat": 4
+  },
+  {
+    "timestamp": "05:17",
+    "text": "pardtay hai namazein karbal ka hai sadqa,"
+  },
+  {
+    "timestamp": "05:24",
+    "text": "Hoti hai azaa-n jab hota hai khulasa,"
+  },
+  {
+    "timestamp": "05:31",
+    "text": "Ya Fatima zehra hum Nasir e moula,"
+  },
+  {
+    "timestamp": "05:37",
+    "text": "Markar Jo shaheedoh ka kehta hai rudba"
+  },
+  {
+    "timestamp": "05:43",
+    "text": "Mai hu, mai hu tera shia",
+    "type": "chorus",
+    "repeat": 4
+  },
+  {
+    "timestamp": "06:01",
+    "text": "Ulfat hai Ali se seerat pe Amal Kar"
+  },
+  {
+    "timestamp": "06:07",
+    "text": "Mushkil khushai se fatwoh ko tu Hal kar,"
+  },
+  {
+    "timestamp": "06:14",
+    "text": "Ye qaulay nabi hai aur qaulay Ali hai"
+  },
+  {
+    "timestamp": "06:20",
+    "text": "muhib Meray wo hai Jo rehtay hai milkar"
+  },
+  {
+    "timestamp": "06:26",
+    "text": "Mai hu, mai hu tera shia",
+    "type": "chorus",
+    "repeat": 4
+  },
+  {
+    "timestamp": "06:44",
+    "text": "Ae saniye haider labbaik ya Hussain,"
+  },
+  {
+    "timestamp": "06:49",
+    "text": "Ae saqiy e kausar labbaik ya Hussain,"
+  },
+  {
+    "timestamp": "06:53",
+    "text": "Likha mere Dil per labbaik ya Hussain"
+  },
+  {
+    "timestamp": "06:57",
+    "text": "Hum hai Tere naukar labbaik ya Hussain"
+  },
+  {
+    "timestamp": "07:02",
+    "text": "labbaik ya Hussain, labbaik labbaik labbaik Ya Hussain"
+  },
+  {
+    "timestamp": "07:15",
+    "text": "hum aashiqay Hyder hum aashiqay sarwar"
+  },
+  {
+    "timestamp": "07:22",
+    "text": "katjaye zuban gar ho daar pe manzar"
+  },
+  {
+    "timestamp": "07:29",
+    "text": "Meesam ki tarah ho ye ishqay samundar"
+  },
+  {
+    "timestamp": "07:35",
+    "text": "Hokar Jo be-zubaan laata hai zubah per"
+  },
+  {
+    "timestamp": "07:41",
+    "text": "Mujhe darr nahi lagta mai dil se hu kehta ye ishqay Ali me taqqaya nahi hota."
+  },
+  {
+    "timestamp": "07:51",
+    "text": "Mai hu, mai hu tera shia",
+    "type": "chorus",
+    "repeat": 4
+  },
+  {
+    "timestamp": "08:08",
+    "text": "zulmat ko mitana Ghar apna lutana"
+  },
+  {
+    "timestamp": "08:15",
+    "text": "Aur sar ko katana Quran bachana,"
+  },
+  {
+    "timestamp": "08:22",
+    "text": "Islam ki khatir ye jazba dikhana"
+  },
+  {
+    "timestamp": "08:28",
+    "text": "Har dour me sheh ka goonjega tarana"
+  },
+  {
+    "timestamp": "08:34",
+    "text": "Mai hu, mai hu tera shia",
+    "type": "chorus",
+    "repeat": 4
+  },
+  {
+    "timestamp": "08:51",
+    "text": "har nasl kahegi har dour me aakar"
+  },
+  {
+    "timestamp": "08:59",
+    "text": "Qismat hai Tejani hum hyderi naukar,"
+  },
+  {
+    "timestamp": "09:05",
+    "text": "Khushbaqt hai Akbar jumla Tera sunkar"
+  },
+  {
+    "timestamp": "09:12",
+    "text": "Kehta hai zamana shabbir ke dar per"
+  },
+  {
+    "timestamp": "09:17",
+    "text": "Mujhe darr nahi lagta mai dil se hu kehta ye ishqay Ali me taqqaya nahi hota."
+  },
+  {
+    "timestamp": "09:26",
+    "text": "Mai hu, mai hu tera shia",
+    "type": "chorus",
+    "repeat": 4
+  },
+  {
+    "timestamp": "09:45",
+    "text": "Ali Un Wali Allah"
+  }
 ]

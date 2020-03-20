@@ -104,7 +104,7 @@
                        :key="line.timestamp"
                        :class="{'lyrics__content--active': isCurrentLyric(line, index)}">
                     <span class="lyrics__content__timestamp">{{ line.timestamp }}</span>
-                    <span class="lyrics__content__text">{{ line.text }}</span>
+                    <span class="lyrics__content__text" v-for="({text}, idx) in line.lines" :key="idx">{{ text }}</span>
                     <span class="lyrics__content__repeat" v-if="line.repeat">x{{ line.repeat }}</span>
                     <template v-if="line.type && line.type === 'chorus'">
                       <br><br>
@@ -595,5 +595,9 @@ export default class TrackPage extends Vue {
   .hero__meta .meta__line {
     padding: 2px 0;
   }
+}
+
+.lyrics__content__text {
+  display: block;
 }
 </style>
