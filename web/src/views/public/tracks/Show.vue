@@ -105,7 +105,7 @@
                        :class="{'lyrics__content--active': isCurrentLyric(line, index)}">
                     <span class="lyrics__content__timestamp">{{ line.timestamp }}</span>
                     <span class="lyrics__content__text">{{ line.text }}</span>
-                    <span v-if="line.type">{{ line.type }}</span>
+                    <span class="lyrics__content__repeat" v-if="line.repeat">x{{ line.repeat }}</span>
                     <template v-if="line.type && line.type === 'chorus'">
                       <br><br>
                     </template>
@@ -536,6 +536,13 @@ export default class TrackPage extends Vue {
     .lyrics__content__timestamp {
       color: #A6A6A6;
       margin-right: 16px;
+    }
+
+    .lyrics__content__repeat {
+      margin-left: 10px;
+      background: #C4C4C4;
+      border-radius: 8px;
+      padding: 3px 10px;
     }
   }
 
