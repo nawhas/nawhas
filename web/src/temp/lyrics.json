@@ -1,5 +1,13 @@
 [
     {
+        "timestamp": "00:00",
+        "lines": [
+            { "text": "Hello", "repeat": 2 },
+            { "text": "How are you" }
+        ],
+        "type": "chorus"
+    },
+    {
         "timestamp": "00:14",
         "text": "Roze alast mei mujhse sawaal ye kiya gaya"
     },
@@ -32,6 +40,9 @@
         "text": "Mai hu, mai hu tera shia",
         "type": "chorus",
         "repeat": 4
+    },
+    {
+        "type": "break"
     },
     {
         "timestamp": "00:58",
