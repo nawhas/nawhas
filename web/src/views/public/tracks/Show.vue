@@ -104,7 +104,13 @@
                           class="lyrics__content__group__lines__line"
                           v-for="line in lyric.lines"
                           :key="line.text"
-                        >{{ line.text }}</span>
+                        >
+                          <span>{{ line.text }}</span>
+                          <span
+                            class="lyrics__content__group__lines__line__repeat"
+                            v-if="line.repeat"
+                          >x{{ line.repeat }}</span>
+                        </span>
                       </div>
                     </div>
                   </template>
@@ -554,6 +560,14 @@ export default class TrackPage extends Vue {
       .lyrics__content__group__lines {
         .lyrics__content__group__lines__line {
           display: block;
+
+          .lyrics__content__group__lines__line__repeat {
+            margin-left: 10px;
+            background-color: #c4c4c4;
+            padding: 3px 6px;
+            border-radius: 8px;
+            color: black;
+          }
         }
       }
     }
