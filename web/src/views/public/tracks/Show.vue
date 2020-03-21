@@ -74,7 +74,6 @@
               <v-icon>print</v-icon>
             </v-btn>
             <template v-if="track && isModerator">
-              <v-btn @click="goToAddLyrics" text>Add Lyrics</v-btn>
               <edit-track-dialog :track="track"></edit-track-dialog>
             </template>
             <v-btn dark icon v-if="false">
@@ -352,17 +351,6 @@ export default class TrackPage extends Vue {
     const { id } = this.$store.state.player.queue.slice(-1)[0];
     this.$store.commit('player/REMOVE_TRACK', { id });
     this.addedToQueueSnackbar = false;
-  }
-
-  goToAddLyrics() {
-    this.$router.push({
-      name: 'lyrics.add',
-      params: {
-        reciter: this.track.reciter.slug,
-        album: this.album.year,
-        track: this.track.slug,
-      },
-    });
   }
 }
 </script>

@@ -1,27 +1,34 @@
 <template>
-  <v-dialog v-model="dialog" persistent max-width="600px">
+  <v-dialog v-model="dialog"
+            persistent fullscreen no-click-animation hide-overlay
+            transition="dialog-bottom-transition"
+  >
     <template v-slot:activator="{ on }">
       <v-btn v-if="track" dark icon v-on="on"><v-icon>edit</v-icon></v-btn>
       <v-btn v-else v-on="on" text>Add Track</v-btn>
     </template>
     <v-card :loading="loading">
-      <v-card-title>
-        <span class="headline">{{ track ? 'Edit' : 'Add' }} Track</span>
-      </v-card-title>
-      <v-card-text class="py-4">
+      <v-toolbar>
+        <v-btn icon @click="close">
+          <v-icon>close</v-icon>
+        </v-btn>
+        <v-toolbar-title>{{ track ? 'Edit' : 'Add' }} Track</v-toolbar-title>
+        <v-spacer></v-spacer>
+        <div class="toolbar__actions">
+          <v-btn v-if="track" color="error" text @click="confirmDelete">Delete</v-btn>
+          <v-btn text @click="close">Cancel</v-btn>
+          <v-btn color="primary" @click="submit">Save</v-btn>
+        </div>
+      </v-toolbar>
+      <v-card-text class="py-12 dialog__content">
         <v-text-field
           outlined
           v-model="form.title"
           label="Name"
           required
         ></v-text-field>
-        <v-textarea
-          outlined
-          label="Lyrics"
-          v-model="form.lyrics"
-          required
-        ></v-textarea>
-        <v-file-input v-model="form.audio"
+        <div class="file-input" @drop.prevent="addFile" @dragover.prevent>
+          <v-file-input v-model="form.audio"
                       label="Audio File"
                       placeholder="Upload Track Audio File"
                       prepend-icon="volume_up"
@@ -29,28 +36,22 @@
                       accept="audio/*"
                       :show-size="1000"
         >
-          <template v-slot:selection="{ text }">
-            <v-chip color="deep-orange accent-4" dark label small>
-              {{ text }}
-            </v-chip>
-          </template>
-        </v-file-input>
-        <div v-cloak @drop.prevent="addFile" @dragover.prevent>
-          <h2>Drag and drop track audio here...</h2>
-          <p>Make sure to drag and drop one file</p>
-          <ul>
-            <li v-if="form.audio">
-              {{ form.audio.name }} ({{ form.audio.size }})
-              <button @click="removeFile" title="Remove">X</button>
-            </li>
-          </ul>
+            <template v-slot:selection="{ text }">
+              <v-chip color="deep-orange accent-4" dark label small>
+                {{ text }}
+              </v-chip>
+            </template>
+          </v-file-input>
         </div>
+        <v-textarea
+          outlined
+          label="Lyrics"
+          v-model="form.lyrics"
+          required
+        ></v-textarea>
+        <edit-lyrics v-model="form.lyrics"></edit-lyrics>
       </v-card-text>
       <v-card-actions>
-        <v-btn v-if="track" color="error" text @click="confirmDelete">Delete</v-btn>
-        <v-spacer></v-spacer>
-        <v-btn text @click="close">Cancel</v-btn>
-        <v-btn color="primary" text @click="submit" :loading="loading">Save</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -61,6 +62,7 @@ import Client from '@/services/client';
 import {
   Component, Prop, Watch, Vue,
 } from 'vue-property-decorator';
+import EditLyrics from '@/components/edit/EditLyrics.vue';
 
 interface Form {
   title: string|null;
@@ -72,7 +74,10 @@ const defaults: Form = {
   lyrics: null,
   audio: null,
 };
-@Component
+
+@Component({
+  components: { EditLyrics },
+})
 export default class EditTrackDialog extends Vue {
   @Prop({ type: Object }) private track;
   @Prop({ type: Object }) private album;
@@ -191,3 +196,10 @@ export default class EditTrackDialog extends Vue {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.dialog__content {
+  max-width: 800px;
+  margin: 0 auto;
+}
+</style>
