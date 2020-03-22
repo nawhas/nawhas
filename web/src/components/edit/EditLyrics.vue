@@ -47,7 +47,7 @@ import { Component, Vue } from 'vue-property-decorator';
 
 @Component
 export default class EditLyrics extends Vue {
-  private lyrics: Array<object> = [];
+  private lyrics: Array<any> = [];
   private types: Array<string> = [
     'Normal',
     'Chorus',
