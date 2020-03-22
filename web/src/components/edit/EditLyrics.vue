@@ -3,9 +3,9 @@
     <table>
       <tbody>
         <!-- Group -->
-        <tr v-for="(group, groupId) in lyrics" :key="groupId">
+        <tr v-for="(group, groupId) in value" :key="groupId">
           <!-- Timestamp -->
-          <td @dblclick="setTimestamp(groupId)" class="timestamp">{{ formatTimestamp(group.timestamp) }}</td>
+          <td class="timestamp">{{ formatTimestamp(group.timestamp) }}</td>
           <td class="content">
             <table class="lines">
               <tbody>
@@ -15,19 +15,19 @@
                     <v-text-field
                       :ref="`group-${groupId}-line-${lineId}`"
                       dense
-                      @keyup.enter="onEnter(group, groupId, line, lineId)"
-                      @keyup.delete="onDelete(group, groupId, line, lineId)"
-                      @keyup.up="goToPreviousLine(groupId, lineId)"
-                      @keyup.down="goToNextLine(groupId, lineId)"
+                      @keyup.enter="onEnter($event, group, groupId, line, lineId)"
+                      @keyup.delete="onDelete($event, group, groupId, line, lineId)"
+                      @keydown.up="goToPreviousLine(groupId, lineId)"
+                      @keydown.down="goToNextLine(groupId, lineId)"
                       v-model="line.text"
                       aria-autocomplete="none"
                       autocomplete="off"
-                      placeholder="Write the writeup here."
+                      placeholder="Add a line"
                       solo flat hide-details
                     ></v-text-field>
                   </td>
                   <td class="repeat">
-                    <repeat-line />
+                    <repeat-line v-model="line.repeat" />
                   </td>
                 </tr>
               </tbody>
@@ -43,9 +43,22 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Model, Vue } from 'vue-property-decorator';
 import RepeatLine from '@/components/edit/RepeatLine.vue';
 import * as moment from 'moment';
+
+interface Line {
+  text: string;
+  repeat: number;
+}
+
+interface LineGroup {
+  timestamp: number;
+  type: string;
+  lines: Array<Line>;
+}
+
+type Lyrics = Array<LineGroup>;
 
 @Component({
   components: {
@@ -60,65 +73,93 @@ export default class EditLyrics extends Vue {
     'Break',
   ];
 
-  private lyrics: Array<any> = [
-    {
-      timestamp: 0,
-      type: this.types[0],
-      lines: [
-        { text: '', repeat: 0 },
-      ],
-    },
-  ];
+  @Model('change', { type: Array }) readonly value!: Lyrics;
 
   /**
    * Adds a new group to lyrics
    */
   addNewGroup(at) {
-    this.lyrics.splice(at + 1, 0, {
-      timestamp: 0,
+    const updated = [...this.value];
+    updated.splice(at + 1, 0, {
+      timestamp: this.$store.state.player.seek,
       type: this.types[0],
       lines: [
         { text: '', repeat: 0 },
       ],
     });
-    this.setTimestamp(this.lyrics.length - 1);
+    this.updateModel(updated);
     this.$nextTick(() => this.getRef(at + 1, 0).focus());
   }
 
   /**
    * When the user presses enter
-   * Eitehr add a new line
+   * Either add a new line
    * Or add a new group
    */
-  onEnter(group, groupId, line, lineId) {
+  onEnter(e, group, groupId, line, lineId) {
     // If this is the only line in the group
     // and the line is empty, do nothing.
     if (group.lines.length === 1 && line.text.length === 0) {
       return;
     }
 
+    // If it's an empty line, add a new group and delete this line.
     if (line.text.length === 0) {
-      this.onDelete(group, groupId, line, lineId);
+      this.onDelete(e, group, groupId, line, lineId);
       this.addNewGroup(groupId);
-    } else {
-      group.lines.splice(lineId + 1, 0, { text: '', repeat: 0 });
-      this.$nextTick(() => this.getRef(groupId, lineId + 1).focus());
+      return;
     }
+
+    const cursor = e.target.selectionStart;
+
+    // Add a new line. Split the line at the cursor location.
+    let newLine = '';
+    if (line.text.length !== cursor) {
+      newLine = line.text.substring(cursor);
+      // eslint-disable-next-line
+      line.text = line.text.substring(0, cursor);
+    }
+    group.lines.splice(lineId + 1, 0, { text: newLine, repeat: 0 });
+    this.$nextTick(() => this.getRef(groupId, lineId + 1).focus());
   }
 
   /**
    * Either remove a line
    * Or remove a group
    */
-  onDelete(group, groupId, line, lineId) {
-    // If the line has any text, don't do anything.
-    // Let the native functionality work.
-    if (line.text.length !== 0) {
+  onDelete(e, group, groupId, line, lineId) {
+    const cursor = e.target.selectionStart;
+
+    // If the line has any text, and the cursor is not at the first position,
+    // don't do anything. Let the native functionality work.
+    if (line.text.length !== 0 && cursor !== 0) {
       return;
     }
 
+    let newCursorPosition: number|undefined;
+
+    // If the cursor is at the start of the line,
+    // and there is some text in this line,
+    // merge this line with the previous line.
+    if (cursor === 0 && line.text.length !== 0) {
+      if (lineId !== 0) {
+        // If we have a previous line in the same group,
+        // merge with that one.
+        const previousLine = group.lines[lineId - 1];
+        newCursorPosition = previousLine.text.length;
+        previousLine.text += line.text;
+      } else if (groupId !== 0) {
+        // If we do not have a previous line in the same group
+        // Merge the text to the last line of the previous group
+        const previousGroup = this.value[groupId - 1];
+        const lastLineOfPrevGroup = previousGroup.lines[previousGroup.lines.length - 1];
+        newCursorPosition = lastLineOfPrevGroup.text.length;
+        lastLineOfPrevGroup.text += line.text;
+      }
+    }
+
     // If this is the last group and the last line, don't delete it.
-    if (this.lyrics.length === 1 && group.lines.length === 1) {
+    if (this.value.length === 1 && group.lines.length === 1) {
       return;
     }
 
@@ -129,36 +170,9 @@ export default class EditLyrics extends Vue {
     // and we delete it, delete the group as well.
     if (group.lines.length === 0) {
       // Delete group.
-      this.lyrics.splice(groupId, 1);
+      this.value.splice(groupId, 1);
     }
-    this.goToPreviousLine(groupId, lineId);
-  }
-
-  /**
-   * Add 1 to the line repeat
-   */
-  incrementRepeatForLine(groupId, lineId) {
-    if (this.lyrics[groupId].lines[lineId].repeat === 0) {
-      this.lyrics[groupId].lines[lineId].repeat = 2;
-      return true;
-    }
-    this.lyrics[groupId].lines[lineId].repeat++;
-    return true;
-  }
-
-  /**
-   * Remove 1 from the line repeat
-   */
-  decrementRepeatForLine(groupId, lineId) {
-    if (this.lyrics[groupId].lines[lineId].repeat === 2) {
-      this.lyrics[groupId].lines[lineId].repeat = 0;
-      return true;
-    }
-    if (this.lyrics[groupId].lines[lineId].repeat === 0) {
-      return false;
-    }
-    this.lyrics[groupId].lines[lineId].repeat--;
-    return true;
+    this.goToPreviousLine(groupId, lineId, newCursorPosition);
   }
 
   /**
@@ -169,24 +183,17 @@ export default class EditLyrics extends Vue {
   }
 
   /**
-   * Set's the timestamp of a group from the audio player
-   */
-  setTimestamp(index) {
-    this.lyrics[index].timestamp = this.$store.state.player.seek;
-  }
-
-  /**
    * Go to either the next line
    * Or to the next group
    */
   goToNextLine(groupId, lineId) {
-    const group = this.lyrics[groupId];
+    const group = this.value[groupId];
     if (group.lines.length > lineId + 1) {
       this.getRef(groupId, lineId + 1).focus();
       return;
     }
 
-    if (this.lyrics.length > groupId + 1) {
+    if (this.value.length > groupId + 1) {
       this.getRef(groupId + 1, 0).focus();
     }
   }
@@ -195,26 +202,38 @@ export default class EditLyrics extends Vue {
    * Either go to the previous line
    * Or to the previous group
    */
-  goToPreviousLine(groupId, lineId) {
+  goToPreviousLine(groupId, lineId, cursor: number|undefined) {
+    let newLineId = lineId;
+    let newGroupId = groupId;
+
     if (lineId !== 0) {
-      this.getRef(groupId, lineId - 1).focus();
-      return;
+      newLineId = lineId - 1;
+    } else if (groupId !== 0) {
+      newGroupId = groupId - 1;
+      const prevGroup = this.value[newGroupId];
+      newLineId = prevGroup.lines.length - 1;
     }
 
-    if (groupId !== 0) {
-      const prevGroupId = groupId - 1;
-      const prevGroup = this.lyrics[prevGroupId];
-      this.getRef(prevGroupId, prevGroup.lines.length - 1).focus();
+    const input = this.getRef(newGroupId, newLineId);
+
+    if (typeof cursor !== 'undefined') {
+      input.$refs.input.setSelectionRange(cursor, cursor);
+      console.log(input.$refs.input.selectionStart);
     }
+    input.focus();
   }
 
   /**
    * Get the Reference from the DOM
    */
-  getRef(groupId, lineId): HTMLElement {
+  getRef(groupId, lineId): any {
     const ref = `group-${groupId}-line-${lineId}`;
 
-    return (this.$refs[ref][0] as HTMLElement);
+    return (this.$refs[ref][0] as any);
+  }
+
+  updateModel(value: Lyrics) {
+    this.$emit('change', value);
   }
 }
 </script>

@@ -1,6 +1,6 @@
 [
   {
-    "timestamp": "00:14",
+    "timestamp": 14,
     "lines": [
       {
         "text": "Roze alast mei mujhse sawaal ye kiya gaya"
@@ -8,7 +8,7 @@
     ]
   },
   {
-    "timestamp": "00:18",
+    "timestamp": 18,
     "lines": [
       {
         "text": "Kya tumko hai qubool aliyyun waliyullah"
@@ -16,7 +16,7 @@
     ]
   },
   {
-    "timestamp": "00:23",
+    "timestamp": 23,
     "lines": [
       {
         "text": "Maine kiya iqrar aur dil shaad huwa tha"
@@ -24,7 +24,7 @@
     ]
   },
   {
-    "timestamp": "00:27",
+    "timestamp": 27,
     "lines": [
       {
         "text": "Honton se mere bas yahi aati thi ik sada"
@@ -32,7 +32,7 @@
     ]
   },
   {
-    "timestamp": "00:32",
+    "timestamp": 32,
     "lines": [
       {
         "text": "Aur aaj bhi zubaan ke saath dil hai bolta"
@@ -40,7 +40,7 @@
     ]
   },
   {
-    "timestamp": "00:36",
+    "timestamp": 36,
     "lines": [
       {
         "text": "Hai fakhr mujhko bus yahi main hu tera shia"
@@ -48,7 +48,7 @@
     ]
   },
   {
-    "timestamp": "00:40",
+    "timestamp": 40,
     "lines": [
       {
         "text": "Jo wahaan kaha tha, wo ab bhi kahunga",
@@ -57,7 +57,7 @@
     ]
   },
   {
-    "timestamp": "00:49",
+    "timestamp": 49,
     "lines": [
       {
         "text": "Mai hu, mai hu, mai hu tera shia",
@@ -66,7 +66,7 @@
     ]
   },
   {
-    "timestamp": "00:58",
+    "timestamp": 58,
     "lines": [
       {
         "text": "Mujhe darr nahi lagta"
@@ -77,7 +77,7 @@
     ]
   },
   {
-    "timestamp": "01:04",
+    "timestamp": 64,
     "lines": [
       {
         "text": "Ye ishqay Ali me"
@@ -88,7 +88,7 @@
     ]
   },
   {
-    "timestamp": "01:08",
+    "timestamp": 68,
     "lines": [
       {
         "text": "Mai hu, mai hu, mai hu tera shia",
@@ -98,7 +98,7 @@
     "type": "chorus"
   },
   {
-    "timestamp": "01:25",
+    "timestamp": 85,
     "lines": [
       {
         "text": "Zehra ki Dua hai"
@@ -110,7 +110,7 @@
     ]
   },
   {
-    "timestamp": "01:32",
+    "timestamp": 92,
     "lines": [
       {
         "text": "Ye dil nahi Mera"
@@ -122,7 +122,7 @@
     ]
   },
   {
-    "timestamp": "01:39",
+    "timestamp": 99,
     "lines": [
       {
         "text": "Ye zikr se jaari"
@@ -133,7 +133,7 @@
     ]
   },
   {
-    "timestamp": "01:45",
+    "timestamp": 105,
     "lines": [
       {
         "text": "Matam gham e shabbir"
@@ -142,15 +142,5 @@
         "text": "Ye rab ki riza hai"
       }
     ]
-  },
-  {
-    "timestamp": "01:08",
-    "lines": [
-      {
-        "text": "Mai hu, mai hu, mai hu tera shia",
-        "repeat": 4
-      }
-    ],
-    "type": "chorus"
   }
 ]

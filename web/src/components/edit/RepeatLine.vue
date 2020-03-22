@@ -1,6 +1,6 @@
 <template>
   <div class="repeat">
-    <v-btn icon v-if="!repeat" @click="enableRepeat"><v-icon>loop</v-icon></v-btn>
+    <v-btn icon v-if="!repeat" @click="enableRepeat" class="enable-repeat-icon"><v-icon>loop</v-icon></v-btn>
     <v-menu
       v-else
       :close-on-content-click="false"
@@ -12,7 +12,8 @@
       <template v-slot:activator="{ on }">
         <v-chip
           label
-          color="primary"
+          outlined
+          color="primary lighten-1"
           v-on="on"
         >
           <v-icon>loop</v-icon>
@@ -37,28 +38,28 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Model, Vue } from 'vue-property-decorator';
 
 @Component
 export default class RepeatLine extends Vue {
-  private repeat = 0;
+  @Model('change', { type: Number }) private readonly repeat!: number;
   private menu = false;
 
   enableRepeat() {
-    this.repeat = 2;
+    this.$emit('change', 2);
   }
 
   increment() {
-    this.repeat++;
+    this.$emit('change', this.repeat + 1);
   }
 
   decrement() {
     if (this.repeat === 2) {
-      this.repeat = 0;
+      this.$emit('change', 0);
       this.menu = false;
       return;
     }
-    this.repeat--;
+    this.$emit('change', this.repeat - 1);
   }
 }
 </script>
@@ -68,6 +69,12 @@ export default class RepeatLine extends Vue {
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
+}
+.enable-repeat-icon {
+  opacity: 0.3;
+  &:hover {
+    opacity: 0.8;
+  }
 }
 .repeat-value {
   padding: 4px;

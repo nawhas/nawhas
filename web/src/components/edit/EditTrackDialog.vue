@@ -44,6 +44,7 @@
           </v-file-input>
         </div>
         <v-textarea
+          v-if="false"
           outlined
           label="Lyrics"
           v-model="form.lyrics"
@@ -66,7 +67,7 @@ import EditLyrics from '@/components/edit/EditLyrics.vue';
 
 interface Form {
   title: string|null;
-  lyrics: string|null;
+  lyrics: Array<any>|null;
   audio: string|Blob|null;
 }
 const defaults: Form = {
@@ -110,7 +111,7 @@ export default class EditTrackDialog extends Vue {
       this.form = {
         ...this.form,
         title,
-        lyrics: lyrics ? lyrics.content : null,
+        lyrics: lyrics ? JSON.parse(lyrics.content) : null,
       };
     }
   }
