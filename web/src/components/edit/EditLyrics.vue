@@ -1,5 +1,5 @@
 <template>
-  <v-card class="editor" flat outlined>
+  <v-card @dblclick="addLines" class="editor" flat outlined>
     <table>
       <tbody>
         <tr v-for="(lines, index) in lyrics" :key="index">
@@ -33,15 +33,9 @@
           <td class="type">
             <v-select hide-details :items="types" v-model="lines.type" solo flat label="Type"></v-select>
           </td>
-          <!-- <td>
-            <v-btn @click="removeLines(index)" icon>
-              <v-icon>delete</v-icon>
-            </v-btn>
-          </td> -->
         </tr>
       </tbody>
     </table>
-    <v-btn @click="addLines">Add Lines</v-btn>
   </v-card>
 </template>
 
