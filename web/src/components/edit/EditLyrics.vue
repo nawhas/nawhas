@@ -1,28 +1,29 @@
 <template>
-  <v-card @dblclick="addLines" class="editor" flat outlined>
+  <v-card class="editor" flat outlined>
     <table>
       <tbody>
-        <tr v-for="(lines, index) in lyrics" :key="index">
-          <td @dblclick="setTimestamp(index)" class="timestamp">{{ lines.timestamp }}</td>
+        <tr v-for="(group, groupId) in lyrics" :key="groupId">
+          <td @dblclick="setTimestamp(groupId)" class="timestamp">{{ formatTimestamp(group.timestamp) }}</td>
           <td class="content">
             <table class="lines">
               <tbody>
-                <tr v-for="(line, lineIndex) in lines.lines" :key="lineIndex">
+                <tr v-for="(line, lineId) in group.lines" :key="lineId">
                   <td>
                     <v-text-field
-                      v-on:keyup.enter="addLine(index)"
-                      v-on:keyup.delete="removeLine(index, lineIndex)"
+                      dense
+                      v-on:keyup.enter="onEnter(group, groupId, line, lineId)"
+                      v-on:keyup.delete="removeLine(groupId, lineId)"
                       v-model="line.text"
                       placeholder="Please enter text"
-                      :disabled="lines.edited === true"
+                      solo flat hide-details
                     ></v-text-field>
                   </td>
-                  <td>
-                    <v-btn @click="subtract(index, lineIndex)" icon small>
+                  <td v-if="false">
+                    <v-btn @click="subtract(groupId, lineId)" icon small>
                       <v-icon>remove</v-icon>
                     </v-btn>
                     <span class="repeat-value d-inline-block mx-2">{{ line.repeat }}</span>
-                    <v-btn @click="add(index, lineIndex)" icon small>
+                    <v-btn @click="add(groupId, lineId)" icon small>
                       <v-icon>add</v-icon>
                     </v-btn>
                   </td>
@@ -30,7 +31,7 @@
               </tbody>
             </table>
           </td>
-          <td class="type">
+          <td class="type" v-if="false">
             <v-select hide-details :items="types" v-model="lines.type" solo flat label="Type"></v-select>
           </td>
         </tr>
@@ -41,10 +42,19 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
+import * as moment from 'moment';
 
 @Component
 export default class EditLyrics extends Vue {
-  private lyrics: Array<any> = [];
+  private lyrics: Array<any> = [
+    {
+      timestamp: 0,
+      // type: this.[0],
+      lines: [
+        { text: '', repeat: 0 },
+      ],
+    },
+  ];
   private types: Array<string> = [
     'Normal',
     'Chorus',
@@ -52,56 +62,62 @@ export default class EditLyrics extends Vue {
     'Break',
   ];
 
-  addLines() {
-    this.lyrics.push({
-      timestamp: '00:00',
+  addNewGroup(at) {
+    this.lyrics.splice(at + 1, 0, {
+      timestamp: 0,
       type: this.types[0],
       lines: [
         { text: '', repeat: 0 },
       ],
-      edited: false,
     });
     this.setTimestamp(this.lyrics.length - 1);
   }
 
-  addLine(index) {
-    this.lyrics[index].lines.push(
-      { text: '', repeat: 0 },
-    );
+  onEnter(group, groupId, line, lineId) {
+    if (line.text.length === 0) {
+      this.removeLine(groupId, lineId);
+      this.addNewGroup(groupId);
+    } else {
+      group.lines.splice(lineId + 1, 0, { text: '', repeat: 0 });
+    }
   }
 
-  removeLines(index) {
-    this.lyrics.splice(index, 1);
+  removeGroup(groupId) {
+    this.lyrics.splice(groupId, 1);
   }
 
-  removeLine(linesIndex, lineIndex) {
-    if (this.lyrics[linesIndex].lines.length === 1) {
-      this.removeLines(linesIndex);
+  removeLine(groupId, lineId) {
+    if (this.lyrics[groupId].lines.length === 1) {
+      this.removeGroup(groupId);
       return true;
     }
-    this.lyrics[linesIndex].lines.splice(lineIndex, 1);
+    this.lyrics[groupId].lines.splice(lineId, 1);
     return true;
   }
 
-  add(linesIndex, lineIndex) {
-    if (this.lyrics[linesIndex].lines[lineIndex].repeat === 0) {
-      this.lyrics[linesIndex].lines[lineIndex].repeat = 2;
+  add(groupId, lineId) {
+    if (this.lyrics[groupId].lines[lineId].repeat === 0) {
+      this.lyrics[groupId].lines[lineId].repeat = 2;
       return true;
     }
-    this.lyrics[linesIndex].lines[lineIndex].repeat++;
+    this.lyrics[groupId].lines[lineId].repeat++;
     return true;
   }
 
-  subtract(linesIndex, lineIndex) {
-    if (this.lyrics[linesIndex].lines[lineIndex].repeat === 2) {
-      this.lyrics[linesIndex].lines[lineIndex].repeat = 0;
+  subtract(groupId, lineId) {
+    if (this.lyrics[groupId].lines[lineId].repeat === 2) {
+      this.lyrics[groupId].lines[lineId].repeat = 0;
       return true;
     }
-    if (this.lyrics[linesIndex].lines[lineIndex].repeat === 0) {
+    if (this.lyrics[groupId].lines[lineId].repeat === 0) {
       return false;
     }
-    this.lyrics[linesIndex].lines[lineIndex].repeat--;
+    this.lyrics[groupId].lines[lineId].repeat--;
     return true;
+  }
+
+  formatTimestamp(timestamp) {
+    return moment.utc(moment.duration(timestamp, 'seconds').asMilliseconds()).format('m:ss');
   }
 
   setTimestamp(index) {
@@ -112,7 +128,7 @@ export default class EditLyrics extends Vue {
 
 <style lang="scss" scoped>
 .editor {
-  padding: 24px;
+  padding: 12px 24px;
 }
 table {
   width: 100%;
@@ -121,14 +137,17 @@ table {
 }
 .timestamp {
   font-size: 0.95rem;
-  width: 10%;
+  width: 30px;
+  vertical-align: top;
+  padding-top: 10px;
+  opacity: 0.6;
 }
 .content {
-  width: 70%;
+  // width: 70%;
 }
 
 .type {
-  width: 20%;
+  // width: 20%;
 }
 
 .lines {
