@@ -1,54 +1,69 @@
 [
   {
-    "timestamp": 14,
+    "timestamp": 9.186924,
     "lines": [
       {
-        "text": "Roze alast mei mujhse sawaal ye kiya gaya"
+        "text": "Moula",
+        "repeat": 3
       }
     ]
   },
   {
-    "timestamp": 18,
+    "timestamp": 14.247168,
     "lines": [
       {
-        "text": "Kya tumko hai qubool aliyyun waliyullah"
+        "text": "Roze alast mei mujhse sawaal ye kiya gaya",
+        "repeat": 0
       }
     ]
   },
   {
-    "timestamp": 23,
+    "timestamp": 18.465781,
     "lines": [
       {
-        "text": "Maine kiya iqrar aur dil shaad huwa tha"
+        "text": "Kya tumko hai qubool aliyyun waliyullah",
+        "repeat": 0
       }
     ]
   },
   {
-    "timestamp": 27,
+    "timestamp": 22.981176,
     "lines": [
       {
-        "text": "Honton se mere bas yahi aati thi ik sada"
+        "text": "Maine kiya iqrar aur dil shaad huwa tha",
+        "repeat": 0
       }
     ]
   },
   {
-    "timestamp": 32,
+    "timestamp": 27.546866,
     "lines": [
       {
-        "text": "Aur aaj bhi zubaan ke saath dil hai bolta"
+        "text": "Honton se mere bas yahi aati thi ik sada",
+        "repeat": 0
       }
     ]
   },
   {
-    "timestamp": 36,
+    "timestamp": 32.074063,
     "lines": [
       {
-        "text": "Hai fakhr mujhko bus yahi main hu tera shia"
+        "text": "Aur aaj bhi zubaan ke saath dil hai bolta",
+        "repeat": 0
       }
     ]
   },
   {
-    "timestamp": 40,
+    "timestamp": 36.065409,
+    "lines": [
+      {
+        "text": "Hai fakhr mujhko bus yahi main hu tera shia",
+        "repeat": 0
+      }
+    ]
+  },
+  {
+    "timestamp": 40.974345,
     "lines": [
       {
         "text": "Jo wahaan kaha tha, wo ab bhi kahunga",
@@ -57,7 +72,7 @@
     ]
   },
   {
-    "timestamp": 49,
+    "timestamp": 49.800899,
     "lines": [
       {
         "text": "Mai hu, mai hu, mai hu tera shia",
@@ -66,42 +81,46 @@
     ]
   },
   {
-    "timestamp": 58,
+    "timestamp": 58.46626,
     "lines": [
       {
-        "text": "Mujhe darr nahi lagta"
+        "text": "Mujhe darr nahi lagta",
+        "repeat": 0
       },
       {
-        "text": "Mai dil se hu kehta"
+        "text": "Mai dil se hu kehta",
+        "repeat": 0
       }
     ]
   },
   {
-    "timestamp": 64,
+    "timestamp": 62.898002,
     "lines": [
       {
-        "text": "Ye ishqay Ali me"
+        "text": "Ye ishqay Ali me",
+        "repeat": 0
       },
       {
-        "text": "Taqqaya nahi hota"
+        "text": "Taqqaya nahi hota",
+        "repeat": 0
       }
     ]
   },
   {
-    "timestamp": 68,
+    "timestamp": 67.73324,
     "lines": [
       {
         "text": "Mai hu, mai hu, mai hu tera shia",
         "repeat": 4
       }
-    ],
-    "type": "chorus"
+    ]
   },
   {
-    "timestamp": 85,
+    "timestamp": 85.270169,
     "lines": [
       {
-        "text": "Zehra ki Dua hai"
+        "text": "Zehra ki Dua hai",
+        "repeat": 0
       },
       {
         "text": "Sarwar ki ata hai",
@@ -110,10 +129,11 @@
     ]
   },
   {
-    "timestamp": 92,
+    "timestamp": 92.186642,
     "lines": [
       {
-        "text": "Ye dil nahi Mera"
+        "text": "Ye dil nahi Mera",
+        "repeat": 0
       },
       {
         "text": "ye karbobala hai",
@@ -122,24 +142,37 @@
     ]
   },
   {
-    "timestamp": 99,
+    "timestamp": 98.711999,
     "lines": [
       {
-        "text": "Ye zikr se jaari"
+        "text": "Ye zikr se jaari",
+        "repeat": 0
       },
       {
-        "text": "Har gham ki dawa hai"
+        "text": "Har gham ki dawa hai",
+        "repeat": 0
       }
     ]
   },
   {
-    "timestamp": 105,
+    "timestamp": 105.279697,
     "lines": [
       {
-        "text": "Matam gham e shabbir"
+        "text": "Matam gham e shabbir",
+        "repeat": 0
       },
       {
-        "text": "Ye rab ki riza hai"
+        "text": "Ye rab ki riza hai",
+        "repeat": 0
+      }
+    ]
+  },
+  {
+    "timestamp": 110.827311,
+    "lines": [
+      {
+        "text": "Mai hu, mai hu, mai hu tera shia",
+        "repeat": 2
       }
     ]
   }
