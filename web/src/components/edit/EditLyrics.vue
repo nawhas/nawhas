@@ -3,13 +3,19 @@
     <table>
       <tbody>
         <tr v-for="(lines, index) in lyrics" :key="index">
-          <td class="timestamp">{{ lines.timestamp }}</td>
+          <td @dblclick="setTimestamp(index)" class="timestamp">{{ lines.timestamp }}</td>
           <td class="content">
             <table class="lines">
               <tbody>
                 <tr v-for="(line, lineIndex) in lines.lines" :key="lineIndex">
                   <td>
-                    <v-text-field v-model="line.text" :disabled="lines.edited === true"></v-text-field>
+                    <v-text-field
+                      v-on:keyup.enter="addLine(index)"
+                      v-on:keyup.delete="removeLine(index, lineIndex)"
+                      v-model="line.text"
+                      placeholder="Please enter text"
+                      :disabled="lines.edited === true"
+                    ></v-text-field>
                   </td>
                   <td>
                     <v-btn @click="subtract(index, lineIndex)" icon small>
@@ -27,22 +33,11 @@
           <td class="type">
             <v-select hide-details :items="types" v-model="lines.type" solo flat label="Type"></v-select>
           </td>
-          <td>
-            <template v-if="!lines.edited">
-              <v-btn icon @click="lines.edited = true">
-                <v-icon>done</v-icon>
-              </v-btn>
-              <v-btn @click="addLine(index)" icon>
-                <v-icon>add</v-icon>
-              </v-btn>
-            </template>
-            <v-btn icon v-else @click="lines.edited = false">
-              <v-icon>create</v-icon>
-            </v-btn>
+          <!-- <td>
             <v-btn @click="removeLines(index)" icon>
               <v-icon>delete</v-icon>
             </v-btn>
-          </td>
+          </td> -->
         </tr>
       </tbody>
     </table>
@@ -72,6 +67,7 @@ export default class EditLyrics extends Vue {
       ],
       edited: false,
     });
+    this.setTimestamp(this.lyrics.length - 1);
   }
 
   addLine(index) {
@@ -82,6 +78,15 @@ export default class EditLyrics extends Vue {
 
   removeLines(index) {
     this.lyrics.splice(index, 1);
+  }
+
+  removeLine(linesIndex, lineIndex) {
+    if (this.lyrics[linesIndex].lines.length === 1) {
+      this.removeLines(linesIndex);
+      return true;
+    }
+    this.lyrics[linesIndex].lines.splice(lineIndex, 1);
+    return true;
   }
 
   add(linesIndex, lineIndex) {
@@ -104,6 +109,10 @@ export default class EditLyrics extends Vue {
     this.lyrics[linesIndex].lines[lineIndex].repeat--;
     return true;
   }
+
+  setTimestamp(index) {
+    this.lyrics[index].timestamp = this.$store.state.player.seek;
+  }
 }
 </script>
 
@@ -121,11 +130,11 @@ table {
   width: 10%;
 }
 .content {
-  width: 60%;
+  width: 70%;
 }
 
 .type {
-  width: 30%;
+  width: 20%;
 }
 
 .lines {
