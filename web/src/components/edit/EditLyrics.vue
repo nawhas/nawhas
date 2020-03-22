@@ -28,11 +28,19 @@
             <v-select hide-details :items="types" v-model="lines.type" solo flat label="Type"></v-select>
           </td>
           <td>
-            <v-btn icon v-if="!lines.edited" @click="lines.edited = true">
-              <v-icon>done</v-icon>
-            </v-btn>
+            <template v-if="!lines.edited">
+              <v-btn icon @click="lines.edited = true">
+                <v-icon>done</v-icon>
+              </v-btn>
+              <v-btn @click="addLine(index)" icon>
+                <v-icon>add</v-icon>
+              </v-btn>
+            </template>
             <v-btn icon v-else @click="lines.edited = false">
               <v-icon>create</v-icon>
+            </v-btn>
+            <v-btn @click="removeLines(index)" icon>
+              <v-icon>delete</v-icon>
             </v-btn>
           </td>
         </tr>
@@ -64,7 +72,16 @@ export default class EditLyrics extends Vue {
       ],
       edited: false,
     });
-    console.log(this.lyrics);
+  }
+
+  addLine(index) {
+    this.lyrics[index].lines.push(
+      { text: '', repeat: 0 },
+    );
+  }
+
+  removeLines(index) {
+    this.lyrics.splice(index, 1);
   }
 
   add(linesIndex, lineIndex) {
