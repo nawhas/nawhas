@@ -1,11 +1,15 @@
 <template>
   <div>
     <div v-if="isJson">
-      <template v-for="(lyric, index) in lyrics">
-        <div class="lyrics__group" :key="index">
-          <div class="lyrics__group__timestamp">{{ lyric.timestamp }}</div>
+      <template v-for="(group, groupId) in lyrics">
+        <div
+          :class="{'lyrics__group': true, 'lyrics_active': isCurrentLyric(group, groupId)}"
+          :key="groupId"
+          :ref="`group-${groupId}`"
+        >
+          <div class="lyrics__group__timestamp">{{ formattedTimestamp(group.timestamp) }}</div>
           <div class="lyrics__group__lines">
-            <span class="lyrics__group__lines__line" v-for="line in lyric.lines" :key="line.text">
+            <span class="lyrics__group__lines__line" v-for="line in group.lines" :key="line.text">
               <span>{{ line.text }}</span>
               <span class="lyrics__repeat" v-if="line.repeat">x{{ line.repeat }}</span>
             </span>
@@ -45,18 +49,31 @@ export default class LyircsPage extends Vue {
     return (this.isJson) ? JSON.parse(this.lyricObject) : this.lyricObject.replace(/\n/gi, '<br>');
   }
 
-  isCurrentLyric(lyric, index) {
-    if (lyric.timestamp < this.formattedSeek) {
-      const nextLyric = this.lyrics[index + 1]
-        .timestamp;
-      if (lyric.timestamp < nextLyric) {
-        if (nextLyric < this.formattedSeek) {
-          return false;
-        }
-        return true;
-      }
+  formattedTimestamp(timestamp) {
+    return moment
+      .utc(moment.duration(timestamp, 'seconds').asMilliseconds())
+      .format('mm:ss');
+  }
+
+  isCurrentLyric(group, groupId) {
+    // If the timestamp is greater than the audio player seek
+    // return false
+    if (group.timestamp > this.seek) {
+      return false;
     }
-    return false;
+    const nextGroup = this.lyrics[groupId + 1];
+    // If there is no more lines available
+    // We have readhed the end of the track
+    // So return true
+    if (nextGroup === undefined) {
+      return true;
+    }
+    // If the next group timestamp is less than the audio player seek
+    // return false
+    if (nextGroup.timestamp < this.seek) {
+      return false;
+    }
+    return true;
   }
 }
 </script>
@@ -76,6 +93,10 @@ export default class LyircsPage extends Vue {
       display: block;
     }
   }
+}
+
+.lyrics_active {
+  background-color: deeppink;
 }
 
 .lyrics__repeat {

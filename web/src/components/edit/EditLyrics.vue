@@ -218,7 +218,7 @@ export default class EditLyrics extends Vue {
 
     if (typeof cursor !== 'undefined') {
       input.$refs.input.setSelectionRange(cursor, cursor);
-      console.log(input.$refs.input.selectionStart);
+      // console.log(input.$refs.input.selectionStart);
     }
     input.focus();
   }
