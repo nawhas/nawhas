@@ -130,7 +130,7 @@ export default class EditTrackDialog extends Vue {
       data.title = this.form.title;
     }
     if (this.form.lyrics) {
-      data.lyrics = this.form.lyrics;
+      data.lyrics = JSON.stringify(this.form.lyrics);
     }
     const { reciterId } = this.album;
     const albumId = this.album.id;
@@ -146,8 +146,9 @@ export default class EditTrackDialog extends Vue {
     if (this.track.title !== this.form.title && this.form.title) {
       data.title = this.form.title;
     }
-    if (this.track.lyrics?.content !== this.form.lyrics && this.form.lyrics) {
-      data.lyrics = this.form.lyrics;
+    const lyricsString = JSON.stringify(this.form.lyrics);
+    if (this.track.lyrics?.content !== lyricsString && this.form.lyrics) {
+      data.lyrics = lyricsString;
     }
     const { id, reciterId, albumId } = this.track;
     let response = await Client.patch(
