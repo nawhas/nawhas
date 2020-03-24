@@ -30,6 +30,7 @@ import * as moment from 'moment';
 @Component
 export default class LyircsPage extends Vue {
   @Prop({ type: String }) private lyricObject: any;
+  @Prop({ type: Boolean }) private isCurrentTrack: boolean;
 
   get seek() {
     return this.$store.state.player.seek;
@@ -61,6 +62,13 @@ export default class LyircsPage extends Vue {
   }
 
   isCurrentLyric(group, groupId) {
+    // If the track that is playing is not the same
+    // to the one that is being displayed
+    // Do not highlight anything
+    if (!this.isCurrentTrack) {
+      return false;
+    }
+
     // If the timestamp is greater than the audio player seek
     // return false
     if (group.timestamp > this.seek) {

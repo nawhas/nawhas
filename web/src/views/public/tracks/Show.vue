@@ -94,7 +94,11 @@
             </v-card-title>
             <v-card-text class="lyrics__content" :class="{ 'black--text': !isDark }">
               <template v-if="track">
-                <lyrics v-if="track.lyrics" :lyricObject="track.lyrics.content"></lyrics>
+                <lyrics
+                  v-if="track.lyrics"
+                  :lyricObject="track.lyrics.content"
+                  :isCurrentTrack="isSameTrackPlaying"
+                ></lyrics>
                 <div class="lyrics__empty" v-else>
                   <div
                     class="lyrics__empty-message"
