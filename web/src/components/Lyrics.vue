@@ -30,7 +30,8 @@ import * as moment from 'moment';
 @Component
 export default class LyircsPage extends Vue {
   @Prop({ type: String }) private lyricObject: any;
-  @Prop({ type: Boolean }) private isCurrentTrack: boolean;
+  @Prop()
+  isCurrentTrack!: boolean;
 
   get seek() {
     return this.$store.state.player.seek;
