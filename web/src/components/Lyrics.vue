@@ -42,7 +42,12 @@ export default class LyircsPage extends Vue {
   }
 
   get isJson() {
-    return !!(this.lyricObject.startsWith('['));
+    try {
+      JSON.parse(this.lyricObject);
+    } catch (e) {
+      return false;
+    }
+    return true;
   }
 
   get lyrics() {
@@ -73,6 +78,8 @@ export default class LyircsPage extends Vue {
     if (nextGroup.timestamp < this.seek) {
       return false;
     }
+    const ref = `group-${groupId}`;
+    this.$refs[ref][0].scrollIntoView({ block: 'center', behavior: 'smooth' });
     return true;
   }
 }
