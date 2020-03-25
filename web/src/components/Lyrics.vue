@@ -7,10 +7,13 @@
           :key="groupId"
           :ref="`group-${groupId}`"
         >
-          <div v-if="!mobile" class="lyrics__group__timestamp">{{ formattedTimestamp(group.timestamp) }}</div>
+          <div
+            v-if="!mobile"
+            class="lyrics__group__timestamp"
+          >{{ formattedTimestamp(group.timestamp) }}</div>
           <div class="lyrics__group__lines">
             <span class="lyrics__group__lines__line" v-for="line in group.lines" :key="line.text">
-              <span>{{ line.text }}</span>
+              <span :class="{'white--text': isDark && isCurrentLyric(group, groupId)}">{{ line.text }}</span>
               <span class="lyrics__repeat" v-if="line.repeat">x{{ line.repeat }}</span>
             </span>
           </div>
@@ -50,6 +53,10 @@ export default class LyircsPage extends Vue {
       return false;
     }
     return true;
+  }
+
+  get isDark() {
+    return this.$vuetify.theme.dark;
   }
 
   get lyrics() {
@@ -117,8 +124,8 @@ export default class LyircsPage extends Vue {
 
 .lyrics_active {
   // background-color: deeppink;
-  color: white;
-  font-weight: bolder;
+  // color: white;
+  font-weight: 900;
   padding: 10px 10px 10px 0px;
 }
 
