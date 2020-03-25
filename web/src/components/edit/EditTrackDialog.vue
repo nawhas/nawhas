@@ -103,7 +103,7 @@ export default class EditTrackDialog extends Vue {
       return JSON.parse(lyricsContent);
     }
     const lyricsArray = lyricsContent.split(/\n/gi);
-    const lyrics = [];
+    const lyrics: object[] = [];
     for (let index = 0; index < lyricsArray.length; index++) {
       const text = lyricsArray[index];
       const group = {
