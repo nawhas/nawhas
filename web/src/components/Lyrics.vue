@@ -7,7 +7,7 @@
           :key="groupId"
           :ref="`group-${groupId}`"
         >
-          <div class="lyrics__group__timestamp">{{ formattedTimestamp(group.timestamp) }}</div>
+          <div v-if="!mobile" class="lyrics__group__timestamp">{{ formattedTimestamp(group.timestamp) }}</div>
           <div class="lyrics__group__lines">
             <span class="lyrics__group__lines__line" v-for="line in group.lines" :key="line.text">
               <span>{{ line.text }}</span>
@@ -54,6 +54,10 @@ export default class LyircsPage extends Vue {
 
   get lyrics() {
     return (this.isJson) ? JSON.parse(this.lyricObject) : this.lyricObject.replace(/\n/gi, '<br>');
+  }
+
+  get mobile() {
+    return this.$vuetify.breakpoint.smAndDown;
   }
 
   formattedTimestamp(timestamp) {
@@ -112,7 +116,10 @@ export default class LyircsPage extends Vue {
 }
 
 .lyrics_active {
-  background-color: deeppink;
+  // background-color: deeppink;
+  color: white;
+  font-weight: bolder;
+  padding: 10px 10px 10px 0px;
 }
 
 .lyrics__repeat {

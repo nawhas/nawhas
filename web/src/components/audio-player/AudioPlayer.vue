@@ -15,6 +15,7 @@
     </div>
     <div class="lyrics" v-if="!minimized && mobile">
       <lyrics
+        class="lyrics__text"
         v-if="track.lyrics"
         :lyricObject="track.lyrics.content"
         :isCurrentTrack="true"
@@ -798,12 +799,17 @@ $duration: 680ms;
 
   .lyrics {
     background: #69503b;
-    height: 300px;
+    height: 310px;
     width: 100%;
     z-index: 10;
     position: absolute;
-    top: 50px;
+    top: 40px;
     overflow: auto;
+
+    .lyrics__text {
+      padding-left: 20px;
+      padding-top: 10px;
+    }
   }
 
   .artwork {
