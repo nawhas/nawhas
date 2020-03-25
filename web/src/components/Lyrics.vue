@@ -88,7 +88,7 @@ export default class LyircsPage extends Vue {
       return false;
     }
     const ref = `group-${groupId}`;
-    this.$refs[ref][0].scrollIntoView({ block: 'center', behavior: 'smooth' });
+    this.$nextTick(() => this.$refs[ref][0].scrollIntoView({ block: 'center', behavior: 'smooth' }));
     return true;
   }
 }
