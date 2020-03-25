@@ -123,8 +123,6 @@ export default class LyircsPage extends Vue {
 }
 
 .lyrics_active {
-  // background-color: deeppink;
-  // color: white;
   font-weight: 900;
   padding: 10px 10px 10px 0px;
 }
