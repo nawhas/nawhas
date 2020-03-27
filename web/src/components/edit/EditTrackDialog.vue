@@ -1,10 +1,16 @@
 <template>
-  <v-dialog v-model="dialog"
-            persistent fullscreen no-click-animation hide-overlay
-            transition="dialog-bottom-transition"
+  <v-dialog
+    v-model="dialog"
+    persistent
+    fullscreen
+    no-click-animation
+    hide-overlay
+    transition="dialog-bottom-transition"
   >
     <template v-slot:activator="{ on }">
-      <v-btn v-if="track" dark icon v-on="on"><v-icon>edit</v-icon></v-btn>
+      <v-btn v-if="track" dark icon v-on="on">
+        <v-icon>edit</v-icon>
+      </v-btn>
       <v-btn v-else v-on="on" text>Add Track</v-btn>
     </template>
     <v-card :loading="loading">
@@ -21,39 +27,26 @@
         </div>
       </v-toolbar>
       <v-card-text class="py-12 dialog__content">
-        <v-text-field
-          outlined
-          v-model="form.title"
-          label="Name"
-          required
-        ></v-text-field>
+        <v-text-field outlined v-model="form.title" label="Name" required></v-text-field>
         <div class="file-input" @drop.prevent="addFile" @dragover.prevent>
-          <v-file-input v-model="form.audio"
-                      label="Audio File"
-                      placeholder="Upload Track Audio File"
-                      prepend-icon="volume_up"
-                      outlined
-                      accept="audio/*"
-                      :show-size="1000"
-        >
+          <v-file-input
+            v-model="form.audio"
+            label="Audio File"
+            placeholder="Upload Track Audio File"
+            prepend-icon="volume_up"
+            outlined
+            accept="audio/*"
+            :show-size="1000"
+          >
             <template v-slot:selection="{ text }">
-              <v-chip color="deep-orange accent-4" dark label small>
-                {{ text }}
-              </v-chip>
+              <v-chip color="deep-orange accent-4" dark label small>{{ text }}</v-chip>
             </template>
           </v-file-input>
         </div>
-        <v-textarea
-          v-if="false"
-          outlined
-          label="Lyrics"
-          v-model="form.lyrics"
-          required
-        ></v-textarea>
+        <v-textarea v-if="false" outlined label="Lyrics" v-model="form.lyrics" required></v-textarea>
         <edit-lyrics v-model="form.lyrics"></edit-lyrics>
       </v-card-text>
-      <v-card-actions>
-      </v-card-actions>
+      <v-card-actions></v-card-actions>
     </v-card>
   </v-dialog>
 </template>
@@ -66,9 +59,9 @@ import {
 import EditLyrics from '@/components/edit/EditLyrics.vue';
 
 interface Form {
-  title: string|null;
-  lyrics: Array<any>|null;
-  audio: string|Blob|null;
+  title: string | null;
+  lyrics: Array<any> | null;
+  audio: string | Blob | null;
 }
 const defaults: Form = {
   title: null,
@@ -94,6 +87,34 @@ export default class EditTrackDialog extends Vue {
       this.resetForm();
     }
   }
+
+  get isJson() {
+    try {
+      JSON.parse(this.track.lyrics.content);
+    } catch (e) {
+      return false;
+    }
+    return true;
+  }
+
+  get lyrics() {
+    const lyricsContent = this.track.lyrics.content;
+    if (this.isJson) {
+      return JSON.parse(lyricsContent);
+    }
+    const lyricsArray = lyricsContent.split(/\n/gi);
+    const lyrics: object[] = [];
+    for (let index = 0; index < lyricsArray.length; index++) {
+      const text = lyricsArray[index];
+      const group = {
+        timestamp: null,
+        lines: [{ text, repeat: 0 }],
+      };
+      lyrics.push(group);
+    }
+    return lyrics;
+  }
+
   addFile(e) {
     const file = e.dataTransfer.files[0];
     if (file.type.match(/audio.*/)) {
@@ -107,11 +128,11 @@ export default class EditTrackDialog extends Vue {
   resetForm() {
     this.form = { ...defaults };
     if (this.track) {
-      const { title, lyrics } = this.track;
+      const { title } = this.track;
       this.form = {
         ...this.form,
         title,
-        lyrics: lyrics ? JSON.parse(lyrics.content) : null,
+        lyrics: this.lyrics,
       };
     }
   }

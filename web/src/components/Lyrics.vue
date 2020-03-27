@@ -7,10 +7,13 @@
           :key="groupId"
           :ref="`group-${groupId}`"
         >
-          <div class="lyrics__group__timestamp">{{ formattedTimestamp(group.timestamp) }}</div>
+          <div
+            v-if="!mobile"
+            class="lyrics__group__timestamp"
+          >{{ formattedTimestamp(group.timestamp) }}</div>
           <div class="lyrics__group__lines">
             <span class="lyrics__group__lines__line" v-for="line in group.lines" :key="line.text">
-              <span>{{ line.text }}</span>
+              <span :class="{'white--text': isDark && isCurrentLyric(group, groupId)}">{{ line.text }}</span>
               <span class="lyrics__repeat" v-if="line.repeat">x{{ line.repeat }}</span>
             </span>
           </div>
@@ -30,6 +33,8 @@ import * as moment from 'moment';
 @Component
 export default class LyircsPage extends Vue {
   @Prop({ type: String }) private lyricObject: any;
+  @Prop()
+  isCurrentTrack!: boolean;
 
   get seek() {
     return this.$store.state.player.seek;
@@ -42,11 +47,24 @@ export default class LyircsPage extends Vue {
   }
 
   get isJson() {
-    return !!(this.lyricObject.startsWith('['));
+    try {
+      JSON.parse(this.lyricObject);
+    } catch (e) {
+      return false;
+    }
+    return true;
+  }
+
+  get isDark() {
+    return this.$vuetify.theme.dark;
   }
 
   get lyrics() {
     return (this.isJson) ? JSON.parse(this.lyricObject) : this.lyricObject.replace(/\n/gi, '<br>');
+  }
+
+  get mobile() {
+    return this.$vuetify.breakpoint.smAndDown;
   }
 
   formattedTimestamp(timestamp) {
@@ -56,6 +74,13 @@ export default class LyircsPage extends Vue {
   }
 
   isCurrentLyric(group, groupId) {
+    // If the track that is playing is not the same
+    // to the one that is being displayed
+    // Do not highlight anything
+    if (!this.isCurrentTrack) {
+      return false;
+    }
+
     // If the timestamp is greater than the audio player seek
     // return false
     if (group.timestamp > this.seek) {
@@ -73,6 +98,8 @@ export default class LyircsPage extends Vue {
     if (nextGroup.timestamp < this.seek) {
       return false;
     }
+    const ref = `group-${groupId}`;
+    this.$nextTick(() => this.$refs[ref][0].scrollIntoView({ block: 'center', behavior: 'smooth' }));
     return true;
   }
 }
@@ -96,7 +123,8 @@ export default class LyircsPage extends Vue {
 }
 
 .lyrics_active {
-  background-color: deeppink;
+  font-weight: 900;
+  padding: 10px 10px 10px 0px;
 }
 
 .lyrics__repeat {
