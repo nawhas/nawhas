@@ -1,38 +1,27 @@
 <template>
-  <v-card class="editor" flat outlined>
-    <table>
-      <tbody>
-        <!-- Group -->
-        <tr v-for="(group, groupId) in lyrics" :key="groupId">
-          <!-- Timestamp -->
-          <td class="timestamp">{{ formatTimestamp(group.timestamp) }}</td>
-          <td class="content">
-            <table class="lines">
-              <tbody>
-                <tr v-for="(line, lineId) in group.lines" :key="lineId">
-                  <td class="line-text">
-                    <!-- Line Text Field -->
-                    <editable-text class="line__text"
-                                   v-model="line.text"
-                                   autocapitalize="off"
-                                   autocomplete="off"
-                                   aria-autocomplete="none"
-                                   spellcheck="false"
-                                   :ref="`group-${groupId}-line-${lineId}`"
-                                   @keydown="onKeyDown($event, group, line, { group: groupId, line: lineId })"
-                    ></editable-text>
-                  </td>
-                  <td class="repeat">
-                    <repeat-line v-model="line.repeat" />
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </v-card>
+  <v-sheet :class="classes">
+    <div class="group" v-for="(group, groupId) in lyrics" :key="groupId">
+      <div class="group__timestamp">{{ formatTimestamp(group.timestamp) }}</div>
+      <div class="group__lines">
+        <div class="line" v-for="(line, lineId) in group.lines" :key="lineId">
+          <editable-text class="line__text"
+                         v-model="line.text"
+                         autocapitalize="off"
+                         autocomplete="off"
+                         aria-autocomplete="none"
+                         spellcheck="false"
+                         :ref="`group-${groupId}-line-${lineId}`"
+                         @keydown="onKeyDown($event, group, line, { group: groupId, line: lineId })"
+                         @focus="onFocus($event, group, line, { group: groupId, line: lineId })"
+                         @blur="onBlur($event, group, line, { group: groupId, line: lineId })"
+          />
+          <div class="line__actions">
+            <repeat-line v-model="line.repeat" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </v-sheet>
 </template>
 
 <script lang="ts">
@@ -67,6 +56,16 @@ type Lyrics = Array<LineGroup>;
 })
 export default class EditLyrics extends Vue {
   @Model('change', { type: Array }) readonly lyrics!: Lyrics;
+  private focused = false;
+  private selected: LineCoordinates|null = null;
+
+  get classes() {
+    return {
+      editor: true,
+      'editor--dark': this.$vuetify.theme.dark,
+      'editor--focused': this.focused,
+    };
+  }
 
   /**
    * Adds a new group to lyrics
@@ -246,6 +245,17 @@ export default class EditLyrics extends Vue {
     this.focus({ group: newGroupId, line: newLineId }, newCursorPosition);
   }
 
+  onFocus(e: FocusEvent, group: LineGroup, line: Line, coordinates: LineCoordinates) {
+    this.focused = true;
+    this.selected = coordinates;
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  onBlur(e: FocusEvent, group: LineGroup, line: Line, coordinates: LineCoordinates) {
+    this.focused = false;
+    this.selected = null;
+  }
+
   focus(coordinates: LineCoordinates, cursor: number|undefined = undefined) {
     this.$nextTick(() => {
       try {
@@ -285,25 +295,50 @@ export default class EditLyrics extends Vue {
 </script>
 
 <style lang="scss" scoped>
+@import "../../styles/theme";
+
 .editor {
   padding: 12px;
-}
-table {
-  width: 100%;
   font-family: 'Roboto Slab', 'serif';
   font-size: 1.15rem;
+  border: 1px solid rgba(0,0,0,0.3);
+  border-collapse: collapse;
+  box-sizing: border-box;
+  @include transition(border);
+
+  &--focused {
+    border: 1px solid $primary;
+    box-shadow: 0 0 0 1px $primary;
+  }
 }
-.timestamp {
+.group {
+  display: flex;
+  margin-bottom: 12px;
+}
+.group__timestamp {
   font-size: 0.95rem;
   width: 30px;
-  vertical-align: top;
   opacity: 0.6;
-  height: 40px;
-  line-height: 40px;
+  padding-top: 6px;
 }
 
-.repeat {
-  width: 90px;
+.group__lines {
+  flex-grow: 1;
+}
+
+.line {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.line__text {
+  flex-grow: 1;
+  padding: 6px;
+}
+.line__actions {
+  flex-shrink: 1;
   font-size: 0.95rem;
 }
 

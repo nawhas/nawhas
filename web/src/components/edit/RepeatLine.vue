@@ -1,6 +1,8 @@
 <template>
   <div class="repeat">
-    <v-btn icon v-if="!repeat" @click="enableRepeat" class="enable-repeat-icon"><v-icon>loop</v-icon></v-btn>
+    <v-btn small icon v-if="!repeat" @click="enableRepeat" class="enable-repeat-icon">
+      <v-icon>loop</v-icon>
+    </v-btn>
     <v-menu
       v-else
       :close-on-content-click="false"
