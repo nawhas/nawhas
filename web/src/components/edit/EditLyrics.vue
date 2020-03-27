@@ -3,7 +3,7 @@
     <table>
       <tbody>
         <!-- Group -->
-        <tr v-for="(group, groupId) in value" :key="groupId">
+        <tr v-for="(group, groupId) in lyrics" :key="groupId">
           <!-- Timestamp -->
           <td class="timestamp">{{ formatTimestamp(group.timestamp) }}</td>
           <td class="content">
@@ -12,19 +12,15 @@
                 <tr v-for="(line, lineId) in group.lines" :key="lineId">
                   <td class="line-text">
                     <!-- Line Text Field -->
-                    <v-text-field
-                      :ref="`group-${groupId}-line-${lineId}`"
-                      dense
-                      @keyup.enter="onEnter($event, group, groupId, line, lineId)"
-                      @keyup.delete="onDelete($event, group, groupId, line, lineId)"
-                      @keydown.up="goToPreviousLine(groupId, lineId)"
-                      @keydown.down="goToNextLine(groupId, lineId)"
-                      v-model="line.text"
-                      aria-autocomplete="none"
-                      autocomplete="off"
-                      placeholder="Add a line"
-                      solo flat hide-details
-                    ></v-text-field>
+                    <editable-text class="line__text"
+                                   v-model="line.text"
+                                   autocapitalize="off"
+                                   autocomplete="off"
+                                   aria-autocomplete="none"
+                                   spellcheck="false"
+                                   :ref="`group-${groupId}-line-${lineId}`"
+                                   @keydown="onKeyDown($event, group, line, { group: groupId, line: lineId })"
+                    ></editable-text>
                   </td>
                   <td class="repeat">
                     <repeat-line v-model="line.repeat" />
@@ -32,9 +28,6 @@
                 </tr>
               </tbody>
             </table>
-          </td>
-          <td class="type" v-if="false">
-            <v-select hide-details :items="types" v-model="group.type" solo flat label="Type"></v-select>
           </td>
         </tr>
       </tbody>
@@ -44,8 +37,15 @@
 
 <script lang="ts">
 import { Component, Model, Vue } from 'vue-property-decorator';
+import { position } from 'caret-pos';
 import RepeatLine from '@/components/edit/RepeatLine.vue';
 import * as moment from 'moment';
+import EditableText from '@/components/edit/EditableText.vue';
+
+interface LineCoordinates {
+  group: number;
+  line: number;
+}
 
 interface Line {
   text: string;
@@ -54,7 +54,6 @@ interface Line {
 
 interface LineGroup {
   timestamp: number;
-  type: string;
   lines: Array<Line>;
 }
 
@@ -63,32 +62,53 @@ type Lyrics = Array<LineGroup>;
 @Component({
   components: {
     RepeatLine,
+    EditableText,
   },
 })
 export default class EditLyrics extends Vue {
-  private types: Array<string> = [
-    'Normal',
-    'Chorus',
-    'Verse',
-    'Break',
-  ];
-
-  @Model('change', { type: Array }) readonly value!: Lyrics;
+  @Model('change', { type: Array }) readonly lyrics!: Lyrics;
 
   /**
    * Adds a new group to lyrics
    */
-  addNewGroup(at) {
-    const updated = [...this.value];
+  addNewGroup(at, line: Line|null = null) {
+    const updated = [...this.lyrics];
     updated.splice(at + 1, 0, {
       timestamp: this.$store.state.player.seek,
-      type: this.types[0],
       lines: [
-        { text: '', repeat: 0 },
+        line || { text: '', repeat: 0 },
       ],
     });
-    this.updateModel(updated);
-    this.$nextTick(() => this.getRef(at + 1, 0).focus());
+    this.$emit('change', updated);
+    this.focus({ group: at + 1, line: 0 });
+  }
+
+  onKeyDown(e: KeyboardEvent, group: LineGroup, line: Line, coordinates: LineCoordinates) {
+    switch (e.key) {
+      case 'Down':
+      case 'ArrowDown':
+        e.preventDefault();
+        this.goToNextLine(coordinates);
+        break;
+      case 'Up':
+      case 'ArrowUp':
+        e.preventDefault();
+        this.goToPreviousLine(coordinates);
+        break;
+      case 'Enter':
+        e.preventDefault();
+        this.onEnter(group, line, coordinates);
+        break;
+      case 'Backspace':
+        e.preventDefault();
+        this.onBackspace(group, line, coordinates);
+        break;
+      case 'Delete':
+        // TODO
+        break;
+      default:
+        // Do nothing.
+    }
   }
 
   /**
@@ -96,21 +116,21 @@ export default class EditLyrics extends Vue {
    * Either add a new line
    * Or add a new group
    */
-  onEnter(e, group, groupId, line, lineId) {
+  onEnter(group: LineGroup, line: Line, coordinates: LineCoordinates) {
     // If this is the only line in the group
     // and the line is empty, do nothing.
     if (group.lines.length === 1 && line.text.length === 0) {
       return;
     }
 
+    const cursor = this.getCursorPosition(coordinates);
+
     // If it's an empty line, add a new group and delete this line.
     if (line.text.length === 0) {
-      this.onDelete(e, group, groupId, line, lineId);
-      this.addNewGroup(groupId);
+      this.onBackspace(group, line, coordinates);
+      this.addNewGroup(coordinates.group);
       return;
     }
-
-    const cursor = e.target.selectionStart;
 
     // Add a new line. Split the line at the cursor location.
     let newLine = '';
@@ -119,16 +139,17 @@ export default class EditLyrics extends Vue {
       // eslint-disable-next-line
       line.text = line.text.substring(0, cursor);
     }
-    group.lines.splice(lineId + 1, 0, { text: newLine, repeat: 0 });
-    this.$nextTick(() => this.getRef(groupId, lineId + 1).focus());
+    group.lines.splice(coordinates.line + 1, 0, { text: newLine, repeat: 0 });
+
+    this.focus({ group: coordinates.group, line: coordinates.line + 1 });
   }
 
   /**
    * Either remove a line
    * Or remove a group
    */
-  onDelete(e, group, groupId, line, lineId) {
-    const cursor = e.target.selectionStart;
+  onBackspace(group: LineGroup, line: Line, coordinates: LineCoordinates) {
+    const cursor = this.getCursorPosition(coordinates);
 
     // If the line has any text, and the cursor is not at the first position,
     // don't do anything. Let the native functionality work.
@@ -142,16 +163,16 @@ export default class EditLyrics extends Vue {
     // and there is some text in this line,
     // merge this line with the previous line.
     if (cursor === 0 && line.text.length !== 0) {
-      if (lineId !== 0) {
+      if (coordinates.line !== 0) {
         // If we have a previous line in the same group,
         // merge with that one.
-        const previousLine = group.lines[lineId - 1];
+        const previousLine = group.lines[coordinates.line - 1];
         newCursorPosition = previousLine.text.length;
         previousLine.text += line.text;
-      } else if (groupId !== 0) {
+      } else if (coordinates.group !== 0) {
         // If we do not have a previous line in the same group
         // Merge the text to the last line of the previous group
-        const previousGroup = this.value[groupId - 1];
+        const previousGroup = this.lyrics[coordinates.group - 1];
         const lastLineOfPrevGroup = previousGroup.lines[previousGroup.lines.length - 1];
         newCursorPosition = lastLineOfPrevGroup.text.length;
         lastLineOfPrevGroup.text += line.text;
@@ -159,20 +180,20 @@ export default class EditLyrics extends Vue {
     }
 
     // If this is the last group and the last line, don't delete it.
-    if (this.value.length === 1 && group.lines.length === 1) {
+    if (this.lyrics.length === 1 && group.lines.length === 1) {
       return;
     }
 
     // Delete the line.
-    group.lines.splice(lineId, 1);
+    group.lines.splice(coordinates.line, 1);
 
     // If the line is the last line in the group,
     // and we delete it, delete the group as well.
     if (group.lines.length === 0) {
       // Delete group.
-      this.value.splice(groupId, 1);
+      this.lyrics.splice(coordinates.group, 1);
     }
-    this.goToPreviousLine(groupId, lineId, newCursorPosition);
+    this.goToPreviousLine(coordinates, newCursorPosition);
   }
 
   /**
@@ -186,54 +207,79 @@ export default class EditLyrics extends Vue {
    * Go to either the next line
    * Or to the next group
    */
-  goToNextLine(groupId, lineId) {
-    const group = this.value[groupId];
-    if (group.lines.length > lineId + 1) {
-      this.getRef(groupId, lineId + 1).focus();
+  goToNextLine(current: LineCoordinates) {
+    let newLineId = current.line;
+    let newGroupId = current.group;
+    const cursor = this.getCursorPosition(current);
+
+    const group = this.lyrics[current.group];
+    if (group.lines.length > current.line + 1) {
+      newLineId = current.line + 1;
+    } else if (this.lyrics.length > current.group + 1) {
+      newGroupId = current.group + 1;
+      newLineId = 0;
+    } else {
       return;
     }
 
-    if (this.value.length > groupId + 1) {
-      this.getRef(groupId + 1, 0).focus();
-    }
+    this.focus({ group: newGroupId, line: newLineId }, cursor);
   }
 
   /**
    * Either go to the previous line
    * Or to the previous group
    */
-  goToPreviousLine(groupId, lineId, cursor: number|undefined) {
-    let newLineId = lineId;
-    let newGroupId = groupId;
+  goToPreviousLine(current: LineCoordinates, cursor: number|undefined = undefined) {
+    let newLineId = current.line;
+    let newGroupId = current.group;
 
-    if (lineId !== 0) {
-      newLineId = lineId - 1;
-    } else if (groupId !== 0) {
-      newGroupId = groupId - 1;
-      const prevGroup = this.value[newGroupId];
+    if (current.line !== 0) {
+      newLineId = current.line - 1;
+    } else if (current.group !== 0) {
+      newGroupId = current.group - 1;
+      const prevGroup = this.lyrics[newGroupId];
       newLineId = prevGroup.lines.length - 1;
     }
 
-    const input = this.getRef(newGroupId, newLineId);
+    const newCursorPosition = cursor || this.getCursorPosition({ group: current.group, line: current.line });
 
-    if (typeof cursor !== 'undefined') {
-      input.$refs.input.setSelectionRange(cursor, cursor);
-      // console.log(input.$refs.input.selectionStart);
-    }
-    input.focus();
+    this.focus({ group: newGroupId, line: newLineId }, newCursorPosition);
+  }
+
+  focus(coordinates: LineCoordinates, cursor: number|undefined = undefined) {
+    this.$nextTick(() => {
+      try {
+        const input = this.getLineInput(coordinates);
+        input.focus();
+        if (typeof cursor !== 'undefined') {
+          const cursorPosition = (input.innerText.length < cursor) ? input.innerText.length : cursor;
+          position(input, cursorPosition);
+        }
+      } catch (e) {
+        console.error(e);
+        // Do nothing.
+      }
+    });
+  }
+
+  getCursorPosition(coordinates: LineCoordinates): number {
+    return position(this.getLineInput(coordinates)).pos;
   }
 
   /**
    * Get the Reference from the DOM
    */
-  getRef(groupId, lineId): any {
-    const ref = `group-${groupId}-line-${lineId}`;
+  getLineInput(coordinates: LineCoordinates): HTMLDivElement {
+    const ref = (this.$refs[this.getLineInputKey(coordinates)] as Array<Vue>);
 
-    return (this.$refs[ref][0] as any);
+    if (!ref.length) {
+      throw new ReferenceError(`Line at (${coordinates.group}, ${coordinates.line}) does not exist.`);
+    }
+    return (ref[0].$el as HTMLDivElement);
   }
 
-  updateModel(value: Lyrics) {
-    this.$emit('change', value);
+  getLineInputKey({ group, line }: LineCoordinates): string {
+    return `group-${group}-line-${line}`;
   }
 }
 </script>
@@ -244,19 +290,26 @@ export default class EditLyrics extends Vue {
 }
 table {
   width: 100%;
-  font-family: 'Roboto Slab';
+  font-family: 'Roboto Slab', 'serif';
   font-size: 1.15rem;
 }
 .timestamp {
   font-size: 0.95rem;
   width: 30px;
   vertical-align: top;
-  padding-top: 10px;
   opacity: 0.6;
+  height: 40px;
+  line-height: 40px;
 }
 
 .repeat {
   width: 90px;
   font-size: 0.95rem;
+}
+
+.line__text {
+  font-size: 1rem;
+  outline: none;
+  margin: 0 12px 0 8px;
 }
 </style>

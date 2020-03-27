@@ -15,6 +15,7 @@ module.exports = {
     'no-plusplus': 0,
     'class-methods-use-this': 0,
     'no-return-assign': 0,
+    "no-useless-constructor": "off",
     'lines-between-class-members': 0,
     'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
