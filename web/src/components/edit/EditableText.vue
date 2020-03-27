@@ -6,7 +6,7 @@
 import {
   Component, Model, Ref, Vue, Watch,
 } from 'vue-property-decorator';
-import Str from '@/components/utils/Str';
+import Str from '@/utils/Str';
 
 @Component
 export default class EditableText extends Vue {
