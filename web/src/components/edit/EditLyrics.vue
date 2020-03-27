@@ -256,7 +256,7 @@ export default class EditLyrics extends Vue {
           position(input, cursorPosition);
         }
       } catch (e) {
-        console.error(e);
+        // console.error(e);
         // Do nothing.
       }
     });
