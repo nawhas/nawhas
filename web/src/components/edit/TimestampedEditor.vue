@@ -129,7 +129,11 @@ export default class TimestampedEditor extends Vue {
       case 'Z':
         if (e.metaKey || e.ctrlKey) {
           e.preventDefault();
-          this.undo();
+          if (e.shiftKey) {
+            this.redo();
+          } else {
+            this.undo();
+          }
         }
         break;
       default:
@@ -298,17 +302,36 @@ export default class TimestampedEditor extends Vue {
   }
 
   undo() {
-    if (!this.history.canRevert()) {
+    console.log('Undo');
+    console.log(this.history);
+    if (!this.history.canUndo()) {
       return;
     }
 
-    const previous = this.history.revert();
+    const previous = this.history.undo();
 
     if (this.changeTimeout) {
       window.clearTimeout(this.changeTimeout);
     }
 
     this.lyrics = clone(previous);
+    this.$emit('change', clone(this.lyrics));
+  }
+
+  redo() {
+    console.log('Redo');
+    console.log(this.history);
+    if (!this.history.canRedo()) {
+      return;
+    }
+
+    const next = this.history.redo();
+
+    if (this.changeTimeout) {
+      window.clearTimeout(this.changeTimeout);
+    }
+
+    this.lyrics = clone(next);
     this.$emit('change', clone(this.lyrics));
   }
 
