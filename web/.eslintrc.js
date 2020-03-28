@@ -37,7 +37,7 @@ module.exports = {
     'no-shadow': 0,
     'arrow-parens': ['error', 'always'],
     'no-param-reassign': ['error', {
-      props: false
+      props: false,
     }],
   },
   overrides: [
