@@ -112,7 +112,7 @@ export default class TimestampedEditor extends Vue {
         this.onBackspace(group, line, coordinates, e);
         break;
       case 'Delete':
-        // TODO
+        this.onDelete(group, line, coordinates, e);
         break;
       default:
         this.change();
@@ -221,16 +221,61 @@ export default class TimestampedEditor extends Vue {
     }
 
     // Delete the line.
+    this.deleteLine(coordinates);
+    this.goToPreviousLine(coordinates, newCursorPosition);
+  }
+
+  onDelete(group: LineGroup, line: Line, coordinates: LineCoordinates, e: KeyboardEvent) {
+    const cursor = this.getCursorPosition(coordinates);
+
+    // If the cursor is not at the end of the line,
+    // don't do anything. Let the native functionality work.
+    if (cursor !== line.text.length) {
+      return;
+    }
+
+    // Get the next line
+    const nextLineCoordinates = this.getNextLineCoordinates(coordinates);
+    const nextLine = this.getLine(nextLineCoordinates);
+    if (nextLine === null) {
+      return;
+    }
+
+    // Disable native delete functionality.
+    e.preventDefault();
+
+    // Append the next line's content to this line.
+    line.text += nextLine.text;
+
+    // Delete the next line
+    this.deleteLine(nextLineCoordinates);
+
+    // Restore cursor position.
+    this.focus(coordinates, cursor);
+  }
+
+  deleteLine(coordinates: LineCoordinates) {
+    const group = this.getGroup(coordinates);
+
+    if (group === null) {
+      return;
+    }
+
     group.lines.splice(coordinates.line, 1);
 
     // If the line is the last line in the group,
     // and we delete it, delete the group as well.
     if (group.lines.length === 0) {
       // Delete group.
-      this.lyrics.splice(coordinates.group, 1);
+      this.deleteGroup(coordinates);
     }
+
     this.change();
-    this.goToPreviousLine(coordinates, newCursorPosition);
+  }
+
+  deleteGroup({ group }: LineCoordinates) {
+    this.lyrics.splice(group, 1);
+    this.change();
   }
 
   /**
@@ -240,26 +285,41 @@ export default class TimestampedEditor extends Vue {
     return moment.utc(moment.duration(timestamp, 'seconds').asMilliseconds()).format('m:ss');
   }
 
+  getNextLineCoordinates(current: LineCoordinates): LineCoordinates {
+    const next = { ...current };
+    const group = this.lyrics[current.group];
+    if (group.lines.length > current.line + 1) {
+      next.line = current.line + 1;
+    } else if (this.lyrics.length > current.group + 1) {
+      next.group = current.group + 1;
+      next.line = 0;
+    }
+
+    return next;
+  }
+
+  getPreviousLineCoordinates(current: LineCoordinates): LineCoordinates {
+    const previous = { ...current };
+
+    if (current.line !== 0) {
+      previous.line = current.line - 1;
+    } else if (current.group !== 0) {
+      previous.group = current.group - 1;
+      previous.line = this.lyrics[previous.group].lines.length - 1;
+    }
+
+    return previous;
+  }
+
   /**
    * Go to either the next line
    * Or to the next group
    */
   goToNextLine(current: LineCoordinates) {
-    let newLineId = current.line;
-    let newGroupId = current.group;
     const cursor = this.getCursorPosition(current);
+    const next = this.getNextLineCoordinates(current);
 
-    const group = this.lyrics[current.group];
-    if (group.lines.length > current.line + 1) {
-      newLineId = current.line + 1;
-    } else if (this.lyrics.length > current.group + 1) {
-      newGroupId = current.group + 1;
-      newLineId = 0;
-    } else {
-      return;
-    }
-
-    this.focus({ group: newGroupId, line: newLineId }, cursor);
+    this.focus(next, cursor);
   }
 
   /**
@@ -267,20 +327,11 @@ export default class TimestampedEditor extends Vue {
    * Or to the previous group
    */
   goToPreviousLine(current: LineCoordinates, cursor: number|undefined = undefined) {
-    let newLineId = current.line;
-    let newGroupId = current.group;
+    const previous = this.getPreviousLineCoordinates(current);
 
-    if (current.line !== 0) {
-      newLineId = current.line - 1;
-    } else if (current.group !== 0) {
-      newGroupId = current.group - 1;
-      const prevGroup = this.lyrics[newGroupId];
-      newLineId = prevGroup.lines.length - 1;
-    }
+    const newCursorPosition = cursor || this.getCursorPosition(current);
 
-    const newCursorPosition = cursor || this.getCursorPosition({ group: current.group, line: current.line });
-
-    this.focus({ group: newGroupId, line: newLineId }, newCursorPosition);
+    this.focus(previous, newCursorPosition);
   }
 
   onRepeatChange() {
@@ -316,6 +367,14 @@ export default class TimestampedEditor extends Vue {
 
   getCursorPosition(coordinates: LineCoordinates): number {
     return position(this.getLineInput(coordinates)).pos;
+  }
+
+  getLine(coordinates: LineCoordinates): Line|null {
+    return this.getGroup(coordinates)?.lines[coordinates.line] || null;
+  }
+
+  getGroup(coordinates: LineCoordinates): LineGroup|null {
+    return this.lyrics[coordinates.group];
   }
 
   /**
@@ -388,6 +447,6 @@ export default class TimestampedEditor extends Vue {
   font-size: 1rem;
   outline: none;
   margin: 0 12px 0 8px;
-  white-space: pre;
+  white-space: pre-wrap;
 }
 </style>
