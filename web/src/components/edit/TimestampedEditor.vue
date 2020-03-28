@@ -322,8 +322,6 @@ export default class TimestampedEditor extends Vue {
   }
 
   undo() {
-    console.log('Undo');
-    console.log(this.history);
     if (!this.history.canUndo()) {
       return;
     }
@@ -339,8 +337,6 @@ export default class TimestampedEditor extends Vue {
   }
 
   redo() {
-    console.log('Redo');
-    console.log(this.history);
     if (!this.history.canRedo()) {
       return;
     }
