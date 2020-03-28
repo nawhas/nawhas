@@ -6,8 +6,8 @@
       </div>
       <div class="header__title">Write-Up</div>
       <div class="header__actions">
-        <v-btn icon @click="undo"><v-icon>undo</v-icon></v-btn>
-        <v-btn icon @click="redo"><v-icon>redo</v-icon></v-btn>
+        <v-btn :disabled="!canUndo" icon @click="undo"><v-icon>undo</v-icon></v-btn>
+        <v-btn :disabled="!canRedo" icon @click="redo"><v-icon>redo</v-icon></v-btn>
       </div>
     </div>
     <div class="editor__content">
@@ -74,7 +74,7 @@ export default class TimestampedEditor extends Vue {
   private lyrics: Lyrics = [];
   private focused = false;
   private selected: LineCoordinates|null = null;
-  private history!: StateHistory;
+  private history: StateHistory<Lyrics> = new StateHistory([]);
   private changeTimeout: number|undefined;
 
   get classes() {
@@ -83,6 +83,14 @@ export default class TimestampedEditor extends Vue {
       'editor--dark': this.$vuetify.theme.dark,
       'editor--focused': this.focused,
     };
+  }
+
+  get canUndo() {
+    return this.history.previous.length > 0;
+  }
+
+  get canRedo() {
+    return this.history.future.length > 0;
   }
 
   mounted() {

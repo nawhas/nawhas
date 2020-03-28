@@ -1,17 +1,15 @@
 import { clone } from '@/utils/clone';
 
-type Value = any;
+export default class StateHistory<T> {
+  public previous: Array<T> = [];
+  public current: T;
+  public future: Array<T> = [];
 
-export default class StateHistory {
-  private previous: Array<Value> = [];
-  private current: Value;
-  private future: Array<Value> = [];
-
-  constructor(current: Value) {
+  constructor(current: T) {
     this.current = clone(current);
   }
 
-  commit(value: Value) {
+  commit(value: T) {
     // Take the current value,
     // move it to the history.
     this.previous.push(this.current);
@@ -29,23 +27,23 @@ export default class StateHistory {
     return this.future.length !== 0;
   }
 
-  undo(): Value {
+  undo(): T {
     if (!this.canUndo()) {
       throw new Error('No previous changes.');
     }
 
     this.future.push(this.current);
-    this.current = clone(this.previous.pop());
+    this.current = clone(this.previous.pop() as T);
     return this.current;
   }
 
-  redo(): Value {
+  redo(): T {
     if (!this.canRedo()) {
       throw new Error('No future changes.');
     }
 
     this.previous.push(this.current);
-    this.current = clone(this.future.pop());
+    this.current = clone(this.future.pop() as T);
     return this.current;
   }
 }
