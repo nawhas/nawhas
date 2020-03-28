@@ -194,6 +194,10 @@ export default class TimestampedEditor extends Vue {
     // and there is some text in this line,
     // merge this line with the previous line.
     if (cursor === 0 && line.text.length !== 0) {
+      if (coordinates.group === 0 && coordinates.line === 0) {
+        return;
+      }
+
       if (coordinates.line !== 0) {
         // If we have a previous line in the same group,
         // merge with that one.
