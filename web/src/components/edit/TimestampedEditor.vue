@@ -31,6 +31,7 @@ import { position } from 'caret-pos';
 import RepeatLine from '@/components/edit/RepeatLine.vue';
 import * as moment from 'moment';
 import EditableText from '@/components/edit/EditableText.vue';
+import StateHistory from '@/utils/StateHistory';
 import { clone } from '@/utils/clone';
 
 interface LineCoordinates {
@@ -61,6 +62,8 @@ export default class TimestampedEditor extends Vue {
   private lyrics: Lyrics = [];
   private focused = false;
   private selected: LineCoordinates|null = null;
+  private history!: StateHistory;
+  private changeTimeout: number|undefined;
 
   get classes() {
     return {
@@ -72,10 +75,18 @@ export default class TimestampedEditor extends Vue {
 
   mounted() {
     this.lyrics = clone(this.model);
+    this.history = new StateHistory(this.lyrics);
   }
 
   change() {
-    this.$emit('change', clone(this.lyrics));
+    if (this.changeTimeout) {
+      window.clearTimeout(this.changeTimeout);
+    }
+
+    this.changeTimeout = window.setTimeout(() => {
+      this.$emit('change', clone(this.lyrics));
+      this.history.commit(this.lyrics);
+    }, 200);
   }
 
   /**
@@ -114,10 +125,18 @@ export default class TimestampedEditor extends Vue {
       case 'Delete':
         this.onDelete(group, line, coordinates, e);
         break;
+      case 'z':
+      case 'Z':
+        if (e.metaKey || e.ctrlKey) {
+          e.preventDefault();
+          this.undo();
+        }
+        break;
       default:
-        this.change();
+        // this.change();
     }
   }
+
 
   /**
    * When the user presses enter
@@ -278,6 +297,21 @@ export default class TimestampedEditor extends Vue {
     this.change();
   }
 
+  undo() {
+    if (!this.history.canRevert()) {
+      return;
+    }
+
+    const previous = this.history.revert();
+
+    if (this.changeTimeout) {
+      window.clearTimeout(this.changeTimeout);
+    }
+
+    this.lyrics = clone(previous);
+    this.$emit('change', clone(this.lyrics));
+  }
+
   /**
    * Format the timestamp to Minutes and Seconds
    */
@@ -406,6 +440,10 @@ export default class TimestampedEditor extends Vue {
   border-collapse: collapse;
   box-sizing: border-box;
   @include transition(border);
+
+  &--dark {
+    border-color: #545454;
+  }
 
   &--focused {
     border: 1px solid $primary;
