@@ -113,8 +113,16 @@ export default class TimestampedEditor extends Vue {
    * Adds a new group to lyrics
    */
   addNewGroup(at, lines: Array<Line>|null = null) {
+    let timestamp = 0;
+    if (this.$store.state.player.current) {
+      timestamp = this.$store.state.player.seek;
+    } else if (this.lyrics.length > at + 1) {
+      timestamp = this.lyrics[at].timestamp;
+    } else {
+      timestamp = 0;
+    }
     this.lyrics.splice(at + 1, 0, {
-      timestamp: this.$store.state.player.seek,
+      timestamp,
       lines: lines || [
         { text: '', repeat: 0 },
       ],
