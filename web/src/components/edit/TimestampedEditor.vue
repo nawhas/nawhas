@@ -14,9 +14,10 @@
                          @keydown="onKeyDown($event, group, line, { group: groupId, line: lineId })"
                          @focus="onFocus($event, group, line, { group: groupId, line: lineId })"
                          @blur="onBlur($event, group, line, { group: groupId, line: lineId })"
+                         @input="change"
           />
           <div class="line__actions">
-            <repeat-line v-model="line.repeat" />
+            <repeat-line v-model="line.repeat" @change="onRepeatChange" />
           </div>
         </div>
       </div>
@@ -30,6 +31,7 @@ import { position } from 'caret-pos';
 import RepeatLine from '@/components/edit/RepeatLine.vue';
 import * as moment from 'moment';
 import EditableText from '@/components/edit/EditableText.vue';
+import { clone } from '@/utils/clone';
 
 interface LineCoordinates {
   group: number;
@@ -54,8 +56,9 @@ type Lyrics = Array<LineGroup>;
     EditableText,
   },
 })
-export default class EditLyrics extends Vue {
-  @Model('change', { type: Array }) readonly lyrics!: Lyrics;
+export default class TimestampedEditor extends Vue {
+  @Model('change', { type: Array }) readonly model!: Lyrics;
+  private lyrics: Lyrics = [];
   private focused = false;
   private selected: LineCoordinates|null = null;
 
@@ -67,19 +70,26 @@ export default class EditLyrics extends Vue {
     };
   }
 
+  mounted() {
+    this.lyrics = clone(this.model);
+  }
+
+  change() {
+    this.$emit('change', clone(this.lyrics));
+  }
+
   /**
    * Adds a new group to lyrics
    */
-  addNewGroup(at, line: Line|null = null) {
-    const updated = [...this.lyrics];
-    updated.splice(at + 1, 0, {
+  addNewGroup(at, lines: Array<Line>|null = null) {
+    this.lyrics.splice(at + 1, 0, {
       timestamp: this.$store.state.player.seek,
-      lines: [
-        line || { text: '', repeat: 0 },
+      lines: lines || [
+        { text: '', repeat: 0 },
       ],
     });
-    this.$emit('change', updated);
     this.focus({ group: at + 1, line: 0 });
+    this.change();
   }
 
   onKeyDown(e: KeyboardEvent, group: LineGroup, line: Line, coordinates: LineCoordinates) {
@@ -99,14 +109,13 @@ export default class EditLyrics extends Vue {
         this.onEnter(group, line, coordinates);
         break;
       case 'Backspace':
-        e.preventDefault();
-        this.onBackspace(group, line, coordinates);
+        this.onBackspace(group, line, coordinates, e);
         break;
       case 'Delete':
         // TODO
         break;
       default:
-        // Do nothing.
+        this.change();
     }
   }
 
@@ -126,20 +135,41 @@ export default class EditLyrics extends Vue {
 
     // If it's an empty line, add a new group and delete this line.
     if (line.text.length === 0) {
+      let linesToMove: Array<Line>|null = null;
+      // If there are other lines in this group, move them to the new group.
+      if (group.lines.length > coordinates.line + 1) {
+        linesToMove = group.lines.splice(coordinates.line + 1);
+      }
+
       this.onBackspace(group, line, coordinates);
-      this.addNewGroup(coordinates.group);
+      this.addNewGroup(coordinates.group, linesToMove);
+      return;
+    }
+
+    // If the cursor is at the start of the line
+    if (cursor === 0 && coordinates.line > 0) {
+      const linesToMove: Array<Line>|null = group.lines.splice(coordinates.line);
+      this.addNewGroup(coordinates.group, linesToMove);
+
+      if (group.lines.length === 0) {
+        this.lyrics.splice(coordinates.group, 1);
+        this.change();
+        // TODO - solve this when updating component to use change events properly.
+      }
+
       return;
     }
 
     // Add a new line. Split the line at the cursor location.
     let newLine = '';
     if (line.text.length !== cursor) {
-      newLine = line.text.substring(cursor);
+      newLine = line.text.substring(cursor).trimEnd();
       // eslint-disable-next-line
       line.text = line.text.substring(0, cursor);
     }
     group.lines.splice(coordinates.line + 1, 0, { text: newLine, repeat: 0 });
 
+    this.change();
     this.focus({ group: coordinates.group, line: coordinates.line + 1 });
   }
 
@@ -147,7 +177,7 @@ export default class EditLyrics extends Vue {
    * Either remove a line
    * Or remove a group
    */
-  onBackspace(group: LineGroup, line: Line, coordinates: LineCoordinates) {
+  onBackspace(group: LineGroup, line: Line, coordinates: LineCoordinates, e: KeyboardEvent|null = null) {
     const cursor = this.getCursorPosition(coordinates);
 
     // If the line has any text, and the cursor is not at the first position,
@@ -155,6 +185,8 @@ export default class EditLyrics extends Vue {
     if (line.text.length !== 0 && cursor !== 0) {
       return;
     }
+
+    if (e) e.preventDefault();
 
     let newCursorPosition: number|undefined;
 
@@ -176,6 +208,7 @@ export default class EditLyrics extends Vue {
         newCursorPosition = lastLineOfPrevGroup.text.length;
         lastLineOfPrevGroup.text += line.text;
       }
+      this.change();
     }
 
     // If this is the last group and the last line, don't delete it.
@@ -192,6 +225,7 @@ export default class EditLyrics extends Vue {
       // Delete group.
       this.lyrics.splice(coordinates.group, 1);
     }
+    this.change();
     this.goToPreviousLine(coordinates, newCursorPosition);
   }
 
@@ -243,6 +277,10 @@ export default class EditLyrics extends Vue {
     const newCursorPosition = cursor || this.getCursorPosition({ group: current.group, line: current.line });
 
     this.focus({ group: newGroupId, line: newLineId }, newCursorPosition);
+  }
+
+  onRepeatChange() {
+    this.change();
   }
 
   onFocus(e: FocusEvent, group: LineGroup, line: Line, coordinates: LineCoordinates) {
@@ -346,5 +384,6 @@ export default class EditLyrics extends Vue {
   font-size: 1rem;
   outline: none;
   margin: 0 12px 0 8px;
+  white-space: pre;
 }
 </style>

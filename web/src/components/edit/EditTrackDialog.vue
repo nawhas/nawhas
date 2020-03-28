@@ -44,7 +44,7 @@
           </v-file-input>
         </div>
         <v-textarea v-if="false" outlined label="Lyrics" v-model="form.lyrics" required></v-textarea>
-        <edit-lyrics v-model="form.lyrics"></edit-lyrics>
+        <timestamped-editor v-model="form.lyrics"></timestamped-editor>
       </v-card-text>
       <v-card-actions></v-card-actions>
     </v-card>
@@ -56,7 +56,7 @@ import Client from '@/services/client';
 import {
   Component, Prop, Watch, Vue,
 } from 'vue-property-decorator';
-import EditLyrics from '@/components/edit/EditLyrics.vue';
+import TimestampedEditor from '@/components/edit/TimestampedEditor.vue';
 
 interface Form {
   title: string | null;
@@ -70,7 +70,7 @@ const defaults: Form = {
 };
 
 @Component({
-  components: { EditLyrics },
+  components: { TimestampedEditor },
 })
 export default class EditTrackDialog extends Vue {
   @Prop({ type: Object }) private track;
