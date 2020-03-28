@@ -1,23 +1,35 @@
 <template>
   <v-sheet :class="classes">
-    <div class="group" v-for="(group, groupId) in lyrics" :key="groupId">
-      <div class="group__timestamp">{{ formatTimestamp(group.timestamp) }}</div>
-      <div class="group__lines">
-        <div class="line" v-for="(line, lineId) in group.lines" :key="lineId">
-          <editable-text class="line__text"
-                         v-model="line.text"
-                         autocapitalize="off"
-                         autocomplete="off"
-                         aria-autocomplete="none"
-                         spellcheck="false"
-                         :ref="`group-${groupId}-line-${lineId}`"
-                         @keydown="onKeyDown($event, group, line, { group: groupId, line: lineId })"
-                         @focus="onFocus($event, group, line, { group: groupId, line: lineId })"
-                         @blur="onBlur($event, group, line, { group: groupId, line: lineId })"
-                         @input="change"
-          />
-          <div class="line__actions">
-            <repeat-line v-model="line.repeat" @change="onRepeatChange" />
+    <div class="editor__header">
+      <div class="header__icon">
+        <v-icon>speaker_notes</v-icon>
+      </div>
+      <div class="header__title">Write-Up</div>
+      <div class="header__actions">
+        <v-btn icon @click="undo"><v-icon>undo</v-icon></v-btn>
+        <v-btn icon @click="redo"><v-icon>redo</v-icon></v-btn>
+      </div>
+    </div>
+    <div class="editor__content">
+      <div class="group" v-for="(group, groupId) in lyrics" :key="groupId">
+        <div class="group__timestamp">{{ formatTimestamp(group.timestamp) }}</div>
+        <div class="group__lines">
+          <div class="line" v-for="(line, lineId) in group.lines" :key="lineId">
+            <editable-text class="line__text"
+                          v-model="line.text"
+                          autocapitalize="off"
+                          autocomplete="off"
+                          aria-autocomplete="none"
+                          spellcheck="false"
+                          :ref="`group-${groupId}-line-${lineId}`"
+                          @keydown="onKeyDown($event, group, line, { group: groupId, line: lineId })"
+                          @focus="onFocus($event, group, line, { group: groupId, line: lineId })"
+                          @blur="onBlur($event, group, line, { group: groupId, line: lineId })"
+                          @input="change"
+            />
+            <div class="line__actions">
+              <repeat-line v-model="line.repeat" @change="onRepeatChange" />
+            </div>
           </div>
         </div>
       </div>
@@ -456,24 +468,50 @@ export default class TimestampedEditor extends Vue {
 @import "../../styles/theme";
 
 .editor {
-  padding: 12px;
-  font-family: 'Roboto Slab', 'serif';
-  font-size: 1.15rem;
   border: 1px solid rgba(0,0,0,0.3);
   border-collapse: collapse;
   box-sizing: border-box;
   @include transition(border);
-
-  &--dark {
-    border-color: #545454;
-  }
 
   &--focused {
     border: 1px solid $primary;
     box-shadow: 0 0 0 1px $primary;
   }
 }
+
+
+.editor--dark {
+  border-color: #545454;
+
+  .editor__header {
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+}
+
+.editor__header {
+  display: flex;
+  align-items: center;
+  padding: 12px 16px;
+  border-bottom: 1px solid rgba(0,0,0,0.08);
+
+  .header__icon {
+    margin-right: 12px;
+    opacity: 0.8;
+  }
+  .header__title {
+    font-size: 1rem;
+    font-weight: 500;
+    flex: 1;
+  }
+}
+
+.editor__content {
+  padding: 12px;
+}
+
 .group {
+  font-family: 'Roboto Slab', 'serif';
+  font-size: 1.15rem;
   display: flex;
   margin-bottom: 12px;
 }
