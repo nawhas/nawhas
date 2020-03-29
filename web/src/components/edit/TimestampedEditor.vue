@@ -192,8 +192,9 @@ export default class TimestampedEditor extends Vue {
         linesToMove = group.lines.splice(coordinates.line + 1);
       }
 
-      this.onBackspace(group, line, coordinates);
       this.addNewGroup(coordinates.group, linesToMove);
+      this.deleteLine(coordinates);
+      this.focus(coordinates);
       return;
     }
 
