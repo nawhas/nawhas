@@ -15,6 +15,25 @@
     </div>
     <div class="audio-player__mobile--container">
       <div
+        class="audio-player--container--details"
+        v-if="!minimized && mobile && view != 'none'"
+      >
+        <img
+          crossorigin
+          :src="artwork"
+        />
+        <div>
+          <div
+            class="track-info--track-name body-1"
+            @click="onTrackTitleClicked"
+          >{{ track.title }}</div>
+          <div
+            class="track-info--track-meta body-2"
+            @click="onReciterNameClicked"
+          >{{ track.reciter.name }} &bull; {{ track.year }}</div>
+        </div>
+      </div>
+      <div
         class="lyrics"
         v-if="!minimized && mobile && view === 'lyrics'"
       >
@@ -34,13 +53,15 @@
           <queue-list @change="resetQueueMenu"></queue-list>
         </v-expand-transition>
       </div>
-      <v-hover class="artwork">
+      <v-hover
+        class="artwork"
+        v-if="minimized || !minimized && mobile && view === 'none'"
+      >
         <template v-slot:default="{ hover }">
           <div @click="toggleMinimized">
             <img
               crossorigin
               :src="artwork"
-              v-if="view === 'none'"
             />
             <v-fade-transition>
               <v-overlay
@@ -889,7 +910,20 @@ $duration: 680ms;
 
   .audio-player__mobile--container {
     height: 400px;
+
+    .audio-player--container--details {
+      display: flex;
+      padding: 0px 20px;
+
+      img {
+        width: 45px;
+        height: 45px;
+        margin-right: 20px;
+      }
+    }
+
     .lyrics {
+      background: rgba(55, 43, 37, 0.81);
       height: 370px;
       width: 100%;
       z-index: 10;
@@ -898,6 +932,7 @@ $duration: 680ms;
       overflow: auto;
 
       .lyrics__text {
+        word-wrap: break-word !important;
         padding-left: 20px;
         padding-top: 10px;
       }
@@ -909,7 +944,7 @@ $duration: 680ms;
     }
 
     .artwork {
-      padding: 24px 88px;
+      padding: 80px 88px;
       text-align: center;
 
       img {
@@ -967,7 +1002,6 @@ $duration: 680ms;
     }
   }
 }
-
 
 .audio-player__bottom-actions {
   position: fixed;
