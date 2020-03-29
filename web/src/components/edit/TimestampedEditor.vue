@@ -229,7 +229,7 @@ export default class TimestampedEditor extends Vue {
    * Or remove a group
    */
   onBackspace(group: LineGroup, line: Line, coordinates: LineCoordinates, e: KeyboardEvent|null = null) {
-    const cursor = this.getCursorPosition(coordinates);
+    let cursor = this.getCursorPosition(coordinates);
 
     // If the line has any text, and the cursor is not at the first position,
     // don't do anything. Let the native functionality work.
@@ -239,30 +239,18 @@ export default class TimestampedEditor extends Vue {
 
     if (e) e.preventDefault();
 
-    let newCursorPosition: number|undefined;
-
     // If the cursor is at the start of the line,
-    // and there is some text in this line,
     // merge this line with the previous line.
-    if (cursor === 0 && line.text.length !== 0) {
-      if (coordinates.group === 0 && coordinates.line === 0) {
+    if (cursor === 0) {
+      const previous = this.getLine(this.getPreviousLineCoordinates(coordinates));
+
+      // If there is no previous line, do nothing
+      if (!previous) {
         return;
       }
 
-      if (coordinates.line !== 0) {
-        // If we have a previous line in the same group,
-        // merge with that one.
-        const previousLine = group.lines[coordinates.line - 1];
-        newCursorPosition = previousLine.text.length;
-        previousLine.text += line.text;
-      } else if (coordinates.group !== 0) {
-        // If we do not have a previous line in the same group
-        // Merge the text to the last line of the previous group
-        const previousGroup = this.lyrics[coordinates.group - 1];
-        const lastLineOfPrevGroup = previousGroup.lines[previousGroup.lines.length - 1];
-        newCursorPosition = lastLineOfPrevGroup.text.length;
-        lastLineOfPrevGroup.text += line.text;
-      }
+      cursor = previous.text.length;
+      previous.text += line.text;
       this.change();
     }
 
@@ -273,7 +261,7 @@ export default class TimestampedEditor extends Vue {
 
     // Delete the line.
     this.deleteLine(coordinates);
-    this.goToPreviousLine(coordinates, newCursorPosition);
+    this.goToPreviousLine(coordinates, cursor);
   }
 
   onDelete(group: LineGroup, line: Line, coordinates: LineCoordinates, e: KeyboardEvent) {
