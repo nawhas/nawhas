@@ -16,7 +16,7 @@
     <div class="audio-player__mobile--container">
       <div
         class="audio-player--container--details"
-        v-if="!minimized && mobile && view != 'none'"
+        v-if="!minimized && mobile && view === 'lyrics'"
       >
         <img
           crossorigin
