@@ -13,7 +13,10 @@
     >
       <v-icon large>remove</v-icon>
     </div>
-    <div class="lyrics" v-if="!minimized && mobile">
+    <div
+      class="lyrics"
+      v-if="!minimized && mobile"
+    >
       <lyrics
         class="lyrics__text"
         v-if="track.lyrics"
@@ -24,9 +27,15 @@
     <v-hover class="artwork">
       <template v-slot:default="{ hover }">
         <div @click="toggleMinimized">
-          <img crossorigin :src="artwork" />
+          <img
+            crossorigin
+            :src="artwork"
+          />
           <v-fade-transition>
-            <v-overlay v-if="hover && minimized && !mobile" absolute>
+            <v-overlay
+              v-if="hover && minimized && !mobile"
+              absolute
+            >
               <v-icon>fullscreen</v-icon>
             </v-overlay>
           </v-fade-transition>
@@ -35,8 +44,14 @@
     </v-hover>
     <div class="player-content">
       <v-expand-x-transition>
-        <div class="track-info" v-if="!minimized || mobile">
-          <div class="track-info--track-name body-1" @click="onTrackTitleClicked">{{ track.title }}</div>
+        <div
+          class="track-info"
+          v-if="!minimized || mobile"
+        >
+          <div
+            class="track-info--track-name body-1"
+            @click="onTrackTitleClicked"
+          >{{ track.title }}</div>
           <div
             class="track-info--track-meta body-2"
             @click="onReciterNameClicked"
@@ -82,8 +97,14 @@
           color="deep-orange"
           @click="togglePlayState"
         >
-          <v-icon v-if="playing" :size="playbackControlSizes.prominent.icon">pause_circle_filled</v-icon>
-          <v-icon v-else :size="playbackControlSizes.prominent.icon">play_circle_filled</v-icon>
+          <v-icon
+            v-if="playing"
+            :size="playbackControlSizes.prominent.icon"
+          >pause_circle_filled</v-icon>
+          <v-icon
+            v-else
+            :size="playbackControlSizes.prominent.icon"
+          >play_circle_filled</v-icon>
         </v-btn>
         <v-btn
           icon
@@ -104,9 +125,17 @@
           <v-icon v-if="repeat === null || repeat === 'all'">repeat</v-icon>
           <v-icon v-else>repeat_one</v-icon>
         </v-btn>
-        <v-menu v-if="minimized" top offset-y>
+        <v-menu
+          v-if="minimized"
+          top
+          offset-y
+        >
           <template v-slot:activator="{ on }">
-            <v-btn icon large v-on="on">
+            <v-btn
+              icon
+              large
+              v-on="on"
+            >
               <v-icon>more_vert</v-icon>
             </v-btn>
           </template>
@@ -120,7 +149,10 @@
         </v-menu>
       </div>
       <v-expand-transition>
-        <div class="player-sub-actions" v-if="!minimized && !mobile">
+        <div
+          class="player-sub-actions"
+          v-if="!minimized && !mobile"
+        >
           <v-menu
             v-model="queueMenu"
             top
@@ -130,7 +162,11 @@
             :close-on-content-click="false"
           >
             <template v-slot:activator="{ on }">
-              <v-btn icon large v-on="on">
+              <v-btn
+                icon
+                large
+                v-on="on"
+              >
                 <v-icon>playlist_play</v-icon>
               </v-btn>
             </template>
@@ -140,13 +176,49 @@
               <queue-list @change="resetQueueMenu"></queue-list>
             </v-card>
           </v-menu>
-          <v-btn @click="toggleMinimized" icon large>
+          <v-btn
+            @click="toggleMinimized"
+            icon
+            large
+          >
             <v-icon>picture_in_picture_alt</v-icon>
           </v-btn>
         </div>
       </v-expand-transition>
     </div>
-    <div class="audio-player__up-next" v-if="mobile && !minimized">
+    <div
+      v-if="mobile && !minimized"
+      class="audio-player__bottom-actions"
+    >
+      <v-btn
+        @click="changeView('lyrics')"
+        tile
+        text
+        :class="{'audio-player__bottom-actions--active': view === 'lyrics'}"
+      >
+        <v-icon>chat</v-icon>
+      </v-btn>
+      <v-btn
+        @click="changeView('cast')"
+        :class="{'audio-player__bottom-actions--active': view === 'cast'}"
+        tile
+        text
+      >
+        <v-icon>cast</v-icon>
+      </v-btn>
+      <v-btn
+        tile
+        text
+        @click="changeView('queue')"
+        :class="{'audio-player__bottom-actions--active': view === 'queue'}"
+      >
+        <v-icon>queue_music</v-icon>
+      </v-btn>
+    </div>
+    <div
+      class="audio-player__up-next"
+      v-if="mobile && !minimized && false"
+    >
       <h5 class="title px-6">On the Queue</h5>
       <v-expand-transition>
         <queue-list @change="resetQueueMenu"></queue-list>
@@ -170,6 +242,8 @@ interface CachedTrackReference {
   queued: QueuedTrack | null;
   index: number | null;
 }
+
+type View = 'none' | 'lyrics' | 'cast' | 'queue';
 
 @Component({
   components: {
@@ -195,6 +269,8 @@ export default class AudioPlayer extends Vue {
   private queueMenu = false;
   /* Keep a reference to the progress bar interval to clear it when needed. */
   private progressInterval: number | null = null;
+  /* Determines which view should be shown */
+  private view: View = 'none';
 
   get isDark() {
     return this.$vuetify.theme.dark;
@@ -346,6 +422,15 @@ export default class AudioPlayer extends Vue {
 
   mounted() {
     this.minimized = this.mobile;
+  }
+
+  changeView(view) {
+    if (this.view !== view) {
+      this.view = view;
+      return;
+    }
+
+    this.view = 'none';
   }
 
   /**
@@ -823,7 +908,8 @@ $duration: 680ms;
   }
 
   .player-content {
-    padding: 24px 48px;
+    margin-top: 150px;
+    padding: 0px 48px;
     position: relative;
     display: flex;
     min-height: min-content;
@@ -881,6 +967,20 @@ $duration: 680ms;
     z-index: 1;
     margin-bottom: -8px;
     border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  }
+}
+
+.audio-player__bottom-actions {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  height: 60px;
+  display: flex;
+  padding: 15px 30px;
+  justify-content: space-between;
+
+  .audio-player__bottom-actions--active {
+    color: #ff5722;
   }
 }
 
