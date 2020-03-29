@@ -13,35 +13,47 @@
     >
       <v-icon large>remove</v-icon>
     </div>
-    <div
-      class="lyrics"
-      v-if="!minimized && mobile"
-    >
-      <lyrics
-        class="lyrics__text"
-        v-if="track.lyrics"
-        :lyricObject="track.lyrics.content"
-        :isCurrentTrack="true"
-      ></lyrics>
+    <div class="audio-player__mobile--container">
+      <div
+        class="lyrics"
+        v-if="!minimized && mobile && view === 'lyrics'"
+      >
+        <lyrics
+          class="lyrics__text"
+          v-if="track.lyrics"
+          :lyricObject="track.lyrics.content"
+          :isCurrentTrack="true"
+        ></lyrics>
+      </div>
+      <div
+        class="audio-player__up-next"
+        v-if="mobile && !minimized && view === 'queue'"
+      >
+        <h5 class="title px-6">On the Queue</h5>
+        <v-expand-transition>
+          <queue-list @change="resetQueueMenu"></queue-list>
+        </v-expand-transition>
+      </div>
+      <v-hover class="artwork">
+        <template v-slot:default="{ hover }">
+          <div @click="toggleMinimized">
+            <img
+              crossorigin
+              :src="artwork"
+              v-if="view === 'none'"
+            />
+            <v-fade-transition>
+              <v-overlay
+                v-if="hover && minimized && !mobile"
+                absolute
+              >
+                <v-icon>fullscreen</v-icon>
+              </v-overlay>
+            </v-fade-transition>
+          </div>
+        </template>
+      </v-hover>
     </div>
-    <v-hover class="artwork">
-      <template v-slot:default="{ hover }">
-        <div @click="toggleMinimized">
-          <img
-            crossorigin
-            :src="artwork"
-          />
-          <v-fade-transition>
-            <v-overlay
-              v-if="hover && minimized && !mobile"
-              absolute
-            >
-              <v-icon>fullscreen</v-icon>
-            </v-overlay>
-          </v-fade-transition>
-        </div>
-      </template>
-    </v-hover>
     <div class="player-content">
       <v-expand-x-transition>
         <div
@@ -214,15 +226,6 @@
       >
         <v-icon>queue_music</v-icon>
       </v-btn>
-    </div>
-    <div
-      class="audio-player__up-next"
-      v-if="mobile && !minimized && false"
-    >
-      <h5 class="title px-6">On the Queue</h5>
-      <v-expand-transition>
-        <queue-list @change="resetQueueMenu"></queue-list>
-      </v-expand-transition>
     </div>
   </v-sheet>
 </template>
@@ -539,6 +542,8 @@ export default class AudioPlayer extends Vue {
     if (!this.minimized && this.mobile) {
       document.documentElement.classList.add('overflow-y-hidden');
     }
+
+    this.view = 'none';
   }
 
   /**
@@ -882,33 +887,40 @@ $duration: 680ms;
     padding: 4px;
   }
 
-  .lyrics {
-    background: #69503b;
-    height: 310px;
-    width: 100%;
-    z-index: 10;
-    position: absolute;
-    top: 40px;
-    overflow: auto;
-
-    .lyrics__text {
-      padding-left: 20px;
-      padding-top: 10px;
-    }
-  }
-
-  .artwork {
-    padding: 24px 88px;
-    text-align: center;
-
-    img {
+  .audio-player__mobile--container {
+    height: 400px;
+    .lyrics {
+      height: 370px;
       width: 100%;
-      max-width: 400px;
+      z-index: 10;
+      position: absolute;
+      top: 100px;
+      overflow: auto;
+
+      .lyrics__text {
+        padding-left: 20px;
+        padding-top: 10px;
+      }
+    }
+
+    .audio-player__up-next {
+      height: 100%;
+      overflow: auto;
+    }
+
+    .artwork {
+      padding: 24px 88px;
+      text-align: center;
+
+      img {
+        width: 100%;
+        max-width: 400px;
+      }
     }
   }
 
   .player-content {
-    margin-top: 150px;
+    margin-top: 50px;
     padding: 0px 48px;
     position: relative;
     display: flex;
@@ -956,19 +968,6 @@ $duration: 680ms;
   }
 }
 
-.queue-list-menu {
-  max-height: calc(100vh - 180px);
-  position: relative;
-
-  .queue-list-menu__title {
-    position: sticky;
-    padding: 16px 16px 8px;
-    top: 0;
-    z-index: 1;
-    margin-bottom: -8px;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-  }
-}
 
 .audio-player__bottom-actions {
   position: fixed;
