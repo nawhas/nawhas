@@ -19,16 +19,16 @@ export default class StateHistory<T> {
     this.future = [];
   }
 
-  canUndo(): boolean {
+  get canUndo(): boolean {
     return this.previous.length !== 0;
   }
 
-  canRedo(): boolean {
+  get canRedo(): boolean {
     return this.future.length !== 0;
   }
 
   undo(): T {
-    if (!this.canUndo()) {
+    if (!this.canUndo) {
       throw new Error('No previous changes.');
     }
 
@@ -38,7 +38,7 @@ export default class StateHistory<T> {
   }
 
   redo(): T {
-    if (!this.canRedo()) {
+    if (!this.canRedo) {
       throw new Error('No future changes.');
     }
 

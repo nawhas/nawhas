@@ -88,11 +88,11 @@ export default class TimestampedEditor extends Vue {
   }
 
   get canUndo() {
-    return this.history.previous.length > 0;
+    return this.history.canUndo;
   }
 
   get canRedo() {
-    return this.history.future.length > 0;
+    return this.history.canRedo;
   }
 
   mounted() {
@@ -329,7 +329,7 @@ export default class TimestampedEditor extends Vue {
   }
 
   undo() {
-    if (!this.history.canUndo()) {
+    if (!this.history.canUndo) {
       return;
     }
 
@@ -344,7 +344,7 @@ export default class TimestampedEditor extends Vue {
   }
 
   redo() {
-    if (!this.history.canRedo()) {
+    if (!this.history.canRedo) {
       return;
     }
 
