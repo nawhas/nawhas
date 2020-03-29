@@ -55,7 +55,7 @@
       </div>
       <v-hover
         class="artwork"
-        v-if="minimized || !minimized && mobile && view === 'none'"
+        v-if="!mobile || minimized && mobile || !minimized && mobile && view === 'none'"
       >
         <template v-slot:default="{ hover }">
           <div @click="toggleMinimized">
