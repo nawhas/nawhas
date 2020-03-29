@@ -1,9 +1,7 @@
 <template>
   <v-sheet :class="classes">
     <div class="editor__header">
-      <div class="header__icon">
-        <v-icon>speaker_notes</v-icon>
-      </div>
+      <div class="header__icon"><v-icon>speaker_notes</v-icon></div>
       <div class="header__title">Write-Up</div>
       <div class="header__actions">
         <v-btn :disabled="!canUndo" icon @click="undo"><v-icon>undo</v-icon></v-btn>
