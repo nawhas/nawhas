@@ -14,7 +14,7 @@
       <v-btn v-else v-on="on" text>Add Track</v-btn>
     </template>
     <v-card :loading="loading">
-      <v-toolbar>
+      <v-app-bar fixed elevate-on-scroll>
         <v-btn icon @click="close">
           <v-icon>close</v-icon>
         </v-btn>
@@ -25,8 +25,8 @@
           <v-btn text @click="close">Cancel</v-btn>
           <v-btn color="primary" @click="submit">Save</v-btn>
         </div>
-      </v-toolbar>
-      <v-card-text class="py-12 dialog__content">
+      </v-app-bar>
+      <v-card-text class="dialog__content">
         <v-text-field outlined v-model="form.title" label="Name" required></v-text-field>
         <div class="file-input" @drop.prevent="addFile" @dragover.prevent>
           <v-file-input
@@ -224,5 +224,6 @@ export default class EditTrackDialog extends Vue {
 .dialog__content {
   max-width: 800px;
   margin: 0 auto;
+  padding: 96px 12px !important;
 }
 </style>

@@ -38,7 +38,9 @@
 </template>
 
 <script lang="ts">
-import { Component, Model, Vue } from 'vue-property-decorator';
+import {
+  Component, Model, Vue, Watch,
+} from 'vue-property-decorator';
 import { position } from 'caret-pos';
 import RepeatLine from '@/components/edit/RepeatLine.vue';
 import * as moment from 'moment';
@@ -96,6 +98,14 @@ export default class TimestampedEditor extends Vue {
   mounted() {
     this.lyrics = clone(this.model);
     this.history = new StateHistory(this.lyrics);
+  }
+
+  @Watch('model')
+  onModelChanged(value) {
+    if (JSON.stringify(value) !== JSON.stringify(this.lyrics)) {
+      this.lyrics = clone(value);
+      this.history = new StateHistory(value);
+    }
   }
 
   change() {
