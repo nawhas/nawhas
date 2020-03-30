@@ -83,7 +83,7 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import LoginForm from '@/views/public/auth/LoginForm.vue';
+import LoginForm from '@/components/auth/LoginForm.vue';
 @Component({
   components: { LoginForm },
 })

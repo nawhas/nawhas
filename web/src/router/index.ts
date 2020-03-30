@@ -14,17 +14,17 @@ const routes = [
       {
         path: '',
         name: 'Home',
-        component: () => import(/* webpackChunkName: "home" */'@/views/public/Home.vue'),
+        component: () => import(/* webpackChunkName: "home" */'@/views/public/HomeView.vue'),
       },
       {
         path: 'reciters',
         name: 'reciters.index',
-        component: () => import(/* webpackChunkName: "reciters" */'@/views/public/reciters/Index.vue'),
+        component: () => import(/* webpackChunkName: "reciters" */'@/views/public/reciters/RecitersView.vue'),
       },
       {
         path: 'reciters/:reciter',
         name: 'reciters.show',
-        component: () => import(/* webpackChunkName: "reciter" */'@/views/public/reciters/Show.vue'),
+        component: () => import(/* webpackChunkName: "reciter" */'@/views/public/reciters/ReciterView.vue'),
       },
       {
         path: 'reciters/:reciter/albums',
@@ -35,7 +35,7 @@ const routes = [
         path: 'reciters/:reciter/albums/:album',
         name: 'albums.show',
         props: true,
-        component: () => import(/* webpackChunkName: "albums" */'@/views/public/albums/Show.vue'),
+        component: () => import(/* webpackChunkName: "albums" */'@/views/public/albums/AlbumView.vue'),
       },
       {
         path: 'reciters/:reciter/albums/:album/tracks',
@@ -46,13 +46,13 @@ const routes = [
         path: 'reciters/:reciter/albums/:album/tracks/:track',
         name: 'tracks.show',
         props: true,
-        component: () => import(/* webpackChunkName: "tracks" */'@/views/public/tracks/Show.vue'),
+        component: () => import(/* webpackChunkName: "tracks" */'@/views/public/tracks/TrackView.vue'),
       },
       {
         path: 'reciters/:reciter/albums/:album/tracks/:track/edit',
         name: 'tracks.edit',
         props: true,
-        component: () => import(/* webpackChunkName: "tracks" */'@/views/public/tracks/Edit.vue'),
+        component: () => import(/* webpackChunkName: "tracks" */'@/views/public/tracks/EditTrackView.vue'),
       },
       {
         path: 'about',
@@ -60,7 +60,7 @@ const routes = [
         // route level code-splitting
         // this generates a separate chunk (about.[hash].js) for this route
         // which is lazy-loaded when the route is visited.
-        component: () => import(/* webpackChunkName: "about" */ '@/views/public/About.vue'),
+        component: () => import(/* webpackChunkName: "about" */ '@/views/public/AboutView.vue'),
       },
     ],
   },
