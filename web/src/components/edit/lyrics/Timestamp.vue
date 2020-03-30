@@ -70,11 +70,13 @@ export default class Timestamp extends Vue {
   // }
 
   setTimeFromPlayer() {
-    // const timestamp = this.$store.state.player.seek;
+    const timestamp = this.$store.state.player.seek;
+    this.timestamp = this.format(timestamp);
   }
 
   save() {
-    console.log('Saved');
+    const formatted = moment(this.timestamp, 'm:ss').diff(moment().startOf('day'), 'seconds');
+    this.$emit('change', formatted);
   }
 
   cancel() {

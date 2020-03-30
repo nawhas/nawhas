@@ -77,10 +77,6 @@ export default class EditTrack extends Vue {
     return 'reciter,lyrics,album.tracks,media';
   }
 
-  mounted() {
-    this.resetForm();
-  }
-
   get isJson() {
     try {
       JSON.parse(this.track.lyrics.content);
@@ -106,6 +102,17 @@ export default class EditTrack extends Vue {
       lyrics.push(group);
     }
     return lyrics;
+  }
+
+  mounted() {
+    this.resetForm();
+    this.play();
+  }
+
+  play() {
+    this.$store.commit('player/PLAY_TRACK', {
+      track: this.track,
+    });
   }
 
   addFile(e) {
