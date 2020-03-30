@@ -49,6 +49,12 @@ const routes = [
         component: () => import(/* webpackChunkName: "tracks" */'@/views/public/tracks/Show.vue'),
       },
       {
+        path: 'reciters/:reciter/albums/:album/tracks/:track/edit',
+        name: 'tracks.edit',
+        props: true,
+        component: () => import(/* webpackChunkName: "tracks" */'@/views/public/tracks/Edit.vue'),
+      },
+      {
         path: 'about',
         name: 'About',
         // route level code-splitting

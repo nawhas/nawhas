@@ -10,7 +10,9 @@
     </div>
     <div class="editor__content">
       <div class="group" v-for="(group, groupId) in lyrics" :key="groupId">
-        <div class="group__timestamp">{{ formatTimestamp(group.timestamp) }}</div>
+        <div class="group__timestamp">
+          <timestamp absolute v-model="group.timestamp" />
+        </div>
         <div class="group__lines">
           <div class="line" v-for="(line, lineId) in group.lines" :key="lineId">
             <editable-text class="line__text"
@@ -40,9 +42,9 @@ import {
   Component, Model, Vue, Watch,
 } from 'vue-property-decorator';
 import { position } from 'caret-pos';
-import RepeatLine from '@/components/edit/RepeatLine.vue';
-import * as moment from 'moment';
-import EditableText from '@/components/edit/EditableText.vue';
+import RepeatLine from '@/components/edit/lyrics/RepeatLine.vue';
+import EditableText from '@/components/edit/lyrics/EditableText.vue';
+import Timestamp from '@/components/edit/lyrics/Timestamp.vue';
 import StateHistory from '@/utils/StateHistory';
 import { clone } from '@/utils/clone';
 
@@ -67,6 +69,7 @@ type Lyrics = Array<LineGroup>;
   components: {
     RepeatLine,
     EditableText,
+    Timestamp,
   },
 })
 export default class TimestampedEditor extends Vue {
@@ -356,13 +359,6 @@ export default class TimestampedEditor extends Vue {
     this.$emit('change', clone(this.lyrics));
   }
 
-  /**
-   * Format the timestamp to Minutes and Seconds
-   */
-  formatTimestamp(timestamp) {
-    return moment.utc(moment.duration(timestamp, 'seconds').asMilliseconds()).format('m:ss');
-  }
-
   getNextLineCoordinates(current: LineCoordinates): LineCoordinates {
     const next = { ...current };
     const group = this.lyrics[current.group];
@@ -474,7 +470,7 @@ export default class TimestampedEditor extends Vue {
 </script>
 
 <style lang="scss" scoped>
-@import "../../styles/theme";
+@import "../../../styles/theme";
 
 .editor {
   border: 1px solid rgba(0,0,0,0.3);
@@ -529,6 +525,7 @@ export default class TimestampedEditor extends Vue {
   width: 30px;
   opacity: 0.6;
   padding-top: 6px;
+  position: relative;
 }
 
 .group__lines {

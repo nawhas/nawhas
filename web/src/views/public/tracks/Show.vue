@@ -74,7 +74,7 @@
               <v-icon>print</v-icon>
             </v-btn>
             <template v-if="track && isModerator">
-              <edit-track-dialog :track="track"></edit-track-dialog>
+              <v-btn @click="goToEditTrack" icon><v-icon color="white">edit</v-icon></v-btn>
             </template>
             <v-btn dark icon v-if="false">
               <v-icon>more_vert</v-icon>
@@ -272,6 +272,18 @@ export default class TrackPage extends Vue {
   @Watch('$route')
   onRouteUpdate() {
     this.fetchData();
+  }
+
+  goToEditTrack() {
+    this.$router.push({
+      name: 'tracks.edit',
+      params: {
+        reciter: this.track.reciterId,
+        album: this.track.album.year,
+        track: this.track.slug,
+        trackObject: this.track,
+      },
+    });
   }
 
   async fetchData() {

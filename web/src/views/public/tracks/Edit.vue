@@ -1,35 +1,22 @@
 <template>
-  <v-dialog
-    v-model="dialog"
-    persistent
-    fullscreen
-    no-click-animation
-    hide-overlay
-    transition="dialog-bottom-transition"
-  >
-    <template v-slot:activator="{ on }">
-      <v-btn v-if="track" dark icon v-on="on">
-        <v-icon>edit</v-icon>
-      </v-btn>
-      <v-btn v-else v-on="on" text>Add Track</v-btn>
-    </template>
-    <v-card :loading="loading">
-      <v-app-bar fixed elevate-on-scroll>
-        <v-btn icon @click="close">
+  <div>
+    <v-app-bar fixed elevate-on-scroll>
+      <v-btn icon @click="close">
           <v-icon>close</v-icon>
-        </v-btn>
-        <v-toolbar-title>{{ track ? 'Edit' : 'Add' }} Track</v-toolbar-title>
-        <v-spacer></v-spacer>
-        <div class="toolbar__actions">
+      </v-btn>
+      <v-toolbar-title>{{ track ? 'Edit' : 'Add' }} Track</v-toolbar-title>
+      <v-spacer></v-spacer>
+      <div class="toolbar__actions">
           <v-btn v-if="track" color="error" text @click="confirmDelete">Delete</v-btn>
           <v-btn text @click="close">Cancel</v-btn>
           <v-btn color="primary" @click="submit">Save</v-btn>
-        </div>
-      </v-app-bar>
-      <v-card-text class="dialog__content">
+      </div>
+    </v-app-bar>
+    <v-sheet>
+      <v-container class="app__section">
         <v-text-field outlined v-model="form.title" label="Name" required></v-text-field>
         <div class="file-input" @drop.prevent="addFile" @dragover.prevent>
-          <v-file-input
+            <v-file-input
             v-model="form.audio"
             label="Audio File"
             placeholder="Upload Track Audio File"
@@ -37,25 +24,25 @@
             outlined
             accept="audio/*"
             :show-size="1000"
-          >
+            >
             <template v-slot:selection="{ text }">
-              <v-chip color="deep-orange accent-4" dark label small>{{ text }}</v-chip>
+                <v-chip color="deep-orange accent-4" dark label small>{{ text }}</v-chip>
             </template>
-          </v-file-input>
+            </v-file-input>
         </div>
         <v-textarea v-if="false" outlined label="Lyrics" v-model="form.lyrics" required></v-textarea>
         <timestamped-editor v-model="form.lyrics"></timestamped-editor>
-      </v-card-text>
-      <v-card-actions></v-card-actions>
-    </v-card>
-  </v-dialog>
+      </v-container>
+    </v-sheet>
+  </div>
 </template>
 
 <script lang="ts">
 import Client from '@/services/client';
 import {
-  Component, Prop, Watch, Vue,
+  Component, Prop, Vue,
 } from 'vue-property-decorator';
+import { goToTrack, goToReciter } from '@/router/helpers';
 import TimestampedEditor from '@/components/edit/lyrics/TimestampedEditor.vue';
 
 interface Form {
@@ -72,20 +59,26 @@ const defaults: Form = {
 @Component({
   components: { TimestampedEditor },
 })
-export default class EditTrackDialog extends Vue {
-  @Prop({ type: Object }) private track;
-  @Prop({ type: Object }) private album;
-  private dialog = false;
+export default class EditTrack extends Vue {
+  @Prop({ type: Object }) private trackObject;
+  @Prop({ type: Object }) private albumObject;
   private form: Form = { ...defaults };
   private loading = false;
+
+  get track() {
+    return this.trackObject;
+  }
+
+  get album() {
+    return this.albumObject;
+  }
+
   get includes() {
     return 'reciter,lyrics,album.tracks,media';
   }
-  @Watch('dialog')
-  onDialogStateChanged(opened) {
-    if (opened) {
-      this.resetForm();
-    }
+
+  mounted() {
+    this.resetForm();
   }
 
   get isJson() {
@@ -193,15 +186,12 @@ export default class EditTrackDialog extends Vue {
     return null;
   }
   redirect(response) {
-    this.$router.push({
-      name: 'tracks.show',
-      params: {
-        reciter: response.data.reciter.slug,
-        album: response.data.year,
-        track: response.data.slug,
-        trackObject: response.data,
-      },
-    }).catch(() => window.location.reload());
+    goToTrack(
+      response.data.reciter.slug,
+      response.data.year,
+      response.data.slug,
+      { trackObject: response.data },
+    ).catch(() => window.location.reload());
   }
   async confirmDelete() {
     // eslint-disable-next-line no-alert
@@ -210,20 +200,25 @@ export default class EditTrackDialog extends Vue {
       await Client.delete(
         `/v1/reciters/${reciterId}/albums/${albumId}/tracks/${id}`,
       );
-      this.$router.push({ name: 'reciters.show', params: { reciter: this.track.reciter.slug } });
+      goToReciter(this.track.reciter.slug);
     }
   }
   close() {
-    this.dialog = false;
     this.loading = false;
+    goToTrack(
+      this.track.reciter.slug,
+      this.track.album.year,
+      this.track.slug,
+      { trackObject: this.track },
+    ).catch(() => window.location.reload());
   }
 }
 </script>
 
 <style lang="scss" scoped>
-.dialog__content {
-  max-width: 800px;
+.app__section {
+  padding: 36px 12px !important;
+  max-width: 816px;
   margin: 0 auto;
-  padding: 96px 12px !important;
 }
 </style>

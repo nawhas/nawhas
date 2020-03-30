@@ -11,7 +11,7 @@ import Str from '@/utils/Str';
 @Component
 export default class EditableText extends Vue {
   @Ref('editable') private field!: HTMLDivElement;
-  @Model('input', { type: String }) private readonly content!: string;
+  @Model('input') private readonly content!: string;
 
   get listeners() {
     return {
