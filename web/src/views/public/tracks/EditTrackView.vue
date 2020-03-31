@@ -105,6 +105,10 @@ export default class EditTrack extends Vue {
   }
 
   mounted() {
+    if (!this.track) {
+      this.close();
+      return;
+    }
     this.resetForm();
   }
 
@@ -204,12 +208,18 @@ export default class EditTrack extends Vue {
   }
   close() {
     this.loading = false;
-    goToTrack(
-      this.track.reciter.slug,
-      this.track.album.year,
-      this.track.slug,
-      { trackObject: this.track },
-    ).catch(() => window.location.reload());
+    if (this.track) {
+      goToTrack(
+        this.track.reciter.slug,
+        this.track.album.year,
+        this.track.slug,
+        { trackObject: this.track },
+      );
+    } else {
+      const { reciter, album, track } = this.$route.params;
+
+      goToTrack(reciter, album, track);
+    }
   }
 }
 </script>

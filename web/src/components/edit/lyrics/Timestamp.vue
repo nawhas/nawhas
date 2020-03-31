@@ -3,8 +3,6 @@
     <v-edit-dialog
           ref="dialog"
           class="dialog"
-          :return-value.sync="timestamp"
-          @save="save"
           @cancel="cancel"
           @open="open"
           @close="close"
@@ -13,12 +11,14 @@
       <div class="timestamp">{{ format(model) }}</div>
       <template v-slot:input>
         <div class="popup">
-          <input class="popup__text"
-               :style="{ width: `${timestamp.length}ch` }"
-               type="tel"
-               autofocus="autofocus"
-               autocomplete="off"
-               v-model="timestamp"
+          <input
+              :class="{ 'popup__text': true, 'popup__text--invalid': invalid }"
+              :style="{ width: `${timestamp.length}ch` }"
+              type="tel"
+              autofocus="autofocus"
+              placeholder="0:00"
+              autocomplete="off"
+              v-model="timestamp"
           />
           <v-btn @click="setTimeFromPlayer" icon><v-icon>update</v-icon></v-btn>
         </div>
@@ -33,10 +33,13 @@ import {
 } from 'vue-property-decorator';
 import * as moment from 'moment';
 
+const rule = /^\d:\d\d$/;
+
 @Component
 export default class Timestamp extends Vue {
   @Model('change', { type: Number }) private readonly model!: string;
   private timestamp = '';
+  private invalid = false;
 
   get color() {
     return this.$vuetify.theme.dark ? 'grey darken-3' : 'white';
@@ -49,6 +52,11 @@ export default class Timestamp extends Vue {
   @Watch('model')
   onModelChanged(value) {
     this.timestamp = this.format(value);
+  }
+
+  @Watch('timestamp')
+  onValueChanged() {
+    this.invalid = false;
   }
 
   /**
@@ -70,23 +78,30 @@ export default class Timestamp extends Vue {
     this.timestamp = this.format(timestamp);
   }
 
-  save() {
-    const parsed = moment.utc(this.timestamp, 'm:ss').diff(moment.utc().startOf('day'), 'seconds');
-    this.$emit('change', parsed);
+  reset() {
+    this.timestamp = this.format(this.model);
+    this.invalid = false;
   }
 
   cancel() {
-    console.log('Cancelled');
-  }
-
-  open() {
-    console.log('Opened');
-    this.timestamp = this.format(this.model);
-    console.log(this.$refs.dialog);
+    this.reset();
   }
 
   close() {
-    console.log('Closed');
+    // Validate format of timestamp.
+    const value = this.timestamp.trim();
+
+    if (!rule.test(value)) {
+      // Hack-y way to add validation for now.
+      // eslint-disable-next-line dot-notation
+      this.$refs.dialog['isActive'] = true;
+      this.invalid = true;
+      return;
+    }
+
+    this.invalid = false;
+    const parsed = moment.utc(this.timestamp, 'm:ss').diff(moment.utc().startOf('day'), 'seconds');
+    this.$emit('change', parsed);
   }
 }
 </script>
@@ -105,9 +120,28 @@ export default class Timestamp extends Vue {
 }
 
 .popup__text {
-  min-width: 8px;
+  min-width: 40px;
   margin-right: 4px;
   outline: none;
   font-family: 'Roboto Slab', serif;
+
+  &--invalid {
+    color: red;
+    animation: shake 0.5s ease-out;
+  }
+}
+
+@keyframes shake {
+  10%, 90% {
+    transform: translate3d(-1px, 0, 0);
+  }
+
+  30%, 50%, 70% {
+    transform: translate3d(-3px, 0, 0);
+  }
+
+  40%, 60% {
+    transform: translate3d(3px, 0, 0);
+  }
 }
 </style>
