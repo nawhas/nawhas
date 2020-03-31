@@ -32,15 +32,11 @@ import {
   Component, Model, Watch, Vue,
 } from 'vue-property-decorator';
 import * as moment from 'moment';
-// import EditableText from '@/components/edit/lyrics/EditableText.vue';
 
-@Component({
-  // components: { EditableText },
-})
+@Component
 export default class Timestamp extends Vue {
   @Model('change', { type: Number }) private readonly model!: string;
   private timestamp = '';
-  private menu = false;
 
   get color() {
     return this.$vuetify.theme.dark ? 'grey darken-3' : 'white';
@@ -75,8 +71,8 @@ export default class Timestamp extends Vue {
   }
 
   save() {
-    const formatted = moment(this.timestamp, 'm:ss').diff(moment().startOf('day'), 'seconds');
-    this.$emit('change', formatted);
+    const parsed = moment.utc(this.timestamp, 'm:ss').diff(moment.utc().startOf('day'), 'seconds');
+    this.$emit('change', parsed);
   }
 
   cancel() {

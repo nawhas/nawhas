@@ -76,7 +76,7 @@ const getters = {
 };
 
 const mutations = {
-  PLAY_TRACK(state: PlayerState, { track, autoplay = true }) {
+  PLAY_TRACK(state: PlayerState, { track }) {
     state.queue = [{
       track,
       id: generateId(),
