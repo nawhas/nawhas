@@ -71,12 +71,8 @@ import LogoWordmark from '@/assets/wordmark.svgx';
     LogoWordmark,
   },
 })
-export default class PublicVuetify extends Vue {
+export default class PublicLayout extends Vue {
   private drawer: boolean | null = null;
-
-  get mobile() {
-    return this.$vuetify.breakpoint.smAndDown;
-  }
 
   get navigation() {
     return navItems;
