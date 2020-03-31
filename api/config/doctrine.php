@@ -167,18 +167,18 @@ return [
     */
     'cache' => [
         'second_level' => false,
-        'default' => env('DOCTRINE_CACHE', 'redis'),
+        'default' => env('CACHE_DRIVER', 'redis'),
         'namespace' => null,
         'metadata' => [
-            'driver' => env('DOCTRINE_METADATA_CACHE', env('DOCTRINE_CACHE', 'redis')),
+            'driver' => env('CACHE_DRIVER', env('DOCTRINE_CACHE', 'redis')),
             'namespace' => null,
         ],
         'query' => [
-            'driver' => env('DOCTRINE_QUERY_CACHE', env('DOCTRINE_CACHE', 'redis')),
+            'driver' => env('CACHE_DRIVER', env('DOCTRINE_CACHE', 'redis')),
             'namespace' => null,
         ],
         'result' => [
-            'driver' => env('DOCTRINE_RESULT_CACHE', env('DOCTRINE_CACHE', 'redis')),
+            'driver' => env('CACHE_DRIVER', env('DOCTRINE_CACHE', 'redis')),
             'namespace' => null,
         ],
     ],
