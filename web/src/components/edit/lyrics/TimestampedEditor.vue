@@ -4,6 +4,14 @@
       <div class="header__icon"><v-icon>speaker_notes</v-icon></div>
       <div class="header__title">Write-Up</div>
       <div class="header__actions">
+        <template>
+          <v-btn :disabled="!hasAudio" v-if="!isPlayingAudio" icon @click="playAudio">
+            <v-icon>play_circle_filled</v-icon>
+          </v-btn>
+          <v-btn :disabled="!hasAudio" v-else icon @click="stopPlayingAudio">
+            <v-icon>stop</v-icon>
+          </v-btn>
+        </template>
         <v-btn :disabled="!canUndo" icon @click="undo"><v-icon>undo</v-icon></v-btn>
         <v-btn :disabled="!canRedo" icon @click="redo"><v-icon>redo</v-icon></v-btn>
       </div>
@@ -39,7 +47,7 @@
 
 <script lang="ts">
 import {
-  Component, Model, Vue, Watch,
+  Component, Model, Prop, Vue, Watch,
 } from 'vue-property-decorator';
 import { position } from 'caret-pos';
 import RepeatLine from '@/components/edit/lyrics/RepeatLine.vue';
@@ -74,6 +82,8 @@ type Lyrics = Array<LineGroup>;
 })
 export default class TimestampedEditor extends Vue {
   @Model('change', { type: Array }) readonly model!: Lyrics;
+  @Prop({ type: Object }) readonly track!: any;
+
   private lyrics: Lyrics = [];
   private focused = false;
   private selected: LineCoordinates|null = null;
@@ -94,6 +104,20 @@ export default class TimestampedEditor extends Vue {
 
   get canRedo() {
     return this.history.canRedo;
+  }
+
+  get isPlayingAudio() {
+    const playing = this.$store.getters['player/track'];
+
+    if (!playing) {
+      return false;
+    }
+
+    return (this.track && this.track.id === playing.track.id);
+  }
+
+  get hasAudio() {
+    return this.track && this.track.media.data.length > 0;
   }
 
   mounted() {
@@ -465,6 +489,16 @@ export default class TimestampedEditor extends Vue {
 
   getLineInputKey({ group, line }: LineCoordinates): string {
     return `group-${group}-line-${line}`;
+  }
+
+  playAudio() {
+    this.$store.commit('player/PLAY_TRACK', {
+      track: this.track,
+    });
+  }
+
+  stopPlayingAudio() {
+    this.$store.commit('player/STOP');
   }
 }
 </script>

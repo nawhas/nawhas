@@ -31,7 +31,7 @@
             </v-file-input>
         </div>
         <v-textarea v-if="false" outlined label="Lyrics" v-model="form.lyrics" required></v-textarea>
-        <timestamped-editor v-model="form.lyrics"></timestamped-editor>
+        <timestamped-editor v-model="form.lyrics" :track="track"></timestamped-editor>
       </v-container>
     </v-sheet>
   </div>
@@ -106,19 +106,11 @@ export default class EditTrack extends Vue {
 
   mounted() {
     this.resetForm();
-    this.play();
-  }
-
-  play() {
-    this.$store.commit('player/PLAY_TRACK', {
-      track: this.track,
-    });
   }
 
   addFile(e) {
     const file = e.dataTransfer.files[0];
     if (file.type.match(/audio.*/)) {
-      // eslint-disable-next-line prefer-destructuring
       this.form.audio = file;
     }
   }
