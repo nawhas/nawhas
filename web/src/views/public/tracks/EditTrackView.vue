@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="track">
     <v-app-bar fixed elevate-on-scroll>
       <v-btn icon @click="close">
           <v-icon>close</v-icon>
@@ -30,8 +30,7 @@
             </template>
             </v-file-input>
         </div>
-        <v-textarea v-if="false" outlined label="Lyrics" v-model="form.lyrics" required></v-textarea>
-        <timestamped-editor v-model="form.lyrics" :track="track"></timestamped-editor>
+        <timestamped-editor v-if="form.lyrics" v-model="form.lyrics" :track="track"></timestamped-editor>
       </v-container>
     </v-sheet>
   </div>

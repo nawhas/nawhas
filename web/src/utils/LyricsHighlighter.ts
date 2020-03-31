@@ -8,9 +8,10 @@ export default class LyricsHighlighter {
   ) {}
 
   get current(): number|null {
-    if (this.state.current === null || !this.lyrics) {
+    if (this.state.current === null) {
       return null;
     }
+
     let current = 0;
     const { seek } = this.state;
 
