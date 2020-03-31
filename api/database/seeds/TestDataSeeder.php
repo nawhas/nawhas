@@ -49,7 +49,7 @@ class TestDataSeeder extends Seeder
                 foreach ($a['tracks'] as $t) {
                     $track = new Track($album, $t['title']);
                     if ($t['lyrics']) {
-                        $track->replaceLyrics(new Lyrics($track, $t['lyrics']));
+                        $track->replaceLyrics(new Lyrics($track, $t['lyrics'], Lyrics::V1));
                     }
                     if ($t['audio']) {
                         $track->addAudioFile(Media::audioFile($t['audio']));

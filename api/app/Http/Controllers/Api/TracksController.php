@@ -47,7 +47,7 @@ class TracksController extends Controller
         );
 
         if ($request->has('lyrics')) {
-            $track->replaceLyrics(new Lyrics($track, $request->get('lyrics')));
+            $track->replaceLyrics(new Lyrics($track, $request->get('lyrics'), $request->get('version', Lyrics::V1)));
         }
 
         $this->repository->persist($track);
@@ -68,7 +68,7 @@ class TracksController extends Controller
             $track->setTitle($request->get('title'));
         }
         if ($request->has('lyrics')) {
-            $track->replaceLyrics(new Lyrics($track, $request->get('lyrics')));
+            $track->replaceLyrics(new Lyrics($track, $request->get('lyrics'), $request->get('version', Lyrics::V1)));
         }
 
         $this->repository->persist($track);
