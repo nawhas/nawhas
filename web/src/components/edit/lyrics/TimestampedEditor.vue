@@ -19,7 +19,7 @@
     <div class="editor__content">
       <div class="group" v-for="(group, groupId) in lyrics" :key="groupId">
         <div class="group__timestamp">
-          <timestamp absolute v-model="group.timestamp" @change="change" />
+          <timestamp v-model="group.timestamp" @change="change" />
         </div>
         <div class="group__lines">
           <div class="line" v-for="(line, lineId) in group.lines" :key="lineId">
