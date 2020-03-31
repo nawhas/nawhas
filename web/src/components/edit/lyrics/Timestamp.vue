@@ -4,7 +4,6 @@
           ref="dialog"
           class="dialog"
           @cancel="cancel"
-          @open="open"
           @close="close"
           transition="slide-x-transition"
     >
@@ -65,13 +64,6 @@ export default class Timestamp extends Vue {
   format(timestamp) {
     return moment.utc(moment.duration(timestamp, 'seconds').asMilliseconds()).format('m:ss');
   }
-
-  /**
-   * Parse the timestamp to a number
-   */
-  // parse(timestamp) {
-  // return moment(timestamp, 'm:ss').asSeconds();
-  // }
 
   setTimeFromPlayer() {
     const timestamp = this.$store.state.player.seek;

@@ -17,7 +17,11 @@
       </div>
     </div>
     <div class="editor__content">
-      <div class="group" v-for="(group, groupId) in lyrics" :key="groupId">
+      <div
+          :class="{ group: true, 'group--highlighted': playingGroup === groupId }"
+          v-for="(group, groupId) in lyrics"
+          :key="groupId"
+      >
         <div class="group__timestamp">
           <timestamp v-model="group.timestamp" @change="change" />
         </div>
@@ -54,24 +58,14 @@ import RepeatLine from '@/components/edit/lyrics/RepeatLine.vue';
 import EditableText from '@/components/edit/lyrics/EditableText.vue';
 import Timestamp from '@/components/edit/lyrics/Timestamp.vue';
 import StateHistory from '@/utils/StateHistory';
+import { Lyrics, Line, LineGroup } from '@/types/lyrics';
 import { clone } from '@/utils/clone';
+import LyricsHighlighter from '@/utils/LyricsHighlighter';
 
 interface LineCoordinates {
   group: number;
   line: number;
 }
-
-interface Line {
-  text: string;
-  repeat: number;
-}
-
-interface LineGroup {
-  timestamp: number;
-  lines: Array<Line>;
-}
-
-type Lyrics = Array<LineGroup>;
 
 @Component({
   components: {
@@ -88,6 +82,7 @@ export default class TimestampedEditor extends Vue {
   private focused = false;
   private selected: LineCoordinates|null = null;
   private history: StateHistory<Lyrics> = new StateHistory([]);
+  private highlighter: LyricsHighlighter|null = null;
   private changeTimeout: number|undefined;
 
   get classes() {
@@ -120,9 +115,14 @@ export default class TimestampedEditor extends Vue {
     return this.track && this.track.media.data.length > 0;
   }
 
+  get playingGroup() {
+    return this.highlighter ? this.highlighter.current : null;
+  }
+
   mounted() {
     this.lyrics = clone(this.model);
     this.history = new StateHistory(this.lyrics);
+    this.highlighter = new LyricsHighlighter(this.$store.state.player, this.model);
   }
 
   @Watch('model')
@@ -508,13 +508,13 @@ export default class TimestampedEditor extends Vue {
 
 .editor {
   border: 1px solid rgba(0,0,0,0.3);
+  outline: 1px solid transparent;
   border-collapse: collapse;
   box-sizing: border-box;
   @include transition(border);
 
   &--focused {
-    border: 1px solid $primary;
-    box-shadow: 0 0 0 1px $primary;
+    border: 1px solid $primary !important;
   }
 }
 
@@ -545,14 +545,16 @@ export default class TimestampedEditor extends Vue {
 }
 
 .editor__content {
-  padding: 12px;
+  padding: 12px 0;
 }
 
 .group {
+  padding: 0 12px;
   font-family: 'Roboto Slab', 'serif';
   font-size: 1.15rem;
   display: flex;
   margin-bottom: 12px;
+  border-left: 4px solid transparent;
 }
 .group__timestamp {
   font-size: 0.95rem;
@@ -560,6 +562,7 @@ export default class TimestampedEditor extends Vue {
   opacity: 0.6;
   padding-top: 6px;
   position: relative;
+  margin-left: -1px;
 }
 
 .group__lines {
@@ -587,5 +590,14 @@ export default class TimestampedEditor extends Vue {
   outline: none;
   margin: 0 12px 0 8px;
   white-space: pre-wrap;
+}
+
+.group--highlighted {
+  border-left: 4px solid $accent;
+
+  .group__timestamp {
+    font-weight: bold;
+    opacity: 1;
+  }
 }
 </style>
