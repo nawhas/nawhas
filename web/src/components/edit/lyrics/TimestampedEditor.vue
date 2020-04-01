@@ -123,7 +123,6 @@ export default class TimestampedEditor extends Vue {
     this.lyrics = clone(this.model);
     this.history = new StateHistory(this.lyrics);
     this.highlighter = new LyricsHighlighter(this.$store.state.player, this.model);
-    this.playAudio();
   }
 
   @Watch('model')
