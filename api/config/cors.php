@@ -25,6 +25,7 @@ return [
             'https://' . env('APP_DOMAIN'),
             'https://*.' . env('APP_DOMAIN'),
             'https://' . env('APP_DOMAIN') . ':8080',
+            'https://*.' . env('APP_DOMAIN') . ':8080',
         ],
 
         'allow_methods' => [
