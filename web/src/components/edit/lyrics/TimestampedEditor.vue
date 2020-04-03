@@ -66,7 +66,7 @@ import RepeatLine from '@/components/edit/lyrics/RepeatLine.vue';
 import EditableText from '@/components/edit/lyrics/EditableText.vue';
 import Timestamp from '@/components/edit/lyrics/Timestamp.vue';
 import StateHistory from '@/utils/StateHistory';
-import { Lyrics, Line, LineGroup } from '@/types/lyrics';
+import { LyricsData, Line, LineGroup } from '@/types/lyrics';
 import { clone } from '@/utils/clone';
 import LyricsHighlighter from '@/utils/LyricsHighlighter';
 
@@ -83,14 +83,14 @@ interface LineCoordinates {
   },
 })
 export default class TimestampedEditor extends Vue {
-  @Model('change', { type: Array }) readonly model!: Lyrics;
+  @Model('change', { type: Array }) readonly model!: LyricsData;
   @PropSync('timestamped', { type: Boolean, default: true }) timestamps!: boolean;
   @Prop({ type: Object }) readonly track!: any;
 
-  private lyrics: Lyrics = [];
+  private lyrics: LyricsData = [];
   private focused = false;
   private selected: LineCoordinates|null = null;
-  private history: StateHistory<Lyrics> = new StateHistory([]);
+  private history: StateHistory<LyricsData> = new StateHistory([]);
   private highlighter: LyricsHighlighter|null = null;
   private changeTimeout: number|undefined;
 

@@ -1,10 +1,10 @@
 import { PlayerState } from '@/store/modules/player';
-import { Lyrics } from '@/types/lyrics';
+import { LyricsData } from '@/types/lyrics';
 
 export default class LyricsHighlighter {
   constructor(
     private state: PlayerState,
-    private lyrics: Lyrics,
+    private lyrics: LyricsData,
   ) {}
 
   get current(): number|null {
