@@ -19,6 +19,7 @@ class LyricsMapping extends EntityMapping
         $map->uuidPrimaryKey();
         $map->manyToOne(Track::class, 'track');
         $map->text('content');
+        $map->smallInteger('format')->unsigned()->default('1');
         $map->timestamps();
     }
 }

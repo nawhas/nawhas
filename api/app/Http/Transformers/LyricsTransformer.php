@@ -14,6 +14,7 @@ class LyricsTransformer extends Transformer
             'id' => $lyrics->getId(),
             'trackId' => $lyrics->getTrack()->getId(),
             'content' => $lyrics->getContent(),
+            'format' => $lyrics->getFormat(),
             $this->timestamps($lyrics),
         ];
     }
