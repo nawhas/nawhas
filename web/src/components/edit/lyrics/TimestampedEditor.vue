@@ -559,7 +559,6 @@ export default class TimestampedEditor extends Vue {
 .group__timestamp {
   font-size: 0.95rem;
   width: 30px;
-  opacity: 0.6;
   padding-top: 6px;
   position: relative;
   margin-left: -1px;

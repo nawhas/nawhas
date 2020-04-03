@@ -7,16 +7,17 @@
       v-else
       :close-on-content-click="false"
       v-model="menu"
+      :attach="true"
       left bottom
       transition="scale-transition"
       origin="top right"
     >
       <template v-slot:activator="{ on }">
         <v-chip
-          label
-          outlined
-          color="primary lighten-1"
-          v-on="on"
+            label
+            outlined
+            color="primary lighten-1"
+            v-on="on"
         >
           <v-icon>loop</v-icon>
           <span class="repeat-value">{{ repeat }}</span>

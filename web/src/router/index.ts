@@ -49,17 +49,8 @@ const routes = [
         component: () => import(/* webpackChunkName: "tracks" */'@/views/public/tracks/TrackView.vue'),
       },
       {
-        path: 'reciters/:reciter/albums/:album/tracks/:track/edit',
-        name: 'tracks.edit',
-        props: true,
-        component: () => import(/* webpackChunkName: "tracks" */'@/views/public/tracks/EditTrackView.vue'),
-      },
-      {
         path: 'about',
         name: 'About',
-        // route level code-splitting
-        // this generates a separate chunk (about.[hash].js) for this route
-        // which is lazy-loaded when the route is visited.
         component: () => import(/* webpackChunkName: "about" */ '@/views/public/AboutView.vue'),
       },
     ],
