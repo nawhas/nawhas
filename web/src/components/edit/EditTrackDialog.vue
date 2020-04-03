@@ -44,7 +44,7 @@
           </v-file-input>
         </div>
         <v-textarea v-if="false" outlined label="Lyrics" v-model="form.lyrics" required></v-textarea>
-        <timestamped-editor v-model="form.lyrics" :track="track"></timestamped-editor>
+        <timestamped-editor v-model="form.lyrics" :track="track" :timestamped.sync="timestamps"></timestamped-editor>
       </v-card-text>
       <v-card-actions></v-card-actions>
     </v-card>
@@ -56,6 +56,9 @@ import Client from '@/services/client';
 import {
   Component, Prop, Watch, Vue,
 } from 'vue-property-decorator';
+import { clone } from '@/utils/clone';
+import { LineGroup } from '@/types/lyrics';
+import * as Format from '@/constants/lyrics/format';
 import TimestampedEditor from '@/components/edit/lyrics/TimestampedEditor.vue';
 
 interface Form {
@@ -77,6 +80,7 @@ export default class EditTrackDialog extends Vue {
   @Prop({ type: Object }) private album;
   private dialog = false;
   private form: Form = { ...defaults };
+  private timestamps = true;
   private loading = false;
   get includes() {
     return 'reciter,lyrics,album.tracks,media';
@@ -88,31 +92,26 @@ export default class EditTrackDialog extends Vue {
     }
   }
 
-  get isJson() {
-    try {
-      JSON.parse(this.track.lyrics.content);
-    } catch (e) {
-      return false;
-    }
-    return true;
-  }
-
   get lyrics() {
-    const lyricsContent = this.track.lyrics.content;
-    if (this.isJson) {
-      return JSON.parse(lyricsContent);
+    if (!this.track.lyrics) {
+      return null;
     }
-    const lyricsArray = lyricsContent.split(/\n/gi);
-    const lyrics: object[] = [];
-    for (let index = 0; index < lyricsArray.length; index++) {
-      const text = lyricsArray[index];
-      const group = {
+
+    const { content, format } = this.track.lyrics;
+    if (format === Format.JSON_V1) {
+      return JSON.parse(content);
+    }
+
+    return content.split(/\n/gi).map((text) => {
+      if (text.trim().length === 0) {
+        return null;
+      }
+
+      return {
         timestamp: null,
-        lines: [{ text, repeat: 0 }],
+        lines: [{ text: text.trim(), repeat: 0 }],
       };
-      lyrics.push(group);
-    }
-    return lyrics;
+    }).filter((val) => val !== null);
   }
 
   addFile(e) {
@@ -151,7 +150,7 @@ export default class EditTrackDialog extends Vue {
       data.title = this.form.title;
     }
     if (this.form.lyrics) {
-      data.lyrics = JSON.stringify(this.form.lyrics);
+      data.lyrics = this.prepareLyrics();
     }
     const { reciterId } = this.album;
     const albumId = this.album.id;
@@ -167,10 +166,12 @@ export default class EditTrackDialog extends Vue {
     if (this.track.title !== this.form.title && this.form.title) {
       data.title = this.form.title;
     }
-    const lyricsString = JSON.stringify(this.form.lyrics);
+    const lyricsString = this.prepareLyrics();
     if (this.track.lyrics?.content !== lyricsString && this.form.lyrics) {
       data.lyrics = lyricsString;
     }
+    // TODO - make dynamic
+    data.format = Format.JSON_V1;
     const { id, reciterId, albumId } = this.track;
     let response = await Client.patch(
       `/v1/reciters/${reciterId}/albums/${albumId}/tracks/${id}?include=${this.includes}`,
@@ -216,6 +217,19 @@ export default class EditTrackDialog extends Vue {
   close() {
     this.dialog = false;
     this.loading = false;
+  }
+  prepareLyrics() {
+    let lyrics = clone(this.lyrics);
+
+    if (!this.timestamps) {
+      // Remove the timestamps from each of the lines.
+      lyrics = lyrics.map((group: LineGroup) => ({
+        ...group,
+        timestamp: null,
+      }));
+    }
+
+    return JSON.stringify(lyrics);
   }
 }
 </script>

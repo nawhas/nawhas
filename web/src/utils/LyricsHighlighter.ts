@@ -16,7 +16,7 @@ export default class LyricsHighlighter {
     const { seek } = this.state;
 
     for (const [groupId, group] of this.lyrics.entries()) {
-      if (group.timestamp < seek) {
+      if (group.timestamp && group.timestamp < seek) {
         current = groupId;
       } else {
         break;

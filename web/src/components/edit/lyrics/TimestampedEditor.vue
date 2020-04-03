@@ -4,6 +4,14 @@
       <div class="header__icon"><v-icon>speaker_notes</v-icon></div>
       <div class="header__title">Write-Up</div>
       <div class="header__actions">
+        <v-tooltip :attach="true" top>
+          <template v-slot:activator="{ on }">
+            <v-btn v-on="on" icon @click="toggleTimestamps" v-if="timestamps"><v-icon>timer_off</v-icon></v-btn>
+            <v-btn v-on="on" icon @click="toggleTimestamps" v-else><v-icon>timer</v-icon></v-btn>
+          </template>
+          <span v-if="timestamps">Disable timestamps</span>
+          <span v-else>Enable timestamps</span>
+        </v-tooltip>
         <template>
           <v-btn :disabled="!hasAudio" v-if="!isPlayingAudio" icon @click="playAudio">
             <v-icon>play_circle_filled</v-icon>
@@ -22,7 +30,7 @@
           v-for="(group, groupId) in lyrics"
           :key="groupId"
       >
-        <div class="group__timestamp">
+        <div class="group__timestamp" v-if="timestamps">
           <timestamp v-model="group.timestamp" @change="change" />
         </div>
         <div class="group__lines">
@@ -51,7 +59,7 @@
 
 <script lang="ts">
 import {
-  Component, Model, Prop, Vue, Watch,
+  Component, Model, Prop, PropSync, Vue, Watch,
 } from 'vue-property-decorator';
 import { position } from 'caret-pos';
 import RepeatLine from '@/components/edit/lyrics/RepeatLine.vue';
@@ -76,6 +84,7 @@ interface LineCoordinates {
 })
 export default class TimestampedEditor extends Vue {
   @Model('change', { type: Array }) readonly model!: Lyrics;
+  @PropSync('timestamped', { type: Boolean, default: true }) timestamps!: boolean;
   @Prop({ type: Object }) readonly track!: any;
 
   private lyrics: Lyrics = [];
@@ -90,6 +99,7 @@ export default class TimestampedEditor extends Vue {
       editor: true,
       'editor--dark': this.$vuetify.theme.dark,
       'editor--focused': this.focused,
+      'editor--timestamped': this.timestamps,
     };
   }
 
@@ -125,6 +135,10 @@ export default class TimestampedEditor extends Vue {
     this.highlighter = new LyricsHighlighter(this.$store.state.player, this.model);
   }
 
+  toggleTimestamps() {
+    this.timestamps = !this.timestamps;
+  }
+
   @Watch('model')
   onModelChanged(value) {
     if (JSON.stringify(value) !== JSON.stringify(this.lyrics)) {
@@ -139,8 +153,8 @@ export default class TimestampedEditor extends Vue {
     }
 
     this.changeTimeout = window.setTimeout(() => {
-      this.$emit('change', clone(this.lyrics));
       this.history.commit(this.lyrics);
+      this.$emit('change', clone(this.lyrics));
     }, 200);
   }
 
@@ -148,7 +162,7 @@ export default class TimestampedEditor extends Vue {
    * Adds a new group to lyrics
    */
   addNewGroup(at, lines: Array<Line>|null = null) {
-    let timestamp = 0;
+    let timestamp: number|null = 0;
     if (this.$store.state.player.current) {
       timestamp = this.$store.state.player.seek;
     } else if (this.lyrics.length > at + 1) {
@@ -542,8 +556,22 @@ export default class TimestampedEditor extends Vue {
     font-weight: 500;
     flex: 1;
   }
-}
 
+  .header__actions {
+    display: flex;
+    align-items: center;
+
+    .timestamp-switch {
+      display: flex;
+      align-items: center;
+    }
+  }
+}
+.editor--timestamped {
+  .line__text {
+    margin: 0 12px 0 8px;
+  }
+}
 .editor__content {
   padding: 12px 0;
 }
@@ -578,17 +606,13 @@ export default class TimestampedEditor extends Vue {
 .line__text {
   flex-grow: 1;
   padding: 6px;
+  font-size: 1rem;
+  outline: none;
+  white-space: pre-wrap;
 }
 .line__actions {
   flex-shrink: 1;
   font-size: 0.95rem;
-}
-
-.line__text {
-  font-size: 1rem;
-  outline: none;
-  margin: 0 12px 0 8px;
-  white-space: pre-wrap;
 }
 
 .group--highlighted {

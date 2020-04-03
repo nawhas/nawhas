@@ -4,7 +4,7 @@ export interface Line {
 }
 
 export interface LineGroup {
-  timestamp: number;
+  timestamp: number|null;
   lines: Array<Line>;
 }
 
