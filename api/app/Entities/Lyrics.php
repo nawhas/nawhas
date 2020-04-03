@@ -37,14 +37,14 @@ class Lyrics implements Entity, TimestampedEntity
     private UuidInterface $id;
     private Track $track;
     private string $content;
-    private int $version;
+    private int $format;
 
-    public function __construct(Track $track, string $content, int $version)
+    public function __construct(Track $track, string $content, int $format)
     {
         $this->id = Uuid::uuid1();
         $this->track = $track;
         $this->content = $content;
-        $this->version = $version;
+        $this->format = $format;
     }
 
     public function getId(): string
@@ -62,8 +62,8 @@ class Lyrics implements Entity, TimestampedEntity
         return $this->content;
     }
 
-    public function getVersion(): int
+    public function getFormat(): int
     {
-        return $this->version;
+        return $this->format;
     }
 }
