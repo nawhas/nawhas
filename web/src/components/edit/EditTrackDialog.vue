@@ -8,27 +8,62 @@
     transition="dialog-bottom-transition"
   >
     <template v-slot:activator="{ on }">
-      <v-btn v-if="track" dark icon v-on="on">
+      <v-btn
+        v-if="track"
+        dark
+        icon
+        v-on="on"
+      >
         <v-icon>edit</v-icon>
       </v-btn>
-      <v-btn v-else v-on="on" text>Add Track</v-btn>
+      <v-btn
+        v-else
+        v-on="on"
+        text
+      >Add Track</v-btn>
     </template>
     <v-card :loading="loading">
-      <v-app-bar fixed elevate-on-scroll>
-        <v-btn icon @click="close">
+      <v-app-bar
+        fixed
+        elevate-on-scroll
+      >
+        <v-btn
+          icon
+          @click="close"
+        >
           <v-icon>close</v-icon>
         </v-btn>
         <v-toolbar-title>{{ track ? 'Edit' : 'Add' }} Track</v-toolbar-title>
         <v-spacer></v-spacer>
         <div class="toolbar__actions">
-          <v-btn v-if="track" color="error" text @click="confirmDelete">Delete</v-btn>
-          <v-btn text @click="close">Cancel</v-btn>
-          <v-btn color="primary" @click="submit">Save</v-btn>
+          <v-btn
+            v-if="track"
+            color="error"
+            text
+            @click="confirmDelete"
+          >Delete</v-btn>
+          <v-btn
+            text
+            @click="close"
+          >Cancel</v-btn>
+          <v-btn
+            color="primary"
+            @click="submit"
+          >Save</v-btn>
         </div>
       </v-app-bar>
       <v-card-text class="dialog__content">
-        <v-text-field outlined v-model="form.title" label="Name" required></v-text-field>
-        <div class="file-input" @drop.prevent="addFile" @dragover.prevent>
+        <v-text-field
+          outlined
+          v-model="form.title"
+          label="Name"
+          required
+        ></v-text-field>
+        <div
+          class="file-input"
+          @drop.prevent="addFile"
+          @dragover.prevent
+        >
           <v-file-input
             v-model="form.audio"
             label="Audio File"
@@ -39,12 +74,27 @@
             :show-size="1000"
           >
             <template v-slot:selection="{ text }">
-              <v-chip color="deep-orange accent-4" dark label small>{{ text }}</v-chip>
+              <v-chip
+                color="deep-orange accent-4"
+                dark
+                label
+                small
+              >{{ text }}</v-chip>
             </template>
           </v-file-input>
         </div>
-        <v-textarea v-if="false" outlined label="Lyrics" v-model="form.lyrics" required></v-textarea>
-        <timestamped-editor v-model="form.lyrics" :track="track" :timestamped.sync="timestamps"></timestamped-editor>
+        <v-textarea
+          v-if="false"
+          outlined
+          label="Lyrics"
+          v-model="form.lyrics.data"
+          required
+        ></v-textarea>
+        <timestamped-editor
+          v-model="form.lyrics"
+          :track="track"
+          :timestamped.sync="timestamps"
+        ></timestamped-editor>
       </v-card-text>
       <v-card-actions></v-card-actions>
     </v-card>
@@ -57,7 +107,7 @@ import {
   Component, Prop, Watch, Vue,
 } from 'vue-property-decorator';
 import { clone } from '@/utils/clone';
-import { LineGroup } from '@/types/lyrics';
+import { Lyrics } from '@/types/lyrics';
 import * as Format from '@/constants/lyrics/format';
 import TimestampedEditor from '@/components/edit/lyrics/TimestampedEditor.vue';
 
@@ -89,6 +139,9 @@ export default class EditTrackDialog extends Vue {
   onDialogStateChanged(opened) {
     if (opened) {
       this.resetForm();
+      if (this.lyrics.format === Format.JSON_V1) {
+        this.timestamps = this.lyrics.meta.timestamps;
+      }
     }
   }
 
@@ -131,7 +184,7 @@ export default class EditTrackDialog extends Vue {
       this.form = {
         ...this.form,
         title,
-        lyrics: this.lyrics,
+        lyrics: this.lyrics.data,
       };
     }
   }
@@ -219,14 +272,17 @@ export default class EditTrackDialog extends Vue {
     this.loading = false;
   }
   prepareLyrics() {
-    let lyrics = clone(this.lyrics);
+    const lyircsData = clone(this.lyrics);
+
+    const lyrics: Lyrics = {
+      meta: {
+        timestamps: true,
+      },
+      data: lyircsData,
+    };
 
     if (!this.timestamps) {
-      // Remove the timestamps from each of the lines.
-      lyrics = lyrics.map((group: LineGroup) => ({
-        ...group,
-        timestamp: null,
-      }));
+      lyrics.meta.timestamps = false;
     }
 
     return JSON.stringify(lyrics);
