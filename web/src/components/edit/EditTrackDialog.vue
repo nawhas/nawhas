@@ -44,7 +44,7 @@
           </v-file-input>
         </div>
         <v-textarea v-if="false" outlined label="Lyrics" v-model="form.lyrics" required></v-textarea>
-        <timestamped-editor v-model="form.lyrics"></timestamped-editor>
+        <timestamped-editor v-model="form.lyrics" :track="track"></timestamped-editor>
       </v-card-text>
       <v-card-actions></v-card-actions>
     </v-card>
