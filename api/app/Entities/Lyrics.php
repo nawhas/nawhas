@@ -12,10 +12,10 @@ use Zain\LaravelDoctrine\Jetpack\Serializer\SerializesAttributes;
 class Lyrics implements Entity, TimestampedEntity
 {
     /**
-     * Version 1:
+     * Format 1:
      * Flat text document.
      */
-    public const V1 = 1;
+    public const FORMAT_PLAIN_TEXT = 1;
 
     /**
      * Version 2:
@@ -29,7 +29,7 @@ class Lyrics implements Entity, TimestampedEntity
      *   }
      * ]
      */
-    public const V2 = 2;
+    public const FORMAT_JSON_V1 = 2;
 
     use HasTimestamps;
     use SerializesAttributes;

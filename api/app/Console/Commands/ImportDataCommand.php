@@ -188,7 +188,7 @@ class ImportDataCommand extends Command
             // Lyrics
             if ($this->source->exists($directory . '/lyrics.txt')) {
                 $text = $this->getLyricsFromFile($directory);
-                $lyrics = new Lyrics($track, $text, Lyrics::V1);
+                $lyrics = new Lyrics($track, $text, Lyrics::FORMAT_PLAIN_TEXT);
                 $track->replaceLyrics($lyrics);
             }
 
