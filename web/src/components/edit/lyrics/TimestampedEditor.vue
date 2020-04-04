@@ -410,7 +410,7 @@ export default class TimestampedEditor extends Vue {
 
   getNextLineCoordinates(current: LineCoordinates): LineCoordinates {
     const next = { ...current };
-    const group = this.lyrics[current.group];
+    const group = this.lyrics.data[current.group];
     if (group.lines.length > current.line + 1) {
       next.line = current.line + 1;
     } else if (this.lyrics.data.length > current.group + 1) {
