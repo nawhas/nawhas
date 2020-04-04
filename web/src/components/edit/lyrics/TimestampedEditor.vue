@@ -97,6 +97,7 @@ const defaultLyrics = () => ({
     EditableText,
     Timestamp,
   },
+  data: () => ({ GroupType }),
 })
 export default class TimestampedEditor extends Vue {
   @Model('change', { type: Object }) readonly model!: Lyrics;
@@ -108,10 +109,6 @@ export default class TimestampedEditor extends Vue {
   private history: StateHistory<Lyrics> = new StateHistory(defaultLyrics());
   private highlighter: LyricsHighlighter|null = null;
   private changeTimeout: number|undefined;
-
-  get GroupType() {
-    return GroupType;
-  }
 
   get classes() {
     return {
@@ -151,7 +148,7 @@ export default class TimestampedEditor extends Vue {
   mounted() {
     this.lyrics = clone(this.model);
     this.history = new StateHistory(this.lyrics);
-    this.highlighter = new LyricsHighlighter(this.$store.state.player, this.model.data);
+    this.highlighter = new LyricsHighlighter(this.$store.state.player, this.lyrics);
   }
 
   toggleTimestamps() {
@@ -185,11 +182,10 @@ export default class TimestampedEditor extends Vue {
     let timestamp: number|null = 0;
     if (this.$store.state.player.current) {
       timestamp = this.$store.state.player.seek;
-    } else if (this.lyrics.data.length > at + 1) {
-      timestamp = this.lyrics.data[at].timestamp;
     } else {
-      timestamp = 0;
+      timestamp = this.getPreviousTimestamp(at);
     }
+
     this.lyrics.data.splice(at + 1, 0, {
       timestamp,
       lines: lines || [
@@ -198,6 +194,20 @@ export default class TimestampedEditor extends Vue {
     });
     this.focus({ group: at + 1, line: 0 });
     this.change();
+  }
+
+  getPreviousTimestamp(groupId: number) {
+    if (groupId < 0) {
+      return 0;
+    }
+
+    const groups = this.lyrics.data;
+
+    if (groups[groupId].timestamp) {
+      return groups[groupId].timestamp;
+    }
+
+    return this.getPreviousTimestamp(groupId - 1);
   }
 
   onKeyDown(e: KeyboardEvent, group: LineGroup, line: Line, coordinates: LineCoordinates) {
@@ -251,7 +261,12 @@ export default class TimestampedEditor extends Vue {
     if (group.lines.length === 1 && line.text.length === 0) {
       group.type = GroupType.SPACER;
       group.timestamp = null;
-      this.addNewGroup(coordinates.group);
+      this.change();
+      if (coordinates.group < this.lyrics.data.length - 1) {
+        this.goToNextLine(coordinates);
+      } else {
+        this.addNewGroup(coordinates.group);
+      }
       return;
     }
 

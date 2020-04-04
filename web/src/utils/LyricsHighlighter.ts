@@ -1,10 +1,10 @@
 import { PlayerState } from '@/store/modules/player';
-import { LyricsData } from '@/types/lyrics';
+import { Lyrics } from '@/types/lyrics';
 
 export default class LyricsHighlighter {
   constructor(
     private state: PlayerState,
-    private lyrics: LyricsData,
+    private lyrics: Lyrics,
   ) {}
 
   get current(): number|null {
@@ -15,11 +15,13 @@ export default class LyricsHighlighter {
     let current = 0;
     const { seek } = this.state;
 
-    for (const [groupId, group] of this.lyrics.entries()) {
-      if (group.timestamp && group.timestamp < seek) {
-        current = groupId;
-      } else {
-        break;
+    for (const [groupId, group] of this.lyrics.data.entries()) {
+      if (group.timestamp !== null) {
+        if (group.timestamp < seek) {
+          current = groupId;
+        } else {
+          break;
+        }
       }
     }
 
