@@ -177,7 +177,7 @@ export default class TimestampedEditor extends Vue {
     if (this.$store.state.player.current) {
       timestamp = this.$store.state.player.seek;
     } else if (this.lyrics.data.length > at + 1) {
-      timestamp = this.lyrics[at].timestamp;
+      timestamp = this.lyrics.data[at].timestamp;
     } else {
       timestamp = 0;
     }
@@ -428,7 +428,7 @@ export default class TimestampedEditor extends Vue {
       previous.line = current.line - 1;
     } else if (current.group !== 0) {
       previous.group = current.group - 1;
-      previous.line = this.lyrics[previous.group].lines.length - 1;
+      previous.line = this.lyrics.data[previous.group].lines.length - 1;
     }
 
     return previous;
@@ -497,7 +497,7 @@ export default class TimestampedEditor extends Vue {
   }
 
   getGroup(coordinates: LineCoordinates): LineGroup|null {
-    return this.lyrics[coordinates.group];
+    return this.lyrics.data[coordinates.group];
   }
 
   /**
