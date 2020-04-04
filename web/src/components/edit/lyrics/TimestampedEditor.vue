@@ -428,6 +428,8 @@ export default class TimestampedEditor extends Vue {
 
     // If this is the last group and the last line, don't delete it.
     if (this.lyrics.data.length === 1 && group.lines.length === 1) {
+      group.type = 'normal';
+      group.timestamp = 0;
       return;
     }
 
