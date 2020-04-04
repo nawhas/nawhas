@@ -93,11 +93,14 @@ interface EditorAction {
   enabled: boolean;
 }
 
-const defaultLyrics = () => ({
+const defaultLyrics = (): Lyrics => ({
   meta: {
     timestamps: true,
   },
-  data: [],
+  data: [{
+    timestamp: 0,
+    lines: [{ text: '', repeat: 0 }],
+  }],
 });
 
 @Component({
@@ -201,7 +204,9 @@ export default class TimestampedEditor extends Vue {
   }
 
   mounted() {
-    this.lyrics = clone(this.model);
+    if (this.model) {
+      this.lyrics = clone(this.model);
+    }
     this.history = new StateHistory(this.lyrics);
     this.highlighter = new LyricsHighlighter(this.$store.state.player, this.lyrics);
   }
@@ -230,6 +235,12 @@ export default class TimestampedEditor extends Vue {
 
   @Watch('model')
   onModelChanged(value) {
+    if (value === null) {
+      this.lyrics = defaultLyrics();
+      this.history = new StateHistory(this.lyrics);
+      return;
+    }
+
     if (JSON.stringify(value) !== JSON.stringify(this.lyrics)) {
       this.lyrics = clone(value);
       this.history = new StateHistory(value);
