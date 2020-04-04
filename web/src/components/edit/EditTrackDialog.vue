@@ -107,7 +107,6 @@ import {
   Component, Prop, Watch, Vue,
 } from 'vue-property-decorator';
 import { clone } from '@/utils/clone';
-import { Lyrics } from '@/types/lyrics';
 import * as Format from '@/constants/lyrics/format';
 import TimestampedEditor from '@/components/edit/lyrics/TimestampedEditor.vue';
 
@@ -272,14 +271,7 @@ export default class EditTrackDialog extends Vue {
     this.loading = false;
   }
   prepareLyrics() {
-    const lyircsData = clone(this.lyrics);
-
-    const lyrics: Lyrics = {
-      meta: {
-        timestamps: true,
-      },
-      data: lyircsData,
-    };
+    const lyrics = clone(this.lyrics);
 
     if (!this.timestamps) {
       lyrics.meta.timestamps = false;
