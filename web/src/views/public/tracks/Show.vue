@@ -96,13 +96,16 @@
             </v-card-title>
             <v-card-text class="lyrics__content" :class="{ 'black--text': !isDark }">
               <template v-if="track">
-                <div v-if="track.lyrics">
+                <div v-if="track.lyrics && track.lyrics.format === 1">
                   <div v-html="prepareLyrics(track.lyrics.content)"></div>
                 </div>
                 <div class="lyrics__empty" v-else>
                   <div class="lyrics__empty-message"
                        :class="{ 'lyrics__empty-message--dark': isDark }"
-                  >We don't have a write-up for this nawha yet.</div>
+                  >
+                    <span v-if="track.lyrics">An update is required to view this write-up.</span>
+                    <span v-else>We don't have a write-up for this nawha yet.</span>
+                  </div>
                 </div>
               </template>
               <div v-else>
