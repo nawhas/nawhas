@@ -4,31 +4,33 @@
       <div class="header__icon"><v-icon>speaker_notes</v-icon></div>
       <div class="header__title">Write-Up</div>
       <div class="header__actions">
-        <v-tooltip :attach="true" top>
-          <template v-slot:activator="{ on }">
-            <v-btn v-on="on" icon @click="toggleTimestamps" v-if="lyrics.meta.timestamps">
-              <v-icon>timer_off</v-icon>
-            </v-btn>
-            <v-btn v-on="on" icon @click="toggleTimestamps" v-else>
-              <v-icon>timer</v-icon>
+        <v-tooltip
+            v-for="action in actions" :key="action.icon"
+            :attach="true" top
+            open-delay="500"
+        >
+          <template #activator="{ on }">
+            <v-btn
+                icon class="ml-1"
+                :disabled="!action.enabled"
+                v-on="on"
+                @click="action.handler"
+            >
+              <v-icon>{{ action.icon }}</v-icon>
             </v-btn>
           </template>
-          <span v-if="lyrics.meta.timestamps">Disable timestamps</span>
-          <span v-else>Enable timestamps</span>
+          <span>{{ action.tooltip }}</span>
         </v-tooltip>
-        <template>
-          <v-btn :disabled="!hasAudio" v-if="!isPlayingAudio" icon @click="playAudio">
-            <v-icon>play_circle_filled</v-icon>
-          </v-btn>
-          <v-btn :disabled="!hasAudio" v-else icon @click="stopPlayingAudio">
-            <v-icon>stop</v-icon>
-          </v-btn>
-        </template>
-        <v-btn :disabled="!canUndo" icon @click="undo"><v-icon>undo</v-icon></v-btn>
-        <v-btn :disabled="!canRedo" icon @click="redo"><v-icon>redo</v-icon></v-btn>
       </div>
     </div>
-    <div class="editor__content">
+    <div class="editor__content px-4" v-if="jsonEditor">
+      <v-textarea
+          auto-grow
+          v-model="json"
+          filled outlined
+      />
+    </div>
+    <div class="editor__content" v-else>
       <div
           :class="{ group: true, 'group--highlighted': playingGroup === groupId }"
           v-for="(group, groupId) in lyrics.data"
@@ -84,6 +86,13 @@ interface LineCoordinates {
   line: number;
 }
 
+interface EditorAction {
+  tooltip: string;
+  icon: string;
+  handler: Function;
+  enabled: boolean;
+}
+
 const defaultLyrics = () => ({
   meta: {
     timestamps: true,
@@ -108,7 +117,53 @@ export default class TimestampedEditor extends Vue {
   private selected: LineCoordinates|null = null;
   private history: StateHistory<Lyrics> = new StateHistory(defaultLyrics());
   private highlighter: LyricsHighlighter|null = null;
+  private json = '';
+  private jsonEditor = false;
   private changeTimeout: number|undefined;
+
+  get actions(): Array<EditorAction> {
+    const actions: Array<EditorAction> = [];
+
+    // Code Editor
+    actions.push({
+      tooltip: 'Toggle JSON Editor',
+      handler: () => this.toggleJsonEditor(),
+      icon: 'code',
+      enabled: true,
+    });
+
+    // Timestamps
+    actions.push({
+      tooltip: this.lyrics.meta.timestamps ? 'Disable timestamps' : 'Enable timestamps',
+      handler: () => this.toggleTimestamps(),
+      icon: this.lyrics.meta.timestamps ? 'timer_off' : 'timer',
+      enabled: true,
+    });
+
+    // Play/Pause Button
+    actions.push({
+      tooltip: this.isPlayingAudio ? 'Stop playing' : 'Play audio',
+      handler: () => (this.isPlayingAudio ? this.stopPlayingAudio() : this.playAudio()),
+      icon: this.isPlayingAudio ? 'stop' : 'play_circle_filled',
+      enabled: this.hasAudio,
+    });
+
+    // Undo / Redo Buttons
+    actions.push({
+      tooltip: 'Undo',
+      handler: () => this.undo(),
+      icon: 'undo',
+      enabled: this.canUndo,
+    });
+    actions.push({
+      tooltip: 'Redo',
+      handler: () => this.redo(),
+      icon: 'redo',
+      enabled: this.canRedo,
+    });
+
+    return actions;
+  }
 
   get classes() {
     return {
@@ -154,6 +209,22 @@ export default class TimestampedEditor extends Vue {
   toggleTimestamps() {
     this.lyrics.meta.timestamps = !this.lyrics.meta.timestamps;
     this.change();
+  }
+
+  toggleJsonEditor() {
+    this.jsonEditor = !this.jsonEditor;
+
+    if (this.jsonEditor) {
+      this.json = JSON.stringify(this.lyrics, null, 2);
+    } else {
+      try {
+        const parsed = JSON.parse(this.json);
+        this.lyrics = parsed;
+        this.change();
+      } catch {
+        console.error('Could not parse JSON.');
+      }
+    }
   }
 
   @Watch('model')
