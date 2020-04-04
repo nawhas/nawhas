@@ -268,7 +268,7 @@ export default class EditTrackDialog extends Vue {
     this.loading = false;
   }
   prepareLyrics() {
-    const lyrics = clone(this.lyrics);
+    const lyrics = clone(this.form.lyrics);
 
     return JSON.stringify(lyrics);
   }
