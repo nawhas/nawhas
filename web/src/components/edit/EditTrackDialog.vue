@@ -93,7 +93,6 @@
         <timestamped-editor
           v-model="form.lyrics"
           :track="track"
-          :timestamped.sync="timestamps"
         ></timestamped-editor>
       </v-card-text>
       <v-card-actions></v-card-actions>
@@ -129,18 +128,16 @@ export default class EditTrackDialog extends Vue {
   @Prop({ type: Object }) private album;
   private dialog = false;
   private form: Form = { ...defaults };
-  private timestamps = true;
   private loading = false;
+
   get includes() {
     return 'reciter,lyrics,album.tracks,media';
   }
+
   @Watch('dialog')
   onDialogStateChanged(opened) {
     if (opened) {
       this.resetForm();
-      if (this.lyrics.format === Format.JSON_V1) {
-        this.timestamps = this.lyrics.meta.timestamps;
-      }
     }
   }
 
@@ -183,7 +180,7 @@ export default class EditTrackDialog extends Vue {
       this.form = {
         ...this.form,
         title,
-        lyrics: this.lyrics.data,
+        lyrics: this.lyrics,
       };
     }
   }
@@ -272,10 +269,6 @@ export default class EditTrackDialog extends Vue {
   }
   prepareLyrics() {
     const lyrics = clone(this.lyrics);
-
-    if (!this.timestamps) {
-      lyrics.meta.timestamps = false;
-    }
 
     return JSON.stringify(lyrics);
   }
