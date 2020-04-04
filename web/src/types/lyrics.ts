@@ -18,3 +18,9 @@ export interface Lyrics {
   meta: LyricsMetadata;
   data: LyricsData;
 }
+
+export interface LyricsModel {
+  id: string;
+  content: string;
+  format: 1|2;
+}
