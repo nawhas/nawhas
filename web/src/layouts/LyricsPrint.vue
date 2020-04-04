@@ -21,7 +21,7 @@
         class="print__content"
         v-if="data.lyrics"
         :model="data.lyrics"
-        :showTimestamps="false"
+        :show-timestamps="false"
         :current="false"
       ></lyrics-viewer>
       <div class="print__content print__content--empty" v-else>
