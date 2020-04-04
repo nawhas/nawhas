@@ -3,6 +3,8 @@ name: Clean Up Integration Build
 on:
   pull_request:
     types: [closed]
+    branches:
+      - develop
 
 env:
   API_IMAGE: nawhas/api
