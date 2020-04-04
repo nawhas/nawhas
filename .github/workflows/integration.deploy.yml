@@ -1,6 +1,9 @@
 name: Integration Deploy
 
-on: [pull_request]
+on:
+  pull_request:
+    branches:
+      - develop
 
 env:
   API_IMAGE: nawhas/api
