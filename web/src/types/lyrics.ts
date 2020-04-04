@@ -6,6 +6,7 @@ export interface Line {
 export interface LineGroup {
   timestamp: number | null;
   lines: Array<Line>;
+  type?: string | null;
 }
 
 export type LyricsData = Array<LineGroup>;
@@ -22,5 +23,5 @@ export interface Lyrics {
 export interface LyricsModel {
   id: string;
   content: string;
-  format: 1|2;
+  format: 1 | 2;
 }

@@ -35,23 +35,27 @@
           :key="groupId"
       >
         <div class="group__timestamp" v-if="lyrics.meta.timestamps">
-          <timestamp v-model="group.timestamp" @change="change" />
+          <v-chip
+              small label outlined
+              v-if="group.type === GroupType.SPACER"
+          ><v-icon small>height</v-icon></v-chip>
+          <timestamp v-model="group.timestamp" @change="change" v-else />
         </div>
         <div class="group__lines">
           <div class="line" v-for="(line, lineId) in group.lines" :key="lineId">
             <editable-text class="line__text"
-                          v-model="line.text"
-                          autocapitalize="off"
-                          autocomplete="off"
-                          aria-autocomplete="none"
-                          spellcheck="false"
-                          :ref="`group-${groupId}-line-${lineId}`"
-                          @keydown="onKeyDown($event, group, line, { group: groupId, line: lineId })"
-                          @focus="onFocus($event, group, line, { group: groupId, line: lineId })"
-                          @blur="onBlur($event, group, line, { group: groupId, line: lineId })"
-                          @input="change"
+                           v-model="line.text"
+                           autocapitalize="off"
+                           autocomplete="off"
+                           aria-autocomplete="none"
+                           spellcheck="false"
+                           :ref="`group-${groupId}-line-${lineId}`"
+                           @keydown="onKeyDown($event, group, line, { group: groupId, line: lineId })"
+                           @focus="onFocus($event, group, line, { group: groupId, line: lineId })"
+                           @blur="onBlur($event, group, line, { group: groupId, line: lineId })"
+                           @input="change"
             />
-            <div class="line__actions">
+            <div class="line__actions" v-if="group.type !== GroupType.SPACER">
               <repeat-line v-model="line.repeat" @change="onRepeatChange" />
             </div>
           </div>
@@ -73,6 +77,7 @@ import StateHistory from '@/utils/StateHistory';
 import { Line, LineGroup, Lyrics } from '@/types/lyrics';
 import { clone } from '@/utils/clone';
 import LyricsHighlighter from '@/utils/LyricsHighlighter';
+import * as GroupType from '@/constants/lyrics/group-type';
 
 interface LineCoordinates {
   group: number;
@@ -103,6 +108,10 @@ export default class TimestampedEditor extends Vue {
   private history: StateHistory<Lyrics> = new StateHistory(defaultLyrics());
   private highlighter: LyricsHighlighter|null = null;
   private changeTimeout: number|undefined;
+
+  get GroupType() {
+    return GroupType;
+  }
 
   get classes() {
     return {
@@ -237,8 +246,12 @@ export default class TimestampedEditor extends Vue {
    */
   onEnter(group: LineGroup, line: Line, coordinates: LineCoordinates) {
     // If this is the only line in the group
-    // and the line is empty, do nothing.
+    // and the line is empty, convert this group into a
+    // spacer and add a new group.
     if (group.lines.length === 1 && line.text.length === 0) {
+      group.type = GroupType.SPACER;
+      group.timestamp = null;
+      this.addNewGroup(coordinates.group);
       return;
     }
 
