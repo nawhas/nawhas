@@ -32,7 +32,7 @@ import * as moment from 'moment';
 
 @Component
 export default class LyircsPage extends Vue {
-  @Prop({ type: String }) private lyricObject: any;
+  @Prop({ type: Object }) private lyricObject: any;
   @Prop()
   isCurrentTrack!: boolean;
 
@@ -47,12 +47,7 @@ export default class LyircsPage extends Vue {
   }
 
   get isJson() {
-    try {
-      JSON.parse(this.lyricObject);
-    } catch (e) {
-      return false;
-    }
-    return true;
+    return this.lyricObject.format === 2;
   }
 
   get isDark() {
@@ -60,7 +55,11 @@ export default class LyircsPage extends Vue {
   }
 
   get lyrics() {
-    return (this.isJson) ? JSON.parse(this.lyricObject) : this.lyricObject.replace(/\n/gi, '<br>');
+    if (this.isJson) {
+      const lyricsData = JSON.parse(this.lyricObject.content);
+      return lyricsData.data;
+    }
+    return this.lyricObject.content.replace(/\n/gi, '<br>');
   }
 
   get mobile() {

@@ -1,1 +1,184 @@
-[{"timestamp":9.186924,"lines":[{"text":"Moula","repeat":3}]},{"timestamp":14.247168,"lines":[{"text":"Roze alast mei mujhse sawaal ye kiya gaya","repeat":0}]},{"timestamp":18.465781,"lines":[{"text":"Kya tumko hai qubool aliyyun waliyullah","repeat":0}]},{"timestamp":22.981176,"lines":[{"text":"Maine kiya iqrar aur dil shaad huwa tha","repeat":0}]},{"timestamp":27.546866,"lines":[{"text":"Honton se mere bas yahi aati thi ik sada","repeat":0}]},{"timestamp":32.074063,"lines":[{"text":"Aur aaj bhi zubaan ke saath dil hai bolta","repeat":0}]},{"timestamp":36.065409,"lines":[{"text":"Hai fakhr mujhko bus yahi main hu tera shia","repeat":0}]},{"timestamp":40.974345,"lines":[{"text":"Jo wahaan kaha tha, wo ab bhi kahunga","repeat":2}]},{"timestamp":49.800899,"lines":[{"text":"Mai hu, mai hu, mai hu tera shia","repeat":2}]},{"timestamp":58.46626,"lines":[{"text":"Mujhe darr nahi lagta","repeat":0},{"text":"Mai dil se hu kehta","repeat":0}]},{"timestamp":62.898002,"lines":[{"text":"Ye ishqay Ali me","repeat":0},{"text":"Taqqaya nahi hota","repeat":0}]},{"timestamp":67.73324,"lines":[{"text":"Mai hu, mai hu, mai hu tera shia","repeat":4}]},{"timestamp":85.270169,"lines":[{"text":"Zehra ki Dua hai","repeat":0},{"text":"Sarwar ki ata hai","repeat":2}]},{"timestamp":92.186642,"lines":[{"text":"Ye dil nahi Mera","repeat":0},{"text":"ye karbobala hai","repeat":2}]},{"timestamp":98.711999,"lines":[{"text":"Ye zikr se jaari","repeat":0},{"text":"Har gham ki dawa hai","repeat":0}]},{"timestamp":105.279697,"lines":[{"text":"Matam gham e shabbir","repeat":0},{"text":"Ye rab ki riza hai","repeat":0}]},{"timestamp":110.827311,"lines":[{"text":"Mai hu, mai hu, mai hu tera shia","repeat":2}]}]
+{
+    "meta": {
+        "timestamps": true
+    },
+    "data": [
+        {
+            "timestamp": 9.186924,
+            "lines": [
+                {
+                    "text": "Moula",
+                    "repeat": 3
+                }
+            ]
+        },
+        {
+            "timestamp": 14.247168,
+            "lines": [
+                {
+                    "text": "Roze alast mei mujhse sawaal ye kiya gaya",
+                    "repeat": 0
+                }
+            ]
+        },
+        {
+            "timestamp": 18.465781,
+            "lines": [
+                {
+                    "text": "Kya tumko hai qubool aliyyun waliyullah",
+                    "repeat": 0
+                }
+            ]
+        },
+        {
+            "timestamp": 22.981176,
+            "lines": [
+                {
+                    "text": "Maine kiya iqrar aur dil shaad huwa tha",
+                    "repeat": 0
+                }
+            ]
+        },
+        {
+            "timestamp": 27.546866,
+            "lines": [
+                {
+                    "text": "Honton se mere bas yahi aati thi ik sada",
+                    "repeat": 0
+                }
+            ]
+        },
+        {
+            "timestamp": 32.074063,
+            "lines": [
+                {
+                    "text": "Aur aaj bhi zubaan ke saath dil hai bolta",
+                    "repeat": 0
+                }
+            ]
+        },
+        {
+            "timestamp": 36.065409,
+            "lines": [
+                {
+                    "text": "Hai fakhr mujhko bus yahi main hu tera shia",
+                    "repeat": 0
+                }
+            ]
+        },
+        {
+            "timestamp": 40.974345,
+            "lines": [
+                {
+                    "text": "Jo wahaan kaha tha, wo ab bhi kahunga",
+                    "repeat": 2
+                }
+            ]
+        },
+        {
+            "timestamp": 49.800899,
+            "lines": [
+                {
+                    "text": "Mai hu, mai hu, mai hu tera shia",
+                    "repeat": 2
+                }
+            ]
+        },
+        {
+            "timestamp": 58.46626,
+            "lines": [
+                {
+                    "text": "Mujhe darr nahi lagta",
+                    "repeat": 0
+                },
+                {
+                    "text": "Mai dil se hu kehta",
+                    "repeat": 0
+                }
+            ]
+        },
+        {
+            "timestamp": 62.898002,
+            "lines": [
+                {
+                    "text": "Ye ishqay Ali me",
+                    "repeat": 0
+                },
+                {
+                    "text": "Taqqaya nahi hota",
+                    "repeat": 0
+                }
+            ]
+        },
+        {
+            "timestamp": 67.73324,
+            "lines": [
+                {
+                    "text": "Mai hu, mai hu, mai hu tera shia",
+                    "repeat": 4
+                }
+            ]
+        },
+        {
+            "timestamp": 85.270169,
+            "lines": [
+                {
+                    "text": "Zehra ki Dua hai",
+                    "repeat": 0
+                },
+                {
+                    "text": "Sarwar ki ata hai",
+                    "repeat": 2
+                }
+            ]
+        },
+        {
+            "timestamp": 92.186642,
+            "lines": [
+                {
+                    "text": "Ye dil nahi Mera",
+                    "repeat": 0
+                },
+                {
+                    "text": "ye karbobala hai",
+                    "repeat": 2
+                }
+            ]
+        },
+        {
+            "timestamp": 98.711999,
+            "lines": [
+                {
+                    "text": "Ye zikr se jaari",
+                    "repeat": 0
+                },
+                {
+                    "text": "Har gham ki dawa hai",
+                    "repeat": 0
+                }
+            ]
+        },
+        {
+            "timestamp": 105.279697,
+            "lines": [
+                {
+                    "text": "Matam gham e shabbir",
+                    "repeat": 0
+                },
+                {
+                    "text": "Ye rab ki riza hai",
+                    "repeat": 0
+                }
+            ]
+        },
+        {
+            "timestamp": 110.827311,
+            "lines": [
+                {
+                    "text": "Mai hu, mai hu, mai hu tera shia",
+                    "repeat": 2
+                }
+            ]
+        }
+    ]
+}

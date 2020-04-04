@@ -40,7 +40,7 @@
         <lyrics
           class="lyrics__text"
           v-if="track.lyrics"
-          :lyricObject="track.lyrics.content"
+          :lyricObject="track.lyrics"
           :isCurrentTrack="true"
         ></lyrics>
       </div>
