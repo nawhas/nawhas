@@ -1,6 +1,9 @@
 <template>
   <v-app>
-    <v-content  class="content" v-if="data">
+    <v-content
+      class="content"
+      v-if="data"
+    >
       <div class="print__header">
         <div class="print__header__title">
           <div class="print__header__title--track--name">{{ data.title }}</div>
@@ -8,21 +11,34 @@
         </div>
         <v-spacer></v-spacer>
         <div class="print__header_logo">
-          <img src="./../assets/logo.svg"  alt="Nawhas.com" />
+          <img
+            src="./../assets/logo.svg"
+            alt="Nawhas.com"
+          />
         </div>
       </div>
-      <div class="print__content" v-if="data.lyrics" v-html="prepareLyrics(data.lyrics.content)"></div>
+      <lyrics-viewer
+        class="print__content"
+        v-if="data.lyrics"
+        :model="data.lyrics"
+        :show-timestamps="false"
+        :current="false"
+      ></lyrics-viewer>
       <div class="print__content print__content--empty" v-else>
         We don't have a write-up of this nawha yet.
       </div>
     </v-content>
-    <v-content class="content" v-else>Loading...</v-content>
+    <v-content
+      class="content"
+      v-else
+    >Loading...</v-content>
   </v-app>
 </template>
 
 <script>
 /* eslint-disable dot-notation */
 import { getTrack } from '@/services/tracks';
+import LyricsViewer from '@/components/LyricsViewer.vue';
 
 export default {
   props: ['trackObject'],
@@ -31,6 +47,10 @@ export default {
     fetchedTrack: undefined,
     timeout: undefined,
   }),
+
+  components: {
+    LyricsViewer,
+  },
 
   computed: {
     data() {
@@ -47,6 +67,7 @@ export default {
         });
     }
   },
+
   mounted() {
     const handler = () => {
       this.goBackToTrack();
@@ -60,6 +81,7 @@ export default {
 
     this.triggerPrint();
   },
+
   updated() {
     if (!this.data) {
       return;
@@ -67,19 +89,18 @@ export default {
 
     this.triggerPrint();
   },
+
   beforeDestroy() {
     window.removeEventListener('afterprint', this.$el['__onPrintCompleteHandler__']);
     delete this.$el['__onPrintCompleteHandler__'];
   },
+
   methods: {
     triggerPrint() {
       window.clearTimeout(this.timeout);
       window.timeout = window.setTimeout(() => {
         window.print();
       }, 500);
-    },
-    prepareLyrics(content) {
-      return content.replace(/\n/gi, '<br>');
     },
     goBackToTrack() {
       if (!this.data) {
@@ -125,7 +146,7 @@ export default {
 }
 
 .print__content--empty {
-  color: rgba(0,0,0,0.6);
+  color: rgba(0, 0, 0, 0.6);
   font-size: 20px;
   column-count: 1;
   padding: 20px;

@@ -9,7 +9,7 @@
         >
           <br v-if="group.type === GroupType.SPACER" />
           <div
-            v-else-if="!mobile && hasTimestamps"
+            v-else-if="!mobile && hasTimestamps && showTimestamps"
             class="lyrics__group__timestamp"
           >{{ formattedTimestamp(group.timestamp) }}</div>
           <div class="lyrics__group__lines">
@@ -40,6 +40,7 @@ import { Lyrics, LyricsModel } from '@/types/lyrics';
 export default class LyricsViewer extends Vue {
   @Prop({ type: Object, required: true }) private readonly model!: LyricsModel;
   @Prop() private readonly current!: boolean;
+  @Prop({ type: Boolean, default: true }) private showTimestamps;
 
   get lyrics(): Lyrics|string {
     if (this.isJson) {
