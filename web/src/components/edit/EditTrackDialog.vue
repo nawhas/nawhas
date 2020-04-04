@@ -83,13 +83,6 @@
             </template>
           </v-file-input>
         </div>
-        <v-textarea
-          v-if="false"
-          outlined
-          label="Lyrics"
-          v-model="form.lyrics.data"
-          required
-        ></v-textarea>
         <timestamped-editor
           v-model="form.lyrics"
           :track="track"
