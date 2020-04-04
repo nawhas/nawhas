@@ -83,17 +83,9 @@
             </template>
           </v-file-input>
         </div>
-        <v-textarea
-          v-if="false"
-          outlined
-          label="Lyrics"
-          v-model="form.lyrics.data"
-          required
-        ></v-textarea>
         <timestamped-editor
           v-model="form.lyrics"
           :track="track"
-          :timestamped.sync="timestamps"
         ></timestamped-editor>
       </v-card-text>
       <v-card-actions></v-card-actions>
@@ -109,11 +101,12 @@ import {
 import { clone } from '@/utils/clone';
 import * as Format from '@/constants/lyrics/format';
 import TimestampedEditor from '@/components/edit/lyrics/TimestampedEditor.vue';
+import { Lyrics } from '@/types/lyrics';
 
 interface Form {
-  title: string | null;
-  lyrics: Array<any> | null;
-  audio: string | Blob | null;
+  title: string|null;
+  lyrics: Lyrics|null;
+  audio: string|Blob|null;
 }
 const defaults: Form = {
   title: null,
@@ -129,22 +122,20 @@ export default class EditTrackDialog extends Vue {
   @Prop({ type: Object }) private album;
   private dialog = false;
   private form: Form = { ...defaults };
-  private timestamps = true;
   private loading = false;
+
   get includes() {
     return 'reciter,lyrics,album.tracks,media';
   }
+
   @Watch('dialog')
   onDialogStateChanged(opened) {
     if (opened) {
       this.resetForm();
-      if (this.lyrics.format === Format.JSON_V1) {
-        this.timestamps = this.lyrics.meta.timestamps;
-      }
     }
   }
 
-  get lyrics() {
+  get lyrics(): Lyrics|null {
     if (!this.track.lyrics) {
       return null;
     }
@@ -154,7 +145,7 @@ export default class EditTrackDialog extends Vue {
       return JSON.parse(content);
     }
 
-    return content.split(/\n/gi).map((text) => {
+    const data = content.split(/\n/gi).map((text) => {
       if (text.trim().length === 0) {
         return null;
       }
@@ -164,6 +155,13 @@ export default class EditTrackDialog extends Vue {
         lines: [{ text: text.trim(), repeat: 0 }],
       };
     }).filter((val) => val !== null);
+
+    return {
+      meta: {
+        timestamps: false,
+      },
+      data,
+    };
   }
 
   addFile(e) {
@@ -183,7 +181,7 @@ export default class EditTrackDialog extends Vue {
       this.form = {
         ...this.form,
         title,
-        lyrics: this.lyrics.data,
+        lyrics: this.lyrics,
       };
     }
   }
@@ -271,11 +269,7 @@ export default class EditTrackDialog extends Vue {
     this.loading = false;
   }
   prepareLyrics() {
-    const lyrics = clone(this.lyrics);
-
-    if (!this.timestamps) {
-      lyrics.meta.timestamps = false;
-    }
+    const lyrics = clone(this.form.lyrics);
 
     return JSON.stringify(lyrics);
   }

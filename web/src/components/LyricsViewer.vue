@@ -1,14 +1,14 @@
 <template>
   <div>
     <div v-if="isJson">
-      <template v-for="(group, groupId) in lyrics">
+      <template v-for="(group, groupId) in lyrics.data">
         <div
           :class="{'lyrics__group': true, 'lyrics_active': isCurrentLyric(group, groupId)}"
           :key="groupId"
           :ref="`group-${groupId}`"
         >
           <div
-            v-if="!mobile"
+            v-if="!mobile && hasTimestamps"
             class="lyrics__group__timestamp"
           >{{ formattedTimestamp(group.timestamp) }}</div>
           <div class="lyrics__group__lines">
@@ -29,12 +29,20 @@ import {
   Component, Prop, Vue,
 } from 'vue-property-decorator';
 import * as moment from 'moment';
+import * as Format from '@/constants/lyrics/format';
+import { Lyrics, LyricsModel } from '@/types/lyrics';
 
 @Component
-export default class LyircsPage extends Vue {
-  @Prop({ type: Object }) private lyricObject: any;
-  @Prop()
-  isCurrentTrack!: boolean;
+export default class LyricsViewer extends Vue {
+  @Prop({ type: Object, required: true }) private readonly model!: LyricsModel;
+  @Prop() private readonly current!: boolean;
+
+  get lyrics(): Lyrics|string {
+    if (this.isJson) {
+      return JSON.parse(this.model.content);
+    }
+    return this.model.content.replace(/\n/gi, '<br>');
+  }
 
   get seek() {
     return this.$store.state.player.seek;
@@ -46,20 +54,20 @@ export default class LyircsPage extends Vue {
       .format('mm:ss');
   }
 
+  get hasTimestamps() {
+    if (this.model.format === Format.PLAIN_TEXT) {
+      return false;
+    }
+
+    return (this.lyrics as Lyrics).meta.timestamps;
+  }
+
   get isJson() {
-    return this.lyricObject.format === 2;
+    return this.model.format === Format.JSON_V1;
   }
 
   get isDark() {
     return this.$vuetify.theme.dark;
-  }
-
-  get lyrics() {
-    if (this.isJson) {
-      const lyricsData = JSON.parse(this.lyricObject.content);
-      return lyricsData.data;
-    }
-    return this.lyricObject.content.replace(/\n/gi, '<br>');
   }
 
   get mobile() {
@@ -76,7 +84,7 @@ export default class LyircsPage extends Vue {
     // If the track that is playing is not the same
     // to the one that is being displayed
     // Do not highlight anything
-    if (!this.isCurrentTrack) {
+    if (!this.current) {
       return false;
     }
 

@@ -94,11 +94,11 @@
             </v-card-title>
             <v-card-text class="lyrics__content" :class="{ 'black--text': !isDark }">
               <template v-if="track">
-                <lyrics
+                <lyrics-viewer
                   v-if="track.lyrics"
-                  :lyricObject="track.lyrics"
-                  :isCurrentTrack="isSameTrackPlaying"
-                ></lyrics>
+                  :model="track.lyrics"
+                  :current="isSameTrackPlaying"
+                ></lyrics-viewer>
                 <div class="lyrics__empty" v-else>
                   <div
                     class="lyrics__empty-message"
@@ -163,19 +163,19 @@ import {
 } from 'vue-property-decorator';
 import Vibrant from 'node-vibrant';
 import ReciterHeroSkeleton from '@/components/loaders/ReciterHeroSkeleton.vue';
-import Lyrics from '@/components/Lyrics.vue';
 import LyricsSkeleton from '@/components/loaders/LyricsSkeleton.vue';
 import MoreTracksSkeleton from '@/components/loaders/MoreTracksSkeleton.vue';
 import EditTrackDialog from '@/components/edit/EditTrackDialog.vue';
 import { getTracks, getTrack } from '@/services/tracks';
+import LyricsViewer from '@/components/LyricsViewer.vue';
 
 @Component({
   components: {
+    LyricsViewer,
     ReciterHeroSkeleton,
     LyricsSkeleton,
     MoreTracksSkeleton,
     EditTrackDialog,
-    Lyrics,
   },
 })
 export default class TrackPage extends Vue {

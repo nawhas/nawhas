@@ -6,10 +6,14 @@
       <div class="header__actions">
         <v-tooltip :attach="true" top>
           <template v-slot:activator="{ on }">
-            <v-btn v-on="on" icon @click="toggleTimestamps" v-if="timestamps"><v-icon>timer_off</v-icon></v-btn>
-            <v-btn v-on="on" icon @click="toggleTimestamps" v-else><v-icon>timer</v-icon></v-btn>
+            <v-btn v-on="on" icon @click="toggleTimestamps" v-if="lyrics.meta.timestamps">
+              <v-icon>timer_off</v-icon>
+            </v-btn>
+            <v-btn v-on="on" icon @click="toggleTimestamps" v-else>
+              <v-icon>timer</v-icon>
+            </v-btn>
           </template>
-          <span v-if="timestamps">Disable timestamps</span>
+          <span v-if="lyrics.meta.timestamps">Disable timestamps</span>
           <span v-else>Enable timestamps</span>
         </v-tooltip>
         <template>
@@ -27,10 +31,10 @@
     <div class="editor__content">
       <div
           :class="{ group: true, 'group--highlighted': playingGroup === groupId }"
-          v-for="(group, groupId) in lyrics"
+          v-for="(group, groupId) in lyrics.data"
           :key="groupId"
       >
-        <div class="group__timestamp" v-if="timestamps">
+        <div class="group__timestamp" v-if="lyrics.meta.timestamps">
           <timestamp v-model="group.timestamp" @change="change" />
         </div>
         <div class="group__lines">
@@ -59,14 +63,14 @@
 
 <script lang="ts">
 import {
-  Component, Model, Prop, PropSync, Vue, Watch,
+  Component, Model, Prop, Vue, Watch,
 } from 'vue-property-decorator';
 import { position } from 'caret-pos';
 import RepeatLine from '@/components/edit/lyrics/RepeatLine.vue';
 import EditableText from '@/components/edit/lyrics/EditableText.vue';
 import Timestamp from '@/components/edit/lyrics/Timestamp.vue';
 import StateHistory from '@/utils/StateHistory';
-import { LyricsData, Line, LineGroup } from '@/types/lyrics';
+import { Line, LineGroup, Lyrics } from '@/types/lyrics';
 import { clone } from '@/utils/clone';
 import LyricsHighlighter from '@/utils/LyricsHighlighter';
 
@@ -74,6 +78,13 @@ interface LineCoordinates {
   group: number;
   line: number;
 }
+
+const defaultLyrics = () => ({
+  meta: {
+    timestamps: true,
+  },
+  data: [],
+});
 
 @Component({
   components: {
@@ -83,14 +94,13 @@ interface LineCoordinates {
   },
 })
 export default class TimestampedEditor extends Vue {
-  @Model('change', { type: Array }) readonly model!: LyricsData;
-  @PropSync('timestamped', { type: Boolean, default: true }) timestamps!: boolean;
+  @Model('change', { type: Object }) readonly model!: Lyrics;
   @Prop({ type: Object }) readonly track!: any;
 
-  private lyrics: LyricsData = [];
+  private lyrics: Lyrics = defaultLyrics();
   private focused = false;
   private selected: LineCoordinates|null = null;
-  private history: StateHistory<LyricsData> = new StateHistory([]);
+  private history: StateHistory<Lyrics> = new StateHistory(defaultLyrics());
   private highlighter: LyricsHighlighter|null = null;
   private changeTimeout: number|undefined;
 
@@ -99,7 +109,7 @@ export default class TimestampedEditor extends Vue {
       editor: true,
       'editor--dark': this.$vuetify.theme.dark,
       'editor--focused': this.focused,
-      'editor--timestamped': this.timestamps,
+      'editor--timestamped': this.lyrics.meta.timestamps,
     };
   }
 
@@ -132,11 +142,12 @@ export default class TimestampedEditor extends Vue {
   mounted() {
     this.lyrics = clone(this.model);
     this.history = new StateHistory(this.lyrics);
-    this.highlighter = new LyricsHighlighter(this.$store.state.player, this.model);
+    this.highlighter = new LyricsHighlighter(this.$store.state.player, this.model.data);
   }
 
   toggleTimestamps() {
-    this.timestamps = !this.timestamps;
+    this.lyrics.meta.timestamps = !this.lyrics.meta.timestamps;
+    this.change();
   }
 
   @Watch('model')
@@ -165,12 +176,12 @@ export default class TimestampedEditor extends Vue {
     let timestamp: number|null = 0;
     if (this.$store.state.player.current) {
       timestamp = this.$store.state.player.seek;
-    } else if (this.lyrics.length > at + 1) {
-      timestamp = this.lyrics[at].timestamp;
+    } else if (this.lyrics.data.length > at + 1) {
+      timestamp = this.lyrics.data[at].timestamp;
     } else {
       timestamp = 0;
     }
-    this.lyrics.splice(at + 1, 0, {
+    this.lyrics.data.splice(at + 1, 0, {
       timestamp,
       lines: lines || [
         { text: '', repeat: 0 },
@@ -253,7 +264,7 @@ export default class TimestampedEditor extends Vue {
       this.addNewGroup(coordinates.group, linesToMove);
 
       if (group.lines.length === 0) {
-        this.lyrics.splice(coordinates.group, 1);
+        this.lyrics.data.splice(coordinates.group, 1);
         this.change();
         // TODO - solve this when updating component to use change events properly.
       }
@@ -305,7 +316,7 @@ export default class TimestampedEditor extends Vue {
     }
 
     // If this is the last group and the last line, don't delete it.
-    if (this.lyrics.length === 1 && group.lines.length === 1) {
+    if (this.lyrics.data.length === 1 && group.lines.length === 1) {
       return;
     }
 
@@ -363,7 +374,7 @@ export default class TimestampedEditor extends Vue {
   }
 
   deleteGroup({ group }: LineCoordinates) {
-    this.lyrics.splice(group, 1);
+    this.lyrics.data.splice(group, 1);
     this.change();
   }
 
@@ -399,10 +410,10 @@ export default class TimestampedEditor extends Vue {
 
   getNextLineCoordinates(current: LineCoordinates): LineCoordinates {
     const next = { ...current };
-    const group = this.lyrics[current.group];
+    const group = this.lyrics.data[current.group];
     if (group.lines.length > current.line + 1) {
       next.line = current.line + 1;
-    } else if (this.lyrics.length > current.group + 1) {
+    } else if (this.lyrics.data.length > current.group + 1) {
       next.group = current.group + 1;
       next.line = 0;
     }
@@ -417,7 +428,7 @@ export default class TimestampedEditor extends Vue {
       previous.line = current.line - 1;
     } else if (current.group !== 0) {
       previous.group = current.group - 1;
-      previous.line = this.lyrics[previous.group].lines.length - 1;
+      previous.line = this.lyrics.data[previous.group].lines.length - 1;
     }
 
     return previous;
@@ -486,7 +497,7 @@ export default class TimestampedEditor extends Vue {
   }
 
   getGroup(coordinates: LineCoordinates): LineGroup|null {
-    return this.lyrics[coordinates.group];
+    return this.lyrics.data[coordinates.group];
   }
 
   /**
