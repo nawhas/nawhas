@@ -222,6 +222,7 @@ export default class TimestampedEditor extends Vue {
         this.lyrics = parsed;
         this.change();
       } catch {
+        // eslint-disable-next-line no-console
         console.error('Could not parse JSON.');
       }
     }
