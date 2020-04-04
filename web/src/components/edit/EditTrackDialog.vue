@@ -102,6 +102,7 @@ import { clone } from '@/utils/clone';
 import * as Format from '@/constants/lyrics/format';
 import TimestampedEditor from '@/components/edit/lyrics/TimestampedEditor.vue';
 import { Lyrics } from '@/types/lyrics';
+import * as GroupType from '@/constants/lyrics/group-type';
 
 interface Form {
   title: string|null;
@@ -147,7 +148,11 @@ export default class EditTrackDialog extends Vue {
 
     const data = content.split(/\n/gi).map((text) => {
       if (text.trim().length === 0) {
-        return null;
+        return {
+          timestamp: null,
+          lines: [{ text: '', repeat: 0 }],
+          type: GroupType.SPACER,
+        };
       }
 
       return {

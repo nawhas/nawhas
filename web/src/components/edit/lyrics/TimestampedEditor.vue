@@ -35,23 +35,27 @@
           :key="groupId"
       >
         <div class="group__timestamp" v-if="lyrics.meta.timestamps">
-          <timestamp v-model="group.timestamp" @change="change" />
+          <v-chip
+              small label outlined
+              v-if="group.type === GroupType.SPACER"
+          ><v-icon small>height</v-icon></v-chip>
+          <timestamp v-model="group.timestamp" @change="change" v-else />
         </div>
         <div class="group__lines">
           <div class="line" v-for="(line, lineId) in group.lines" :key="lineId">
             <editable-text class="line__text"
-                          v-model="line.text"
-                          autocapitalize="off"
-                          autocomplete="off"
-                          aria-autocomplete="none"
-                          spellcheck="false"
-                          :ref="`group-${groupId}-line-${lineId}`"
-                          @keydown="onKeyDown($event, group, line, { group: groupId, line: lineId })"
-                          @focus="onFocus($event, group, line, { group: groupId, line: lineId })"
-                          @blur="onBlur($event, group, line, { group: groupId, line: lineId })"
-                          @input="change"
+                           v-model="line.text"
+                           autocapitalize="off"
+                           autocomplete="off"
+                           aria-autocomplete="none"
+                           spellcheck="false"
+                           :ref="`group-${groupId}-line-${lineId}`"
+                           @keydown="onKeyDown($event, group, line, { group: groupId, line: lineId })"
+                           @focus="onFocus($event, group, line, { group: groupId, line: lineId })"
+                           @blur="onBlur($event, group, line, { group: groupId, line: lineId })"
+                           @input="change"
             />
-            <div class="line__actions">
+            <div class="line__actions" v-if="group.type !== GroupType.SPACER">
               <repeat-line v-model="line.repeat" @change="onRepeatChange" />
             </div>
           </div>
@@ -73,6 +77,7 @@ import StateHistory from '@/utils/StateHistory';
 import { Line, LineGroup, Lyrics } from '@/types/lyrics';
 import { clone } from '@/utils/clone';
 import LyricsHighlighter from '@/utils/LyricsHighlighter';
+import * as GroupType from '@/constants/lyrics/group-type';
 
 interface LineCoordinates {
   group: number;
@@ -92,6 +97,7 @@ const defaultLyrics = () => ({
     EditableText,
     Timestamp,
   },
+  data: () => ({ GroupType }),
 })
 export default class TimestampedEditor extends Vue {
   @Model('change', { type: Object }) readonly model!: Lyrics;
@@ -142,7 +148,7 @@ export default class TimestampedEditor extends Vue {
   mounted() {
     this.lyrics = clone(this.model);
     this.history = new StateHistory(this.lyrics);
-    this.highlighter = new LyricsHighlighter(this.$store.state.player, this.model.data);
+    this.highlighter = new LyricsHighlighter(this.$store.state.player, this.lyrics);
   }
 
   toggleTimestamps() {
@@ -176,11 +182,10 @@ export default class TimestampedEditor extends Vue {
     let timestamp: number|null = 0;
     if (this.$store.state.player.current) {
       timestamp = this.$store.state.player.seek;
-    } else if (this.lyrics.data.length > at + 1) {
-      timestamp = this.lyrics.data[at].timestamp;
     } else {
-      timestamp = 0;
+      timestamp = this.getPreviousTimestamp(at);
     }
+
     this.lyrics.data.splice(at + 1, 0, {
       timestamp,
       lines: lines || [
@@ -189,6 +194,20 @@ export default class TimestampedEditor extends Vue {
     });
     this.focus({ group: at + 1, line: 0 });
     this.change();
+  }
+
+  getPreviousTimestamp(groupId: number) {
+    if (groupId < 0) {
+      return 0;
+    }
+
+    const groups = this.lyrics.data;
+
+    if (groups[groupId].timestamp) {
+      return groups[groupId].timestamp;
+    }
+
+    return this.getPreviousTimestamp(groupId - 1);
   }
 
   onKeyDown(e: KeyboardEvent, group: LineGroup, line: Line, coordinates: LineCoordinates) {
@@ -237,8 +256,17 @@ export default class TimestampedEditor extends Vue {
    */
   onEnter(group: LineGroup, line: Line, coordinates: LineCoordinates) {
     // If this is the only line in the group
-    // and the line is empty, do nothing.
+    // and the line is empty, convert this group into a
+    // spacer and add a new group.
     if (group.lines.length === 1 && line.text.length === 0) {
+      group.type = GroupType.SPACER;
+      group.timestamp = null;
+      this.change();
+      if (coordinates.group < this.lyrics.data.length - 1) {
+        this.goToNextLine(coordinates);
+      } else {
+        this.addNewGroup(coordinates.group);
+      }
       return;
     }
 

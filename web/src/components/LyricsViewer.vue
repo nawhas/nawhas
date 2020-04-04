@@ -7,8 +7,9 @@
           :key="groupId"
           :ref="`group-${groupId}`"
         >
+          <br v-if="group.type === GroupType.SPACER" />
           <div
-            v-if="!mobile && hasTimestamps"
+            v-else-if="!mobile && hasTimestamps"
             class="lyrics__group__timestamp"
           >{{ formattedTimestamp(group.timestamp) }}</div>
           <div class="lyrics__group__lines">
@@ -30,9 +31,12 @@ import {
 } from 'vue-property-decorator';
 import * as moment from 'moment';
 import * as Format from '@/constants/lyrics/format';
+import * as GroupType from '@/constants/lyrics/group-type';
 import { Lyrics, LyricsModel } from '@/types/lyrics';
 
-@Component
+@Component({
+  data: () => ({ GroupType }),
+})
 export default class LyricsViewer extends Vue {
   @Prop({ type: Object, required: true }) private readonly model!: LyricsModel;
   @Prop() private readonly current!: boolean;
