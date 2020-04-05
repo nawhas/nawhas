@@ -37,12 +37,7 @@
         class="lyrics"
         v-if="!minimized && mobile && view === 'lyrics'"
       >
-        <lyrics-viewer
-          class="lyrics__text"
-          v-if="track.lyrics"
-          :model="track.lyrics"
-          :current="true"
-        ></lyrics-viewer>
+        <lyrics-renderer class="lyrics-content" :track="track" />
       </div>
       <div
         class="audio-player__up-next"
@@ -257,7 +252,7 @@ import { Component, Vue, Watch } from 'vue-property-decorator';
 import { Howl } from 'howler';
 import * as moment from 'moment';
 import QueueList from '@/components/audio-player/QueueList.vue';
-import LyricsViewer from '@/components/LyricsViewer.vue';
+import LyricsRenderer from '@/components/lyrics/LyricsRenderer.vue';
 import {
   PlayerState, QueuedTrack, TrackQueue, RepeatType,
 } from '@/store/modules/player';
@@ -271,7 +266,7 @@ type View = 'none' | 'lyrics' | 'cast' | 'queue';
 
 @Component({
   components: {
-    LyricsViewer,
+    LyricsRenderer,
     QueueList,
   },
 })
