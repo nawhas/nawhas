@@ -2,12 +2,12 @@
   <v-app>
     <v-content
       class="content"
-      v-if="data"
+      v-if="track"
     >
       <div class="print__header">
         <div class="print__header__title">
-          <div class="print__header__title--track--name">{{ data.title }}</div>
-          <div class="print__header__title--track--meta">{{ data.reciter.name }} - {{ data.year }}</div>
+          <div class="print__header__title--track--name">{{ track.title }}</div>
+          <div class="print__header__title--track--meta">{{ track.reciter.name }} - {{ track.year }}</div>
         </div>
         <v-spacer></v-spacer>
         <div class="print__header_logo">
@@ -17,12 +17,11 @@
           />
         </div>
       </div>
-      <lyrics-viewer
+      <lyrics-renderer
+        v-if="track.lyrics"
         class="print__content"
-        v-if="data.lyrics"
-        :model="data.lyrics"
-        :current="false"
-      ></lyrics-viewer>
+        :track="track"
+      ></lyrics-renderer>
       <div class="print__content print__content--empty" v-else>
         We don't have a write-up of this nawha yet.
       </div>
@@ -37,8 +36,7 @@
 <script>
 /* eslint-disable dot-notation */
 import { getTrack } from '@/services/tracks';
-import LyricsViewer from '@/components/LyricsViewer.vue';
-// import LyricsRenderer from '@/components/lyrics/LyricsRenderer.vue';
+import LyricsRenderer from '@/components/lyrics/LyricsRenderer.vue';
 
 export default {
   props: ['trackObject'],
@@ -49,12 +47,11 @@ export default {
   }),
 
   components: {
-    LyricsViewer,
-    // LyricsRenderer,
+    LyricsRenderer,
   },
 
   computed: {
-    data() {
+    track() {
       return this.trackObject || this.fetchedTrack;
     },
   },
@@ -76,7 +73,7 @@ export default {
     this.$el['__onPrintCompleteHandler__'] = handler;
     window.addEventListener('afterprint', handler);
 
-    if (!this.data) {
+    if (!this.track) {
       return;
     }
 
@@ -84,7 +81,7 @@ export default {
   },
 
   updated() {
-    if (!this.data) {
+    if (!this.track) {
       return;
     }
 
@@ -104,17 +101,17 @@ export default {
       }, 500);
     },
     goBackToTrack() {
-      if (!this.data) {
+      if (!this.track) {
         return;
       }
 
       this.$router.replace({
         name: 'tracks.show',
         params: {
-          reciter: this.data.reciter.slug,
-          album: this.data.year,
-          track: this.data.slug,
-          trackObject: this.data,
+          reciter: this.track.reciter.slug,
+          album: this.track.year,
+          track: this.track.slug,
+          trackObject: this.track,
         },
       });
     },
@@ -143,9 +140,31 @@ export default {
 .print__content {
   padding-top: 6mm;
   column-count: 2;
-  font-family: 'Roboto Slab', sans-serif;
-  * {
-    color: black !important;
+  font-weight: 400;
+  font-size: 1rem;
+  line-height: 2.1rem;
+
+  .lyrics__spacer {
+    width: 1px;
+    height: 12px;
+  }
+
+
+  .lyrics__group__lines__line {
+    display: flex;
+    align-items: center;
+
+    .lyrics__repeat {
+      margin-left: 8px;
+      padding: 4px 6px;
+      text-align: center;;
+      border-radius: 8px;
+      font-size: 12px;
+      font-family: 'Roboto Mono', monospace;
+      font-weight: 600;
+      line-height: 12px;
+      border: 1px solid rgba(0,0,0,0.6);
+    }
   }
 }
 
