@@ -38,6 +38,7 @@
 /* eslint-disable dot-notation */
 import { getTrack } from '@/services/tracks';
 import LyricsViewer from '@/components/LyricsViewer.vue';
+// import LyricsRenderer from '@/components/lyrics/LyricsRenderer.vue';
 
 export default {
   props: ['trackObject'],
@@ -49,6 +50,7 @@ export default {
 
   components: {
     LyricsViewer,
+    // LyricsRenderer,
   },
 
   computed: {
@@ -120,7 +122,7 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .print__header {
   width: 100%;
   display: flex;
@@ -142,6 +144,9 @@ export default {
   padding-top: 6mm;
   column-count: 2;
   font-family: 'Roboto Slab', sans-serif;
+  * {
+    color: black !important;
+  }
 }
 
 .print__content--empty {

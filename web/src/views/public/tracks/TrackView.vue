@@ -96,8 +96,7 @@
               <template v-if="track">
                 <lyrics-viewer
                   v-if="track.lyrics"
-                  :model="track.lyrics"
-                  :current="isSameTrackPlaying"
+                  :track="track"
                 ></lyrics-viewer>
                 <div class="lyrics__empty" v-else>
                   <div :class="{ 'lyrics__empty-message': true, 'lyrics__empty-message--dark': isDark }">
