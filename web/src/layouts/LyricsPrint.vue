@@ -21,7 +21,6 @@
         class="print__content"
         v-if="data.lyrics"
         :model="data.lyrics"
-        :show-timestamps="false"
         :current="false"
       ></lyrics-viewer>
       <div class="print__content print__content--empty" v-else>
@@ -154,8 +153,8 @@ export default {
 }
 
 .content {
-  background: white;
-  color: black;
+  background: white !important;
+  color: black !important;
   padding: 24px !important;
 }
 

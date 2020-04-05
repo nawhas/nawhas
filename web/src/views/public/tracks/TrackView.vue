@@ -95,7 +95,7 @@
             <v-card-text class="lyrics__content" :class="{ 'black--text': !isDark }">
               <template v-if="track">
                 <lyrics-viewer
-                  v-if="track.lyrics && track.lyrics.format === 1"
+                  v-if="track.lyrics"
                   :model="track.lyrics"
                   :current="isSameTrackPlaying"
                 ></lyrics-viewer>
@@ -106,7 +106,7 @@
                   </div>
                 </div>
               </template>
-              <div v-else>
+              <div class="lyrics__content__loader" v-else>
                 <lyrics-skeleton />
               </div>
             </v-card-text>
@@ -485,18 +485,21 @@ export default class TrackPage extends Vue {
 }
 
 .card--lyrics {
+  padding: 0;
+
   .lyrics__content {
-    padding: 24px;
-    font-weight: 400;
-    font-family: 'Roboto Slab', sans-serif;
-    line-height: 2rem;
-    font-size: 1rem;
+    padding: 0;
+  }
+
+  .lyrics__content__loader {
+    padding: 16px;
   }
 
   .lyrics__empty {
+    font-family: 'Roboto Slab', sans-serif;
     display: flex;
     justify-content: center;
-    color: rgba(0, 0, 0, 0.3);
+    color: rgba(17, 13, 13, 0.3);
     font-size: 20px;
     font-weight: 300;
     padding: 60px 0;
