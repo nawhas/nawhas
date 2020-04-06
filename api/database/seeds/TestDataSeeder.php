@@ -8,6 +8,7 @@ use App\Entities\Reciter;
 use App\Entities\Track;
 use App\Entities\User;
 use App\Enum\Role;
+use App\Modules\Lyrics\Documents\Format;
 use Illuminate\Database\Seeder;
 
 class TestDataSeeder extends Seeder
@@ -49,7 +50,7 @@ class TestDataSeeder extends Seeder
                 foreach ($a['tracks'] as $t) {
                     $track = new Track($album, $t['title']);
                     if ($t['lyrics']) {
-                        $track->replaceLyrics(new Lyrics($track, $t['lyrics'], Lyrics::FORMAT_PLAIN_TEXT));
+                        $track->replaceLyrics(new Lyrics($track, $t['lyrics'], Format::PLAIN_TEXT()));
                     }
                     if ($t['audio']) {
                         $track->addAudioFile(Media::audioFile($t['audio']));

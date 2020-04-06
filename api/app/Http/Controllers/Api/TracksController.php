@@ -12,6 +12,7 @@ use App\Entities\Track;
 use App\Entities\Media;
 use App\Http\Controllers\Controller;
 use App\Http\Transformers\TrackTransformer;
+use App\Modules\Lyrics\Documents\Format;
 use App\Repositories\TrackRepository;
 use App\Visits\Manager as VisitsManager;
 use Illuminate\Http\JsonResponse;
@@ -47,7 +48,8 @@ class TracksController extends Controller
         );
 
         if ($request->has('lyrics')) {
-            $track->replaceLyrics(new Lyrics($track, $request->get('lyrics'), $request->get('format', Lyrics::FORMAT_PLAIN_TEXT)));
+            $format = $request->get('format', Format::PLAIN_TEXT);
+            $track->replaceLyrics(new Lyrics($track, $request->get('lyrics'), new Format($format)));
         }
 
         $this->repository->persist($track);
@@ -68,7 +70,8 @@ class TracksController extends Controller
             $track->setTitle($request->get('title'));
         }
         if ($request->has('lyrics')) {
-            $track->replaceLyrics(new Lyrics($track, $request->get('lyrics'), $request->get('format', Lyrics::FORMAT_PLAIN_TEXT)));
+            $format = $request->get('format', Format::PLAIN_TEXT);
+            $track->replaceLyrics(new Lyrics($track, $request->get('lyrics'), new Format($format)));
         }
 
         $this->repository->persist($track);

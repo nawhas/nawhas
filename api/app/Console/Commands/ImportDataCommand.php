@@ -10,6 +10,7 @@ use App\Entities\Lyrics;
 use App\Entities\Media;
 use App\Entities\Reciter;
 use App\Entities\Track;
+use App\Modules\Lyrics\Documents\Format;
 use App\Repositories\AlbumRepository;
 use App\Repositories\ReciterRepository;
 use App\Repositories\TrackRepository;
@@ -188,7 +189,7 @@ class ImportDataCommand extends Command
             // Lyrics
             if ($this->source->exists($directory . '/lyrics.txt')) {
                 $text = $this->getLyricsFromFile($directory);
-                $lyrics = new Lyrics($track, $text, Lyrics::FORMAT_PLAIN_TEXT);
+                $lyrics = new Lyrics($track, $text, Format::PLAIN_TEXT());
                 $track->replaceLyrics($lyrics);
             }
 
