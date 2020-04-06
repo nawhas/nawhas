@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-menu :close-on-content-click="false" v-model="open">
+    <v-menu :close-on-content-click="false" v-model="open" left>
       <template v-slot:activator="{ on }">
         <v-btn icon class="user-menu" v-on="on">
           <v-icon>person</v-icon>
