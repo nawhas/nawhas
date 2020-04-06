@@ -38,14 +38,9 @@
         <div class="toolbar__actions">
           <v-btn
             v-if="track"
-            color="error"
             text
             @click="confirmDelete"
-          >Delete</v-btn>
-          <v-btn
-            text
-            @click="close"
-          >Cancel</v-btn>
+          ><v-icon>delete_forever</v-icon></v-btn>
           <v-btn
             color="primary"
             @click="submit"
