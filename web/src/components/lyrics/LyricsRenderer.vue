@@ -68,13 +68,26 @@ export default class LyricsRenderer extends Vue {
     return this.$vuetify.theme.dark;
   }
 
+  get highlightedGroup() {
+    return this.highlighter ? this.highlighter.current : null;
+  }
+
+  mounted() {
+    this.setUpHighlighter(this.isCurrentlyPlaying);
+  }
+
   @Watch('isCurrentlyPlaying')
-  onPlayingTrackChanged(playing: boolean) {
+  setUpHighlighter(playing: boolean) {
     if (playing && this.hasTimestamps()) {
       this.highlighter = new LyricsHighlighter(this.$store.state.player, (this.lyrics as Lyrics));
     } else {
       this.highlighter = null;
     }
+  }
+
+  @Watch('highlightedGroup')
+  onHighlightedGroupChanged(value) {
+    this.$emit('highlight:changed', value);
   }
 
   hasTimestamps(): boolean {
