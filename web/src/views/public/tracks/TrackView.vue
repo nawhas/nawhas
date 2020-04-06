@@ -87,29 +87,7 @@
     <v-container class="app__section">
       <v-row>
         <v-col cols="12" md="8">
-          <v-card class="card card--lyrics lyrics">
-            <v-card-title class="card__title subtitle-1">
-              <v-icon class="card__title__icon material-icons-outlined">speaker_notes</v-icon>
-              <div>Write-Up</div>
-            </v-card-title>
-            <v-card-text class="lyrics__content" :class="{ 'black--text': !isDark }">
-              <template v-if="track">
-                <lyrics-viewer
-                  v-if="track.lyrics"
-                  :track="track"
-                ></lyrics-viewer>
-                <div class="lyrics__empty" v-else>
-                  <div :class="{ 'lyrics__empty-message': true, 'lyrics__empty-message--dark': isDark }">
-                    <span v-if="track.lyrics">An update is required to view this write-up.</span>
-                    <span v-else>We don't have a write-up for this nawha yet.</span>
-                  </div>
-                </div>
-              </template>
-              <div class="lyrics__content__loader" v-else>
-                <lyrics-skeleton />
-              </div>
-            </v-card-text>
-          </v-card>
+          <lyrics-card :track="track" />
         </v-col>
         <v-col cols="12" md="4">
           <v-card class="card card--album">
@@ -162,19 +140,18 @@ import {
 } from 'vue-property-decorator';
 import Vibrant from 'node-vibrant';
 import ReciterHeroSkeleton from '@/components/loaders/ReciterHeroSkeleton.vue';
-import LyricsSkeleton from '@/components/loaders/LyricsSkeleton.vue';
 import MoreTracksSkeleton from '@/components/loaders/MoreTracksSkeleton.vue';
 import EditTrackDialog from '@/components/edit/EditTrackDialog.vue';
 import { getTracks, getTrack } from '@/services/tracks';
-import LyricsViewer from '@/components/LyricsViewer.vue';
+import LyricsCard from '@/components/lyrics/LyricsCard.vue';
+
 
 @Component({
   components: {
-    LyricsViewer,
     ReciterHeroSkeleton,
-    LyricsSkeleton,
     MoreTracksSkeleton,
     EditTrackDialog,
+    LyricsCard,
   },
 })
 export default class TrackPage extends Vue {
@@ -360,6 +337,7 @@ export default class TrackPage extends Vue {
 
 <style lang="scss" scoped>
 @import '../../../styles/theme';
+@import '../../../styles/tracks/cards';
 
 .hero {
   width: 100%;
@@ -420,20 +398,6 @@ export default class TrackPage extends Vue {
   }
 }
 
-.card__title {
-  border-bottom: rgba(0, 0, 0, 0.05) solid 1px;
-
-  display: flex;
-  align-items: center;
-
-  .card__title__icon {
-    margin-right: 14px;
-  }
-  &.card__title--link {
-    cursor: pointer;
-  }
-}
-
 .card--album {
   padding: 0;
   margin-bottom: 12px;
@@ -483,37 +447,6 @@ export default class TrackPage extends Vue {
   }
 }
 
-.card--lyrics {
-  padding: 0;
-
-  .lyrics__content {
-    padding: 0;
-  }
-
-  .lyrics__content__loader {
-    padding: 16px;
-  }
-
-  .lyrics__empty {
-    font-family: 'Roboto Slab', sans-serif;
-    display: flex;
-    justify-content: center;
-    color: rgba(17, 13, 13, 0.3);
-    font-size: 20px;
-    font-weight: 300;
-    padding: 60px 0;
-
-    .lyrics__empty-message {
-      display: flex;
-      margin: auto;
-      align-self: center;
-
-      &--dark {
-        color: white;
-      }
-    }
-  }
-}
 
 .track-page--dark {
   .hero__artwork {
