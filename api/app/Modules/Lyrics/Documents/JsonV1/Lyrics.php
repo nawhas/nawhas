@@ -34,6 +34,6 @@ class Lyrics
 
     public function toArray(): array
     {
-        return $this->groups->map(fn(Group $g) => $g->toArray())->toArray();
+        return $this->groups->map(fn(Group $group) => $group->toArray())->toArray();
     }
 }

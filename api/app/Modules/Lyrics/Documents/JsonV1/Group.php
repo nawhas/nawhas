@@ -44,7 +44,7 @@ class Group
         return [
             'timestamp' => $this->timestamp,
             'type' => $this->type,
-            'lines' => $this->lines->map(fn (Line $l) => $l->toArray()),
+            'lines' => $this->lines->map(fn (Line $line) => $line->toArray()),
         ];
     }
 }
