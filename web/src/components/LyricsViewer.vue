@@ -8,14 +8,12 @@
 import {
   Component, Prop, Vue,
 } from 'vue-property-decorator';
-import * as GroupType from '@/constants/lyrics/group-type';
 import LyricsRenderer from '@/components/lyrics/LyricsRenderer.vue';
 
 @Component({
   components: {
     LyricsRenderer,
   },
-  data: () => ({ GroupType }),
 })
 export default class LyricsViewer extends Vue {
   @Prop({ type: Object, required: true }) private readonly track!: any;
