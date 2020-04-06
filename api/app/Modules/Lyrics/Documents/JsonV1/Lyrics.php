@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Values\Lyrics\Documents\JsonV1;
+namespace App\Modules\Lyrics\Documents\JsonV1;
 
 use Illuminate\Support\Collection;
 
@@ -25,6 +25,11 @@ class Lyrics
     public function getGroups(): array
     {
         return $this->groups->toArray();
+    }
+
+    public function render(): string
+    {
+        return $this->groups->map(fn(Group $group) => $group->render())->join("\n");
     }
 
     public function toArray(): array

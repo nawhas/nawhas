@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Values\Lyrics\Documents\JsonV1;
+namespace App\Modules\Lyrics\Documents\JsonV1;
 
 class Line
 {
@@ -30,6 +30,17 @@ class Line
     public function getText(): string
     {
         return $this->text;
+    }
+
+    public function render(): string
+    {
+        $rendered = $this->text;
+
+        if ($this->repeat !== 0) {
+            $rendered .= " (x{$this->repeat})";
+        }
+
+        return $rendered;
     }
 
     public function toArray(): array

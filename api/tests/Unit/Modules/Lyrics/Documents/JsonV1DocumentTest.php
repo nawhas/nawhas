@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Values\Lyrics\Documents;
+namespace Tests\Unit\Modules\Lyrics\Documents;
 
-use App\Values\Lyrics\Documents\JsonV1\Document;
+use App\Modules\Lyrics\Documents\JsonV1\Document;
 use Illuminate\Validation\ValidationException;
 use JsonException;
 use Tests\TestCase;
@@ -16,7 +16,7 @@ class JsonV1DocumentTest extends TestCase
      */
     public function it_serializes_to_json_properly(): void
     {
-        $expected = <<<JSON
+        $expected = /** @lang JSON */ <<<JSON
         {
            "meta": {
                "timestamps": true
@@ -33,7 +33,7 @@ class JsonV1DocumentTest extends TestCase
      */
     public function it_parses_json_source_content(): void
     {
-        $source = <<<JSON
+        $source = /** @lang JSON */ <<<JSON
         {
            "meta": {
                "timestamps": true
@@ -73,7 +73,7 @@ class JsonV1DocumentTest extends TestCase
         }
         JSON;
 
-        $expected = <<<JSON
+        $expected = /** @lang JSON */ <<<JSON
         {
            "meta": {
                "timestamps": true
@@ -123,18 +123,22 @@ class JsonV1DocumentTest extends TestCase
     /**
      * @test
      */
-    public function it_handles_missing_attributes(): void
+    public function it_renders_to_string_properly(): void
     {
-        $source = <<<JSON
+
+        $source = /** @lang JSON */ <<<JSON
         {
-           "meta": {},
+           "meta": {
+               "timestamps": true
+           },
            "data": [
                {
+                   "timestamp": 0,
                    "lines": [
-                        { "text": "some text goes here", "repeat": 0 },
-                        { "text": "some text goes here", "repeat": 2 },
-                        {  }
-                   ]
+                        { "text": "Hello", "repeat": 0 },
+                        { "text": "World", "repeat": 2 }
+                   ],
+                   "type": "normal"
                },
                {
                    "timestamp": null,
@@ -144,26 +148,26 @@ class JsonV1DocumentTest extends TestCase
                    "type": "spacer"
                },
                {
-                   "timestamp": "whatiswrongwithyou>>!>!?#",
+                   "timestamp": 14.04,
                    "lines": [
-                        { "text": true, "repeat": -2394 },
-                        { "text": "some text goes here", "repeat": "yes" },
-                        { "text": 10e10, "repeat": "yes" }
+                        { "text": "This is a test", "repeat": 0 },
+                        { "text": "Remain calm", "repeat": 2 }
                    ]
-               },
-               {
-                   "timestamp": "19.0000.044425",
-                   "lines": []
-               },
-               {
-                   "timestamp": 10e10,
-                   "lines": []
                }
            ]
         }
         JSON;
 
-        $this->expectException(ValidationException::class);
+        $expected = <<<TEXT
+        Hello
+        World (x2)
+        
+        This is a test
+        Remain calm (x2)
+        TEXT;
+
         $doc = Document::fromJson($source);
+
+        $this->assertEquals($expected, $doc->render());
     }
 }

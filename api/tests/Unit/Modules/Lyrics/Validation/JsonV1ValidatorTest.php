@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Validation\Lyrics;
+namespace Tests\Unit\Modules\Lyrics\Validation;
 
-use App\Validation\Lyrics\JsonV1Validator;
+use App\Modules\Lyrics\Validation\JsonV1Validator;
 use Illuminate\Validation\ValidationException;
 use JsonException;
 use Tests\TestCase;

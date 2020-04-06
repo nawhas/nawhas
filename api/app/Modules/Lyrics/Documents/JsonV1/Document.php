@@ -2,12 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\Values\Lyrics\Documents\JsonV1;
+namespace App\Modules\Lyrics\Documents\JsonV1;
 
+use App\Modules\Lyrics\Documents\Document as DocumentContract;
+use App\Modules\Lyrics\Documents\Format;
 use Illuminate\Contracts\Support\Jsonable;
 use Illuminate\Support\Arr;
 
-class Document implements Jsonable
+class Document implements DocumentContract, Jsonable
 {
     private Metadata $meta;
     private Lyrics $data;
@@ -58,6 +60,11 @@ class Document implements Jsonable
         return $this->data;
     }
 
+    public function getFormat(): Format
+    {
+        return Format::JSON_V1();
+    }
+
     public function toArray(): array
     {
         return [
@@ -66,8 +73,18 @@ class Document implements Jsonable
         ];
     }
 
+    public function render(): string
+    {
+        return $this->data->render();
+    }
+
     public function toJson($options = 0)
     {
         return json_encode($this->toArray(), $options);
+    }
+
+    public function __toString()
+    {
+        return $this->render();
     }
 }

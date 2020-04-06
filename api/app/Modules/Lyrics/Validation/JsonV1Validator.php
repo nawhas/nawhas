@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Validation\Lyrics;
+namespace App\Modules\Lyrics\Validation;
 
 use Illuminate\Support\Arr;
 use Illuminate\Support\MessageBag;

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Values\Lyrics\Documents\JsonV1;
+namespace App\Modules\Lyrics\Documents\JsonV1;
 
 class Metadata
 {

@@ -5,32 +5,15 @@ declare(strict_types=1);
 namespace App\Entities;
 
 use App\Entities\Behaviors\HasTimestamps;
+use App\Modules\Lyrics\Documents\Document;
+use App\Modules\Lyrics\Documents\Factory;
+use App\Modules\Lyrics\Documents\Format;
 use App\Entities\Contracts\{Entity, TimestampedEntity};
 use Ramsey\Uuid\{Uuid, UuidInterface};
 use Zain\LaravelDoctrine\Jetpack\Serializer\SerializesAttributes;
 
 class Lyrics implements Entity, TimestampedEntity
 {
-    /**
-     * Format 1:
-     * Flat text document.
-     */
-    public const FORMAT_PLAIN_TEXT = 1;
-
-    /**
-     * Version 2:
-     * JSON document:
-     * [
-     *   {
-     *     "timestamp": int,
-     *     "lines": [
-     *       { "text": string, "repeat": optional<int> }
-     *     ]
-     *   }
-     * ]
-     */
-    public const FORMAT_JSON_V1 = 2;
-
     use HasTimestamps;
     use SerializesAttributes;
 
@@ -39,12 +22,12 @@ class Lyrics implements Entity, TimestampedEntity
     private string $content;
     private int $format;
 
-    public function __construct(Track $track, string $content, int $format)
+    public function __construct(Track $track, string $content, Format $format)
     {
         $this->id = Uuid::uuid1();
         $this->track = $track;
         $this->content = $content;
-        $this->format = $format;
+        $this->format = $format->getValue();
     }
 
     public function getId(): string
@@ -62,8 +45,13 @@ class Lyrics implements Entity, TimestampedEntity
         return $this->content;
     }
 
-    public function getFormat(): int
+    public function getDocument(): Document
     {
-        return $this->format;
+        return Factory::create($this->content, $this->getFormat());
+    }
+
+    public function getFormat(): Format
+    {
+        return new Format($this->format);
     }
 }
