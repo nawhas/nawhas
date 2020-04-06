@@ -1,5 +1,5 @@
 <template>
-  <div :class="['hero-quote', 'hero-quote--' + $vuetify.breakpoint.name]">
+  <v-container :class="['hero-quote', 'hero-quote--' + $vuetify.breakpoint.name]">
     <div class="hero-quote__wrapper">
       <div class="hero-quote__lig hero-quote__lig--left">&ldquo;</div>
       <div class="hero-quote__content">
@@ -8,7 +8,7 @@
       <div class="hero-quote__lig hero-quote__lig--right">&rdquo;</div>
     </div>
     <div class="hero-quote__author">&mdash; {{ author }}</div>
-  </div>
+  </v-container>
 </template>
 
 <script>
@@ -23,7 +23,6 @@ export default {
   font-family: 'Bellefair', 'Roboto Slab', serif;
   color: white;
   padding: 24px 80px;
-  max-width: 70%;
   margin: 0 auto;
 
   .hero-quote__wrapper {
