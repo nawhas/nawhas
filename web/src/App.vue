@@ -71,17 +71,10 @@ export default class App extends Vue {
 @import url('https://fonts.googleapis.com/css?family=Bellefair|Roboto+Condensed:300,300i,400,400i,700,700i|Roboto+Slab:100,300,400,700|Material+Icons|Material+Icons+Outlined');
 @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css');
 
-body.scroll--none {
-  overflow: hidden;
-  overscroll-behavior: contain;
-}
-// Layout Styles
-.page-section {
-  padding: 24px 48px;
-}
-
 .app__section {
   padding-bottom: 24px !important;
+  max-width: 1000px;
+
   .section__title {
     font-size: 1.4rem; // Overriding the font size.
     font-weight: map-deep-get($headings, 'h5', 'weight');
@@ -98,9 +91,6 @@ body.scroll--none {
 }
 
 .app--xs, .app--sm {
-  .page-section {
-    padding: 24px;
-  }
   .app__section {
     padding: 24px;
   }
