@@ -73,7 +73,6 @@ export default class App extends Vue {
 
 .app__section {
   padding-bottom: 24px !important;
-  max-width: 1000px;
 
   .section__title {
     font-size: 1.4rem; // Overriding the font size.
