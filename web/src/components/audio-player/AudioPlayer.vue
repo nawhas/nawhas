@@ -5,27 +5,49 @@
       @mouseleave="hovering = false"
       v-if="track"
     >
+      <!--
+        -- Mobile Header --
+        Toggles the minimized/maximized state of the player.
+        Only shown on mobile.
+      -->
       <div
         class="audio-player__mobile-header"
         v-ripple
         v-if="mobile && !minimized"
         @click="toggleMinimized"
       >
-        <v-icon large>remove</v-icon>
+        <v-icon large :color="vibrantTextColor">remove</v-icon>
       </div>
-      <v-hover class="artwork">
-        <template #default="{ hover }">
-          <div @click="toggleMinimized">
-            <img crossorigin :src="artwork" />
-            <v-fade-transition>
-              <v-overlay v-if="hover && minimized && !mobile" absolute>
-                <v-icon>fullscreen</v-icon>
-              </v-overlay>
-            </v-fade-transition>
+
+      <!--
+        -- Artwork --
+        Toggles the minimized/maximized state of the player.
+      -->
+      <div class="artwork" :style="{ 'background-color': mobile && !minimized ? vibrantBackgroundColor : 'none' }">
+        <div @click="toggleMinimized">
+          <img crossorigin :src="artwork" :style="{ opacity: mobile && !minimized && currentOverlay ? 0 : 1 }" />
+        </div>
+        <div class="overlay overlay--lyrics" v-if="currentOverlay === 'lyrics'">
+          Lyrics
+        </div>
+        <div class="overlay overlay--queue" v-else-if="currentOverlay === 'queue'">
+          <!--
+            -- Queue --
+            Displays what is currently on the queue
+            Only Shown on mobile full screen
+          -->
+          <div class="audio-player__up-next" v-if="mobile && !minimized">
+            <v-expand-transition>
+              <queue-list :dark="true" @change="resetQueueMenu"></queue-list>
+            </v-expand-transition>
           </div>
-        </template>
-      </v-hover>
+        </div>
+      </div>
+
       <div class="player-content">
+        <!--
+          -- Track Title and Metadata --
+        -->
         <v-expand-x-transition>
           <div class="track-info" v-if="!minimized || mobile">
             <div class="track-info--track-name body-1" @click="onTrackTitleClicked">
@@ -36,6 +58,10 @@
             </div>
           </div>
         </v-expand-x-transition>
+
+        <!--
+          -- Seek Bar --
+        -->
         <div class="seek-bar">
           <v-progress-linear
             :active="(mobile && !minimized) || duration !== 0"
@@ -50,6 +76,9 @@
             <div class="seek-bar__timestamps__duration">{{ formattedDuration }}</div>
           </div>
         </div>
+        <!--
+          -- Player Actions --
+        -->
         <div class="player-actions">
           <v-btn
             icon
@@ -124,6 +153,9 @@
           </v-menu>
         </div>
         <v-expand-transition>
+          <!--
+            -- Overflow Menu --
+          -->
           <div class="player-sub-actions" v-if="!minimized && !mobile">
             <v-menu
               v-model="queueMenu"
@@ -142,6 +174,11 @@
                 </v-btn>
               </template>
 
+              <!--
+                -- Queue --
+                Displays what is currently on the queue
+                Only shown on desktop and expaned
+              -->
               <v-card class="queue-list-menu">
                 <v-card-title class="queue-list-menu__title">
                   On the Queue
@@ -153,18 +190,40 @@
           </div>
         </v-expand-transition>
       </div>
-      <!-- <div class="audio-player__up-next" v-if="mobile && !minimized">
-        <h5 class="title px-6">On the Queue</h5>
-        <v-expand-transition>
-          <queue-list @change="resetQueueMenu"></queue-list>
-        </v-expand-transition>
-      </div> -->
+
+      <!--
+        -- Action Bar --
+        Common actions for the player
+        Only Shown on mobile full screen
+      -->
+      <div
+        v-if="mobile && !minimized"
+        class="audio-player__bottom-actions"
+      >
+        <v-btn
+          text
+          @click="toggleOverlay('lyrics')"
+          :class="{'bottom-actions__button': true, 'bottom-action__button--active': currentOverlay === 'lyrics'}"
+        >
+          <v-icon left>speaker_notes</v-icon>
+          Write-Up
+        </v-btn>
+        <v-btn
+          text
+          @click="toggleOverlay('queue')"
+          :class="{'bottom-actions__button': true, 'bottom-action__button--active': currentOverlay === 'queue'}"
+        >
+          <v-icon left>queue_music</v-icon>
+          Queue
+        </v-btn>
+      </div>
     </v-sheet>
 </template>
 
 <script lang="ts">
 /* eslint-disable no-undef */
 import { Component, Vue, Watch } from 'vue-property-decorator';
+import Vibrant from 'node-vibrant';
 import { Howl } from 'howler';
 import * as moment from 'moment';
 import QueueList from '@/components/audio-player/QueueList.vue';
@@ -200,6 +259,11 @@ export default class AudioPlayer extends Vue {
   private queueMenu = false;
   /* Keep a reference to the progress bar interval to clear it when needed. */
   private progressInterval: number|null = null;
+  /* Background color for the audio player container */
+  private vibrantBackgroundColor = 'rgb(150, 37, 2)';
+  /* Text color for the audio player container */
+  private vibrantTextColor = '#fff';
+  private currentOverlay: null | 'lyrics' | 'queue' = null;
 
   get isDark() {
     return this.$vuetify.theme.dark;
@@ -349,6 +413,14 @@ export default class AudioPlayer extends Vue {
     return moment.utc(moment.duration(this.duration, 'seconds').asMilliseconds()).format('m:ss');
   }
 
+  toggleOverlay(key) {
+    if (this.currentOverlay !== key) {
+      this.currentOverlay = key;
+      return;
+    }
+    this.currentOverlay = null;
+  }
+
   mounted() {
     this.minimized = this.mobile;
   }
@@ -426,6 +498,8 @@ export default class AudioPlayer extends Vue {
 
     this.currentTrack.queued = this.currentQueuedTrack;
     this.currentTrack.index = this.store.current;
+
+    this.setBackgroundFromImage();
 
     this.stop();
     this.howl = undefined;
@@ -674,6 +748,19 @@ export default class AudioPlayer extends Vue {
       window.clearInterval(this.progressInterval);
     }
   }
+
+  setBackgroundFromImage() {
+    Vibrant.from(this.artwork)
+      .getPalette()
+      .then((palette) => {
+        const swatch = palette.DarkMuted;
+        if (!swatch) {
+          return;
+        }
+        this.vibrantBackgroundColor = swatch.getHex();
+        this.vibrantTextColor = swatch.getBodyTextColor();
+      });
+  }
 }
 </script>
 
@@ -703,7 +790,9 @@ $duration: 680ms;
   .artwork {
     cursor: pointer;
     img {
-      transition: width $duration $transition, max-width $duration $transition;
+      transition: width $duration $transition,
+        opacity 280ms $transition,
+        max-width $duration $transition;
       max-width: 80px;
     }
   }
@@ -787,15 +876,20 @@ $duration: 680ms;
   width: 100%;
   text-align: center;
   padding: 4px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 10;
 }
 
 .audio-player--mobile.audio-player--expanded {
-  height: 98%;
+  height: 100%;
   border-radius: 16px 16px 0 0;
-  overflow-y: auto;
+  overflow-y: hidden;
   overflow-x: hidden;
   z-index: 100 !important;
   flex-direction: column;
+  justify-content: space-between;
 
   .audio-player__mobile-header {
     width: 100%;
@@ -804,12 +898,37 @@ $duration: 680ms;
   }
 
   .artwork {
-    padding: 24px 88px;
+    background: rgb(150, 37, 2);
+    padding: 68px 88px 48px;
     text-align: center;
+    position: relative;
 
     img {
       width: 100%;
       max-width: 400px;
+      border: 4px solid white;
+    }
+
+    .overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      z-index: 5;
+      padding: 44px 0 0 0;
+      margin: 0;
+
+      .audio-player__up-next {
+        height: 100%;
+        overflow-y: auto;
+        text-align: left;
+      }
     }
   }
 
@@ -857,6 +976,17 @@ $duration: 680ms;
       justify-content: space-between;
       width: 100%;
       padding: 0;
+    }
+  }
+  .audio-player__bottom-actions {
+    width: 100%;
+    margin-bottom: 12px;
+    display: flex;
+    padding: 15px 30px;
+    justify-content: space-between;
+
+    .bottom-action__button--active {
+      color: $accent;
     }
   }
 }
