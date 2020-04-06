@@ -1,18 +1,20 @@
 <template>
-    <v-sheet :class="classes"
-         @mouseenter="hovering = true"
-         @mouseleave="hovering = false"
-         v-if="track"
+    <v-sheet
+      :class="classes"
+      @mouseenter="hovering = true"
+      @mouseleave="hovering = false"
+      v-if="track"
     >
-      <div class="audio-player__mobile-header"
-           v-ripple
-           v-if="mobile && !minimized"
-           @click="toggleMinimized"
+      <div
+        class="audio-player__mobile-header"
+        v-ripple
+        v-if="mobile && !minimized"
+        @click="toggleMinimized"
       >
         <v-icon large>remove</v-icon>
       </div>
       <v-hover class="artwork">
-        <template v-slot:default="{ hover }">
+        <template #default="{ hover }">
           <div @click="toggleMinimized">
             <img crossorigin :src="artwork" />
             <v-fade-transition>
@@ -49,7 +51,8 @@
           </div>
         </div>
         <div class="player-actions">
-          <v-btn icon
+          <v-btn
+            icon
             v-if="!minimized"
             @click="toggleShuffle"
             :color="shuffled ? 'deep-orange' : 'secondary'"
@@ -65,11 +68,12 @@
           >
             <v-icon :size="playbackControlSizes.standard.icon">skip_previous</v-icon>
           </v-btn>
-          <v-btn icon
-                 :height="playbackControlSizes.prominent.button"
-                 :width="playbackControlSizes.prominent.button"
-                 color="deep-orange"
-                 @click="togglePlayState"
+          <v-btn
+            icon
+            :height="playbackControlSizes.prominent.button"
+            :width="playbackControlSizes.prominent.button"
+            color="deep-orange"
+            @click="togglePlayState"
           >
             <v-icon v-if="playing" :size="playbackControlSizes.prominent.icon">
               pause_circle_filled
@@ -88,10 +92,12 @@
           >
             <v-icon :size="playbackControlSizes.standard.icon">skip_next</v-icon>
           </v-btn>
-          <v-btn @click="toggleRepeat"
-                 icon
-                 v-if="!minimized"
-                 :color="repeat ? 'deep-orange' : 'secondary'">
+          <v-btn
+            @click="toggleRepeat"
+            icon
+            v-if="!minimized"
+            :color="repeat ? 'deep-orange' : 'secondary'"
+          >
             <v-icon v-if="repeat === null || repeat === 'all'">repeat</v-icon>
             <v-icon v-else>repeat_one</v-icon>
           </v-btn>
@@ -147,12 +153,12 @@
           </div>
         </v-expand-transition>
       </div>
-      <div class="audio-player__up-next" v-if="mobile && !minimized">
+      <!-- <div class="audio-player__up-next" v-if="mobile && !minimized">
         <h5 class="title px-6">On the Queue</h5>
         <v-expand-transition>
           <queue-list @change="resetQueueMenu"></queue-list>
         </v-expand-transition>
-      </div>
+      </div> -->
     </v-sheet>
 </template>
 
