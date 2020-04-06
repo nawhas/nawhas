@@ -20,26 +20,28 @@
       </v-list>
     </v-navigation-drawer>
     <v-app-bar class="app-bar" :color="(!isDark) ? 'white' : null" app fixed elevate-on-scroll>
-      <div class="app-bar__left">
-        <nav class="nav__buttons" v-if="$vuetify.breakpoint.lgAndUp">
-          <v-btn text v-for="(link) in navigation" class="nav__btn" :key="link.to" :to="link.to">
-            {{ link.title }}
-          </v-btn>
-        </nav>
-        <v-app-bar-nav-icon @click.native="drawer = !drawer" v-else />
-      </div>
-      <div class="app-bar__center">
-        <v-toolbar-title class="nav__title">
-          <router-link to="/" tag="div" class="masthead__logo">
-            <logo-icon class="masthead__logo__icon" />
-            <logo-wordmark :class="{ 'masthead__logo__wordmark': true, 'masthead__logo__wordmark--dark': isDark }" />
-          </router-link>
-        </v-toolbar-title>
-      </div>
-      <div class="app-bar__right nav__search">
-        <search />
-        <user-menu class="user-menu" />
-      </div>
+      <v-container class="app-bar__container">
+        <div class="app-bar__left">
+          <nav class="nav__buttons" v-if="$vuetify.breakpoint.lgAndUp">
+            <v-btn text v-for="(link) in navigation" class="nav__btn" :key="link.to" :to="link.to">
+              {{ link.title }}
+            </v-btn>
+          </nav>
+          <v-app-bar-nav-icon @click.native="drawer = !drawer" v-else />
+        </div>
+        <div class="app-bar__center">
+          <v-toolbar-title class="nav__title">
+            <router-link to="/" tag="div" class="masthead__logo">
+              <logo-icon class="masthead__logo__icon" />
+              <logo-wordmark :class="{ 'masthead__logo__wordmark': true, 'masthead__logo__wordmark--dark': isDark }" />
+            </router-link>
+          </v-toolbar-title>
+        </div>
+        <div class="app-bar__right nav__search">
+          <search />
+          <user-menu class="user-menu" />
+        </div>
+      </v-container>
     </v-app-bar>
     <v-content>
       <v-container fluid :class="{ 'grey lighten-5': !isDark }" class="main-container">
@@ -142,6 +144,14 @@ export default class PublicVuetify extends Vue {
   margin: auto;
 }
 
+.app-bar__container {
+  display: flex;
+  align-items: center;
+  padding: 4px 0;
+  margin: 0 auto;
+  position: relative;
+  height: 64px;
+}
 .app-bar__left, .app-bar__right {
   flex: 1;
   display: flex;
