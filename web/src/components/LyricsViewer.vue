@@ -31,7 +31,9 @@ export default class LyricsViewer extends Vue {
   font-size: 1.1rem;
   line-height: 2.3rem;
 }
-
+.lyrics-content ::v-deep .lyrics__plain-text {
+  padding: 0 24px;
+}
 .lyrics-content ::v-deep .lyrics__group {
   display: flex;
   border-left: 3px solid transparent;
