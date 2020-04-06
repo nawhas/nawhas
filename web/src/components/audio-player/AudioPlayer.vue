@@ -1,249 +1,159 @@
 <template>
-  <v-sheet
-    :class="classes"
-    @mouseenter="hovering = true"
-    @mouseleave="hovering = false"
-    v-if="track"
-  >
-    <div
-      class="audio-player__mobile-header"
-      v-ripple
-      v-if="mobile && !minimized"
-      @click="toggleMinimized"
+    <v-sheet :class="classes"
+         @mouseenter="hovering = true"
+         @mouseleave="hovering = false"
+         v-if="track"
     >
-      <v-icon large>remove</v-icon>
-    </div>
-    <div class="audio-player__mobile--container">
-      <div
-        class="audio-player--container--details"
-        v-if="!minimized && mobile && view === 'lyrics'"
+      <div class="audio-player__mobile-header"
+           v-ripple
+           v-if="mobile && !minimized"
+           @click="toggleMinimized"
       >
-        <img
-          crossorigin
-          :src="artwork"
-        />
-        <div>
-          <div
-            class="track-info--track-name body-1"
-            @click="onTrackTitleClicked"
-          >{{ track.title }}</div>
-          <div
-            class="track-info--track-meta body-2"
-            @click="onReciterNameClicked"
-          >{{ track.reciter.name }} &bull; {{ track.year }}</div>
-        </div>
+        <v-icon large>remove</v-icon>
       </div>
-      <div
-        class="lyrics"
-        v-if="!minimized && mobile && view === 'lyrics'"
-      >
-        <lyrics-renderer class="lyrics-content" :track="track" />
-      </div>
-      <div
-        class="audio-player__up-next"
-        v-if="mobile && !minimized && view === 'queue'"
-      >
-        <h5 class="title px-6">On the Queue</h5>
-        <v-expand-transition>
-          <queue-list @change="resetQueueMenu"></queue-list>
-        </v-expand-transition>
-      </div>
-      <v-hover
-        class="artwork"
-        v-if="!mobile || minimized && mobile || !minimized && mobile && view === 'none'"
-      >
+      <v-hover class="artwork">
         <template v-slot:default="{ hover }">
           <div @click="toggleMinimized">
-            <img
-              crossorigin
-              :src="artwork"
-            />
+            <img crossorigin :src="artwork" />
             <v-fade-transition>
-              <v-overlay
-                v-if="hover && minimized && !mobile"
-                absolute
-              >
+              <v-overlay v-if="hover && minimized && !mobile" absolute>
                 <v-icon>fullscreen</v-icon>
               </v-overlay>
             </v-fade-transition>
           </div>
         </template>
       </v-hover>
-    </div>
-    <div class="player-content">
-      <v-expand-x-transition>
-        <div
-          class="track-info"
-          v-if="!minimized || mobile"
-        >
-          <div
-            class="track-info--track-name body-1"
-            @click="onTrackTitleClicked"
-          >{{ track.title }}</div>
-          <div
-            class="track-info--track-meta body-2"
-            @click="onReciterNameClicked"
-          >{{ track.reciter.name }} &bull; {{ track.year }}</div>
+      <div class="player-content">
+        <v-expand-x-transition>
+          <div class="track-info" v-if="!minimized || mobile">
+            <div class="track-info--track-name body-1" @click="onTrackTitleClicked">
+              {{ track.title }}
+            </div>
+            <div class="track-info--track-meta body-2" @click="onReciterNameClicked">
+              {{ track.reciter.name }} &bull; {{ track.year }}
+            </div>
+          </div>
+        </v-expand-x-transition>
+        <div class="seek-bar">
+          <v-progress-linear
+            :active="(mobile && !minimized) || duration !== 0"
+            v-model="progress"
+            color="deep-orange"
+            height="8"
+            :background-opacity="hovering || mobile ? 0.3 : 0"
+            class="seek-bar__progress">
+          </v-progress-linear>
+          <div :class="{'seek-bar__timestamps': true, 'seek-bar__timestamps--disabled': isDark}">
+            <div class="seek-bar__timestamps__current">{{ formattedSeek }}</div>
+            <div class="seek-bar__timestamps__duration">{{ formattedDuration }}</div>
+          </div>
         </div>
-      </v-expand-x-transition>
-      <div class="seek-bar">
-        <v-progress-linear
-          :active="(mobile && !minimized) || duration !== 0"
-          v-model="progress"
-          color="deep-orange"
-          height="8"
-          :background-opacity="hovering || mobile ? 0.3 : 0"
-          class="seek-bar__progress"
-        ></v-progress-linear>
-        <div :class="{'seek-bar__timestamps': true, 'seek-bar__timestamps--disabled': isDark}">
-          <div class="seek-bar__timestamps__current">{{ formattedSeek }}</div>
-          <div class="seek-bar__timestamps__duration">{{ formattedDuration }}</div>
-        </div>
-      </div>
-      <div class="player-actions">
-        <v-btn
-          icon
-          v-if="!minimized"
-          @click="toggleShuffle"
-          :color="shuffled ? 'deep-orange' : 'secondary'"
-        >
-          <v-icon>shuffle</v-icon>
-        </v-btn>
-        <v-btn
-          v-if="!mobile || !minimized"
-          icon
-          :height="playbackControlSizes.standard.button"
-          :width="playbackControlSizes.standard.button"
-          @click="previous"
-        >
-          <v-icon :size="playbackControlSizes.standard.icon">skip_previous</v-icon>
-        </v-btn>
-        <v-btn
-          icon
-          :height="playbackControlSizes.prominent.button"
-          :width="playbackControlSizes.prominent.button"
-          color="deep-orange"
-          @click="togglePlayState"
-        >
-          <v-icon
-            v-if="playing"
-            :size="playbackControlSizes.prominent.icon"
-          >pause_circle_filled</v-icon>
-          <v-icon
-            v-else
-            :size="playbackControlSizes.prominent.icon"
-          >play_circle_filled</v-icon>
-        </v-btn>
-        <v-btn
-          icon
-          v-if="!mobile || !minimized"
-          :height="playbackControlSizes.standard.button"
-          :width="playbackControlSizes.standard.button"
-          @click="next"
-          :disabled="!hasNext"
-        >
-          <v-icon :size="playbackControlSizes.standard.icon">skip_next</v-icon>
-        </v-btn>
-        <v-btn
-          @click="toggleRepeat"
-          icon
-          v-if="!minimized"
-          :color="repeat ? 'deep-orange' : 'secondary'"
-        >
-          <v-icon v-if="repeat === null || repeat === 'all'">repeat</v-icon>
-          <v-icon v-else>repeat_one</v-icon>
-        </v-btn>
-        <v-menu
-          v-if="minimized"
-          top
-          offset-y
-        >
-          <template v-slot:activator="{ on }">
-            <v-btn
-              icon
-              large
-              v-on="on"
-            >
-              <v-icon>more_vert</v-icon>
-            </v-btn>
-          </template>
-          <v-card>
-            <v-list>
-              <v-list-item @click="goToReciter">Go to reciter</v-list-item>
-              <v-list-item @click="goToTrack">Go to track</v-list-item>
-              <v-list-item @click="toggleMinimized">Expand player</v-list-item>
-            </v-list>
-          </v-card>
-        </v-menu>
-      </div>
-      <v-expand-transition>
-        <div
-          class="player-sub-actions"
-          v-if="!minimized && !mobile"
-        >
-          <v-menu
-            v-model="queueMenu"
-            top
-            :nudge-left="300"
-            offset-y
-            allow-overflow
-            :close-on-content-click="false"
+        <div class="player-actions">
+          <v-btn icon
+            v-if="!minimized"
+            @click="toggleShuffle"
+            :color="shuffled ? 'deep-orange' : 'secondary'"
           >
-            <template v-slot:activator="{ on }">
+            <v-icon>shuffle</v-icon>
+          </v-btn>
+          <v-btn
+            v-if="!mobile || !minimized"
+            icon
+            :height="playbackControlSizes.standard.button"
+            :width="playbackControlSizes.standard.button"
+            @click="previous"
+          >
+            <v-icon :size="playbackControlSizes.standard.icon">skip_previous</v-icon>
+          </v-btn>
+          <v-btn icon
+                 :height="playbackControlSizes.prominent.button"
+                 :width="playbackControlSizes.prominent.button"
+                 color="deep-orange"
+                 @click="togglePlayState"
+          >
+            <v-icon v-if="playing" :size="playbackControlSizes.prominent.icon">
+              pause_circle_filled
+            </v-icon>
+            <v-icon v-else :size="playbackControlSizes.prominent.icon">
+              play_circle_filled
+            </v-icon>
+          </v-btn>
+          <v-btn
+            icon
+            v-if="!mobile || !minimized"
+            :height="playbackControlSizes.standard.button"
+            :width="playbackControlSizes.standard.button"
+            @click="next"
+            :disabled="!hasNext"
+          >
+            <v-icon :size="playbackControlSizes.standard.icon">skip_next</v-icon>
+          </v-btn>
+          <v-btn @click="toggleRepeat"
+                 icon
+                 v-if="!minimized"
+                 :color="repeat ? 'deep-orange' : 'secondary'">
+            <v-icon v-if="repeat === null || repeat === 'all'">repeat</v-icon>
+            <v-icon v-else>repeat_one</v-icon>
+          </v-btn>
+          <v-menu
+            v-if="minimized"
+            top
+            offset-y
+          >
+          <template v-slot:activator="{ on }">
               <v-btn
-                icon
-                large
+                icon large
                 v-on="on"
               >
-                <v-icon>playlist_play</v-icon>
+                <v-icon>more_vert</v-icon>
               </v-btn>
             </template>
-
-            <v-card class="queue-list-menu">
-              <v-card-title class="queue-list-menu__title">On the Queue</v-card-title>
-              <queue-list @change="resetQueueMenu"></queue-list>
+            <v-card>
+              <v-list>
+                <v-list-item @click="goToReciter">Go to reciter</v-list-item>
+                <v-list-item @click="goToTrack">Go to track</v-list-item>
+                <v-list-item @click="toggleMinimized">Expand player</v-list-item>
+              </v-list>
             </v-card>
           </v-menu>
-          <v-btn
-            @click="toggleMinimized"
-            icon
-            large
-          >
-            <v-icon>picture_in_picture_alt</v-icon>
-          </v-btn>
         </div>
-      </v-expand-transition>
-    </div>
-    <div
-      v-if="mobile && !minimized"
-      class="audio-player__bottom-actions"
-    >
-      <v-btn
-        @click="changeView('lyrics')"
-        tile
-        text
-        :class="{'audio-player__bottom-actions--active': view === 'lyrics'}"
-      >
-        <v-icon>chat</v-icon>
-      </v-btn>
-      <v-btn
-        @click="changeView('cast')"
-        :class="{'audio-player__bottom-actions--active': view === 'cast'}"
-        tile
-        text
-      >
-        <v-icon>cast</v-icon>
-      </v-btn>
-      <v-btn
-        tile
-        text
-        @click="changeView('queue')"
-        :class="{'audio-player__bottom-actions--active': view === 'queue'}"
-      >
-        <v-icon>queue_music</v-icon>
-      </v-btn>
-    </div>
-  </v-sheet>
+        <v-expand-transition>
+          <div class="player-sub-actions" v-if="!minimized && !mobile">
+            <v-menu
+              v-model="queueMenu"
+              top
+              :nudge-left="300"
+              offset-y
+              allow-overflow
+              :close-on-content-click="false"
+            >
+              <template v-slot:activator="{ on }">
+                <v-btn
+                  icon large
+                  v-on="on"
+                >
+                  <v-icon>playlist_play</v-icon>
+                </v-btn>
+              </template>
+
+              <v-card class="queue-list-menu">
+                <v-card-title class="queue-list-menu__title">
+                  On the Queue
+                </v-card-title>
+                <queue-list @change="resetQueueMenu"></queue-list>
+              </v-card>
+            </v-menu>
+            <v-btn @click="toggleMinimized" icon large><v-icon>picture_in_picture_alt</v-icon></v-btn>
+          </div>
+        </v-expand-transition>
+      </div>
+      <div class="audio-player__up-next" v-if="mobile && !minimized">
+        <h5 class="title px-6">On the Queue</h5>
+        <v-expand-transition>
+          <queue-list @change="resetQueueMenu"></queue-list>
+        </v-expand-transition>
+      </div>
+    </v-sheet>
 </template>
 
 <script lang="ts">
@@ -252,21 +162,17 @@ import { Component, Vue, Watch } from 'vue-property-decorator';
 import { Howl } from 'howler';
 import * as moment from 'moment';
 import QueueList from '@/components/audio-player/QueueList.vue';
-import LyricsRenderer from '@/components/lyrics/LyricsRenderer.vue';
 import {
   PlayerState, QueuedTrack, TrackQueue, RepeatType,
 } from '@/store/modules/player';
 
 interface CachedTrackReference {
-  queued: QueuedTrack | null;
-  index: number | null;
+  queued: QueuedTrack|null;
+  index: number|null;
 }
-
-type View = 'none' | 'lyrics' | 'cast' | 'queue';
 
 @Component({
   components: {
-    LyricsRenderer,
     QueueList,
   },
 })
@@ -278,7 +184,7 @@ export default class AudioPlayer extends Vue {
   /* Denote whether the player is "minimized". Default to minimized on Mobile */
   private minimized = false;
   /* Playback engine */
-  private howl: Howl | undefined = undefined;
+  private howl: Howl|undefined = undefined;
   /* Cache the current playing track to compare */
   private currentTrack: CachedTrackReference = {
     queued: null,
@@ -287,9 +193,7 @@ export default class AudioPlayer extends Vue {
   /* Denote whether the menu for the queue is 'minimized' */
   private queueMenu = false;
   /* Keep a reference to the progress bar interval to clear it when needed. */
-  private progressInterval: number | null = null;
-  /* Determines which view should be shown */
-  private view: View = 'none';
+  private progressInterval: number|null = null;
 
   get isDark() {
     return this.$vuetify.theme.dark;
@@ -343,14 +247,14 @@ export default class AudioPlayer extends Vue {
    */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   get track(): any {
-    const queued: QueuedTrack | null = this.$store.getters['player/track'];
+    const queued: QueuedTrack|null = this.$store.getters['player/track'];
     return queued !== null ? queued.track : null;
   }
 
   /**
    * Gets the current QueuedTrack object from the player store
    */
-  get currentQueuedTrack(): QueuedTrack | null {
+  get currentQueuedTrack(): QueuedTrack|null {
     return this.$store.getters['player/track'];
   }
 
@@ -383,7 +287,7 @@ export default class AudioPlayer extends Vue {
     return this.track.album.artwork;
   }
 
-  get uri(): string | null {
+  get uri(): string|null {
     if (!this.track) {
       return null;
     }
@@ -441,15 +345,6 @@ export default class AudioPlayer extends Vue {
 
   mounted() {
     this.minimized = this.mobile;
-  }
-
-  changeView(view) {
-    if (this.view !== view) {
-      this.view = view;
-      return;
-    }
-
-    this.view = 'none';
   }
 
   /**
@@ -558,8 +453,6 @@ export default class AudioPlayer extends Vue {
     if (!this.minimized && this.mobile) {
       document.documentElement.classList.add('overflow-y-hidden');
     }
-
-    this.view = 'none';
   }
 
   /**
@@ -792,12 +685,14 @@ $duration: 680ms;
   bottom: 0;
   right: 0;
   white-space: nowrap;
-  z-index: 500;
-  box-shadow: 0 -2px 8px 4px rgba(0, 0, 0, 0.16);
+  z-index: 10;
+  box-shadow: 0 -2px 8px 4px rgba(0,0,0,0.16);
   display: flex;
-  transition: width $duration $transition, height $duration $transition,
-    left $duration $transition, right $duration $transition,
-    bottom $duration $transition;
+  transition: width $duration $transition,
+     height $duration $transition,
+     left $duration $transition,
+     right $duration $transition,
+     bottom $duration $transition;
 
   .artwork {
     cursor: pointer;
@@ -854,8 +749,7 @@ $duration: 680ms;
   }
 
   .track-info {
-    &--track-name,
-    &--track-meta {
+    &--track-name, &--track-meta {
       cursor: pointer;
     }
   }
@@ -878,9 +772,9 @@ $duration: 680ms;
 }
 
 @media #{map-get($display-breakpoints, 'md-and-down')} {
-  .audio-player {
-    z-index: 3 !important;
-  }
+    .audio-player {
+      z-index: 3 !important;
+    }
 }
 
 .audio-player__mobile-header {
@@ -903,55 +797,18 @@ $duration: 680ms;
     padding: 4px;
   }
 
-  .audio-player__mobile--container {
-    height: 400px;
+  .artwork {
+    padding: 24px 88px;
+    text-align: center;
 
-    .audio-player--container--details {
-      display: flex;
-      padding: 0px 20px;
-
-      img {
-        width: 45px;
-        height: 45px;
-        margin-right: 20px;
-      }
-    }
-
-    .lyrics {
-      background: rgba(55, 43, 37, 0.81);
-      height: 370px;
+    img {
       width: 100%;
-      z-index: 10;
-      position: absolute;
-      top: 100px;
-      overflow: auto;
-
-      .lyrics__text {
-        word-wrap: break-word !important;
-        padding-left: 20px;
-        padding-top: 10px;
-      }
-    }
-
-    .audio-player__up-next {
-      height: 100%;
-      overflow: auto;
-    }
-
-    .artwork {
-      padding: 80px 88px;
-      text-align: center;
-
-      img {
-        width: 100%;
-        max-width: 400px;
-      }
+      max-width: 400px;
     }
   }
 
   .player-content {
-    margin-top: 50px;
-    padding: 0px 48px;
+    padding: 24px 48px;
     position: relative;
     display: flex;
     min-height: min-content;
@@ -998,21 +855,22 @@ $duration: 680ms;
   }
 }
 
-.audio-player__bottom-actions {
-  position: fixed;
-  bottom: 0;
-  width: 100%;
-  height: 60px;
-  display: flex;
-  padding: 15px 30px;
-  justify-content: space-between;
+.queue-list-menu {
+  max-height: calc(100vh - 180px);
+  position: relative;
 
-  .audio-player__bottom-actions--active {
-    color: #ff5722;
+  .queue-list-menu__title {
+    position: sticky;
+    padding: 16px 16px 8px;
+    top: 0;
+    z-index: 1;
+    margin-bottom: -8px;
+    border-bottom: 1px solid rgba(0,0,0,0.1);
   }
 }
 
-@media screen and (orientation: landscape) {
+
+@media screen and (orientation:landscape) {
   .audio-player--mobile.audio-player--expanded {
     flex-direction: row;
     flex-wrap: wrap;
