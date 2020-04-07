@@ -263,7 +263,7 @@ export default class TimestampedEditor extends Vue {
    */
   addNewGroup(at, lines: Array<Line>|null = null) {
     let timestamp: number|null = 0;
-    if (this.$store.state.player.current) {
+    if (this.$store.state.player.current !== null) {
       timestamp = this.$store.state.player.seek;
     } else {
       timestamp = this.getPreviousTimestamp(at);
