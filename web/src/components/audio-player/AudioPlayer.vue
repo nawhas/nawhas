@@ -570,6 +570,9 @@ export default class AudioPlayer extends Vue {
    * If no player is initialized, initialize Howler.
    */
   play() {
+    if (!this.track) {
+      return;
+    }
     if (!this.howl) {
       this.howl = this.initializeHowler();
     }
