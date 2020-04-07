@@ -1,10 +1,21 @@
 <template>
   <div :class="{ 'lyrics': true, 'lyrics--dark': isDark }">
-    <div v-if="isJson">
+    <div v-if="!track.lyrics" class="lyrics__empty lyrics__empty--unavailable">
+      <div class="lyrics__empty-message">
+        We don't have a write-up for this nawha yet.
+      </div>
+    </div>
+    <div v-else-if="unsupported" class="lyrics__empty lyrics__empty--unsupported">
+      <div class="lyrics__empty-message">
+        An update is required to view this write-up.
+      </div>
+    </div>
+    <div v-else-if="isJson">
       <div
         :class="{ 'lyrics__group': true, 'lyrics__group--highlighted': highlighter && highlighter.current === groupId }"
         v-for="(group, groupId) in lyrics.data"
-        :key="groupId">
+        :key="groupId"
+      >
         <div class="lyrics__spacer" v-if="group.type === GroupType.SPACER"></div>
         <div class="lyrics__group__lines">
           <div class="lyrics__group__lines__line" v-for="line in group.lines" :key="line.text">
@@ -36,6 +47,13 @@ export default class LyricsRenderer extends Vue {
 
   get model(): LyricsModel|null {
     return (this.track.lyrics as LyricsModel|null);
+  }
+
+  get unsupported(): boolean {
+    if (!this.track) {
+      return false;
+    }
+    return this.track.lyrics && this.track.lyrics.format > Format.JSON_V1;
   }
 
   get lyrics(): Lyrics|string {

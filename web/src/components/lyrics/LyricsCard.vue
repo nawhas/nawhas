@@ -12,18 +12,8 @@
       </v-tooltip>
     </v-card-title>
     <v-card-text class="lyrics__content" :class="{ 'black--text': !$vuetify.theme.dark }">
-      <template v-if="track && supported">
-        <lyrics-renderer
-            class="lyrics__renderer"
-            v-if="track.lyrics"
-            :track="track"
-        />
-        <div class="lyrics__empty" v-else>
-          <div :class="{ 'lyrics__empty-message': true, 'lyrics__empty-message--dark': $vuetify.theme.dark }">
-            <span v-if="track.lyrics">An update is required to view this write-up.</span>
-            <span v-else>We don't have a write-up for this nawha yet.</span>
-          </div>
-        </div>
+      <template v-if="track">
+        <lyrics-renderer class="lyrics__renderer" :track="track" />
       </template>
       <div class="lyrics__content__loader" v-else>
         <lyrics-skeleton />
@@ -47,13 +37,6 @@ import { Lyrics, LyricsModel } from '@/types/lyrics';
 })
 export default class LyricsCard extends Vue {
   @Prop({ type: Object }) private readonly track!: any;
-
-  get supported(): boolean {
-    if (!this.track) {
-      return false;
-    }
-    return this.track.lyrics && this.track.lyrics.format <= Format.JSON_V1;
-  }
 
   get synchronized(): boolean {
     if (!this.track || !this.track.lyrics) {
@@ -92,23 +75,20 @@ export default class LyricsCard extends Vue {
   padding: 16px;
 }
 
-.lyrics__empty {
+.lyrics__renderer ::v-deep  .lyrics__empty {
   font-family: 'Roboto Slab', sans-serif;
   display: flex;
   justify-content: center;
   color: rgba(17, 13, 13, 0.3);
   font-size: 20px;
   font-weight: 300;
-  padding: 60px 0;
+  padding: 60px 30px;
+  text-align: center;
 
   .lyrics__empty-message {
     display: flex;
     margin: auto;
     align-self: center;
-
-    &--dark {
-      color: white;
-    }
   }
 }
 
@@ -162,6 +142,9 @@ export default class LyricsCard extends Vue {
 }
 
 .lyrics__renderer.lyrics--dark {
+  ::v-deep .lyrics__empty {
+    color: rgba(255, 255, 255, 0.7);
+  }
   ::v-deep .lyrics__group {
     color: rgba(255, 255, 255, 0.76);
 
