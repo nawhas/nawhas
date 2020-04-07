@@ -56,7 +56,7 @@ $active-color: rgba(255, 255, 255, 1);
 }
 
 .renderer ::v-deep .lyrics__plain-text {
-  padding: 0 24px;
+  font-size: 18px;
 }
 
 .renderer ::v-deep .lyrics__group {

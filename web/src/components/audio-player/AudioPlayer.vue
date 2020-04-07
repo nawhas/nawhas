@@ -16,16 +16,21 @@
         v-if="mobile && !minimized"
         @click="toggleMinimized"
       >
-        <v-icon large :color="vibrantTextColor">remove</v-icon>
+<!--        <v-icon large :color="vibrantTextColor">expand_more</v-icon>-->
+        <v-icon large>expand_more</v-icon>
       </div>
 
       <!--
         # Artwork
         Toggles the minimized/maximized state of the player.
       -->
-      <div class="artwork" :style="{ 'background-color': mobile && !minimized ? vibrantBackgroundColor : 'none' }">
-        <div @click="toggleMinimized">
-          <img crossorigin :src="artwork" :style="{ opacity: mobile && !minimized && currentOverlay ? 0 : 1 }" />
+<!-- <div class="artwork" :style="{ 'background-color': mobile && !minimized ? vibrantBackgroundColor : 'none' }">-->
+      <div class="artwork">
+        <div
+            :class="{'artwork__image': true, 'artwork__image--overlay': mobile && !minimized && currentOverlay }"
+            @click="toggleMinimized"
+        >
+          <img crossorigin :src="artwork" />
         </div>
         <div class="overlay overlay--lyrics" v-if="mobile && !minimized && currentOverlay === 'lyrics'">
           <lyrics-overlay :track="track" />
@@ -889,8 +894,6 @@ $duration: 680ms;
 
 .audio-player--mobile.audio-player--expanded {
   height: 100%;
-  border-radius: 16px 16px 0 0;
-  overflow-y: hidden;
   overflow-x: hidden;
   z-index: 100 !important;
   flex-direction: column;
@@ -900,18 +903,34 @@ $duration: 680ms;
     width: 100%;
     text-align: center;
     padding: 4px;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.9), rgba(0,0,0,0));
   }
 
   .artwork {
-    background: rgb(150, 37, 2);
-    padding: 68px 88px 48px;
+    padding: 60px 0 48px;
     text-align: center;
     position: relative;
+    height: 100vw;
+    width: 100vw;
 
-    img {
+    .artwork__image {
+      position: absolute;
+      top: 0;
+      left: 0;
       width: 100%;
-      max-width: 400px;
-      border: 4px solid white;
+      height: 100%;
+      overflow: hidden;
+
+      img {
+        width: 100%;
+        max-width: initial;
+        @include transition(filter 280ms, transform 280ms);
+      }
+
+      &.artwork__image--overlay img {
+        filter: blur(15px);
+        transform: scale(1.3);
+      }
     }
 
     .overlay {
@@ -920,7 +939,7 @@ $duration: 680ms;
       left: 0;
       width: 100%;
       height: 100%;
-      background-color: rgba(0,0,0,0.3);
+      background-color: rgba(0,0,0,0.45);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -1010,7 +1029,6 @@ $duration: 680ms;
     border-bottom: 1px solid rgba(0,0,0,0.1);
   }
 }
-
 
 @media screen and (orientation:landscape) {
   .audio-player--mobile.audio-player--expanded {
