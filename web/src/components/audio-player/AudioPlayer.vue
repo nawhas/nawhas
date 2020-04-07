@@ -774,16 +774,11 @@ export default class AudioPlayer extends Vue {
     if (id === null) {
       return;
     }
-
     const renderer = (this.$refs.lyrics as Vue);
-    this.$vuetify.goTo('.lyrics__group--highlighted', {
-      container: (renderer.$el as HTMLElement),
-      offset: -1 * (renderer.$el.clientHeight - 100),
+    this.$nextTick(() => {
+      const results = renderer.$el.querySelector('.lyrics__group--highlighted');
+      return results && results.scrollIntoView({ block: 'center', behavior: 'smooth' });
     });
-    // const renderer = (this.$refs.lyrics as Vue);
-    // console.log(renderer);
-    // const results = renderer.$el.querySelector('.lyrics__group--highlighted');
-    // this.$nextTick(() => results && results.scrollIntoView({ block: 'center', behavior: 'smooth' }));
   }
 }
 </script>
