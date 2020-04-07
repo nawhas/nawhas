@@ -1,0 +1,850 @@
+{
+    "meta": {
+      "timestamps": true
+    },
+    "data": [
+      {
+        "timestamp": null,
+        "lines": [
+          {
+            "text": "Baba Dekho ye Teri Jaan hai",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": 7,
+        "lines": [
+          {
+            "text": "Mu pe tamachein ka nishaan hain",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": null,
+        "lines": [
+          {
+            "text": "",
+            "repeat": 0
+          }
+        ],
+        "type": "spacer"
+      },
+      {
+        "timestamp": 12,
+        "lines": [
+          {
+            "text": "Haye Baba",
+            "repeat": 3
+          }
+        ]
+      },
+      {
+        "timestamp": 23,
+        "lines": [
+          {
+            "text": "Neze ke tale beyth ke roti hai sakina kyun baba",
+            "repeat": 2
+          }
+        ]
+      },
+      {
+        "timestamp": 46,
+        "lines": [
+          {
+            "text": "karlin hain bund ankhein",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": null,
+        "lines": [
+          {
+            "text": "",
+            "repeat": 0
+          }
+        ],
+        "type": "spacer"
+      },
+      {
+        "timestamp": 53,
+        "lines": [
+          {
+            "text": "Takleef agar hoti thi",
+            "repeat": 0
+          },
+          {
+            "text": "mujhko kissi pehlu",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": 62,
+        "lines": [
+          {
+            "text": "Ankhon mein meri dekh nahin",
+            "repeat": 0
+          },
+          {
+            "text": "patay thay ansun",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": 71,
+        "lines": [
+          {
+            "text": "Behta hai meri ankhon say",
+            "repeat": 0
+          },
+          {
+            "text": "ab ashkon ka darya",
+            "repeat": 0
+          },
+          {
+            "text": "kyun baba",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": null,
+        "lines": [
+          {
+            "text": "",
+            "repeat": 0
+          }
+        ],
+        "type": "spacer"
+      },
+      {
+        "timestamp": 83,
+        "lines": [
+          {
+            "text": "Neze ke tale beyth ke",
+            "repeat": 0
+          },
+          {
+            "text": "roti hai sakina",
+            "repeat": 0
+          },
+          {
+            "text": "kyun baba",
+            "repeat": 0
+          },
+          {
+            "text": "karlin hain bund ankhein",
+            "repeat": 0
+          },
+          {
+            "text": "kyun baba",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": null,
+        "lines": [
+          {
+            "text": "",
+            "repeat": 0
+          }
+        ],
+        "type": "spacer"
+      },
+      {
+        "timestamp": 101,
+        "lines": [
+          {
+            "text": "Be rehm hai kitni ye",
+            "repeat": 0
+          },
+          {
+            "text": "laeeno ki nigahen",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": 110,
+        "lines": [
+          {
+            "text": "Kartay hain sitam bharti hoon",
+            "repeat": 0
+          },
+          {
+            "text": "jab dard sey aahein",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": 120,
+        "lines": [
+          {
+            "text": "Hota hai kissi qaid mein",
+            "repeat": 0
+          },
+          {
+            "text": "ronay pe bhi pehra",
+            "repeat": 0
+          },
+          {
+            "text": "kyun baba",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": null,
+        "lines": [
+          {
+            "text": "",
+            "repeat": 0
+          }
+        ],
+        "type": "spacer"
+      },
+      {
+        "timestamp": 131,
+        "lines": [
+          {
+            "text": "Neze ke tale beyth ke",
+            "repeat": 0
+          },
+          {
+            "text": "roti hai sakina",
+            "repeat": 0
+          },
+          {
+            "text": "kyun baba",
+            "repeat": 0
+          },
+          {
+            "text": "karlin hain bund ankhein",
+            "repeat": 0
+          },
+          {
+            "text": "kyun baba",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": null,
+        "lines": [
+          {
+            "text": "",
+            "repeat": 0
+          }
+        ],
+        "type": "spacer"
+      },
+      {
+        "timestamp": 150,
+        "lines": [
+          {
+            "text": "kya in mein koi sahibe",
+            "repeat": 0
+          },
+          {
+            "text": "aulad nahin hai",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": 159,
+        "lines": [
+          {
+            "text": "Kya in Ka makan bachon se",
+            "repeat": 0
+          },
+          {
+            "text": "abaad nahin hai",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": 168,
+        "lines": [
+          {
+            "text": "Bachpan pe bhi aada ne",
+            "repeat": 0
+          },
+          {
+            "text": "taras kuch nahin khaaya",
+            "repeat": 0
+          },
+          {
+            "text": "kyun baba",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": null,
+        "lines": [
+          {
+            "text": "",
+            "repeat": 0
+          }
+        ],
+        "type": "spacer"
+      },
+      {
+        "timestamp": 180,
+        "lines": [
+          {
+            "text": "Neze ke tale beyth ke",
+            "repeat": 0
+          },
+          {
+            "text": "roti hai sakina",
+            "repeat": 0
+          },
+          {
+            "text": "kyun baba",
+            "repeat": 0
+          },
+          {
+            "text": "karlin hain bund ankhein",
+            "repeat": 0
+          },
+          {
+            "text": "kyun baba",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": null,
+        "lines": [
+          {
+            "text": "",
+            "repeat": 0
+          }
+        ],
+        "type": "spacer"
+      },
+      {
+        "timestamp": 198,
+        "lines": [
+          {
+            "text": "Baba mujhe zalim ke",
+            "repeat": 0
+          },
+          {
+            "text": "tamacho se bachalo",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": 207,
+        "lines": [
+          {
+            "text": "Aaghosh mein ab apni",
+            "repeat": 0
+          },
+          {
+            "text": "sakina ko uthalo",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": 217,
+        "lines": [
+          {
+            "text": "Faryaad karoon kissay",
+            "repeat": 0
+          },
+          {
+            "text": "koi bhi nahin apna",
+            "repeat": 0
+          },
+          {
+            "text": "kyun baba",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": null,
+        "lines": [
+          {
+            "text": "",
+            "repeat": 0
+          }
+        ],
+        "type": "spacer"
+      },
+      {
+        "timestamp": 228,
+        "lines": [
+          {
+            "text": "Neze ke tale beyth ke",
+            "repeat": 0
+          },
+          {
+            "text": "roti hai sakina",
+            "repeat": 0
+          },
+          {
+            "text": "kyun baba",
+            "repeat": 0
+          },
+          {
+            "text": "karlin hain bund ankhein",
+            "repeat": 0
+          },
+          {
+            "text": "kyun baba",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": null,
+        "lines": [
+          {
+            "text": "",
+            "repeat": 0
+          }
+        ],
+        "type": "spacer"
+      },
+      {
+        "timestamp": 247,
+        "lines": [
+          {
+            "text": "Yeh shimre laen ghur kiya",
+            "repeat": 0
+          },
+          {
+            "text": "kab tak mujhay dega",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": 256,
+        "lines": [
+          {
+            "text": "Yeh zulm o sitam mera jigar",
+            "repeat": 0
+          },
+          {
+            "text": "kaisay sahay ga",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": 265,
+        "lines": [
+          {
+            "text": "Ghut ghut ke museebat se",
+            "repeat": 0
+          },
+          {
+            "text": "main marjaoon kahin na",
+            "repeat": 0
+          },
+          {
+            "text": "kyun baba",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": null,
+        "lines": [
+          {
+            "text": "",
+            "repeat": 0
+          }
+        ],
+        "type": "spacer"
+      },
+      {
+        "timestamp": 277,
+        "lines": [
+          {
+            "text": "Neze ke tale beyth ke",
+            "repeat": 0
+          },
+          {
+            "text": "roti hai sakina",
+            "repeat": 0
+          },
+          {
+            "text": "kyun baba",
+            "repeat": 0
+          },
+          {
+            "text": "karlin hain bund ankhein",
+            "repeat": 0
+          },
+          {
+            "text": "kyun baba",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": null,
+        "lines": [
+          {
+            "text": "",
+            "repeat": 0
+          }
+        ],
+        "type": "spacer"
+      },
+      {
+        "timestamp": 295,
+        "lines": [
+          {
+            "text": "Yaad ata hai ammu ka",
+            "repeat": 0
+          },
+          {
+            "text": "meray naaz uthaana",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": 304,
+        "lines": [
+          {
+            "text": "Aur aapka woh haathon ke",
+            "repeat": 0
+          },
+          {
+            "text": "jhulay mein jhulana",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": 314,
+        "lines": [
+          {
+            "text": "Qismat ne hummay kon sa din aaj dikhaaya",
+            "repeat": 0
+          },
+          {
+            "text": "kyun baba",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": null,
+        "lines": [
+          {
+            "text": "",
+            "repeat": 0
+          }
+        ],
+        "type": "spacer"
+      },
+      {
+        "timestamp": 325,
+        "lines": [
+          {
+            "text": "Neze ke tale beyth ke",
+            "repeat": 0
+          },
+          {
+            "text": "roti hai sakina",
+            "repeat": 0
+          },
+          {
+            "text": "kyun baba",
+            "repeat": 0
+          },
+          {
+            "text": "karlin hain bund ankhein",
+            "repeat": 0
+          },
+          {
+            "text": "kyun baba",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": null,
+        "lines": [
+          {
+            "text": "",
+            "repeat": 0
+          }
+        ],
+        "type": "spacer"
+      },
+      {
+        "timestamp": 344,
+        "lines": [
+          {
+            "text": "Chalti hoon to dukhtay hain",
+            "repeat": 0
+          },
+          {
+            "text": "bohat paaon ke chalay",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": 353,
+        "lines": [
+          {
+            "text": "Kantay jo chubhay hain",
+            "repeat": 0
+          },
+          {
+            "text": "to inhein kon nikalay",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": 362,
+        "lines": [
+          {
+            "text": "Jalti hai zameen kaisay",
+            "repeat": 0
+          },
+          {
+            "text": "chaloon dekhlo baba",
+            "repeat": 0
+          },
+          {
+            "text": "kyun baba",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": null,
+        "lines": [
+          {
+            "text": "",
+            "repeat": 0
+          }
+        ],
+        "type": "spacer"
+      },
+      {
+        "timestamp": 374,
+        "lines": [
+          {
+            "text": "Neze ke tale beyth ke",
+            "repeat": 0
+          },
+          {
+            "text": "roti hai sakina",
+            "repeat": 0
+          },
+          {
+            "text": "kyun baba",
+            "repeat": 0
+          },
+          {
+            "text": "karlin hain bund ankhein",
+            "repeat": 0
+          },
+          {
+            "text": "kyun baba",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": null,
+        "lines": [
+          {
+            "text": "",
+            "repeat": 0
+          }
+        ],
+        "type": "spacer"
+      },
+      {
+        "timestamp": 392,
+        "lines": [
+          {
+            "text": "Rassi ki jo gardan mein",
+            "repeat": 0
+          },
+          {
+            "text": "chubhan hoti hai baba",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": 401,
+        "lines": [
+          {
+            "text": "Main saans loon kaisay ke ghuttan",
+            "repeat": 0
+          },
+          {
+            "text": "hoti hai baba",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": 411,
+        "lines": [
+          {
+            "text": "Boloon bhi to kis tarha ke",
+            "repeat": 0
+          },
+          {
+            "text": "bola nahin jaata",
+            "repeat": 0
+          },
+          {
+            "text": "kyun baba",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": null,
+        "lines": [
+          {
+            "text": "",
+            "repeat": 0
+          }
+        ],
+        "type": "spacer"
+      },
+      {
+        "timestamp": 422,
+        "lines": [
+          {
+            "text": "Neze ke tale beyth ke",
+            "repeat": 0
+          },
+          {
+            "text": "roti hai sakina",
+            "repeat": 0
+          },
+          {
+            "text": "kyun baba",
+            "repeat": 0
+          },
+          {
+            "text": "karlin hain bund ankhein",
+            "repeat": 0
+          },
+          {
+            "text": "kyun baba",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": null,
+        "lines": [
+          {
+            "text": "",
+            "repeat": 0
+          }
+        ],
+        "type": "spacer"
+      },
+      {
+        "timestamp": 441,
+        "lines": [
+          {
+            "text": "Tejani falak ne kabhi",
+            "repeat": 0
+          },
+          {
+            "text": "dekha na yeh manzar",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": 450,
+        "lines": [
+          {
+            "text": "Neze pe ho sar baap ka aur",
+            "repeat": 0
+          },
+          {
+            "text": "qaid ho dukhtar",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": 459,
+        "lines": [
+          {
+            "text": "Phatta hai Nigar apna",
+            "repeat": 0
+          },
+          {
+            "text": "jigar likh ke yeh noha",
+            "repeat": 0
+          },
+          {
+            "text": "kyun baba",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": null,
+        "lines": [
+          {
+            "text": "",
+            "repeat": 0
+          }
+        ],
+        "type": "spacer"
+      },
+      {
+        "timestamp": 471,
+        "lines": [
+          {
+            "text": "Neze ke tale beyth ke",
+            "repeat": 0
+          },
+          {
+            "text": "roti hai sakina",
+            "repeat": 0
+          },
+          {
+            "text": "kyun baba",
+            "repeat": 0
+          },
+          {
+            "text": "karlin hain bund ankhein",
+            "repeat": 0
+          },
+          {
+            "text": "kyun baba",
+            "repeat": 0
+          }
+        ]
+      }
+    ]
+  }
