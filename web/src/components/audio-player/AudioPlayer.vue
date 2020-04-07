@@ -35,6 +35,7 @@
             :track="track"
             @highlight:changed="scrollToCurrentLyricsGroup"
           />
+          <div v-else>We don't have a write-up for this nawha yet.</div>
         </div>
         <div class="overlay overlay--queue" v-else-if="mobile && !minimized && currentOverlay === 'queue'">
           <!--
