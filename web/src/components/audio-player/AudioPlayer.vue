@@ -772,6 +772,7 @@ export default class AudioPlayer extends Vue {
 
   scrollToCurrentLyricsGroup(id) {
     if (id === null) {
+      window.scrollTo(0, 0);
       return;
     }
     const renderer = (this.$refs.lyrics as Vue);
