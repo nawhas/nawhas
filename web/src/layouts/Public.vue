@@ -39,7 +39,7 @@
         </div>
         <div class="app-bar__center">
         </div>
-        <div class="app-bar__right nav__search">
+        <div class="app-bar__right">
           <search />
           <user-menu class="user-menu" />
         </div>
@@ -104,7 +104,7 @@ export default class PublicVuetify extends Vue {
   justify-content: center;
 }
 
-.nav__search {
+.app-bar__right {
   align-self: flex-start;
 }
 
@@ -183,6 +183,10 @@ export default class PublicVuetify extends Vue {
 
   .user-menu {
     margin: 0;
+    align-self: center;
+  }
+
+  .app-bar__right {
     align-self: center;
   }
 }
