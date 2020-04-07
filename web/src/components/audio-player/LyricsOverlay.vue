@@ -1,0 +1,102 @@
+<template>
+  <lyrics-renderer
+      ref="lyrics"
+      class="renderer"
+      v-if="track.lyrics"
+      :track="track"
+      @highlight:changed="scrollToCurrentLyricsGroup"
+  />
+</template>
+
+<script lang="ts">
+import {
+  Component, Prop, Ref, Vue,
+} from 'vue-property-decorator';
+import LyricsRenderer from '@/components/lyrics/LyricsRenderer.vue';
+
+@Component({
+  components: {
+    LyricsRenderer,
+  },
+})
+export default class LyricsOverlay extends Vue {
+  @Prop({ type: Object }) private readonly track;
+  @Ref('lyrics') private readonly renderer!: Vue;
+
+  scrollToCurrentLyricsGroup(id) {
+    if (id === null) {
+      window.scrollTo(0, 0);
+      return;
+    }
+
+    this.$nextTick(() => {
+      const highlighted = this.renderer.$el.querySelector('.lyrics__group--highlighted');
+      if (highlighted) {
+        highlighted.scrollIntoView({ block: 'center', behavior: 'smooth' });
+      }
+    });
+  }
+}
+</script>
+
+<style lang="scss" scoped>
+@import '../../styles/theme';
+
+$inactive-color: rgba(255, 255, 255, 0.3);
+$active-color: rgba(255, 255, 255, 1);
+
+.renderer {
+  padding: 12px 36px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  white-space: normal;
+  text-align: left;
+  height: 100%;
+  width: 100%;
+}
+
+.renderer ::v-deep .lyrics__plain-text {
+  padding: 0 24px;
+}
+
+.renderer ::v-deep .lyrics__group {
+  padding: 8px 0;
+  color: $inactive-color;
+  font-size: 28px;
+  font-weight: 600;
+  @include transition(color, font-weight);
+
+  .lyrics__spacer {
+    display: none;
+  }
+
+  .lyrics__text {
+    display: inline;
+  }
+
+  .lyrics__repeat {
+    display: inline-block;
+    margin-left: 8px;
+    margin-bottom: 3px;
+    padding: 5px 8px;
+    text-align: center;
+    border-radius: 8px;
+    font-size: 14px;
+    font-family: 'Roboto Mono', monospace;
+    font-weight: 600;
+    line-height: 14px;
+    border: 1px solid $inactive-color;
+    vertical-align: middle;
+    @include transition(border-color);
+  }
+
+  &.lyrics__group--highlighted {
+    color: white;
+    font-weight: 700;
+
+    .lyrics__repeat {
+      border-color: rgba(255,255,255,0.76);
+    }
+  }
+}
+</style>

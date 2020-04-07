@@ -28,13 +28,7 @@
           <img crossorigin :src="artwork" :style="{ opacity: mobile && !minimized && currentOverlay ? 0 : 1 }" />
         </div>
         <div class="overlay overlay--lyrics" v-if="mobile && !minimized && currentOverlay === 'lyrics'">
-          <lyrics-renderer
-            ref="lyrics"
-            class="lyrics__renderer"
-            v-if="track.lyrics"
-            :track="track"
-            @highlight:changed="scrollToCurrentLyricsGroup"
-          />
+          <lyrics-overlay :track="track" />
         </div>
         <div class="overlay overlay--queue" v-else-if="mobile && !minimized && currentOverlay === 'queue'">
           <!--
@@ -235,6 +229,7 @@ import { Howl } from 'howler';
 import * as moment from 'moment';
 import QueueList from '@/components/audio-player/QueueList.vue';
 import LyricsRenderer from '@/components/lyrics/LyricsRenderer.vue';
+import LyricsOverlay from '@/components/audio-player/LyricsOverlay.vue';
 import {
   PlayerState, QueuedTrack, TrackQueue, RepeatType,
 } from '@/store/modules/player';
@@ -248,6 +243,7 @@ interface CachedTrackReference {
   components: {
     QueueList,
     LyricsRenderer,
+    LyricsOverlay,
   },
 })
 export default class AudioPlayer extends Vue {
@@ -770,23 +766,11 @@ export default class AudioPlayer extends Vue {
         this.vibrantTextColor = swatch.getBodyTextColor();
       });
   }
-
-  scrollToCurrentLyricsGroup(id) {
-    if (id === null) {
-      window.scrollTo(0, 0);
-      return;
-    }
-    const renderer = (this.$refs.lyrics as Vue);
-    this.$nextTick(() => {
-      const results = renderer.$el.querySelector('.lyrics__group--highlighted');
-      return results && results.scrollIntoView({ block: 'center', behavior: 'smooth' });
-    });
-  }
 }
 </script>
 
 <style lang="scss" scoped>
-@import '@/styles/theme';
+@import '../../styles/theme';
 
 $transition: cubic-bezier(0.4, 0, 0.2, 1);
 $duration: 680ms;
@@ -1064,70 +1048,6 @@ $duration: 680ms;
 
   .track-info {
     opacity: 1;
-  }
-}
-
-.lyrics__renderer {
-  font-size: 32px;
-  font-weight: 600;
-  padding: 12px 36px;
-  overflow-y: auto;
-  overflow-x: hidden;
-  white-space: normal;
-  text-align: left;
-  height: 100%;
-  width: 100%;
-}
-
-.lyrics__renderer ::v-deep .lyrics__plain-text {
-  padding: 0 24px;
-}
-
-.lyrics__renderer ::v-deep .lyrics__group {
-  padding: 8px 0;
-  color: rgba(255,255,255, 0.76);
-
-  .lyrics__group__timestamp {
-    font-family: 'Roboto Mono', monospace;
-    color: rgba(0, 0, 0, 0.5);
-    width: 45px;
-    margin-right: 16px;
-    text-align: right;
-    font-size: 14px;
-  }
-
-  .lyrics__spacer {
-    display: none;
-  }
-
-  .lyrics__text {
-    display: inline;
-  }
-
-  .lyrics__repeat {
-    display: inline-block;
-    margin-left: 8px;
-    margin-bottom: 3px;
-    padding: 5px 8px;
-    text-align: center;
-    border-radius: 8px;
-    font-size: 14px;
-    font-family: 'Roboto Mono', monospace;
-    font-weight: 600;
-    line-height: 14px;
-    border: 1px solid rgba(0,0,0,0.6);
-    vertical-align: middle;
-  }
-}
-
-.lyrics__renderer ::v-deep .lyrics__group {
-  color: rgba(255, 255, 255, 0.58);
-
-  &.lyrics__group--highlighted {
-    color: white;
-  }
-  .lyrics__repeat {
-    border-color: rgba(255,255,255,0.76);
   }
 }
 </style>
