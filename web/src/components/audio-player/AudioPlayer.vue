@@ -16,37 +16,39 @@
         v-if="mobile && !minimized"
         @click="toggleMinimized"
       >
-<!--        <v-icon large :color="vibrantTextColor">expand_more</v-icon>-->
-        <v-icon large>expand_more</v-icon>
+        <v-icon large dark>expand_more</v-icon>
       </div>
 
       <!--
         # Artwork
         Toggles the minimized/maximized state of the player.
       -->
-<!-- <div class="artwork" :style="{ 'background-color': mobile && !minimized ? vibrantBackgroundColor : 'none' }">-->
       <div class="artwork">
         <div
-            :class="{'artwork__image': true, 'artwork__image--overlay': mobile && !minimized && currentOverlay }"
+            :class="{
+              'artwork__image': true,
+              'artwork__image--overlay': mobile && !minimized && currentOverlay,
+              'artwork__image--default': !hasArtwork,
+            }"
             @click="toggleMinimized"
         >
           <img crossorigin :src="artwork" />
         </div>
-        <div class="overlay overlay--lyrics" v-if="mobile && !minimized && currentOverlay === 'lyrics'">
-          <lyrics-overlay :track="track" />
-        </div>
-        <div class="overlay overlay--queue" v-else-if="mobile && !minimized && currentOverlay === 'queue'">
-          <!--
-            # Queue
-            Displays what is currently on the queue
-            Only Shown on mobile full screen
-          -->
-          <div class="audio-player__up-next" v-if="mobile && !minimized">
-            <v-expand-transition>
-              <queue-list :dark="true" @change="resetQueueMenu"></queue-list>
-            </v-expand-transition>
+        <v-fade-transition>
+          <div class="overlay overlay--lyrics" v-if="mobile && !minimized && currentOverlay === 'lyrics'">
+            <lyrics-overlay :track="track" />
           </div>
-        </div>
+          <div class="overlay overlay--queue" v-else-if="mobile && !minimized && currentOverlay === 'queue'">
+            <!--
+              # Queue
+              Displays what is currently on the queue
+              Only Shown on mobile full screen
+            -->
+            <div class="audio-player__up-next" v-if="mobile && !minimized">
+              <queue-list :dark="true" @change="resetQueueMenu"></queue-list>
+            </div>
+          </div>
+        </v-fade-transition>
       </div>
 
       <div class="player-content">
@@ -229,7 +231,6 @@
 <script lang="ts">
 /* eslint-disable no-undef */
 import { Component, Vue, Watch } from 'vue-property-decorator';
-import Vibrant from 'node-vibrant';
 import { Howl } from 'howler';
 import * as moment from 'moment';
 import QueueList from '@/components/audio-player/QueueList.vue';
@@ -269,10 +270,6 @@ export default class AudioPlayer extends Vue {
   private queueMenu = false;
   /* Keep a reference to the progress bar interval to clear it when needed. */
   private progressInterval: number|null = null;
-  /* Background color for the audio player container */
-  private vibrantBackgroundColor = 'rgb(150, 37, 2)';
-  /* Text color for the audio player container */
-  private vibrantTextColor = '#fff';
   private currentOverlay: null | 'lyrics' | 'queue' = null;
 
   get isDark() {
@@ -359,8 +356,12 @@ export default class AudioPlayer extends Vue {
     return this.$store.getters['player/queue'];
   }
 
+  get hasArtwork() {
+    return this.track && this.track.album.artwork;
+  }
+
   get artwork(): string {
-    if (!this.track || !this.track.album.artwork) {
+    if (!this.hasArtwork) {
       return '/img/default-album-image.png';
     }
 
@@ -508,8 +509,6 @@ export default class AudioPlayer extends Vue {
 
     this.currentTrack.queued = this.currentQueuedTrack;
     this.currentTrack.index = this.store.current;
-
-    this.setBackgroundFromImage();
 
     this.stop();
     this.howl = undefined;
@@ -758,19 +757,6 @@ export default class AudioPlayer extends Vue {
       window.clearInterval(this.progressInterval);
     }
   }
-
-  setBackgroundFromImage() {
-    Vibrant.from(this.artwork)
-      .getPalette()
-      .then((palette) => {
-        const swatch = palette.DarkMuted;
-        if (!swatch) {
-          return;
-        }
-        this.vibrantBackgroundColor = swatch.getHex();
-        this.vibrantTextColor = swatch.getBodyTextColor();
-      });
-  }
 }
 </script>
 
@@ -778,7 +764,7 @@ export default class AudioPlayer extends Vue {
 @import '../../styles/theme';
 
 $transition: cubic-bezier(0.4, 0, 0.2, 1);
-$duration: 680ms;
+$duration: 2680ms;
 
 .audio-player {
   user-select: none;
@@ -799,6 +785,7 @@ $duration: 680ms;
 
   .artwork {
     cursor: pointer;
+    position: relative;
     img {
       transition: width $duration $transition,
         opacity 280ms $transition,
@@ -860,9 +847,6 @@ $duration: 680ms;
   }
 }
 
-.artwork {
-  position: relative;
-}
 .audio-player--minimized {
   width: 270px;
   bottom: 24px;
@@ -903,7 +887,7 @@ $duration: 680ms;
     width: 100%;
     text-align: center;
     padding: 4px;
-    background: linear-gradient(to bottom, rgba(0,0,0,0.9), rgba(0,0,0,0));
+    background: linear-gradient(to bottom, rgba(0,0,0,0.75), rgba(0,0,0,0));
   }
 
   .artwork {
@@ -931,6 +915,10 @@ $duration: 680ms;
         filter: blur(15px);
         transform: scale(1.3);
       }
+
+      &.artwork__image--default {
+        background: rgb(150, 37, 2);
+      }
     }
 
     .overlay {
@@ -939,14 +927,14 @@ $duration: 680ms;
       left: 0;
       width: 100%;
       height: 100%;
-      background-color: rgba(0,0,0,0.45);
+      background-color: rgba(0,0,0,0.55);
       display: flex;
       align-items: center;
       justify-content: center;
       overflow-x: hidden;
       overflow-y: hidden;
       z-index: 5;
-      padding: 44px 0 12px 0;
+      padding: 44px 0 0 0;
       margin: 0;
 
       .audio-player__up-next {

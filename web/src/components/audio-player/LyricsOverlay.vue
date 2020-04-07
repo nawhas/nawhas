@@ -46,7 +46,7 @@ $inactive-color: rgba(255, 255, 255, 0.3);
 $active-color: rgba(255, 255, 255, 1);
 
 .renderer {
-  padding: 12px 36px;
+  padding: 0 36px;
   overflow-y: auto;
   overflow-x: hidden;
   white-space: normal;
