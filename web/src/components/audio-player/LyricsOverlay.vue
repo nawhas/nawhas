@@ -10,7 +10,7 @@
 
 <script lang="ts">
 import {
-  Component, Prop, Ref, Vue,
+  Component, Prop, Ref, Vue, Watch,
 } from 'vue-property-decorator';
 import LyricsRenderer from '@/components/lyrics/LyricsRenderer.vue';
 
@@ -23,9 +23,17 @@ export default class LyricsOverlay extends Vue {
   @Prop({ type: Object }) private readonly track;
   @Ref('lyrics') private readonly renderer!: Vue;
 
+  @Watch('track')
+  onTrackChanged() {
+    this.renderer.$el.scrollTo({
+      behavior: 'smooth',
+      top: 0,
+      left: 0,
+    });
+  }
+
   scrollToCurrentLyricsGroup(id) {
     if (id === null) {
-      window.scrollTo(0, 0);
       return;
     }
 

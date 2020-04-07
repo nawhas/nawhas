@@ -509,6 +509,8 @@ export default class AudioPlayer extends Vue {
     this.currentTrack.queued = this.currentQueuedTrack;
     this.currentTrack.index = this.store.current;
 
+    this.updateOverlay();
+
     this.stop();
     this.howl = undefined;
     this.play();
@@ -517,6 +519,12 @@ export default class AudioPlayer extends Vue {
   @Watch('queue')
   onQueueUpdate() {
     this.updateMediaSessionNextHandler();
+  }
+
+  updateOverlay() {
+    if (this.currentOverlay === 'lyrics' && !this.track.lyrics) {
+      this.currentOverlay = null;
+    }
   }
 
   /**
