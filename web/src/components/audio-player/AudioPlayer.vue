@@ -12,7 +12,6 @@
       -->
       <div
         class="audio-player__mobile-header"
-        v-ripple
         v-if="mobile && !minimized"
         @click="toggleMinimized"
       >
