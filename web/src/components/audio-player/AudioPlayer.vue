@@ -570,6 +570,9 @@ export default class AudioPlayer extends Vue {
    * If no player is initialized, initialize Howler.
    */
   play() {
+    if (!this.track) {
+      return;
+    }
     if (!this.howl) {
       this.howl = this.initializeHowler();
     }
@@ -781,7 +784,7 @@ $duration: 580ms;
   bottom: 0;
   right: 0;
   white-space: nowrap;
-  z-index: 10;
+  z-index: 500;
   box-shadow: 0 -2px 8px 4px rgba(0,0,0,0.16);
   display: flex;
   transition: width $duration $transition,
