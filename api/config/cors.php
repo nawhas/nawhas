@@ -26,6 +26,7 @@ return [
             'https://*.' . env('APP_DOMAIN'),
             'https://' . env('APP_DOMAIN') . ':8080',
             'https://*.' . env('APP_DOMAIN') . ':8080',
+            'https://*.ngrok.io',
         ],
 
         'allow_methods' => [

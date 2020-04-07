@@ -8,7 +8,8 @@
     "build": "vue-cli-service build",
     "build:local": "yarn build && docker-compose up -d --force-recreate web",
     "test:unit": "vue-cli-service test:unit",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "ngrok": "ngrok http -host-header=rewrite https://nawhas.test:8080"
   },
   "dependencies": {
     "algoliasearch": "^4.0.3",
