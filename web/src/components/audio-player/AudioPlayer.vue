@@ -764,7 +764,7 @@ export default class AudioPlayer extends Vue {
 @import '../../styles/theme';
 
 $transition: cubic-bezier(0.4, 0, 0.2, 1);
-$duration: 2680ms;
+$duration: 580ms;
 
 .audio-player {
   user-select: none;
