@@ -82,7 +82,8 @@ export default class LyricsCard extends Vue {
   color: rgba(17, 13, 13, 0.3);
   font-size: 20px;
   font-weight: 300;
-  padding: 60px 0;
+  padding: 60px 30px;
+  text-align: center;
 
   .lyrics__empty-message {
     display: flex;
