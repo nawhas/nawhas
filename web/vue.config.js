@@ -26,6 +26,7 @@ module.exports = {
   devServer: {
     https,
     host: 'nawhas.test',
+    disableHostCheck: true,
     proxy: {
       '/api': {
         target: 'https://api.nawhas.test',

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b75b7041941af1710ff1460e313dc0ff",
+    "content-hash": "3be8351d9fd1bc48460a3da13c53d429",
     "packages": [
         {
             "name": "acelaya/doctrine-enum-type",
@@ -2294,6 +2294,7 @@
                     "email": "jakub.onderka@gmail.com"
                 }
             ],
+            "abandoned": "php-parallel-lint/php-console-color",
             "time": "2018-09-29T17:23:10+00:00"
         },
         {
@@ -2340,6 +2341,7 @@
                 }
             ],
             "description": "Highlight PHP code in terminal",
+            "abandoned": "php-parallel-lint/php-console-highlighter",
             "time": "2018-09-29T18:48:56+00:00"
         },
         {
@@ -6128,6 +6130,20 @@
             ],
             "description": "Symfony HttpFoundation Component",
             "homepage": "https://symfony.com",
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
             "time": "2020-03-30T14:07:33+00:00"
         },
         {
@@ -6337,6 +6353,20 @@
             "keywords": [
                 "mime",
                 "mime-type"
+            ],
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
             ],
             "time": "2020-03-27T16:56:45+00:00"
         },
@@ -6571,6 +6601,20 @@
                 "portable",
                 "shim"
             ],
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
             "time": "2020-03-09T19:04:49+00:00"
         },
         {
@@ -6630,6 +6674,20 @@
                 "portable",
                 "shim"
             ],
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
             "time": "2020-03-09T19:04:49+00:00"
         },
         {
@@ -6684,6 +6742,20 @@
                 "polyfill",
                 "portable",
                 "shim"
+            ],
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
             ],
             "time": "2020-02-27T09:26:54+00:00"
         },
@@ -7936,7 +8008,26 @@
                     "Zain\\LaravelDoctrine\\Algolia\\": "lib/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
+            "autoload-dev": {
+                "psr-4": {
+                    "Zain\\LaravelDoctrine\\Algolia\\": "tests/"
+                }
+            },
+            "scripts": {
+                "lint": [
+                    "php-cs-fixer fix -v"
+                ],
+                "test:unit": [
+                    "phpunit --colors=always --verbose"
+                ],
+                "test:lint": [
+                    "php-cs-fixer fix -v --dry-run"
+                ],
+                "test": [
+                    "@test:lint",
+                    "@test:unit"
+                ]
+            },
             "license": [
                 "MIT"
             ],
@@ -7951,6 +8042,10 @@
                 }
             ],
             "description": "Algolia integration with Laravel & Doctrine",
+            "support": {
+                "source": "https://github.com/szainmehdi/laravel-doctrine-algolia/tree/v0.1.0",
+                "issues": "https://github.com/szainmehdi/laravel-doctrine-algolia/issues"
+            },
             "time": "2020-02-25T04:06:14+00:00"
         },
         {
@@ -9639,12 +9734,12 @@
             "version": "1.1.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/psalm/psalm-plugin-laravel.git",
+                "url": "https://github.com/psalm/laravel-psalm-plugin.git",
                 "reference": "dcdbe7d156cc654a2a9681ba21faf4f730d837c2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/psalm/psalm-plugin-laravel/zipball/dcdbe7d156cc654a2a9681ba21faf4f730d837c2",
+                "url": "https://api.github.com/repos/psalm/laravel-psalm-plugin/zipball/dcdbe7d156cc654a2a9681ba21faf4f730d837c2",
                 "reference": "dcdbe7d156cc654a2a9681ba21faf4f730d837c2",
                 "shasum": ""
             },
@@ -10448,5 +10543,6 @@
     "platform": {
         "php": "7.4.*"
     },
-    "platform-dev": []
+    "platform-dev": [],
+    "plugin-api-version": "1.1.0"
 }

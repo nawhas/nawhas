@@ -1,57 +1,89 @@
 <template>
-  <v-dialog v-model="dialog" persistent max-width="600px">
+  <v-dialog
+    v-model="dialog"
+    persistent
+    fullscreen
+    no-click-animation
+    hide-overlay
+    transition="dialog-bottom-transition"
+  >
     <template v-slot:activator="{ on }">
-      <v-btn v-if="track" dark icon v-on="on"><v-icon>edit</v-icon></v-btn>
-      <v-btn v-else v-on="on" text>Add Track</v-btn>
+      <v-btn
+        v-if="track"
+        dark
+        icon
+        v-on="on"
+      >
+        <v-icon>edit</v-icon>
+      </v-btn>
+      <v-btn
+        v-else
+        v-on="on"
+        text
+      >Add Track</v-btn>
     </template>
     <v-card :loading="loading">
-      <v-card-title>
-        <span class="headline">{{ track ? 'Edit' : 'Add' }} Track</span>
-      </v-card-title>
-      <v-card-text class="py-4">
+      <v-app-bar
+        fixed
+        elevate-on-scroll
+      >
+        <v-btn
+          icon
+          @click="close"
+        >
+          <v-icon>close</v-icon>
+        </v-btn>
+        <v-toolbar-title>{{ track ? 'Edit' : 'Add' }} Track</v-toolbar-title>
+        <v-spacer></v-spacer>
+        <div class="toolbar__actions">
+          <v-btn
+            v-if="track"
+            text
+            @click="confirmDelete"
+          ><v-icon>delete_forever</v-icon></v-btn>
+          <v-btn
+            color="primary"
+            @click="submit"
+          >Save</v-btn>
+        </div>
+      </v-app-bar>
+      <v-card-text class="dialog__content">
         <v-text-field
           outlined
           v-model="form.title"
           label="Name"
           required
         ></v-text-field>
-        <v-textarea
-          outlined
-          label="Lyrics"
-          v-model="form.lyrics"
-          required
-        ></v-textarea>
-        <v-file-input v-model="form.audio"
-                      label="Audio File"
-                      placeholder="Upload Track Audio File"
-                      prepend-icon="volume_up"
-                      outlined
-                      accept="audio/*"
-                      :show-size="1000"
+        <div
+          class="file-input"
+          @drop.prevent="addFile"
+          @dragover.prevent
         >
-          <template v-slot:selection="{ text }">
-            <v-chip color="deep-orange accent-4" dark label small>
-              {{ text }}
-            </v-chip>
-          </template>
-        </v-file-input>
-        <div v-cloak @drop.prevent="addFile" @dragover.prevent>
-          <h2>Drag and drop track audio here...</h2>
-          <p>Make sure to drag and drop one file</p>
-          <ul>
-            <li v-if="form.audio">
-              {{ form.audio.name }} ({{ form.audio.size }})
-              <button @click="removeFile" title="Remove">X</button>
-            </li>
-          </ul>
+          <v-file-input
+            v-model="form.audio"
+            label="Audio File"
+            placeholder="Upload Track Audio File"
+            prepend-icon="volume_up"
+            outlined
+            accept="audio/*"
+            :show-size="1000"
+          >
+            <template v-slot:selection="{ text }">
+              <v-chip
+                color="deep-orange accent-4"
+                dark
+                label
+                small
+              >{{ text }}</v-chip>
+            </template>
+          </v-file-input>
         </div>
+        <timestamped-editor
+          v-model="form.lyrics"
+          :track="track"
+        ></timestamped-editor>
       </v-card-text>
-      <v-card-actions>
-        <v-btn v-if="track" color="error" text @click="confirmDelete">Delete</v-btn>
-        <v-spacer></v-spacer>
-        <v-btn text @click="close">Cancel</v-btn>
-        <v-btn color="primary" text @click="submit" :loading="loading">Save</v-btn>
-      </v-card-actions>
+      <v-card-actions></v-card-actions>
     </v-card>
   </v-dialog>
 </template>
@@ -61,10 +93,15 @@ import Client from '@/services/client';
 import {
   Component, Prop, Watch, Vue,
 } from 'vue-property-decorator';
+import { clone } from '@/utils/clone';
+import * as Format from '@/constants/lyrics/format';
+import TimestampedEditor from '@/components/edit/lyrics/TimestampedEditor.vue';
+import { Lyrics } from '@/types/lyrics';
+import * as GroupType from '@/constants/lyrics/group-type';
 
 interface Form {
   title: string|null;
-  lyrics: string|null;
+  lyrics: Lyrics|null;
   audio: string|Blob|null;
 }
 const defaults: Form = {
@@ -72,22 +109,61 @@ const defaults: Form = {
   lyrics: null,
   audio: null,
 };
-@Component
+
+@Component({
+  components: { TimestampedEditor },
+})
 export default class EditTrackDialog extends Vue {
   @Prop({ type: Object }) private track;
   @Prop({ type: Object }) private album;
   private dialog = false;
   private form: Form = { ...defaults };
   private loading = false;
+
   get includes() {
     return 'reciter,lyrics,album.tracks,media';
   }
+
   @Watch('dialog')
   onDialogStateChanged(opened) {
     if (opened) {
       this.resetForm();
     }
   }
+
+  get lyrics(): Lyrics|null {
+    if (!this.track.lyrics) {
+      return null;
+    }
+
+    const { content, format } = this.track.lyrics;
+    if (format === Format.JSON_V1) {
+      return JSON.parse(content);
+    }
+
+    const data = content.split(/\n/gi).map((text) => {
+      if (text.trim().length === 0) {
+        return {
+          timestamp: null,
+          lines: [{ text: '', repeat: 0 }],
+          type: GroupType.SPACER,
+        };
+      }
+
+      return {
+        timestamp: null,
+        lines: [{ text: text.trim(), repeat: 0 }],
+      };
+    }).filter((val) => val !== null);
+
+    return {
+      meta: {
+        timestamps: false,
+      },
+      data,
+    };
+  }
+
   addFile(e) {
     const file = e.dataTransfer.files[0];
     if (file.type.match(/audio.*/)) {
@@ -101,11 +177,11 @@ export default class EditTrackDialog extends Vue {
   resetForm() {
     this.form = { ...defaults };
     if (this.track) {
-      const { title, lyrics } = this.track;
+      const { title } = this.track;
       this.form = {
         ...this.form,
         title,
-        lyrics: lyrics ? lyrics.content : null,
+        lyrics: this.lyrics,
       };
     }
   }
@@ -124,7 +200,7 @@ export default class EditTrackDialog extends Vue {
       data.title = this.form.title;
     }
     if (this.form.lyrics) {
-      data.lyrics = this.form.lyrics;
+      data.lyrics = this.prepareLyrics();
     }
     const { reciterId } = this.album;
     const albumId = this.album.id;
@@ -140,9 +216,12 @@ export default class EditTrackDialog extends Vue {
     if (this.track.title !== this.form.title && this.form.title) {
       data.title = this.form.title;
     }
-    if (this.track.lyrics?.content !== this.form.lyrics && this.form.lyrics) {
-      data.lyrics = this.form.lyrics;
+    const lyricsString = this.prepareLyrics();
+    if (this.track.lyrics?.content !== lyricsString && this.form.lyrics) {
+      data.lyrics = lyricsString;
     }
+    // TODO - make dynamic
+    data.format = Format.JSON_V1;
     const { id, reciterId, albumId } = this.track;
     let response = await Client.patch(
       `/v1/reciters/${reciterId}/albums/${albumId}/tracks/${id}?include=${this.includes}`,
@@ -189,5 +268,18 @@ export default class EditTrackDialog extends Vue {
     this.dialog = false;
     this.loading = false;
   }
+  prepareLyrics() {
+    const lyrics = clone(this.form.lyrics);
+
+    return JSON.stringify(lyrics);
+  }
 }
 </script>
+
+<style lang="scss" scoped>
+.dialog__content {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 96px 12px !important;
+}
+</style>

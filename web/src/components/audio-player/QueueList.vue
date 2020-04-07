@@ -1,5 +1,5 @@
 <template>
-  <v-list>
+  <v-list color="transparent" :dark="dark">
     <v-list-item
       v-for="{ id, track } in queue"
       :key="id"
@@ -36,11 +36,12 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Prop, Vue } from 'vue-property-decorator';
 import { TrackQueue, QueuedTrack } from '@/store/modules/player';
 
 @Component
 export default class QueueList extends Vue {
+  @Prop({ type: Boolean, default: false }) private readonly dark!: boolean;
   /**
    * Gets the current queue from the player store
    */
@@ -63,7 +64,7 @@ export default class QueueList extends Vue {
   }
 
   get isDark(): boolean {
-    return this.$vuetify.theme.dark;
+    return this.dark || this.$vuetify.theme.dark;
   }
 
   getTrackArtwork(track): string {
@@ -103,10 +104,10 @@ export default class QueueList extends Vue {
 @import '@/styles/theme';
 
 .queue-item--active {
-  background-color: map-deep-get($colors, 'deep-orange', 'lighten-5');
+  background-color: rgba(0,0,0,0.1);
 }
 .queue-item--dark.queue-item--active {
-  background-color: darken($secondary, 18%);
+  background-color: rgba(255,255,255,0.1);
 }
 .playback-progress {
   margin-right: 8px;

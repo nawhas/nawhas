@@ -51,12 +51,7 @@ class TrackNormalizer implements NormalizerInterface
             return null;
         }
 
-        $content = $lyrics->getContent();
-
-        // Trim unnecessary whitespace
-        $content = preg_replace("/\n{2,}/", "\n", $content);
-
-        $content = trim($content);
+        $content = $lyrics->getDocument()->render();
 
         return substr($content, 0, 8000);
     }
