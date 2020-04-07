@@ -35,7 +35,6 @@
             :track="track"
             @highlight:changed="scrollToCurrentLyricsGroup"
           />
-          <div v-else>We don't have a write-up for this nawha yet.</div>
         </div>
         <div class="overlay overlay--queue" v-else-if="mobile && !minimized && currentOverlay === 'queue'">
           <!--
@@ -210,6 +209,7 @@
         <v-btn
           text
           @click="toggleOverlay('lyrics')"
+          :disabled="!track.lyrics"
           :class="{'bottom-actions__button': true, 'bottom-action__button--active': currentOverlay === 'lyrics'}"
         >
           <v-icon left>speaker_notes</v-icon>
