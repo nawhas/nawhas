@@ -6,7 +6,7 @@
       v-if="track"
     >
       <!--
-        -- Mobile Header --
+        # Mobile Header
         Toggles the minimized/maximized state of the player.
         Only shown on mobile.
       -->
@@ -20,7 +20,7 @@
       </div>
 
       <!--
-        -- Artwork --
+        # Artwork
         Toggles the minimized/maximized state of the player.
       -->
       <div class="artwork" :style="{ 'background-color': mobile && !minimized ? vibrantBackgroundColor : 'none' }">
@@ -38,7 +38,7 @@
         </div>
         <div class="overlay overlay--queue" v-else-if="mobile && !minimized && currentOverlay === 'queue'">
           <!--
-            -- Queue --
+            # Queue
             Displays what is currently on the queue
             Only Shown on mobile full screen
           -->
@@ -52,7 +52,7 @@
 
       <div class="player-content">
         <!--
-          -- Track Title and Metadata --
+          # Track Title and Metadata
         -->
         <v-expand-x-transition>
           <div class="track-info" v-if="!minimized || mobile">
@@ -66,7 +66,7 @@
         </v-expand-x-transition>
 
         <!--
-          -- Seek Bar --
+          # Seek Bar
         -->
         <div class="seek-bar">
           <v-progress-linear
@@ -83,7 +83,7 @@
           </div>
         </div>
         <!--
-          -- Player Actions --
+          # Player Actions
         -->
         <div class="player-actions">
           <v-btn
@@ -160,7 +160,7 @@
         </div>
         <v-expand-transition>
           <!--
-            -- Overflow Menu --
+            # Overflow Menu
           -->
           <div class="player-sub-actions" v-if="!minimized && !mobile">
             <v-menu
@@ -181,9 +181,9 @@
               </template>
 
               <!--
-                -- Queue --
+                # Queue
                 Displays what is currently on the queue
-                Only shown on desktop and expaned
+                Only shown on desktop and expanded
               -->
               <v-card class="queue-list-menu">
                 <v-card-title class="queue-list-menu__title">
@@ -198,7 +198,7 @@
       </div>
 
       <!--
-        -- Action Bar --
+        # Action Bar
         Common actions for the player
         Only Shown on mobile full screen
       -->
