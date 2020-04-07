@@ -888,9 +888,9 @@ $duration: 680ms;
 }
 
 @media #{map-get($display-breakpoints, 'md-and-down')} {
-    .audio-player {
-      z-index: 3 !important;
-    }
+  .audio-player {
+    z-index: 3 !important;
+  }
 }
 
 .audio-player__mobile-header {
@@ -1067,7 +1067,6 @@ $duration: 680ms;
   }
 }
 
-
 .lyrics__renderer {
   font-size: 32px;
   font-weight: 600;
@@ -1080,7 +1079,6 @@ $duration: 680ms;
   width: 100%;
 }
 
-
 .lyrics__renderer ::v-deep .lyrics__plain-text {
   padding: 0 24px;
 }
@@ -1088,7 +1086,6 @@ $duration: 680ms;
 .lyrics__renderer ::v-deep .lyrics__group {
   padding: 8px 0;
   color: rgba(255,255,255, 0.76);
-
 
   .lyrics__group__timestamp {
     font-family: 'Roboto Mono', monospace;
