@@ -18,7 +18,7 @@
       >
         <div class="lyrics__spacer" v-if="group.type === GroupType.SPACER"></div>
         <div class="lyrics__group__lines">
-          <div class="lyrics__group__lines__line" v-for="line in group.lines" :key="line.text">
+          <div class="lyrics__group__lines__line" v-for="(line, lineId) in group.lines" :key="lineId">
             <div class="lyrics__text">{{ line.text }}</div>
             <div class="lyrics__repeat" v-if="line.repeat">x{{ line.repeat }}</div>
           </div>
