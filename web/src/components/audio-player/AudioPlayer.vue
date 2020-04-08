@@ -872,7 +872,8 @@ $duration: 580ms;
 
 @media #{map-get($display-breakpoints, 'md-and-down')} {
   .audio-player {
-    z-index: 3 !important;
+    // Show below nav drawer, but above edit dialogs.
+    z-index: 250 !important;
   }
 }
 
