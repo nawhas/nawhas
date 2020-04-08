@@ -51,7 +51,7 @@ export default class LyricsOverlay extends Vue {
     });
   }
 
-  beforeDestory() {
+  beforeDestroy() {
     this.lock.disable();
   }
 }
