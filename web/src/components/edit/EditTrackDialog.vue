@@ -151,7 +151,7 @@ export default class EditTrackDialog extends Vue {
       }
 
       return {
-        timestamp: null,
+        timestamp: 0,
         lines: [{ text: text.trim(), repeat: 0 }],
       };
     }).filter((val) => val !== null);
