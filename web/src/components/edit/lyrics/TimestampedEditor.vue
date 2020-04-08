@@ -225,6 +225,7 @@ export default class TimestampedEditor extends Vue {
       try {
         const parsed = JSON.parse(this.json);
         this.lyrics = parsed;
+        this.highlighter = new LyricsHighlighter(this.$store.state.player, this.lyrics);
         this.change();
       } catch {
         // eslint-disable-next-line no-console
