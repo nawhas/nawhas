@@ -12,6 +12,7 @@
 import {
   Component, Prop, Ref, Vue, Watch,
 } from 'vue-property-decorator';
+import * as NoSleep from 'nosleep.js/dist/NoSleep';
 import LyricsRenderer from '@/components/lyrics/LyricsRenderer.vue';
 
 @Component({
@@ -22,6 +23,11 @@ import LyricsRenderer from '@/components/lyrics/LyricsRenderer.vue';
 export default class LyricsOverlay extends Vue {
   @Prop({ type: Object }) private readonly track;
   @Ref('lyrics') private readonly renderer!: Vue;
+  private lock = new NoSleep();
+
+  mounted() {
+    this.lock.enable();
+  }
 
   @Watch('track')
   onTrackChanged() {
@@ -43,6 +49,10 @@ export default class LyricsOverlay extends Vue {
         highlighted.scrollIntoView({ block: 'center', behavior: 'smooth' });
       }
     });
+  }
+
+  beforeDestroy() {
+    this.lock.disable();
   }
 }
 </script>
