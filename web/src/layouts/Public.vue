@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-navigation-drawer v-model="drawer" temporary app>
+    <v-navigation-drawer v-model="drawer" temporary app class="nav__drawer">
       <v-list class="nav" shaped>
         <v-list-item
           v-for="link in navigation"
@@ -169,7 +169,9 @@ export default class PublicVuetify extends Vue {
   align-self: flex-start;
   margin: 4px 0 0 4px;
 }
-
+.nav__drawer {
+  z-index: 500;
+}
 @media #{map-get($display-breakpoints, 'md-and-down')} {
   .app-bar__left {
     flex: 0;

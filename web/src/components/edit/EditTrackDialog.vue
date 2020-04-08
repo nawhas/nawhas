@@ -141,7 +141,7 @@ export default class EditTrackDialog extends Vue {
       return JSON.parse(content);
     }
 
-    const data = content.split(/\n/gi).map((text) => {
+    const data = content.trim().split(/\n/gi).map((text, index) => {
       if (text.trim().length === 0) {
         return {
           timestamp: null,
@@ -151,10 +151,10 @@ export default class EditTrackDialog extends Vue {
       }
 
       return {
-        timestamp: null,
+        timestamp: index === 0 ? 0 : null,
         lines: [{ text: text.trim(), repeat: 0 }],
       };
-    }).filter((val) => val !== null);
+    });
 
     return {
       meta: {
