@@ -1,0 +1,982 @@
+{
+    "meta": {
+      "timestamps": true
+    },
+    "data": [
+      {
+        "timestamp": 0,
+        "lines": [
+          {
+            "text": "Haye",
+            "repeat": 2
+          }
+        ]
+      },
+      {
+        "timestamp": 11.702251,
+        "lines": [
+          {
+            "text": "Waa ghurbata waa museebata",
+            "repeat": 2
+          }
+        ]
+      },
+      {
+        "timestamp": null,
+        "lines": [
+          {
+            "text": "",
+            "repeat": 0
+          }
+        ],
+        "type": "spacer"
+      },
+      {
+        "timestamp": 21.887053,
+        "lines": [
+          {
+            "text": "Nawha ye Zainab ka tha shame ghariban",
+            "repeat": 2
+          }
+        ]
+      },
+      {
+        "timestamp": 31.886993,
+        "lines": [
+          {
+            "text": "Hogayi may beridaa shame ghariban",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": 35.886609,
+        "lines": [
+          {
+            "text": "Wawayla shame ghariban",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": null,
+        "lines": [
+          {
+            "text": "",
+            "repeat": 0
+          }
+        ],
+        "type": "spacer"
+      },
+      {
+        "timestamp": 39.136868,
+        "lines": [
+          {
+            "text": "Qasim o Akbar nahi, shame ghariban",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": 44.386577,
+        "lines": [
+          {
+            "text": "berida roti rahi, shame ghariban",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": 49.387909,
+        "lines": [
+          {
+            "text": "Hai sada lab par yahi, shame ghariban",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": 54.389075,
+        "lines": [
+          {
+            "text": "Haaye meri bekasi, shame ghariban",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": 58.363828,
+        "lines": [
+          {
+            "text": "Wawayla shame ghariban",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": null,
+        "lines": [
+          {
+            "text": "",
+            "repeat": 0
+          }
+        ],
+        "type": "spacer"
+      },
+      {
+        "timestamp": 61.863101,
+        "lines": [
+          {
+            "text": "Nawha ye Zainab ka tha shame ghariban",
+            "repeat": 2
+          }
+        ]
+      },
+      {
+        "timestamp": 71.862947,
+        "lines": [
+          {
+            "text": "Hogayi may beridaa shame ghariban",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": 75.863458,
+        "lines": [
+          {
+            "text": "Wawayla shame ghariban",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": null,
+        "lines": [
+          {
+            "text": "",
+            "repeat": 0
+          }
+        ],
+        "type": "spacer"
+      },
+      {
+        "timestamp": 79.363364,
+        "lines": [
+          {
+            "text": "Zainabe khasta Jigar, shame ghariban",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": 84.362596,
+        "lines": [
+          {
+            "text": "lutgaya hai jiska ghar, shame ghariban",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": 89.362737,
+        "lines": [
+          {
+            "text": "Jaeygi ab dar badar, shame ghariban",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": 94.3637,
+        "lines": [
+          {
+            "text": "Haye hokey be pisar, shame ghariban",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": 98.363387,
+        "lines": [
+          {
+            "text": "Wawayla shame ghariban",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": null,
+        "lines": [
+          {
+            "text": "",
+            "repeat": 0
+          }
+        ],
+        "type": "spacer"
+      },
+      {
+        "timestamp": 101.862974,
+        "lines": [
+          {
+            "text": "Nawha ye Zainab ka tha shame ghariban",
+            "repeat": 2
+          }
+        ]
+      },
+      {
+        "timestamp": 111.862759,
+        "lines": [
+          {
+            "text": "Hogayi may beridaa shame ghariban",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": 115.863568,
+        "lines": [
+          {
+            "text": "Wawayla shame ghariban",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": null,
+        "lines": [
+          {
+            "text": "",
+            "repeat": 0
+          }
+        ],
+        "type": "spacer"
+      },
+      {
+        "timestamp": 119.363436,
+        "lines": [
+          {
+            "text": "Khaak par hai bekafan, shame ghariban",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": 124.114162,
+        "lines": [
+          {
+            "text": "Choor choor hai badan, shame ghariban",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": 129.362553,
+        "lines": [
+          {
+            "text": "tukrdon mei hai sheh ka tan, shame ghariban",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": 134.363249,
+        "lines": [
+          {
+            "text": "Waqt hai kaisa katthan, shame ghariban",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": 138.363307,
+        "lines": [
+          {
+            "text": "Wawayla shame ghariban",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": null,
+        "lines": [
+          {
+            "text": "",
+            "repeat": 0
+          }
+        ],
+        "type": "spacer"
+      },
+      {
+        "timestamp": 141.864346,
+        "lines": [
+          {
+            "text": "Nawha ye Zainab ka tha shame ghariban",
+            "repeat": 2
+          }
+        ]
+      },
+      {
+        "timestamp": 151.862579,
+        "lines": [
+          {
+            "text": "Hogayi may beridaa shame ghariban",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": 155.86344,
+        "lines": [
+          {
+            "text": "Wawayla shame ghariban",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": null,
+        "lines": [
+          {
+            "text": "",
+            "repeat": 0
+          }
+        ],
+        "type": "spacer"
+      },
+      {
+        "timestamp": 159.363208,
+        "lines": [
+          {
+            "text": "lutgaye aale nabi, shame ghariban",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": 164.363355,
+        "lines": [
+          {
+            "text": "pehre pe zainab khardi, shame ghariban",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": 169.363358,
+        "lines": [
+          {
+            "text": "agaye baba ali, shame ghariban",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": 174.363066,
+        "lines": [
+          {
+            "text": "jab bacha koi nahi, shame ghariban",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": 178.363324,
+        "lines": [
+          {
+            "text": "Wawayla shame ghariban",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": null,
+        "lines": [
+          {
+            "text": "",
+            "repeat": 0
+          }
+        ],
+        "type": "spacer"
+      },
+      {
+        "timestamp": 181.86332,
+        "lines": [
+          {
+            "text": "Nawha ye Zainab ka tha shame ghariban",
+            "repeat": 2
+          }
+        ]
+      },
+      {
+        "timestamp": 191.862609,
+        "lines": [
+          {
+            "text": "Hogayi may beridaa shame ghariban",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": 195.863217,
+        "lines": [
+          {
+            "text": "Wawayla shame ghariban",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": null,
+        "lines": [
+          {
+            "text": "",
+            "repeat": 0
+          }
+        ],
+        "type": "spacer"
+      },
+      {
+        "timestamp": 199.363139,
+        "lines": [
+          {
+            "text": "hai sakina ka bayaan, shame ghariban",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": 204.363267,
+        "lines": [
+          {
+            "text": "baba dekho to yahaan, shame ghariban",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": 209.362737,
+        "lines": [
+          {
+            "text": "gaalon pe mere nishaan, shame ghariban",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": 214.362987,
+        "lines": [
+          {
+            "text": "kaanon se hai khun rawaan, shame ghariban",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": 218.362621,
+        "lines": [
+          {
+            "text": "Wawayla shame ghariban",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": null,
+        "lines": [
+          {
+            "text": "",
+            "repeat": 0
+          }
+        ],
+        "type": "spacer"
+      },
+      {
+        "timestamp": 221.863321,
+        "lines": [
+          {
+            "text": "Nawha ye Zainab ka tha shame ghariban",
+            "repeat": 2
+          }
+        ]
+      },
+      {
+        "timestamp": 231.862975,
+        "lines": [
+          {
+            "text": "Hogayi may beridaa shame ghariban",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": 235.862819,
+        "lines": [
+          {
+            "text": "Wawayla shame ghariban",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": null,
+        "lines": [
+          {
+            "text": "",
+            "repeat": 0
+          }
+        ],
+        "type": "spacer"
+      },
+      {
+        "timestamp": 239.363383,
+        "lines": [
+          {
+            "text": "ho kahan shere jali, shame ghariban",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": 244.362692,
+        "lines": [
+          {
+            "text": "Aakay dekho to sahi, shame ghariban",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": 249.362645,
+        "lines": [
+          {
+            "text": "Aag khaimo mein lagi, shame ghariban",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": 254.362749,
+        "lines": [
+          {
+            "text": "Jalgaya jhoola sabhi, shame ghariban",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": 258.372053,
+        "lines": [
+          {
+            "text": "Wawayla shame ghariban",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": null,
+        "lines": [
+          {
+            "text": "",
+            "repeat": 0
+          }
+        ],
+        "type": "spacer"
+      },
+      {
+        "timestamp": 261.862731,
+        "lines": [
+          {
+            "text": "Nawha ye Zainab ka tha shame ghariban",
+            "repeat": 2
+          }
+        ]
+      },
+      {
+        "timestamp": 271.613991,
+        "lines": [
+          {
+            "text": "Hogayi may beridaa shame ghariban",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": 275.862796,
+        "lines": [
+          {
+            "text": "Wawayla shame ghariban",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": null,
+        "lines": [
+          {
+            "text": "",
+            "repeat": 0
+          }
+        ],
+        "type": "spacer"
+      },
+      {
+        "timestamp": 279.363484,
+        "lines": [
+          {
+            "text": "ghash mei abid hai parda, shame ghariban",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": 284.363198,
+        "lines": [
+          {
+            "text": "aur bistar hai jala, shame ghariban",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": 289.36432,
+        "lines": [
+          {
+            "text": "tawq mei baandha gala, shame ghariban",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": 294.364136,
+        "lines": [
+          {
+            "text": "berdiyan pehney huwa, shame ghariban",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": 298.363573,
+        "lines": [
+          {
+            "text": "Wawayla shame ghariban",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": null,
+        "lines": [
+          {
+            "text": "",
+            "repeat": 0
+          }
+        ],
+        "type": "spacer"
+      },
+      {
+        "timestamp": 301.862955,
+        "lines": [
+          {
+            "text": "Nawha ye Zainab ka tha shame ghariban",
+            "repeat": 2
+          }
+        ]
+      },
+      {
+        "timestamp": 311.864221,
+        "lines": [
+          {
+            "text": "Hogayi may beridaa shame ghariban",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": 315.863106,
+        "lines": [
+          {
+            "text": "Wawayla shame ghariban",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": null,
+        "lines": [
+          {
+            "text": "",
+            "repeat": 0
+          }
+        ],
+        "type": "spacer"
+      },
+      {
+        "timestamp": 319.362929,
+        "lines": [
+          {
+            "text": "berida roti hai maan, shame ghariban",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": 324.362641,
+        "lines": [
+          {
+            "text": "mere akbar nojawaan, shame ghariban",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": 329.112874,
+        "lines": [
+          {
+            "text": "khaake sine mein sinaan, shame ghariban",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": 334.363175,
+        "lines": [
+          {
+            "text": "sogaye ho tum kahaan, shame ghariban",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": 338.362832,
+        "lines": [
+          {
+            "text": "Wawayla shame ghariban",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": null,
+        "lines": [
+          {
+            "text": "",
+            "repeat": 0
+          }
+        ],
+        "type": "spacer"
+      },
+      {
+        "timestamp": 341.862958,
+        "lines": [
+          {
+            "text": "Nawha ye Zainab ka tha shame ghariban",
+            "repeat": 2
+          }
+        ]
+      },
+      {
+        "timestamp": 351.862934,
+        "lines": [
+          {
+            "text": "Hogayi may beridaa shame ghariban",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": 355.862718,
+        "lines": [
+          {
+            "text": "Wawayla shame ghariban",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": null,
+        "lines": [
+          {
+            "text": "",
+            "repeat": 0
+          }
+        ],
+        "type": "spacer"
+      },
+      {
+        "timestamp": 359.362959,
+        "lines": [
+          {
+            "text": "karbala tu hai gawaah, shame ghariban",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": 364.113879,
+        "lines": [
+          {
+            "text": "raat kaisi thi siyaah, shame ghariban",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": 369.362854,
+        "lines": [
+          {
+            "text": "hogayi zainab tabah, shame ghariban",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": 374.363035,
+        "lines": [
+          {
+            "text": "bekafan thi lashe shaah, shame ghariban",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": 378.362668,
+        "lines": [
+          {
+            "text": "Wawayla shame ghariban",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": null,
+        "lines": [
+          {
+            "text": "",
+            "repeat": 0
+          }
+        ],
+        "type": "spacer"
+      },
+      {
+        "timestamp": 381.863419,
+        "lines": [
+          {
+            "text": "Nawha ye Zainab ka tha shame ghariban",
+            "repeat": 2
+          }
+        ]
+      },
+      {
+        "timestamp": 391.863182,
+        "lines": [
+          {
+            "text": "Hogayi may beridaa shame ghariban",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": 395.863552,
+        "lines": [
+          {
+            "text": "Wawayla shame ghariban",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": null,
+        "lines": [
+          {
+            "text": "",
+            "repeat": 0
+          }
+        ],
+        "type": "spacer"
+      },
+      {
+        "timestamp": 399.363537,
+        "lines": [
+          {
+            "text": "hai Tejani ki fughaan, shame ghariban",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": 404.362763,
+        "lines": [
+          {
+            "text": "ho na paega bayaan, shame ghariban",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": 409.362709,
+        "lines": [
+          {
+            "text": "berida sab bibiyaan, shame ghariban",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": 414.362783,
+        "lines": [
+          {
+            "text": "sheh ka sar noke sinan, shame ghariban",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": 418.363117,
+        "lines": [
+          {
+            "text": "Wawayla shame ghariban",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": null,
+        "lines": [
+          {
+            "text": "",
+            "repeat": 0
+          }
+        ],
+        "type": "spacer"
+      },
+      {
+        "timestamp": 421.863206,
+        "lines": [
+          {
+            "text": "Nawha ye Zainab ka tha shame ghariban",
+            "repeat": 2
+          }
+        ]
+      },
+      {
+        "timestamp": 431.863602,
+        "lines": [
+          {
+            "text": "Hogayi may beridaa shame ghariban",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": 435.862563,
+        "lines": [
+          {
+            "text": "Wawayla shame ghariban",
+            "repeat": 2
+          }
+        ]
+      }
+    ]
+  }
