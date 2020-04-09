@@ -1,0 +1,513 @@
+{
+    "meta": {
+      "timestamps": true
+    },
+    "data": [
+      {
+        "timestamp": 0,
+        "lines": [
+          {
+            "text": "Hussain",
+            "repeat": 6
+          }
+        ]
+      },
+      {
+        "timestamp": 8.411021,
+        "lines": [
+          {
+            "text": "As-salaam ay maahe gham",
+            "repeat": 4
+          }
+        ]
+      },
+      {
+        "timestamp": 26.412366,
+        "lines": [
+          {
+            "text": "Ehle aza",
+            "repeat": 0
+          },
+          {
+            "text": "phir agaya",
+            "repeat": 0
+          },
+          {
+            "text": "maahe aza,",
+            "repeat": 0
+          },
+          {
+            "text": "maahe aza",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": null,
+        "lines": [
+          {
+            "text": "",
+            "repeat": 0
+          }
+        ],
+        "type": "spacer"
+      },
+      {
+        "timestamp": 38.161616,
+        "lines": [
+          {
+            "text": "Muharram ka ye chaand agaya",
+            "repeat": 4
+          }
+        ]
+      },
+      {
+        "timestamp": null,
+        "lines": [
+          {
+            "text": "",
+            "repeat": 0
+          }
+        ],
+        "type": "spacer"
+      },
+      {
+        "timestamp": 58.912743,
+        "lines": [
+          {
+            "text": "Zamin ta arshe Azam sirf ek mahol h gham ka",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": 68.412301,
+        "lines": [
+          {
+            "text": "Nabi ki aal ke ghar men utha h shor matam ka",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": 77.411432,
+        "lines": [
+          {
+            "text": "Nahi bhule ghme Karbala",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": null,
+        "lines": [
+          {
+            "text": "",
+            "repeat": 0
+          }
+        ],
+        "type": "spacer"
+      },
+      {
+        "timestamp": 82.411042,
+        "lines": [
+          {
+            "text": "Muharram ka ye chaand agaya",
+            "repeat": 3
+          }
+        ]
+      },
+      {
+        "timestamp": null,
+        "lines": [
+          {
+            "text": "",
+            "repeat": 0
+          }
+        ],
+        "type": "spacer"
+      },
+      {
+        "timestamp": 97.995273,
+        "lines": [
+          {
+            "text": "Azadari teri jari rahegi hashr tak mola",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": 107.495307,
+        "lines": [
+          {
+            "text": "Shhe karbobala ki yad men hoga yunhi girya",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": 116.495531,
+        "lines": [
+          {
+            "text": "In ankhon ki h ab ye sada",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": null,
+        "lines": [
+          {
+            "text": "",
+            "repeat": 0
+          }
+        ],
+        "type": "spacer"
+      },
+      {
+        "timestamp": 121.496736,
+        "lines": [
+          {
+            "text": "Muharram ka ye chaand agaya",
+            "repeat": 3
+          }
+        ]
+      },
+      {
+        "timestamp": null,
+        "lines": [
+          {
+            "text": "",
+            "repeat": 0
+          }
+        ],
+        "type": "spacer"
+      },
+      {
+        "timestamp": 137.495411,
+        "lines": [
+          {
+            "text": "Paye gham aise maayen bachchon ko tayyar Karti hain",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": 146.74499,
+        "lines": [
+          {
+            "text": "Azadari ke sadqe men Naya Mukhtar Karti hain",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": 155.994933,
+        "lines": [
+          {
+            "text": "Ye dete hain adu Ko qaza",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": null,
+        "lines": [
+          {
+            "text": "",
+            "repeat": 0
+          }
+        ],
+        "type": "spacer"
+      },
+      {
+        "timestamp": 160.495043,
+        "lines": [
+          {
+            "text": "Muharram ka ye chaand agaya",
+            "repeat": 3
+          }
+        ]
+      },
+      {
+        "timestamp": null,
+        "lines": [
+          {
+            "text": "",
+            "repeat": 0
+          }
+        ],
+        "type": "spacer"
+      },
+      {
+        "timestamp": 176.745098,
+        "lines": [
+          {
+            "text": "Ye ayyame aza har ayk Shai se hamko pyara  h",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": 185.745594,
+        "lines": [
+          {
+            "text": "Moharram ke liye maaon ne khud bachchon ko waara h",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": 194.996749,
+        "lines": [
+          {
+            "text": "Moharram par h ye Jaa fida",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": null,
+        "lines": [
+          {
+            "text": "",
+            "repeat": 0
+          }
+        ],
+        "type": "spacer"
+      },
+      {
+        "timestamp": 199.996798,
+        "lines": [
+          {
+            "text": "Muharram ka ye chaand agaya",
+            "repeat": 3
+          }
+        ]
+      },
+      {
+        "timestamp": null,
+        "lines": [
+          {
+            "text": "",
+            "repeat": 0
+          }
+        ],
+        "type": "spacer"
+      },
+      {
+        "timestamp": 215.9953,
+        "lines": [
+          {
+            "text": "Musalsal ghurbate Shabbir par ashkon se muh dhona",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": 224.995674,
+        "lines": [
+          {
+            "text": "Nahi bhulenge ham Sajjad ka is gham men khu Rona",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": 234.24568,
+        "lines": [
+          {
+            "text": "Rahe raushan aza ka diya",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": null,
+        "lines": [
+          {
+            "text": "",
+            "repeat": 0
+          }
+        ],
+        "type": "spacer"
+      },
+      {
+        "timestamp": 238.995763,
+        "lines": [
+          {
+            "text": "Muharram ka ye chaand agaya",
+            "repeat": 3
+          }
+        ]
+      },
+      {
+        "timestamp": null,
+        "lines": [
+          {
+            "text": "",
+            "repeat": 0
+          }
+        ],
+        "type": "spacer"
+      },
+      {
+        "timestamp": 254.995295,
+        "lines": [
+          {
+            "text": "Jena walon ko rudade ghame Sarwar sunate hain",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": 264.245596,
+        "lines": [
+          {
+            "text": "Nawase ki museebat par Nabi ansu bahate hain",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": 273.499386,
+        "lines": [
+          {
+            "text": "Shareeke gham hain sab ambiya",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": null,
+        "lines": [
+          {
+            "text": "",
+            "repeat": 0
+          }
+        ],
+        "type": "spacer"
+      },
+      {
+        "timestamp": 278.24536,
+        "lines": [
+          {
+            "text": "Muharram ka ye chaand agaya",
+            "repeat": 3
+          }
+        ]
+      },
+      {
+        "timestamp": null,
+        "lines": [
+          {
+            "text": "",
+            "repeat": 0
+          }
+        ],
+        "type": "spacer"
+      },
+      {
+        "timestamp": 294.465977,
+        "lines": [
+          {
+            "text": "Sukunat pate hain romal men Zahra ke mahram hain",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": 303.74489,
+        "lines": [
+          {
+            "text": "Hamare ashk hi zakhme shhe Wala ke marham hain",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": 312.744655,
+        "lines": [
+          {
+            "text": "Na girye ka ruke silsila",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": null,
+        "lines": [
+          {
+            "text": "",
+            "repeat": 0
+          }
+        ],
+        "type": "spacer"
+      },
+      {
+        "timestamp": 317.495169,
+        "lines": [
+          {
+            "text": "Muharram ka ye chaand agaya",
+            "repeat": 3
+          }
+        ]
+      },
+      {
+        "timestamp": null,
+        "lines": [
+          {
+            "text": "",
+            "repeat": 0
+          }
+        ],
+        "type": "spacer"
+      },
+      {
+        "timestamp": 333.744708,
+        "lines": [
+          {
+            "text": "Wo teejani akhi hon ya Hilal is amr ko samjhen",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": 342.994779,
+        "lines": [
+          {
+            "text": "Ye tableeghe azaye shh kisi Surat Ni roken",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": 351.99629,
+        "lines": [
+          {
+            "text": "agar Zahra ki chahen dua",
+            "repeat": 0
+          }
+        ]
+      },
+      {
+        "timestamp": null,
+        "lines": [
+          {
+            "text": "",
+            "repeat": 0
+          }
+        ],
+        "type": "spacer"
+      },
+      {
+        "timestamp": 356.99509,
+        "lines": [
+          {
+            "text": "Muharram ka ye chaand agaya",
+            "repeat": 3
+          }
+        ]
+      }
+    ]
+  }
