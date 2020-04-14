@@ -84,7 +84,13 @@ export default class BugReportForm extends Vue {
     this.error = null;
     this.loading = true;
     try {
-      await client.post('/v1/app/feedback');
+      await client.post('/v1/app/feedback', {
+        summary: this.summary,
+        type: this.type,
+        details: this.details,
+        email: this.email,
+      });
+
       showToast({ text: 'Your feedback has been submitted!' });
       this.close();
     } catch (e) {

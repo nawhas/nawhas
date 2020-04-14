@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\AlbumsController;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\FeedbackController;
 use App\Http\Controllers\Api\PopularEntitiesController;
 use App\Http\Controllers\Api\RecitersController;
 use App\Http\Controllers\Api\TracksController;
@@ -19,6 +20,11 @@ use Illuminate\Http\Request;
 */
 
 Route::prefix('v1')->group(function () {
+    // App
+    Route::prefix('app')->group(function () {
+        Route::post('feedback', [FeedbackController::class, 'submit']);
+    });
+
     // Auth
     Route::prefix('auth')->group(function () {
         Route::post('login', [AuthController::class, 'login']);
