@@ -21,6 +21,10 @@ class FeedbackController extends Controller
 
     public function submit(FeedbackRequest $request): Response
     {
+        if (env('GITHUB_TOKEN') === null) {
+            return response()->noContent(); // For integration and staging environments without token.
+        }
+
         $this->github->issue()->create(config('github.repository.user'), config('github.repository.repo'), [
             'title' => $this->generateTitle($request),
             'body' => $this->generateBody($request),
