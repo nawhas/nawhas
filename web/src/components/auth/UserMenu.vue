@@ -83,7 +83,7 @@
                   </v-list-item-title>
                 </v-list-item-content>
               </v-list-item>
-              <v-list-item @click="showBugReportDialog">
+              <v-list-item @click="showBugReport">
                 <v-list-item-content>
                   <v-list-item-title class="user-menu__action">
                     <v-icon>report</v-icon> <div class="user-menu__action__text">Report an issue</div>
@@ -105,6 +105,9 @@
     <v-dialog v-model="showWhatsNewDialog" width="500">
       <app-changelog @close="showWhatsNewDialog = false" />
     </v-dialog>
+    <v-dialog persistent v-model="showBugReportDialog" width="500">
+      <bug-report-form @close="showBugReportDialog = false" />
+    </v-dialog>
   </div>
 </template>
 
@@ -112,13 +115,19 @@
 import { Component, Vue } from 'vue-property-decorator';
 import LoginForm from '@/components/auth/LoginForm.vue';
 import AppChangelog from '@/components/notifications/AppChangelog.vue';
+import BugReportForm from '@/components/BugReportForm.vue';
 @Component({
-  components: { AppChangelog, LoginForm },
+  components: {
+    BugReportForm,
+    AppChangelog,
+    LoginForm,
+  },
 })
 export default class UserMenu extends Vue {
   private open = false;
   private showLoginDialog = false;
   private showWhatsNewDialog = false;
+  private showBugReportDialog = false;
 
   get user() {
     return this.$store.state.auth.user;
@@ -155,9 +164,9 @@ export default class UserMenu extends Vue {
     this.showWhatsNewDialog = true;
   }
 
-  showBugReportDialog() {
+  showBugReport() {
     this.open = false;
-    console.log('Clicked');
+    this.showBugReportDialog = true;
   }
 
   register() {
