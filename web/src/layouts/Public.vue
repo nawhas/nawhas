@@ -52,6 +52,7 @@
     </v-content>
     <audio-player></audio-player>
     <update-service-worker />
+    <toaster />
   </v-app>
 </template>
 
@@ -64,9 +65,11 @@ import UserMenu from '@/components/auth/UserMenu.vue';
 import UpdateServiceWorker from '@/components/utils/UpdateServiceWorker.vue';
 import LogoIcon from '@/assets/icon.svgx';
 import LogoWordmark from '@/assets/wordmark.svgx';
+import Toaster from '@/components/utils/Toaster.vue';
 
 @Component({
   components: {
+    Toaster,
     UpdateServiceWorker,
     Search,
     AudioPlayer,

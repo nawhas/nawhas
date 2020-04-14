@@ -53,6 +53,7 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import client from '@/services/client';
+import { showToast } from '@/events/toaster';
 
 type IssueType = 'bug' | 'feature' | 'general';
 interface IssueTypeOption {
@@ -69,7 +70,6 @@ export default class BugReportForm extends Vue {
   private error: string|null = null;
   private invalid: any = {};
   private loading = false;
-  private snackbar = false;
 
   get types(): Array<IssueTypeOption> {
     return [
@@ -85,7 +85,7 @@ export default class BugReportForm extends Vue {
     this.loading = true;
     try {
       await client.post('/v1/app/feedback');
-      this.snackbar = true;
+      showToast({ text: 'Your feedback has been submitted!' });
       this.close();
     } catch (e) {
       if (!e.response) {
