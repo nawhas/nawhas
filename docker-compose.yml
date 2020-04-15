@@ -9,7 +9,7 @@ volumes:
 
 services:
   api:
-    image: szainmehdi/php:7.4
+    image: szainmehdi/php:7.4-dev
     container_name: nawhas_api
     working_dir: /var/www/api
     environment:
