@@ -4,17 +4,12 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Api;
 
+use App\Entities\Reciter;
 use App\Http\Controllers\Controller;
-use App\Http\Transformers\AlbumTransformer;
 use App\Http\Transformers\ReciterTransformer;
 use App\Http\Transformers\TrackTransformer;
-use App\Queries\AlbumQuery;
-use App\Queries\TrackQuery;
-use App\Repositories\AlbumRepository;
 use App\Repositories\PopularEntitiesRepository;
 use App\Repositories\ReciterRepository;
-use App\Repositories\TrackRepository;
-use App\Support\Pagination\PaginationState;
 use Illuminate\Contracts\Cache\Repository as Cache;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -34,7 +29,7 @@ class PopularEntitiesController extends Controller
     public function reciters(Request $request, ReciterTransformer $transformer): JsonResponse
     {
         return $this->cache->remember(
-            'controllers.popular.reciters',
+            $this->getRecitersCacheKey($request),
             self::CACHE_TTL,
             fn() => $this->respondWithCollection($this->repository->reciters(), $transformer)
         );
@@ -47,7 +42,8 @@ class PopularEntitiesController extends Controller
         if ($request->has('reciterId')) {
             $reciter = $reciterRepo->query()->whereIdentifier($request->get('reciterId'))->get();
         }
-        $key = $reciter ? "controllers.popular.tracks::reciter:{$reciter->getId()}" : 'controllers.popular.tracks';
+
+        $key = $this->getTracksCacheKey($request, $reciter);
 
         return $this->cache->remember(
             $key,
@@ -55,4 +51,25 @@ class PopularEntitiesController extends Controller
             fn() => $this->respondWithCollection($this->repository->tracks($reciter), $transformer),
         );
     }
+
+    private function getRecitersCacheKey(Request $request): string
+    {
+        $hash = $this->generateRequestHash($request);
+        return "controllers.popular.reciters::{$hash}";
+    }
+
+    private function getTracksCacheKey(Request $request, ?Reciter $reciter = null): string
+    {
+        $key = $reciter ? "controllers.popular.tracks::reciter:{$reciter->getId()}" : 'controllers.popular.tracks';
+
+        $hash = $this->generateRequestHash($request);
+        return "$key::{$hash}";
+    }
+
+    private function generateRequestHash(Request $request): string
+    {
+        return md5(http_build_query($request->all()));
+    }
+
+
 }

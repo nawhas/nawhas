@@ -12,7 +12,7 @@ use Illuminate\Support\Collection;
 
 class DoctrinePopularEntitiesRepository implements PopularEntitiesRepository
 {
-    private const LIMIT = 6;
+    private const LIMIT = 20;
 
     private EntityManager $em;
 

@@ -13,7 +13,7 @@ spec:
       http:
         paths:
           - backend:
-              serviceName: api
+              serviceName: api-nginx
               servicePort: 80
     - host: ING_APP_DOMAIN
       http:
