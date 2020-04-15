@@ -11,7 +11,7 @@ use Ramsey\Uuid\Uuid;
 /**
  * @method Track get()
  * @method Track|null first()
- * @method Collection<Track> all()
+ * @method Collection|traj all()
  */
 class TrackQuery extends Query
 {
