@@ -71,17 +71,15 @@ class AlbumsController extends Controller
     {
         if ($album->hasArtwork()) {
             $media = $album->getArtwork();
-            logger()->debug("Deleting media file at {$media->getPath()}");
-            Storage::delete($media->getPath());
+            Storage::delete($media);
         }
 
         foreach($album->getTracks() as $track) {
             if ($track->hasAudioFile()) {
                 $media = $track->getAudioFile();
-                logger()->debug("Deleting media file at {$media->getPath()}");
                 Storage::delete($media->getPath());
             }
-    
+
             $trackRepository->remove($track);
         }
 

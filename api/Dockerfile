@@ -9,9 +9,9 @@ ENV COMPOSER_ALLOW_SUPERUSER 1
 
 COPY . .
 
-RUN composer install \
-    # && composer phpstan \
-    && composer test
+RUN composer install
+RUN composer psalm:lint -- --output-format=github
+RUN composer test
 
 # ---------------------------------------------------------------------------
 # Build Image
