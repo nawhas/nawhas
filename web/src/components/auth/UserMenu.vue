@@ -1,12 +1,18 @@
 <template>
   <div>
     <v-menu :close-on-content-click="false" v-model="open" left>
-      <template v-slot:activator="{ on }">
-        <v-btn icon class="user-menu" v-on="on">
-          <v-icon>person</v-icon>
-        </v-btn>
+      <template #activator="{ on }">
+        <v-avatar
+            icon
+            class="user-menu__avatar"
+            v-on="on" v-ripple size="36"
+            :color="$vuetify.theme.dark ? 'grey darken-3' : 'grey lighten-2'"
+        >
+          <img v-if="authenticated" crossorigin :src="user.avatar" :alt="user.name">
+          <v-icon v-else>person</v-icon>
+        </v-avatar>
       </template>
-      <v-card width="350px">
+      <v-card width="400px">
         <template v-if="initialized">
           <v-list>
             <v-list-item>
@@ -29,14 +35,20 @@
                 <v-list-item-title>Guest</v-list-item-title>
                 <v-list-item-subtitle>Not logged in</v-list-item-subtitle>
               </v-list-item-content>
+              <v-list-item-action>
+                <v-btn v-if="authenticated" color="primary" text @click="logout">Log Out</v-btn>
+                <template v-else>
+                  <v-btn color="primary" text @click="login">Log In</v-btn>
+                </template>
+              </v-list-item-action>
             </v-list-item>
           </v-list>
 
           <v-divider></v-divider>
 
-          <div class="preferences">
+          <div class="user-menu__section">
             <v-list>
-              <v-subheader style="height: 36px">PREFERENCES</v-subheader>
+              <v-subheader class="section__heading">Preferences</v-subheader>
               <v-list-item-group>
                 <v-list-item :ripple="false" inactive>
                   <v-list-item-content>
@@ -62,14 +74,26 @@
 
           <v-divider></v-divider>
 
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn v-if="authenticated" color="primary" text @click="logout">Log Out</v-btn>
-            <template v-else>
-              <v-btn color="primary" text @click="login">Log In</v-btn>
-            </template>
-          </v-card-actions>
+          <div class="user-menu__section">
+            <v-list>
+              <v-list-item @click="showWhatsNew">
+                <v-list-item-content>
+                  <v-list-item-title class="user-menu__action">
+                    <v-icon>fiber_new</v-icon> <div class="user-menu__action__text">What's new?</div>
+                  </v-list-item-title>
+                </v-list-item-content>
+              </v-list-item>
+              <v-list-item @click="showBugReport">
+                <v-list-item-content>
+                  <v-list-item-title class="user-menu__action">
+                    <v-icon>report</v-icon> <div class="user-menu__action__text">Report an issue</div>
+                  </v-list-item-title>
+                </v-list-item-content>
+              </v-list-item>
+            </v-list>
+          </div>
         </template>
+
         <div class="loader" v-else>
           <v-progress-circular indeterminate color="primary" size="36" />
         </div>
@@ -78,18 +102,32 @@
     <v-dialog v-model="showLoginDialog" width="500">
       <login-form @close="showLoginDialog = false" />
     </v-dialog>
+    <v-dialog v-model="showWhatsNewDialog" width="500">
+      <app-changelog @close="showWhatsNewDialog = false" />
+    </v-dialog>
+    <v-dialog persistent v-model="showBugReportDialog" width="500">
+      <bug-report-form @close="showBugReportDialog = false" />
+    </v-dialog>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import LoginForm from '@/components/auth/LoginForm.vue';
+import AppChangelog from '@/components/notifications/AppChangelog.vue';
+import BugReportForm from '@/components/BugReportForm.vue';
 @Component({
-  components: { LoginForm },
+  components: {
+    BugReportForm,
+    AppChangelog,
+    LoginForm,
+  },
 })
 export default class UserMenu extends Vue {
   private open = false;
   private showLoginDialog = false;
+  private showWhatsNewDialog = false;
+  private showBugReportDialog = false;
 
   get user() {
     return this.$store.state.auth.user;
@@ -121,6 +159,16 @@ export default class UserMenu extends Vue {
     this.open = false;
   }
 
+  showWhatsNew() {
+    this.open = false;
+    this.showWhatsNewDialog = true;
+  }
+
+  showBugReport() {
+    this.open = false;
+    this.showBugReportDialog = true;
+  }
+
   register() {
     // todo
   }
@@ -128,10 +176,30 @@ export default class UserMenu extends Vue {
 </script>
 
 <style lang="scss" scoped>
+@import "../../styles/theme";
+
 .loader {
   padding: 24px;
   display: flex;
   align-items: center;
   justify-content: center;
+}
+.user-menu__avatar {
+  cursor: pointer;
+  margin-top: 6px;
+  margin-left: 12px;
+}
+.user-menu__section {
+  .section__heading {
+    height: 36px;
+    text-transform: uppercase;
+  }
+}
+.user-menu__action {
+  display: flex;
+  align-items: center;
+  .user-menu__action__text {
+    margin-left: 16px;
+  }
 }
 </style>
