@@ -32,7 +32,7 @@ class FeedbackController extends Controller
 
         $this->github->createIssue($issue);
 
-        return response(null, Response::HTTP_CREATED);
+        return response()->make('', Response::HTTP_CREATED);
     }
 
     private function generateTitle(Request $request): string

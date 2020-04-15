@@ -9,6 +9,7 @@ use MyCLabs\Enum\Enum;
 /**
  * @method static Format PLAIN_TEXT()
  * @method static Format JSON_V1()
+ * @psalm-immutable
  */
 final class Format extends Enum
 {

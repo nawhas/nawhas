@@ -25,10 +25,8 @@ class UpdateMediaUriToPath extends Command
 
     /**
      * Execute the console command.
-     *
-     * @return mixed
      */
-    public function handle(EntityManager $em)
+    public function handle(EntityManager $em): void
     {
         $media = MediaQuery::make()->all();
 

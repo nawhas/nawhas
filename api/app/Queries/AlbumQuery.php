@@ -12,7 +12,7 @@ use Ramsey\Uuid\Uuid;
 /**
  * @method Album|null first()
  * @method Album get()
- * @method Collection|Album[] all()
+ * @method Collection<Album> all()
  */
 class AlbumQuery extends Query
 {

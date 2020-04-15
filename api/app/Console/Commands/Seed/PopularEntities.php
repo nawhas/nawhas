@@ -30,10 +30,8 @@ class PopularEntities extends Command
 
     /**
      * Execute the console command.
-     *
-     * @return mixed
      */
-    public function handle(EntityManager $em, DoctrinePopularEntitiesRepository $repository)
+    public function handle(EntityManager $em, DoctrinePopularEntitiesRepository $repository): void
     {
         $this->seedPopularReciters($em, $repository);
     }

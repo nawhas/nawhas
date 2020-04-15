@@ -27,7 +27,7 @@ class CreateUserCommand extends Command
     /**
      * Execute the console command.
      *
-     * @return mixed
+     * @return bool
      */
     public function handle(EntityManager $em): bool
     {
