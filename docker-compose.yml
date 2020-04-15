@@ -9,7 +9,7 @@ volumes:
 
 services:
   api:
-    image: szainmehdi/php:7.4-nginx
+    image: szainmehdi/php:7.4-dev
     container_name: nawhas_api
     working_dir: /var/www/api
     environment:
@@ -19,14 +19,22 @@ services:
       - XDEBUG_IDE_KEY=PHPSTORM
       - XDEBUG_REMOTE_HOST=host.docker.internal
     volumes:
-      - ./api:/var/www/api
-      - ./api/docker/nginx.conf:/etc/nginx/conf.d/default.conf
+      - ./api:/var/www/api:cached
     ports:
       - "9000:9000"
     networks:
       - nawhas
     depends_on:
       - db
+  nginx:
+    image: nginx:stable-alpine
+    container_name: nawhas_api_nginx
+    volumes:
+      - ./docker/nginx/api.conf:/etc/nginx/conf.d/default.conf:ro
+    networks:
+      - nawhas
+    depends_on:
+      - api
   ingress:
     image: nginx:stable-alpine
     container_name: nawhas_ingress
@@ -35,9 +43,9 @@ services:
       - "443:443"
     volumes:
       - ./docker/nginx/certs:/etc/nginx/certs
-      - ./docker/nginx/ingress.conf:/etc/nginx/conf.d/default.conf
+      - ./docker/nginx/ingress.conf:/etc/nginx/conf.d/default.conf:ro
     depends_on:
-      - api
+      - nginx
       - web
     networks:
       - nawhas
@@ -47,7 +55,7 @@ services:
     working_dir: /var/www/web/public
     volumes:
       - ./web/dist:/var/www/web/public
-      - ./web/docker/nginx.conf:/etc/nginx/conf.d/default.conf
+      - ./web/docker/nginx.conf:/etc/nginx/conf.d/default.conf:ro
     networks:
       - nawhas
   db:
