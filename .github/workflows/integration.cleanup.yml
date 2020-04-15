@@ -18,6 +18,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@master
 
+      - uses: styfle/cancel-workflow-action@0.3.1
+        with:
+          workflow_id: 783417
+          access_token: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Save DigitalOcean kubeconfig
         uses: digitalocean/action-doctl@v1.7.0
         env:

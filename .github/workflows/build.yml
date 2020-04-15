@@ -13,6 +13,9 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+      - uses: n1hility/cancel-previous-runs@v2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
       - name: 'Build API Image'
         run: |
           docker build ./api --file ./api/Dockerfile
@@ -22,6 +25,9 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+      - uses: n1hility/cancel-previous-runs@v2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
       - name: 'Build Web Image'
         run: |
           docker build ./web --file ./web/Dockerfile

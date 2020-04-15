@@ -19,6 +19,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@master
 
+      - uses: n1hility/cancel-previous-runs@v2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Notify Build Started
         uses: voxmedia/github-action-slack-notify-build@v1
         with:
