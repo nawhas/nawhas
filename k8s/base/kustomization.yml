@@ -4,3 +4,7 @@ resources:
   - deployments.yml
   - services.yml
   - ingress.yml
+configMapGenerator:
+  - name: nginx-config
+    files:
+      - nginx.conf

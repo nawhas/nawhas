@@ -21,20 +21,48 @@ spec:
         - name: api
           image: IMAGE:TAG
           imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: api-nginx
+spec:
+  replicas: {{ .Values.replicaCount }}
+  template:
+    metadata:
+      labels:
+        app: api-nginx
+    spec:
+      containers:
+        - name: api-nginx
+          image: nginx:stable-alpine
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 80
+            - name: https
+              containerPort: 443
           livenessProbe:
             httpGet:
               path: /alive
-              port: 8080
-            initialDelaySeconds: 3
-            periodSeconds: 3
+              port: http
+            initialDelaySeconds: 30
+            timeoutSeconds: 5
           readinessProbe:
             httpGet:
               path: /alive
-              port: 8080
-            initialDelaySeconds: 1
-            periodSeconds: 5
-          ports:
-            - containerPort: 8080
+              port: http
+            initialDelaySeconds: 5
+            timeoutSeconds: 1
+          volumeMounts:
+            - name: nginx-config
+              mountPath: /etc/nginx/conf.d
+      volumes:
+        - name: nginx-config
+          configMap:
+            name: nginx-config
 ---
 apiVersion: apps/v1
 kind: Deployment
