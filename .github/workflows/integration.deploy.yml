@@ -24,7 +24,7 @@ jobs:
       - name: Notify Build Started
         uses: voxmedia/github-action-slack-notify-build@v1
         with:
-          channel: alerts
+          channel: deploys
           status: STARTED
           color: warning
         env:
@@ -138,7 +138,7 @@ jobs:
         if: success()
         uses: voxmedia/github-action-slack-notify-build@v1
         with:
-          channel: alerts
+          channel: deploys
           status: SUCCESS
           color: good
         env:
@@ -156,7 +156,7 @@ jobs:
         if: failure()
         uses: voxmedia/github-action-slack-notify-build@v1
         with:
-          channel: alerts
+          channel: deploys
           status: FAILED
           color: danger
         env:
