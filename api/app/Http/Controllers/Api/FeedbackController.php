@@ -60,7 +60,7 @@ class FeedbackController extends Controller
     }
 
     /**
-     * @return array|string[]
+     * @return string
      */
     private function generateLabels(Request $request): array
     {
