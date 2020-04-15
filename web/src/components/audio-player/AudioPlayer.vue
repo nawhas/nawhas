@@ -1018,6 +1018,8 @@ $duration: 580ms;
 .queue-list-menu {
   max-height: calc(100vh - 180px);
   position: relative;
+  overflow-y: auto;
+  overflow-x: hidden;
 
   .queue-list-menu__title {
     position: sticky;
@@ -1026,6 +1028,11 @@ $duration: 580ms;
     z-index: 1;
     margin-bottom: -8px;
     border-bottom: 1px solid rgba(0,0,0,0.1);
+    background: rgba(255, 255, 255, 0.86);
+  }
+
+  &.theme--dark .queue-list-menu__title {
+    background: rgba(30, 30, 30, 0.86);
   }
 }
 
