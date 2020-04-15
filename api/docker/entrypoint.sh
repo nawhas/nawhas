@@ -3,7 +3,7 @@ set -xe
 
 if [ $# -eq 0 ]; then
   php artisan boot
-  exec docker-fpm-entrypoint
+  exec php-fpm --nodaemonize
 else
-  exec docker-fpm-entrypoint "$@"
+  exec "$@"
 fi

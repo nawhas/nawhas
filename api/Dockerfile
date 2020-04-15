@@ -1,4 +1,7 @@
-FROM szainmehdi/php:7.4 as test
+# ---------------------------------------------------------------------------
+# Test Image
+# ---------------------------------------------------------------------------
+FROM szainmehdi/php:7.4-dev as test
 
 WORKDIR /var/www/api
 ENV APP_ENV production
@@ -11,18 +14,12 @@ RUN composer install \
     && composer test
 
 # ---------------------------------------------------------------------------
-# Production Image
+# Build Image
 # ---------------------------------------------------------------------------
-FROM szainmehdi/php:7.4
+FROM szainmehdi/php:7.4-dev as build
 
 WORKDIR /var/www/api
 ENV APP_ENV production
-ENV COMPOSER_ALLOW_SUPERUSER 1
-
-ARG GITHUB_SHA
-ARG GITHUB_REF
-ENV GIT_SHA $GITHUB_SHA
-ENV GIT_BRANCH $GITHUB_REF
 
 COPY . .
 
@@ -30,10 +27,23 @@ RUN composer install -n --no-dev --prefer-dist --no-scripts --no-autoloader \
     && composer dump-autoload -n -o --no-dev \
     && composer check-platform-reqs
 
+# ---------------------------------------------------------------------------
+# Production Image
+# ---------------------------------------------------------------------------
+FROM szainmehdi/php:7.4
+
+WORKDIR /var/www/api
+
+ARG GITHUB_SHA
+ARG GITHUB_REF
+ENV GIT_SHA $GITHUB_SHA
+ENV GIT_BRANCH $GITHUB_REF
+
+COPY --from=build /var/www/api /var/www/api
+
 RUN chown -R www-data: /var/www/api
 
 COPY docker/entrypoint.sh /usr/bin/docker-nawhas-api-entrypoint
 RUN chmod +x /usr/bin/docker-nawhas-api-entrypoint
 
 ENTRYPOINT [ "docker-nawhas-api-entrypoint" ]
-CMD []
