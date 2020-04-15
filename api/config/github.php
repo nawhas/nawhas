@@ -2,17 +2,7 @@
 
 declare(strict_types=1);
 
-/*
- * This file is part of Laravel GitHub.
- *
- * (c) Graham Campbell <graham@alt-three.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 return [
-
     /*
     |--------------------------------------------------------------------------
     | Default Connection Name
@@ -24,7 +14,7 @@ return [
     |
     */
 
-    'default' => 'main',
+    'default' => 'private',
 
     /*
     |--------------------------------------------------------------------------
@@ -69,9 +59,10 @@ return [
         ],
 
         'private' => [
-            'method'     => 'private',
-            'appId'      => 'your-github-app-id',
-            'keyPath'    => 'your-private-key-path',
+            'method'          => 'private',
+            'appId'           => env('GITHUB_APP_ID'),
+            'keyPath'         => storage_path('secrets/github.pem'),
+            'installation'    => env('GITHUB_INSTALLATION_ID'),
             // 'key'        => 'your-private-key-content',
             // 'backoff'    => false,
             // 'cache'      => false,
@@ -128,8 +119,5 @@ return [
 
     ],
 
-    'repository' => [
-        'user' => 'nawhas',
-        'repo' => 'nawhas',
-    ]
+    'enabled' => env('GITHUB_ENABLED', false),
 ];

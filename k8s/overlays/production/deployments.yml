@@ -10,6 +10,14 @@ spec:
           envFrom:
             - secretRef:
                 name: api.env
+          volumeMounts:
+            - name: secrets
+              mountPath: "/var/www/api/storage/secrets"
+              readOnly: true
+      volumes:
+        - name: secrets
+          secret:
+            secretName: api-secrets
 ---
 apiVersion: apps/v1
 kind: Deployment

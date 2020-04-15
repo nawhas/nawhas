@@ -6,30 +6,31 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\FeedbackRequest;
+use App\Integrations\Github\GithubService;
+use App\Integrations\Github\Issue;
+use Github\Client;
 use GrahamCampbell\GitHub\GitHubManager;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
 class FeedbackController extends Controller
 {
-    private GitHubManager $github;
+    private GithubService $github;
 
-    public function __construct(GitHubManager $github)
+    public function __construct(GithubService $github)
     {
         $this->github = $github;
     }
 
     public function submit(FeedbackRequest $request): Response
     {
-        if (env('GITHUB_TOKEN') === null) {
-            return response()->noContent(); // For integration and staging environments without token.
-        }
+        $issue = new Issue(
+            $this->generateTitle($request),
+            $this->generateBody($request),
+            $this->generateLabels($request),
+        );
 
-        $this->github->issue()->create(config('github.repository.user'), config('github.repository.repo'), [
-            'title' => $this->generateTitle($request),
-            'body' => $this->generateBody($request),
-            'labels' => $this->generateLabels($request),
-        ]);
+        $this->github->createIssue($issue);
 
         return response(null, Response::HTTP_CREATED);
     }
