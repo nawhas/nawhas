@@ -43,6 +43,7 @@ jobs:
         run: |
           gpg --quiet --batch --yes --decrypt --passphrase="$GPG_KEY" --output api.env api.env.gpg
           gpg --quiet --batch --yes --decrypt --passphrase="$GPG_KEY" --output web.env web.env.gpg
+          gpg --quiet --batch --yes --decrypt --passphrase="$GPG_KEY" --output github.pem github.pem.gpg
         env:
           GPG_KEY: ${{ secrets.GPG_KEY }}
 
