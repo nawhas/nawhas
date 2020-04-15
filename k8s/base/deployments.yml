@@ -29,7 +29,6 @@ kind: Deployment
 metadata:
   name: api-nginx
 spec:
-  replicas: {{ .Values.replicaCount }}
   template:
     metadata:
       labels:
