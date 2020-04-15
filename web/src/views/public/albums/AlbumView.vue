@@ -78,49 +78,7 @@
         <div>Tracks</div>
         <edit-track-dialog v-if="album && isModerator" :album="album" />
       </div>
-      <v-list class="pa-0" v-if="tracks">
-        <v-list-item v-for="(track, index) in tracks" :key="index"
-                     :to="getTrackLink(track)"
-        >
-          <v-list-item-avatar>
-            <v-avatar size="36">
-              <span>{{ index+1 }}</span>
-            </v-avatar>
-          </v-list-item-avatar>
-          <v-list-item-content>{{ track.title }}</v-list-item-content>
-          <v-list-item-action class="track__features">
-            <v-icon :class="{
-              'material-icons-outlined': true,
-              track__feature: true,
-              'track__feature--disabled': !hasLyrics(track) && !isDark,
-              'track__feature--disabled--dark': !hasLyrics(track) && isDark
-            }">
-              <template v-if="hasLyrics(track)">speaker_notes</template>
-              <template v-else>speaker_notes_off</template>
-            </v-icon>
-            <v-btn icon @click.prevent="playTrack(track)"
-                   :disabled="!hasAudioFile(track)"
-                   :class="{
-                      track__feature: true,
-                      'track__feature--disabled': !hasAudioFile(track) && !isDark,
-                      'track__feature--disabled--dark': !hasAudioFile(track) && isDark
-                   }"
-            >
-              <v-icon>
-                <template v-if="hasAudioFile(track)">play_circle_outline</template>
-                <template v-else>volume_off</template>
-              </v-icon>
-            </v-btn>
-          </v-list-item-action>
-        </v-list-item>
-      </v-list>
-      <v-list v-else>
-        <v-skeleton-loader type="list-item-avatar"
-                           class="py-1"
-                           v-for="index in (album ? album.related.tracks : 6)"
-                           :key="index">
-        </v-skeleton-loader>
-      </v-list>
+      <track-list :tracks="tracks" />
     </v-container>
     <v-snackbar v-model="addedToQueueSnackbar" right>
       <v-icon color="white">playlist_add_check</v-icon> Added to Queue
@@ -144,9 +102,11 @@ import EditAlbumDialog from '@/components/edit/EditAlbumDialog.vue';
 import EditTrackDialog from '@/components/edit/EditTrackDialog.vue';
 import { getTracks } from '@/services/tracks';
 import { getAlbum } from '@/services/albums';
+import TrackList from '@/components/tracks/TrackList.vue';
 
 @Component({
   components: {
+    TrackList,
     ReciterHeroSkeleton,
     LyricsSkeleton,
     MoreTracksSkeleton,
@@ -364,26 +324,6 @@ export default class AlbumPage extends Vue {
     padding: 0;
     display: flex;
     justify-content: space-between;
-  }
-}
-
-.track__features {
-  white-space: nowrap;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  flex-direction: row;
-
-  .track__feature {
-    margin-left: 6px;
-    color: map-deep-get($colors, 'deep-orange', 'darken-3');
-  }
-
-  .track__feature--disabled {
-    color: rgba(0, 0, 0, 0.1);
-  }
-  .track__feature--disabled--dark {
-    color: rgba(map-get($shades, 'white'), 0.5);
   }
 }
 
