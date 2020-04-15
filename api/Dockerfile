@@ -13,7 +13,7 @@ RUN composer install \
 # ---------------------------------------------------------------------------
 # Production Image
 # ---------------------------------------------------------------------------
-FROM szainmehdi/php:7.4-nginx
+FROM szainmehdi/php:7.4
 
 WORKDIR /var/www/api
 ENV APP_ENV production
@@ -32,7 +32,6 @@ RUN composer install -n --no-dev --prefer-dist --no-scripts --no-autoloader \
 
 RUN chown -R www-data: /var/www/api
 
-COPY docker/nginx.conf /etc/nginx/conf.d/default.conf
 COPY docker/entrypoint.sh /usr/bin/docker-nawhas-api-entrypoint
 RUN chmod +x /usr/bin/docker-nawhas-api-entrypoint
 
