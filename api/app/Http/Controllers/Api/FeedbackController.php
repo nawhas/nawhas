@@ -64,6 +64,6 @@ class FeedbackController extends Controller
      */
     private function generateLabels(Request $request): array
     {
-        return ['feedback:' . $request->get('type')];
+        return ['feedback', 'feedback:' . $request->get('type')];
     }
 }
