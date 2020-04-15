@@ -43,7 +43,7 @@ class FeedbackController extends Controller
         return "[{$type}] {$summary}";
     }
 
-    private function generateBody(Request $request): void
+    private function generateBody(Request $request): string
     {
         $details = $request->get('details');
         $email = $request->get('email');
