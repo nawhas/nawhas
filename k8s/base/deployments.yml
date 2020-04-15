@@ -28,11 +28,20 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: api-nginx
+  labels:
+    app: api-nginx
+    tier: backend
 spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: api-nginx
+      tier: backend
   template:
     metadata:
       labels:
         app: api-nginx
+        tier: backend
     spec:
       containers:
         - name: api-nginx
