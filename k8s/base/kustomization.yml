@@ -7,4 +7,4 @@ resources:
 configMapGenerator:
   - name: nginx-config
     files:
-      - nginx.conf
+      - configs/nginx.conf
