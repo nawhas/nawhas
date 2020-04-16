@@ -7,6 +7,7 @@ use App\Entities\Reciter;
 use App\Queries\ReciterQuery;
 use App\Repositories\Doctrine\DoctrinePopularEntitiesRepository;
 use App\Repositories\ReciterRepository;
+use App\Support\Pagination\PaginationState;
 use App\Visits\Entities\ReciterVisit;
 use App\Visits\Manager;
 use Carbon\Carbon;
@@ -38,7 +39,7 @@ class PopularEntities extends Command
 
     protected function seedPopularReciters(EntityManager $em, DoctrinePopularEntitiesRepository $repository): void
     {
-        $popular = $repository->reciters()->map(fn (Reciter $reciter) => [$reciter->getName()])->toArray();
+        $popular = $repository->reciters(PaginationState::make())->map(fn (Reciter $reciter) => [$reciter->getName()])->toArray();
         $this->table(['Starting Point'], $popular);
 
         $slugs = [
@@ -58,7 +59,7 @@ class PopularEntities extends Command
 
         $this->info('Done!');
 
-        $popular = $repository->reciters()->map(fn (Reciter $reciter) => [$reciter->getName()])->toArray();
+        $popular = $repository->reciters(PaginationState::make())->map(fn (Reciter $reciter) => [$reciter->getName()])->toArray();
         $this->table(['Starting Point'], $popular);
     }
 }
