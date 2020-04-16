@@ -1,67 +1,105 @@
 import client from '@/services/client';
+import { User, Data as UserData, Role } from '@/entities/user';
+import { ActionContext } from 'vuex';
 
-export const Role = {
-  MODERATOR: 'moderator',
-  CONTRIBUTOR: 'contributor',
-  GUEST: 'guest',
-};
-
-export type RoleValue = 'moderator' | 'contributor' | 'guest';
-
+/*
+|--------------------------------------------------------------------------
+| Interfaces & Types
+|--------------------------------------------------------------------------
+*/
 export interface AuthState {
-  user: any;
+  user: UserData|null;
   initialized: boolean;
 }
 
+export interface LoginActionPayload {
+  email: string;
+  password: string;
+}
+
+export interface UserPayload {
+  user: UserData|null;
+}
+
+type Context = ActionContext<AuthState, any>;
+
+export enum Mutations {
+  Initialize = '[Auth] Initialize auth state',
+  Login = '[Auth] User logged in',
+  Logout = '[Auth] User logged out',
+}
+
+export enum Actions {
+  Login = 'auth.login',
+  Logout = 'auth.logout',
+  Check = 'auth.check',
+}
+
+export enum Getters {
+  User = 'auth.user',
+  Authenticated = 'auth.authenticated',
+  Role = 'auth.role',
+  IsModerator = 'auth.isModerator',
+}
+
+/*
+|--------------------------------------------------------------------------
+| Store State, Mutations, Actions, & Getters
+|--------------------------------------------------------------------------
+*/
 const state: AuthState = {
   user: null,
   initialized: false,
 };
 
 const mutations = {
-  INITIALIZE(state: AuthState, { user }) {
+  [Mutations.Initialize](state: AuthState, { user }: UserPayload) {
     state.user = user;
     state.initialized = true;
   },
-  LOGIN(state: AuthState, { user }) {
+  [Mutations.Login](state: AuthState, { user }: UserPayload) {
     state.user = user;
   },
-  LOGOUT(state: AuthState) {
+  [Mutations.Logout](state: AuthState) {
     state.user = null;
   },
 };
 
+
 const actions = {
-  async login({ commit }, { email, password }) {
+  async [Actions.Login]({ commit }: Context, { email, password }: LoginActionPayload) {
     const response = await client.post('/v1/auth/login', { email, password });
 
-    commit('LOGIN', { user: response.data });
+    commit(Mutations.Login, { user: response.data });
   },
-  async logout({ commit }) {
-    commit('LOGOUT');
+  async [Actions.Logout]({ commit }: Context) {
+    commit(Mutations.Logout);
     client.post('/v1/auth/logout');
   },
-  async check({ commit }) {
+  async [Actions.Check]({ commit }: Context) {
     await client.get('/airlock/csrf-cookie');
     try {
       const response = await client.get('/v1/auth/user');
-      commit('INITIALIZE', { user: response.data });
+      commit(Mutations.Initialize, { user: response.data });
     } catch (e) {
       // User not logged in.
-      commit('INITIALIZE', { user: null });
+      commit(Mutations.Initialize, { user: null });
     }
   },
 };
 
 const getters = {
-  authenticated(state: AuthState): boolean {
+  [Getters.User](state: AuthState): User|null {
+    return state.user ? new User(state.user) : null;
+  },
+  [Getters.Authenticated](state: AuthState): boolean {
     return state.user !== null;
   },
-  role(state: AuthState): RoleValue {
-    return state.user ? state.user.role : Role.GUEST;
+  [Getters.Role](state: AuthState): Role {
+    return state.user ? state.user.role : Role.Guest;
   },
-  isModerator(state: AuthState): boolean {
-    return (state.user && state.user.role === Role.MODERATOR);
+  [Getters.IsModerator](state: AuthState): boolean {
+    return !!(state.user && state.user.role === Role.Moderator);
   },
 };
 
@@ -70,5 +108,4 @@ export default {
   mutations,
   actions,
   getters,
-  namespaced: true,
 };

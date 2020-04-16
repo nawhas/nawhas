@@ -85,6 +85,7 @@ import HeroBanner from '@/components/HeroBanner.vue';
 import { getReciter } from '@/services/reciters';
 import { getAlbums } from '@/services/albums';
 import { getPopularTracks } from '@/services/popular';
+import { Getters as AuthGetters } from '@/store/modules/auth';
 
 
 @Component({
@@ -123,7 +124,7 @@ export default class ReciterProfile extends Vue {
   }
 
   get isModerator() {
-    return this.$store.getters['auth/isModerator'];
+    return this.$store.getters[AuthGetters.IsModerator];
   }
 
   get showToolbar() {

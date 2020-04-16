@@ -93,6 +93,7 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 import Vibrant from 'node-vibrant';
 import EditAlbumDialog from '@/components/edit/EditAlbumDialog.vue';
 import EditTrackDialog from '@/components/edit/EditTrackDialog.vue';
+import { Getters as AuthGetters } from '@/store/modules/auth';
 
 @Component({
   components: {
@@ -187,7 +188,7 @@ export default class Album extends Vue {
   }
 
   get isModerator() {
-    return this.$store.getters['auth/isModerator'];
+    return this.$store.getters[AuthGetters.IsModerator];
   }
 
   get showSpeedPlay(): boolean {
