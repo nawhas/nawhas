@@ -202,4 +202,11 @@ export default class UserMenu extends Vue {
     margin-left: 16px;
   }
 }
+
+@media #{map-get($display-breakpoints, 'sm-and-down')} {
+  .user-menu__avatar {
+    margin-top: 0;
+    margin-left: 12px;
+  }
+}
 </style>
