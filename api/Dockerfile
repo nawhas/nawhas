@@ -46,4 +46,5 @@ RUN chown -R www-data: /var/www/api
 COPY docker/entrypoint.sh /usr/bin/docker-nawhas-api-entrypoint
 RUN chmod +x /usr/bin/docker-nawhas-api-entrypoint
 
+HEALTHCHECK --interval=1m --timeout=3s CMD php artisan healthcheck
 ENTRYPOINT [ "docker-nawhas-api-entrypoint" ]

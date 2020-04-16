@@ -23,6 +23,22 @@ spec:
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
+          livenessProbe:
+            exec:
+              command:
+                - php
+                - artisan
+                - healthcheck
+            initialDelaySeconds: 10
+            timeoutSeconds: 2
+          readinessProbe:
+            exec:
+              command:
+                - php
+                - artisan
+                - healthcheck
+            initialDelaySeconds: 2
+            timeoutSeconds: 2
 ---
 apiVersion: apps/v1
 kind: Deployment
