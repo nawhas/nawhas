@@ -8,6 +8,7 @@ use App\Database\Doctrine\EntityManager;
 use App\Entities\Reciter;
 use App\Entities\Track;
 use App\Repositories\PopularEntitiesRepository;
+use App\Support\Pagination\PaginationState;
 use Illuminate\Support\Collection;
 
 class DoctrinePopularEntitiesRepository implements PopularEntitiesRepository
@@ -24,7 +25,7 @@ class DoctrinePopularEntitiesRepository implements PopularEntitiesRepository
     /**
      * @return Collection|Reciter[]
      */
-    public function reciters(): Collection
+    public function reciters(PaginationState $pagination): Collection
     {
         $reciters = $this->em->repository(Reciter::class);
 
@@ -32,14 +33,14 @@ class DoctrinePopularEntitiesRepository implements PopularEntitiesRepository
             ->leftJoin('t.visits', 'v')
             ->addSelect('COUNT(v.id) as HIDDEN visits')
             ->groupBy('t.id')
-            ->setMaxResults(self::LIMIT)
+            ->setMaxResults($pagination->getLimit(self::LIMIT))
             ->orderBy('visits', 'desc')
             ->getQuery();
 
         return collect($query->getResult());
     }
 
-    public function tracks(?Reciter $reciter = null): Collection
+    public function tracks(PaginationState $pagination, ?Reciter $reciter = null): Collection
     {
         $tracks = $this->em->repository(Track::class);
 
@@ -48,7 +49,7 @@ class DoctrinePopularEntitiesRepository implements PopularEntitiesRepository
             ->leftJoin('t.album', 'a')
             ->addSelect('COUNT(v.id) as HIDDEN visits')
             ->groupBy('t.id, a.year')
-            ->setMaxResults(self::LIMIT)
+            ->setMaxResults($pagination->getLimit(self::LIMIT))
             ->addOrderBy('visits', 'desc')
             ->addOrderBy('a.year', 'desc');
 

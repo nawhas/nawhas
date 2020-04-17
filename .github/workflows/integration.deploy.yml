@@ -206,6 +206,14 @@ jobs:
           kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig rollout status --timeout=2m deployment/api -n $NAMESPACE
           kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig rollout status --timeout=2m deployment/web -n $NAMESPACE
           kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig get services -o wide -n $NAMESPACE
+
+      - name: Post Link on PR
+        if: success()
+        uses: unsplash/comment-on-pr@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          msg: "Your integration branch has been deployed to https://${{ env.APP_DOMAIN }}"
   ################################################################
   # Notify Build Status
   ################################################################
