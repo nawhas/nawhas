@@ -10,17 +10,23 @@ env:
   WEB_IMAGE: nawhas/web
 
 jobs:
-  build:
-    name: Build & Deploy to Integration
+  ################################################################
+  # Cancel Previous Builds
+  ################################################################
+  cleanup:
+    name: Cancel Previous Runs
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@master
-
       - uses: n1hility/cancel-previous-runs@v2
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-
+  ################################################################
+  # Notify Build Started
+  ################################################################
+  notify_start:
+    name: Notify Build Started
+    runs-on: ubuntu-latest
+    steps:
       - name: Notify Build Started
         uses: voxmedia/github-action-slack-notify-build@v1
         with:
@@ -29,21 +35,15 @@ jobs:
           color: warning
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
-
-      - name: Save DigitalOcean kubeconfig
-        uses: digitalocean/action-doctl@v1.7.0
-        env:
-          DIGITALOCEAN_ACCESS_TOKEN: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
-        with:
-          args: kubernetes cluster kubeconfig show k8s-nawhas > $GITHUB_WORKSPACE/.kubeconfig
-
-      - name: Decrypt secrets
-        working-directory: ./k8s/overlays/integration/secrets
-        run: |
-          gpg --quiet --batch --yes --decrypt --passphrase="$GPG_KEY" --output api.integration.env api.integration.env.gpg
-          gpg --quiet --batch --yes --decrypt --passphrase="$GPG_KEY" --output web.integration.env web.integration.env.gpg
-        env:
-          GPG_KEY: ${{ secrets.GPG_KEY }}
+  ################################################################
+  # Build & Test API Image
+  ################################################################
+  build_api:
+    name: Build & Test API Image
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@master
 
       - name: Docker Login
         env:
@@ -64,12 +64,6 @@ jobs:
           echo "::set-env name=API_DOMAIN::$API_DOMAIN"
           echo "::set-env name=APP_DOMAIN::$APP_DOMAIN"
 
-      - name: Prepare Secrets
-        working-directory: ./k8s/overlays/integration/secrets
-        run: |
-          printf "\nAPP_DOMAIN=$APP_DOMAIN" >> api.integration.env
-          printf "\nALGOLIA_PREFIX=intg_${PR_NUM}_" >> api.integration.env
-
       - name: Build API
         run: |
           docker build --file ./api/Dockerfile \
@@ -81,6 +75,41 @@ jobs:
       - name: Publish API
         run: |
           docker push $API_IMAGE:$NAMESPACE-${GITHUB_SHA::8}
+  ################################################################
+  # Build & Test Web Image
+  ################################################################
+  build_web:
+    name: Build & Test Web Image
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@master
+
+      - name: Docker Login
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+        run: |
+          docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+
+      - name: Prepare Environment
+        run: |
+          PR_NUM=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
+          NAMESPACE="intg-$PR_NUM"
+          API_DOMAIN="api.pr-$PR_NUM.intg.k8s.nawhas.com"
+          APP_DOMAIN="pr-$PR_NUM.intg.k8s.nawhas.com"
+
+          echo "::set-env name=NAMESPACE::$NAMESPACE"
+          echo "::set-env name=PR_NUM::$PR_NUM"
+          echo "::set-env name=API_DOMAIN::$API_DOMAIN"
+          echo "::set-env name=APP_DOMAIN::$APP_DOMAIN"
+
+      - name: Decrypt Web secrets
+        working-directory: ./k8s/overlays/integration/secrets
+        run: |
+          gpg --quiet --batch --yes --decrypt --passphrase="$GPG_KEY" --output web.integration.env web.integration.env.gpg
+        env:
+          GPG_KEY: ${{ secrets.GPG_KEY }}
 
       - name: Build Web
         run: |
@@ -99,6 +128,50 @@ jobs:
         run: |
           docker push $WEB_IMAGE:$NAMESPACE-${GITHUB_SHA::8}
 
+  ################################################################
+  # Deploy Integration Environment
+  ################################################################
+  deploy:
+    name: Deploy Integration Environment
+    runs-on: ubuntu-latest
+    needs: [build_api, build_web]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@master
+
+      - name: Save DigitalOcean kubeconfig
+        uses: digitalocean/action-doctl@v1.7.0
+        env:
+          DIGITALOCEAN_ACCESS_TOKEN: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+        with:
+          args: kubernetes cluster kubeconfig show k8s-nawhas > $GITHUB_WORKSPACE/.kubeconfig
+
+      - name: Decrypt secrets
+        working-directory: ./k8s/overlays/integration/secrets
+        run: |
+          gpg --quiet --batch --yes --decrypt --passphrase="$GPG_KEY" --output api.integration.env api.integration.env.gpg
+          gpg --quiet --batch --yes --decrypt --passphrase="$GPG_KEY" --output web.integration.env web.integration.env.gpg
+        env:
+          GPG_KEY: ${{ secrets.GPG_KEY }}
+
+      - name: Prepare Environment
+        run: |
+          PR_NUM=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
+          NAMESPACE="intg-$PR_NUM"
+          API_DOMAIN="api.pr-$PR_NUM.intg.k8s.nawhas.com"
+          APP_DOMAIN="pr-$PR_NUM.intg.k8s.nawhas.com"
+
+          echo "::set-env name=NAMESPACE::$NAMESPACE"
+          echo "::set-env name=PR_NUM::$PR_NUM"
+          echo "::set-env name=API_DOMAIN::$API_DOMAIN"
+          echo "::set-env name=APP_DOMAIN::$APP_DOMAIN"
+
+      - name: Prepare Secrets
+        working-directory: ./k8s/overlays/integration/secrets
+        run: |
+          printf "\nAPP_DOMAIN=$APP_DOMAIN" >> api.integration.env
+          printf "\nALGOLIA_PREFIX=intg_${PR_NUM}_" >> api.integration.env
+
       # Set up kustomize
       - name: Set up Kustomize
         working-directory: ./k8s/overlays/integration
@@ -109,9 +182,9 @@ jobs:
       - name: Prepare Kustomization
         working-directory: ./k8s/overlays/integration
         run: |
-            ./kustomize edit set image "IMAGE:TAG=$API_IMAGE:$NAMESPACE-${GITHUB_SHA::8}"
-            ./kustomize edit set image "WEB:TAG=$WEB_IMAGE:$NAMESPACE-${GITHUB_SHA::8}"
-            ./kustomize edit set namespace "$NAMESPACE"
+          ./kustomize edit set image "IMAGE:TAG=$API_IMAGE:$NAMESPACE-${GITHUB_SHA::8}"
+          ./kustomize edit set image "WEB:TAG=$WEB_IMAGE:$NAMESPACE-${GITHUB_SHA::8}"
+          ./kustomize edit set namespace "$NAMESPACE"
 
       - name: Create Namespace
         working-directory: ./k8s/overlays/integration
@@ -133,28 +206,27 @@ jobs:
           kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig rollout status --timeout=2m deployment/api -n $NAMESPACE
           kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig rollout status --timeout=2m deployment/web -n $NAMESPACE
           kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig get services -o wide -n $NAMESPACE
-
+  ################################################################
+  # Notify Build Status
+  ################################################################
+  notify_failure:
+    name: Notify Build Status
+    runs-on: ubuntu-latest
+    needs: [build_api, build_web, deploy]
+    if: always()
+    steps:
       - name: Notify Build Success
-        if: success()
         uses: voxmedia/github-action-slack-notify-build@v1
+        if: needs.build_api.result == 'success' && needs.build_web.result == 'success' && needs.deploy.result == 'success'
         with:
           channel: deploys
           status: SUCCESS
           color: good
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
-
-      - name: Post Link on PR
-        if: success()
-        uses: unsplash/comment-on-pr@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          msg: "Your integration branch has been deployed to https://${{ env.APP_DOMAIN }}"
-
       - name: Notify Build Failure
-        if: failure()
         uses: voxmedia/github-action-slack-notify-build@v1
+        if: needs.build_api.result == 'failure' || needs.build_web.result == 'failure' || needs.deploy.result == 'failure'
         with:
           channel: deploys
           status: FAILED
