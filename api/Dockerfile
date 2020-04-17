@@ -11,7 +11,7 @@ COPY . .
 
 RUN composer install
 RUN composer run post-root-package-install && php artisan key:generate
-RUN ./vendor/bin/psalm --no-progress --output-format=github | sed "s/file=app/file=api\/app/g"
+RUN ./docker/scripts/psalm.sh
 RUN composer test
 
 # ---------------------------------------------------------------------------
