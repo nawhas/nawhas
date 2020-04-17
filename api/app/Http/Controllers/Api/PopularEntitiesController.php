@@ -10,6 +10,7 @@ use App\Http\Transformers\ReciterTransformer;
 use App\Http\Transformers\TrackTransformer;
 use App\Repositories\PopularEntitiesRepository;
 use App\Repositories\ReciterRepository;
+use App\Support\Pagination\PaginationState;
 use Illuminate\Contracts\Cache\Repository as Cache;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -31,7 +32,12 @@ class PopularEntitiesController extends Controller
         return $this->cache->remember(
             $this->getRecitersCacheKey($request),
             self::CACHE_TTL,
-            fn() => $this->respondWithCollection($this->repository->reciters(), $transformer)
+            fn() => (
+                $this->respondWithCollection(
+                    $this->repository->reciters(PaginationState::fromRequest($request)),
+                    $transformer
+                )
+            ),
         );
     }
 
@@ -48,7 +54,12 @@ class PopularEntitiesController extends Controller
         return $this->cache->remember(
             $key,
             self::CACHE_TTL,
-            fn() => $this->respondWithCollection($this->repository->tracks($reciter), $transformer),
+            fn() => (
+                $this->respondWithCollection(
+                    $this->repository->tracks(PaginationState::fromRequest($request), $reciter),
+                    $transformer
+                )
+            ),
         );
     }
 
@@ -70,6 +81,4 @@ class PopularEntitiesController extends Controller
     {
         return md5(http_build_query($request->all()));
     }
-
-
 }

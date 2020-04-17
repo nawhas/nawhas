@@ -89,7 +89,7 @@ export default class HomeView extends Vue {
     getPopularReciters({ per_page: 20, include: 'related' }).then((response) => {
       this.reciters = response.data.data;
     });
-    getPopularTracks({ per_page: 20, include: 'reciter,lyrics,album,media,related' }).then((response) => {
+    getPopularTracks({ per_page: 20, include: 'reciter,lyrics,album.tracks,media,related' }).then((response) => {
       this.tracks = response.data.data;
     });
   }
