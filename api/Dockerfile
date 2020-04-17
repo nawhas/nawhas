@@ -10,7 +10,7 @@ ENV COMPOSER_ALLOW_SUPERUSER 1
 COPY . .
 
 RUN composer install
-RUN php artisan key:generate
+RUN composer run post-root-package-install && php artisan key:generate
 RUN composer psalm:lint -- --output-format=github | sed "s/file=app/file=api/app/g"
 RUN composer test
 
