@@ -10,6 +10,9 @@ env:
   WEB_IMAGE: nawhas/web
 
 jobs:
+  ################################################################
+  # Cancel Previous Builds
+  ################################################################
   cleanup:
     name: Cancel Previous Runs
     runs-on: ubuntu-latest
@@ -17,18 +20,24 @@ jobs:
       - uses: n1hility/cancel-previous-runs@v2
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
+  ################################################################
+  # Notify Build Started
+  ################################################################
   notify_start:
     name: Notify Build Started
     runs-on: ubuntu-latest
     steps:
-        - name: Notify Build Started
-          uses: voxmedia/github-action-slack-notify-build@v1
-          with:
-            channel: deploys
-            status: STARTED
-            color: warning
-          env:
-            SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+      - name: Notify Build Started
+        uses: voxmedia/github-action-slack-notify-build@v1
+        with:
+          channel: deploys
+          status: STARTED
+          color: warning
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+  ################################################################
+  # Build & Test API Image
+  ################################################################
   build_api:
     name: Build & Test API Image
     runs-on: ubuntu-latest
@@ -66,8 +75,11 @@ jobs:
       - name: Publish API
         run: |
           docker push $API_IMAGE:$NAMESPACE-${GITHUB_SHA::8}
+  ################################################################
+  # Build & Test Web Image
+  ################################################################
   build_web:
-    name: Build & Test API Image
+    name: Build & Test Web Image
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -108,6 +120,10 @@ jobs:
       - name: Publish Web
         run: |
           docker push $WEB_IMAGE:$NAMESPACE-${GITHUB_SHA::8}
+
+  ################################################################
+  # Deploy Integration Environment
+  ################################################################
   deploy:
     name: Deploy Integration Environment
     runs-on: ubuntu-latest
@@ -183,6 +199,9 @@ jobs:
         kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig rollout status --timeout=2m deployment/api -n $NAMESPACE
         kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig rollout status --timeout=2m deployment/web -n $NAMESPACE
         kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig get services -o wide -n $NAMESPACE
+  ################################################################
+  # Notify Build Success
+  ################################################################
   notify_success:
     name: Notify Build Success
     runs-on: ubuntu-latest
@@ -197,6 +216,9 @@ jobs:
           color: good
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+  ################################################################
+  # Notify Build Success
+  ################################################################
   notify_failure:
     name: Notify Build Failure
     runs-on: ubuntu-latest
