@@ -50,11 +50,12 @@ import { EventBus, Search } from '@/events';
 import goTo from 'vuetify/es5/services/goto';
 
 @Component({
-  components: { ReciterCard, SkeletonCardGrid },
+  components: { ReciterCard, SkeletonCardGrid }
 })
 export default class RecitersPage extends Vue {
-  private page = 1;
-  private reciters: Array<any>|null = null;
+  private page: string = 1;
+
+private reciters: Array<any>|null = null;
   private length = 1;
   private popularReciters: Array<any>|null = null;
 
