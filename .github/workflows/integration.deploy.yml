@@ -79,6 +79,9 @@ jobs:
   test_web:
     name: Test & Lint Web App
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: web
     steps:
       - uses: actions/setup-node@v1
         with:
