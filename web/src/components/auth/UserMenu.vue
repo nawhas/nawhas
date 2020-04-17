@@ -13,7 +13,7 @@
         </v-avatar>
       </template>
       <v-card width="400px">
-        <template v-if="initialized">
+        <template v-if="initialized && user">
           <v-list>
             <v-list-item>
               <v-list-item-avatar color="grey lighten-2">
@@ -25,7 +25,7 @@
                 <v-list-item-title class="d-flex align-center">
                   <div>{{ user.name }}</div>
                   <v-icon title="Moderator" class="ml-2"
-                          v-if="user.role === 'moderator'" color="primary" small>
+                          v-if="user.role === Role.Moderator" color="primary" small>
                     security
                   </v-icon>
                 </v-list-item-title>
@@ -116,6 +116,9 @@ import { Component, Vue } from 'vue-property-decorator';
 import LoginForm from '@/components/auth/LoginForm.vue';
 import AppChangelog from '@/components/notifications/AppChangelog.vue';
 import BugReportForm from '@/components/BugReportForm.vue';
+import { User, Role } from '@/entities/user';
+import { Getters as AuthGetters } from '@/store/modules/auth';
+
 @Component({
   components: {
     BugReportForm,
@@ -124,20 +127,21 @@ import BugReportForm from '@/components/BugReportForm.vue';
   },
 })
 export default class UserMenu extends Vue {
+  private readonly Role = Role;
   private open = false;
   private showLoginDialog = false;
   private showWhatsNewDialog = false;
   private showBugReportDialog = false;
 
-  get user() {
-    return this.$store.state.auth.user;
+  get user(): User|null {
+    return this.$store.getters[AuthGetters.User];
   }
 
-  get authenticated() {
-    return this.$store.getters['auth/authenticated'];
+  get authenticated(): boolean {
+    return this.$store.getters[AuthGetters.Authenticated];
   }
 
-  get initialized() {
+  get initialized(): boolean {
     return this.$store.state.auth.initialized;
   }
 

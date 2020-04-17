@@ -7,11 +7,12 @@
 
 <script lang="ts">
 import { Component, Watch, Vue } from 'vue-property-decorator';
+import { Actions as Auth } from '@/store/modules/auth';
 
 @Component
 export default class App extends Vue {
   created() {
-    this.$store.dispatch('auth/check');
+    this.$store.dispatch(Auth.Check);
     this.determineTheme();
     this.installThemeEventListener();
   }

@@ -144,7 +144,7 @@ import MoreTracksSkeleton from '@/components/loaders/MoreTracksSkeleton.vue';
 import EditTrackDialog from '@/components/edit/EditTrackDialog.vue';
 import { getTracks, getTrack } from '@/services/tracks';
 import LyricsCard from '@/components/lyrics/LyricsCard.vue';
-
+import { Getters as AuthGetters } from '@/store/modules/auth';
 
 @Component({
   components: {
@@ -223,7 +223,7 @@ export default class TrackPage extends Vue {
   }
 
   get isModerator() {
-    return this.$store.getters['auth/isModerator'];
+    return this.$store.getters[AuthGetters.IsModerator];
   }
 
   get isDark() {

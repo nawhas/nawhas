@@ -103,6 +103,7 @@ import EditTrackDialog from '@/components/edit/EditTrackDialog.vue';
 import { getTracks } from '@/services/tracks';
 import { getAlbum } from '@/services/albums';
 import TrackList from '@/components/tracks/TrackList.vue';
+import { Getters as AuthGetters } from '@/store/modules/auth';
 
 @Component({
   components: {
@@ -157,7 +158,7 @@ export default class AlbumPage extends Vue {
   }
 
   get isModerator() {
-    return this.$store.getters['auth/isModerator'];
+    return this.$store.getters[AuthGetters.IsModerator];
   }
 
   get isDark() {
