@@ -132,73 +132,73 @@ jobs:
       - name: Checkout
         uses: actions/checkout@master
 
-    - name: Save DigitalOcean kubeconfig
-      uses: digitalocean/action-doctl@v1.7.0
-      env:
-        DIGITALOCEAN_ACCESS_TOKEN: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
-      with:
-        args: kubernetes cluster kubeconfig show k8s-nawhas > $GITHUB_WORKSPACE/.kubeconfig
+      - name: Save DigitalOcean kubeconfig
+        uses: digitalocean/action-doctl@v1.7.0
+        env:
+          DIGITALOCEAN_ACCESS_TOKEN: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+        with:
+          args: kubernetes cluster kubeconfig show k8s-nawhas > $GITHUB_WORKSPACE/.kubeconfig
 
-    - name: Decrypt secrets
-      working-directory: ./k8s/overlays/integration/secrets
-      run: |
-        gpg --quiet --batch --yes --decrypt --passphrase="$GPG_KEY" --output api.integration.env api.integration.env.gpg
-        gpg --quiet --batch --yes --decrypt --passphrase="$GPG_KEY" --output web.integration.env web.integration.env.gpg
-      env:
-        GPG_KEY: ${{ secrets.GPG_KEY }}
+      - name: Decrypt secrets
+        working-directory: ./k8s/overlays/integration/secrets
+        run: |
+          gpg --quiet --batch --yes --decrypt --passphrase="$GPG_KEY" --output api.integration.env api.integration.env.gpg
+          gpg --quiet --batch --yes --decrypt --passphrase="$GPG_KEY" --output web.integration.env web.integration.env.gpg
+        env:
+          GPG_KEY: ${{ secrets.GPG_KEY }}
 
-    - name: Prepare Environment
-      run: |
-        PR_NUM=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
-        NAMESPACE="intg-$PR_NUM"
-        API_DOMAIN="api.pr-$PR_NUM.intg.k8s.nawhas.com"
-        APP_DOMAIN="pr-$PR_NUM.intg.k8s.nawhas.com"
+      - name: Prepare Environment
+        run: |
+          PR_NUM=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
+          NAMESPACE="intg-$PR_NUM"
+          API_DOMAIN="api.pr-$PR_NUM.intg.k8s.nawhas.com"
+          APP_DOMAIN="pr-$PR_NUM.intg.k8s.nawhas.com"
 
-        echo "::set-env name=NAMESPACE::$NAMESPACE"
-        echo "::set-env name=PR_NUM::$PR_NUM"
-        echo "::set-env name=API_DOMAIN::$API_DOMAIN"
-        echo "::set-env name=APP_DOMAIN::$APP_DOMAIN"
+          echo "::set-env name=NAMESPACE::$NAMESPACE"
+          echo "::set-env name=PR_NUM::$PR_NUM"
+          echo "::set-env name=API_DOMAIN::$API_DOMAIN"
+          echo "::set-env name=APP_DOMAIN::$APP_DOMAIN"
 
-    - name: Prepare Secrets
-      working-directory: ./k8s/overlays/integration/secrets
-      run: |
-        printf "\nAPP_DOMAIN=$APP_DOMAIN" >> api.integration.env
-        printf "\nALGOLIA_PREFIX=intg_${PR_NUM}_" >> api.integration.env
+      - name: Prepare Secrets
+        working-directory: ./k8s/overlays/integration/secrets
+        run: |
+          printf "\nAPP_DOMAIN=$APP_DOMAIN" >> api.integration.env
+          printf "\nALGOLIA_PREFIX=intg_${PR_NUM}_" >> api.integration.env
 
-    # Set up kustomize
-    - name: Set up Kustomize
-      working-directory: ./k8s/overlays/integration
-      run: |
-        curl -o kustomize --location https://github.com/kubernetes-sigs/kustomize/releases/download/v3.1.0/kustomize_3.1.0_linux_amd64
-        chmod u+x ./kustomize
+      # Set up kustomize
+      - name: Set up Kustomize
+        working-directory: ./k8s/overlays/integration
+        run: |
+          curl -o kustomize --location https://github.com/kubernetes-sigs/kustomize/releases/download/v3.1.0/kustomize_3.1.0_linux_amd64
+          chmod u+x ./kustomize
 
-    - name: Prepare Kustomization
-      working-directory: ./k8s/overlays/integration
-      run: |
-        ./kustomize edit set image "IMAGE:TAG=$API_IMAGE:$NAMESPACE-${GITHUB_SHA::8}"
-        ./kustomize edit set image "WEB:TAG=$WEB_IMAGE:$NAMESPACE-${GITHUB_SHA::8}"
-        ./kustomize edit set namespace "$NAMESPACE"
+      - name: Prepare Kustomization
+        working-directory: ./k8s/overlays/integration
+        run: |
+          ./kustomize edit set image "IMAGE:TAG=$API_IMAGE:$NAMESPACE-${GITHUB_SHA::8}"
+          ./kustomize edit set image "WEB:TAG=$WEB_IMAGE:$NAMESPACE-${GITHUB_SHA::8}"
+          ./kustomize edit set namespace "$NAMESPACE"
 
-    - name: Create Namespace
-      working-directory: ./k8s/overlays/integration
-      run: |
-        if [[ $(kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig get namespace | grep "$NAMESPACE") == "" ]]; then
-          echo "Namespace does not exist!";
-          kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig create namespace "$NAMESPACE"
-        fi
+      - name: Create Namespace
+        working-directory: ./k8s/overlays/integration
+        run: |
+          if [[ $(kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig get namespace | grep "$NAMESPACE") == "" ]]; then
+            echo "Namespace does not exist!";
+            kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig create namespace "$NAMESPACE"
+          fi
 
-    # Deploy the Docker image to the GKE cluster
-    - name: Deploy
-      working-directory: ./k8s/overlays/integration
-      run: |
-        ./kustomize build . \
-          | sed "s/ING_APP_DOMAIN/$APP_DOMAIN/g" \
-          | sed "s/ING_API_DOMAIN/$API_DOMAIN/g" \
-          | kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig apply -f -
+      # Deploy the Docker image to the GKE cluster
+      - name: Deploy
+        working-directory: ./k8s/overlays/integration
+        run: |
+          ./kustomize build . \
+            | sed "s/ING_APP_DOMAIN/$APP_DOMAIN/g" \
+            | sed "s/ING_API_DOMAIN/$API_DOMAIN/g" \
+            | kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig apply -f -
 
-        kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig rollout status --timeout=2m deployment/api -n $NAMESPACE
-        kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig rollout status --timeout=2m deployment/web -n $NAMESPACE
-        kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig get services -o wide -n $NAMESPACE
+          kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig rollout status --timeout=2m deployment/api -n $NAMESPACE
+          kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig rollout status --timeout=2m deployment/web -n $NAMESPACE
+          kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig get services -o wide -n $NAMESPACE
   ################################################################
   # Notify Build Success
   ################################################################
@@ -217,7 +217,7 @@ jobs:
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
   ################################################################
-  # Notify Build Success
+  # Notify Build Failure
   ################################################################
   notify_failure:
     name: Notify Build Failure
