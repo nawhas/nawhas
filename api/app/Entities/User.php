@@ -129,7 +129,7 @@ class User implements Entity, TimestampedEntity, Authenticatable
         return $this->password;
     }
 
-    public function getAvatar($size = 128): string
+    public function getAvatar(int $size = 128): string
     {
         $hash = md5(strtolower(trim($this->email)));
 
