@@ -11,7 +11,7 @@ COPY . .
 
 RUN composer install
 RUN composer run post-root-package-install && php artisan key:generate
-RUN composer psalm:lint -- --output-format=github | sed "s/file=app/file=api/app/g"
+RUN ./vendor/bin/psalm --no-progress --output-format=github | sed "s/file=app/file=api\/app/g"
 RUN composer test
 
 # ---------------------------------------------------------------------------
