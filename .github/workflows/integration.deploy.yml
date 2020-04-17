@@ -223,7 +223,7 @@ jobs:
           status: SUCCESS
           color: good
         env:
-          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
       - name: Notify Build Failure
         uses: voxmedia/github-action-slack-notify-build@v1
         if: needs.build_api.result == 'failure' || needs.build_web.result == 'failure' || needs.deploy.result == 'failure'
