@@ -1,9 +1,6 @@
-name: Integration Deploy
+name: Pull Request Build
 
-on:
-  pull_request:
-    branches:
-      - develop
+on: [pull_request]
 
 env:
   API_IMAGE: nawhas/api
@@ -26,6 +23,7 @@ jobs:
   notify_start:
     name: Notify Build Started
     runs-on: ubuntu-latest
+    if: endsWith(github.base_ref, '-integration')
     steps:
       - name: Notify Build Started
         uses: voxmedia/github-action-slack-notify-build@v1
@@ -76,11 +74,28 @@ jobs:
         run: |
           docker push $API_IMAGE:$NAMESPACE-${GITHUB_SHA::8}
   ################################################################
-  # Build & Test Web Image
+  # Test & Lint Web App
+  ################################################################
+  test_web:
+    name: Test & Lint Web App
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '13.x'
+
+      - name: Install Dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Lint Codebase
+        run: yarn lint --mode=production --no-fix
+  ################################################################
+  # Build Web Image
   ################################################################
   build_web:
     name: Build & Test Web Image
     runs-on: ubuntu-latest
+    needs: test_web
     steps:
       - name: Checkout
         uses: actions/checkout@master
@@ -135,6 +150,7 @@ jobs:
     name: Deploy Integration Environment
     runs-on: ubuntu-latest
     needs: [build_api, build_web]
+    if: endsWith(github.base_ref, '-integration')
     steps:
       - name: Checkout
         uses: actions/checkout@master
