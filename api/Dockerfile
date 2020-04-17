@@ -10,7 +10,8 @@ ENV COMPOSER_ALLOW_SUPERUSER 1
 COPY . .
 
 RUN composer install
-RUN composer psalm:lint -- --output-format=github
+RUN composer run post-root-package-install && php artisan key:generate
+RUN ./docker/scripts/psalm.sh
 RUN composer test
 
 # ---------------------------------------------------------------------------
