@@ -13,7 +13,7 @@
         </v-avatar>
       </template>
       <v-card width="400px">
-        <template v-if="initialized && user">
+        <template v-if="initialized">
           <v-list>
             <v-list-item>
               <v-list-item-avatar color="grey lighten-2">
