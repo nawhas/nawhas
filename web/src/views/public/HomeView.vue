@@ -121,7 +121,7 @@ export default class HomeView extends Vue {
 }
 .search {
   position: absolute;
-  height: 30px;
+  height: 38px;
   bottom: 0;
   left: 0;
   width: 100%;
@@ -150,7 +150,11 @@ export default class HomeView extends Vue {
     font-size: 48px;
   }
 }
-
+@include breakpoint('sm-and-down') {
+  .search {
+    height: 30px;
+  }
+}
 @include breakpoint('xs-only') {
   .header .app__section {
     padding: 48px 48px 64px !important;
