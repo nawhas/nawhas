@@ -1,5 +1,6 @@
 @import '~vuetify/src/styles/styles';
 @import "transitions";
+@import "functions";
 
 // Colors
 $primary: map-deep-get($colors, 'red', 'base');

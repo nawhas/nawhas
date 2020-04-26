@@ -5,7 +5,8 @@
          :class="{
            search: true,
            'search--focused': activated,
-           'search--focused--dark': isDark && activated
+           'search--dark': isDark,
+           'search--hero': hero,
           }">
       <div class="search__bar">
         <v-btn v-if="mobile" icon @click="resetSearch"><v-icon>arrow_back</v-icon></v-btn>
@@ -58,7 +59,7 @@
 
 <script lang="ts">
 import {
-  Component, Ref, Vue, Watch,
+  Component, Prop, Ref, Vue, Watch,
 } from 'vue-property-decorator';
 import algolia from 'algoliasearch/lite';
 import { ALGOLIA_APP_ID, ALGOLIA_SEARCH_KEY, ALGOLIA_INDEX_PREFIX } from '@/config';
@@ -86,6 +87,7 @@ export default class GlobalSearch extends Vue {
   private focused = false;
   private search = '';
   private listener: Function|null = null;
+  @Prop({ type: Boolean, default: false }) private readonly hero!: boolean
   @Ref('search') readonly input!: HTMLElement;
 
   get indices() {
@@ -96,7 +98,7 @@ export default class GlobalSearch extends Vue {
   }
 
   get mobile() {
-    return this.$vuetify.breakpoint.smAndDown;
+    return this.$vuetify.breakpoint.smAndDown && !this.hero;
   }
 
   get isDark() {
@@ -167,7 +169,7 @@ export default class GlobalSearch extends Vue {
 </script>
 
 <style lang="scss" scoped>
-@import '~vuetify/src/styles/styles';
+@import '../../styles/theme';
 
 $width: 400px;
 .search {
@@ -186,9 +188,8 @@ $width: 400px;
     background-color: white;
     @include elevation(4);
   }
-  &--focused--dark {
+  &--dark {
     background-color: map-get($material-dark-elevation-colors, '8');
-    @include elevation(4);
   }
 
   .search__bar {
@@ -221,7 +222,29 @@ $width: 400px;
   }
 }
 
-@media #{map-get($display-breakpoints, 'sm-and-down')} {
+.search--hero {
+  @include elevation(2);
+  background-color: white;
+  width: 600px;
+
+  &.search--dark {
+    background-color: map-get($material-dark-elevation-colors, '8');
+  }
+
+  &.search--focused {
+    @include elevation(4);
+  }
+
+  .search__bar {
+    padding: 8px 0;
+  }
+
+  .search__container {
+    width: 600px;
+  }
+}
+
+@include breakpoint('sm-and-down') {
   .search {
     width: 100%;
     margin-top: 0;
@@ -238,6 +261,24 @@ $width: 400px;
       .search__footer-hint {
         display: none;
       }
+    }
+  }
+
+  .search--hero {
+    width: calc(100vw - 96px);
+
+    &.search--focused {
+      position: relative;
+      top: initial;
+      left: initial;
+    }
+
+    .search__bar {
+      padding: 4px 0;
+    }
+
+    .search__container {
+      width: calc(100vw - 96px);
     }
   }
 }

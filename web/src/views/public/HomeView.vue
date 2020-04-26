@@ -1,14 +1,16 @@
 <template>
   <div>
-    <hero-banner :background="require('../../assets/imam-hussain-header.jpg')" class="mb-4">
-      <hero-quote author="Imam Jafar Sadiq (a.s.)">
-        The murder of Hussain has lit a fire in the hearts of the believers which will never
-        extinguish.
-      </hero-quote>
-    </hero-banner>
+    <header :class="{ 'header': true, 'header--dark': $vuetify.theme.dark }">
+      <v-container class="app__section">
+        <h1 class="header__title">Explore the most advanced library of nawhas online.</h1>
+      </v-container>
+      <div class="search">
+        <global-search hero />
+      </div>
+    </header>
 
     <v-container class="app__section">
-      <h5 class="section__title">Trending This Month</h5>
+      <h5 class="section__title mt-6">Trending This Month</h5>
       <template v-if="popularTracks">
         <v-row :dense="$vuetify.breakpoint.smAndDown">
           <v-col cols="12" sm="6" md="4" v-for="track in popularTracks" v-bind:key="track.id">
@@ -22,6 +24,13 @@
         </skeleton-card-grid>
       </template>
     </v-container>
+
+    <hero-banner :background="require('../../assets/imam-hussain-header.jpg')" class="my-12">
+      <hero-quote author="Imam Jafar Sadiq (a.s.)">
+        The murder of Hussain has lit a fire in the hearts of the believers which will never
+        extinguish.
+      </hero-quote>
+    </hero-banner>
 
     <v-container class="app__section">
       <div class="section__title section__title--with-actions">
@@ -57,6 +66,7 @@ import ReciterCard from '@/components/ReciterCard.vue';
 import TrackCard from '@/components/TrackCard.vue';
 import SkeletonCardGrid from '@/components/loaders/SkeletonCardGrid.vue';
 import TrackCardSkeleton from '@/components/loaders/TrackCardSkeleton.vue';
+import GlobalSearch from '@/components/search/GlobalSearch.vue';
 import { getPopularReciters, getPopularTracks } from '@/services/popular';
 import TrackList from '@/components/tracks/TrackList.vue';
 
@@ -69,6 +79,7 @@ const POPULAR_ENTITIES_LIMIT = 6;
     HeroQuote,
     ReciterCard,
     TrackCard,
+    GlobalSearch,
     SkeletonCardGrid,
     TrackCardSkeleton,
   },
@@ -95,3 +106,58 @@ export default class HomeView extends Vue {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+@import "../../styles/theme";
+
+.header {
+  width: 100%;
+  background-color: rgba(255, 21, 0, 0.1);
+  margin-bottom: 48px;
+  position: relative;
+}
+.header--dark {
+  background: linear-gradient(30deg, #340808, #1a0000);
+}
+.search {
+  position: absolute;
+  height: 30px;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  z-index: 2;
+}
+.header .app__section {
+  padding: 96px !important;
+}
+.header__title {
+  font-family: Roboto, sans-serif;
+  font-weight: 200;
+  font-size: 64px;
+  line-height: 75px;
+  text-align: center;
+  letter-spacing: -1.5px;
+}
+
+@include breakpoint('md-and-down') {
+  .header .app__section {
+    padding: 64px !important;
+  }
+  .header__title {
+    font-size: 48px;
+  }
+}
+
+@include breakpoint('xs-only') {
+  .header .app__section {
+    padding: 48px 48px 64px !important;
+  }
+  .header__title {
+    font-size: 32px;
+    line-height: initial;
+  }
+}
+</style>
