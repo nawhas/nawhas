@@ -23,6 +23,7 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import HeroBanner from '@/components/HeroBanner.vue';
+import { Actions as AuthActions } from '@/store/modules/auth';
 
 @Component({
   components: {
@@ -41,7 +42,7 @@ export default class LoginForm extends Vue {
     this.error = null;
     this.loading = true;
     try {
-      await this.$store.dispatch('auth/login', { email: this.email, password: this.password });
+      await this.$store.dispatch(AuthActions.Login, { email: this.email, password: this.password });
       this.close();
     } catch (e) {
       if (!e.response) {
