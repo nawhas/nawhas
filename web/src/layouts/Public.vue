@@ -40,7 +40,7 @@
         <div class="app-bar__center">
         </div>
         <div class="app-bar__right">
-          <search />
+          <global-search />
           <user-menu class="user-menu" />
         </div>
       </v-container>
@@ -58,7 +58,7 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import Search from '@/components/search/Search.vue';
+import GlobalSearch from '@/components/search/GlobalSearch.vue';
 import navItems from '@/data/navigation';
 import AudioPlayer from '@/components/audio-player/AudioPlayer.vue';
 import UserMenu from '@/components/auth/UserMenu.vue';
@@ -71,7 +71,7 @@ import Toaster from '@/components/utils/Toaster.vue';
   components: {
     Toaster,
     UpdateServiceWorker,
-    Search,
+    GlobalSearch,
     AudioPlayer,
     UserMenu,
     LogoIcon,
