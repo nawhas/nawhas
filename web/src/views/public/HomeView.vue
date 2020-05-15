@@ -25,6 +25,11 @@
       </template>
     </v-container>
 
+    <v-container class="app__section">
+      <h5 class="section__title">Latest Stories</h5>
+      <story-card-grid />
+    </v-container>
+
     <hero-banner :background="require('../../assets/imam-hussain-header.jpg')" class="my-12">
       <hero-quote author="Imam Jafar Sadiq (a.s.)">
         The murder of Hussain has lit a fire in the hearts of the believers which will never
@@ -69,11 +74,13 @@ import TrackCardSkeleton from '@/components/loaders/TrackCardSkeleton.vue';
 import GlobalSearch from '@/components/search/GlobalSearch.vue';
 import { getPopularReciters, getPopularTracks } from '@/services/popular';
 import TrackList from '@/components/tracks/TrackList.vue';
+import StoryCardGrid from '@/components/stories/StoryCardGrid.vue';
 
 const POPULAR_ENTITIES_LIMIT = 6;
 
 @Component({
   components: {
+    StoryCardGrid,
     TrackList,
     HeroBanner,
     HeroQuote,
