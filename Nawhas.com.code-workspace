@@ -1,19 +1,12 @@
 {
 	"folders": [
 		{
-			"name": "API",
-			"path": "./api"
+			"path": "web"
 		},
 		{
-			"name": "Docker",
-			"path": "./docker"
+			"path": "api"
 		},
 		{
-			"name": "Web",
-			"path": "./web"
-		},
-		{
-			"name": "Project Root",
 			"path": "."
 		}
 	],
