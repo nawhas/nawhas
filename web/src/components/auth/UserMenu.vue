@@ -117,7 +117,7 @@ import LoginForm from '@/components/auth/LoginForm.vue';
 import AppChangelog from '@/components/notifications/AppChangelog.vue';
 import BugReportForm from '@/components/BugReportForm.vue';
 import { User, Role } from '@/entities/user';
-import { Getters as AuthGetters } from '@/store/modules/auth';
+import { Getters as AuthGetters, Actions as AuthActions } from '@/store/modules/auth';
 
 @Component({
   components: {
@@ -158,8 +158,8 @@ export default class UserMenu extends Vue {
     this.open = false;
   }
 
-  logout() {
-    this.$store.dispatch('auth/logout');
+  async logout() {
+    await this.$store.dispatch(AuthActions.Logout);
     this.open = false;
   }
 
