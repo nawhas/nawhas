@@ -53,6 +53,8 @@ class AuthController extends Controller
             throw new AuthenticationException(__('auth.failed'));
         }
 
+        Notification::send($user, new UserRegistered($user));
+
         return $this->respondWithItem($this->guard->user());
     }
 
