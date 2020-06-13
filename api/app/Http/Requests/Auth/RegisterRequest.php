@@ -17,7 +17,7 @@ class RegisterRequest extends FormRequest
             'name' => ['required', 'string'],
             'email' => ['required', 'string', 'unique:App\Entities\User,email'],
             'password' => ['required', 'string'],
-            'nickname' => ['sometimes', 'string', 'unique:App\Entities\User,nickname']
+            'nickname' => ['sometimes', 'string', 'nullable', 'unique:App\Entities\User,nickname']
         ];
     }
 
