@@ -43,8 +43,11 @@ class AuthController extends Controller
         $email = $request->get('email');
         $password = bcrypt($request->get('password'));
         $user = new User($role, $name, $email, $password);
-        // $user->setNickname($request->get('nickname'));
+        if ($request->get('nickname')) {
+            $user->setNickname($request->get('nickname'));
+        }
         $this->em->persist($user);
+        $this->em->flush();
 
         if (!$this->guard->attempt($request->credentials(), false)) {
             throw new AuthenticationException(__('auth.failed'));

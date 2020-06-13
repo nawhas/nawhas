@@ -7,7 +7,7 @@
       <v-card-text>
         <v-alert type="error" v-if="error" outlined class="mb-6">{{ error }}</v-alert>
         <v-text-field outlined label="Name" v-model="name" :error-messages="invalid.name" />
-        <v-text-field outlined label="Email" v-model="email" :error-messages="invalid.email" />
+        <v-text-field outlined label="Email" type="email" v-model="email" :error-messages="invalid.email" />
         <v-text-field
           outlined
           label="Password"
@@ -32,7 +32,7 @@
       <v-card-actions>
         <v-btn @click="close" text>Cancel</v-btn>
         <v-spacer></v-spacer>
-        <v-btn type="submit" text color="primary" :loading="loading">Sign Up</v-btn>
+        <v-btn type="submit" :disabled="!validation" text color="primary" :loading="loading">Sign Up</v-btn>
       </v-card-actions>
     </v-card>
   </v-form>
@@ -53,10 +53,18 @@ export default class RegisterForm extends Vue {
   private email = '';
   private password = '';
   private confirmPassword = '';
-  private nickname = '';
+  private nickname: null|string = null;
   private error: string | null = null;
   private invalid: any = {};
   private loading = false;
+
+  get validation() {
+    if (!this.email || !this.name || !this.password || this.password !== this.confirmPassword) {
+      return false;
+    }
+
+    return true;
+  }
 
   async submit() {
     this.invalid = {};
