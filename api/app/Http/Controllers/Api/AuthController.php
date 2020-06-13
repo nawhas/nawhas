@@ -19,6 +19,7 @@ use Illuminate\Http\Response;
 class AuthController extends Controller
 {
     private StatefulGuard $guard;
+    private EntityManager $em;
 
     public function __construct(AuthFactory $auth, UserTransformer $transformer, EntityManager $em)
     {
@@ -52,8 +53,6 @@ class AuthController extends Controller
         if (!$this->guard->attempt($request->credentials(), false)) {
             throw new AuthenticationException(__('auth.failed'));
         }
-
-        Notification::send($user, new UserRegistered($user));
 
         return $this->respondWithItem($this->guard->user());
     }
