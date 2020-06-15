@@ -10,6 +10,7 @@ import vuetify from './plugins/vuetify';
 import './plugins/progress';
 import './plugins/algolia';
 import './filters';
+import { Actions as FeaturesActions } from './store/modules/features';
 
 axios.defaults.withCredentials = true;
 
@@ -22,9 +23,11 @@ Vue.use(VueGtag, {
 
 sync(store, router);
 
-new Vue({
-  router,
-  store,
-  vuetify,
-  render: (h) => h(App),
-}).$mount('#app');
+store.dispatch(FeaturesActions.Fetch).then(() => {
+  new Vue({
+    router,
+    store,
+    vuetify,
+    render: (h) => h(App),
+  }).$mount('#app');
+});
