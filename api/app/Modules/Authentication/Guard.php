@@ -34,6 +34,8 @@ class Guard
 
     public function id(): ?string
     {
-        return $this->guard->id();
+        $id = $this->guard->id();
+
+        return $id ? (string)$id : null;
     }
 }
