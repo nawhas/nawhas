@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\AlbumsController;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\FeaturesController;
 use App\Http\Controllers\Api\FeedbackController;
 use App\Http\Controllers\Api\PopularEntitiesController;
 use App\Http\Controllers\Api\RecitersController;
@@ -30,6 +31,11 @@ Route::prefix('v1')->group(function () {
         Route::post('login', [AuthController::class, 'login']);
         Route::post('logout', [AuthController::class, 'logout'])->middleware('auth:airlock');
         Route::get('user', [AuthController::class, 'user'])->middleware('auth:airlock');
+    });
+
+    // Features
+    Route::prefix('features')->group(function () {
+        Route::get('/', [FeaturesController::class, 'index']);
     });
 
     // Reciters

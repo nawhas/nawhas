@@ -178,6 +178,10 @@ return [
         App\Providers\DoctrineServiceProvider::class,
         App\Providers\RepositoryServiceProvider::class,
 
+        /*
+         * Application Module Service Providers
+         */
+        App\Modules\Features\ServiceProvider::class,
     ],
 
     /*
