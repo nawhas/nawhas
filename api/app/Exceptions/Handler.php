@@ -2,6 +2,7 @@
 
 namespace App\Exceptions;
 
+use App\Modules\Features\Exceptions\FeatureNotEnabledException;
 use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -33,6 +34,12 @@ class Handler extends ExceptionHandler
 
         if ($e instanceof EntityNotFoundException) {
             return new NotFoundHttpException($e->getMessage(), $e);
+        }
+
+        if (app()->environment('production', 'staging')) {
+            if ($e instanceof FeatureNotEnabledException) {
+                return new NotFoundHttpException($e->getMessage(), $e);
+            }
         }
 
         return $e;

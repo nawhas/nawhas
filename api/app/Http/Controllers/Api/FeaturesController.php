@@ -23,4 +23,11 @@ class FeaturesController extends Controller
             'data' => $this->features->export(),
         ]);
     }
+
+    public function secret(): JsonResponse
+    {
+        return $this->respondWithArray([
+            'data' => 'You found me!',
+        ]);
+    }
 }
