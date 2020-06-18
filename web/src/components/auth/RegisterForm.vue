@@ -59,7 +59,7 @@ export default class RegisterForm extends Vue {
   private loading = false;
 
   get canSubmit() {
-    if (!this.email || !this.name || !this.password || this.password !== this.confirmPassword) {
+    if (!this.email || !this.name || !this.password || !this.confirmPassword) {
       return false;
     }
 
