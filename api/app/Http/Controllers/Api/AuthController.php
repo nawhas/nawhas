@@ -48,11 +48,8 @@ class AuthController extends Controller
             $user->setNickname($request->get('nickname'));
         }
         $this->em->persist($user);
-        $this->em->flush();
 
-        if (!$this->guard->attempt($request->credentials(), false)) {
-            throw new AuthenticationException(__('auth.failed'));
-        }
+        $this->guard->login($user, false);
 
         return $this->respondWithItem($this->guard->user());
     }

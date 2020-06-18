@@ -32,7 +32,7 @@
       <v-card-actions>
         <v-btn @click="close" text>Cancel</v-btn>
         <v-spacer></v-spacer>
-        <v-btn type="submit" :disabled="!validation" text color="primary" :loading="loading">Sign Up</v-btn>
+        <v-btn type="submit" :disabled="!canSubmit" text color="primary" :loading="loading">Sign Up</v-btn>
       </v-card-actions>
     </v-card>
   </v-form>
@@ -58,7 +58,7 @@ export default class RegisterForm extends Vue {
   private invalid: any = {};
   private loading = false;
 
-  get validation() {
+  get canSubmit() {
     if (!this.email || !this.name || !this.password || this.password !== this.confirmPassword) {
       return false;
     }
@@ -72,8 +72,7 @@ export default class RegisterForm extends Vue {
     this.loading = true;
 
     if (this.password !== this.confirmPassword) {
-      this.invalid.password = 'Both passwords need to match';
-      this.invalid.confirmPassword = 'Both passwords need to match';
+      this.invalid.confirmPassword = 'The password confirmation does not match.';
       this.loading = false;
       return false;
     }
@@ -91,10 +90,6 @@ export default class RegisterForm extends Vue {
         throw e;
       }
       switch (e.response.status) {
-        case 401:
-          // Credentials do not match.
-          this.error = e.response.data.message;
-          break;
         case 422:
           // Invalid form submission
           this.invalid = e.response.data.errors;

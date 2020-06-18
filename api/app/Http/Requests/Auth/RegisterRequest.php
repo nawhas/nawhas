@@ -1,8 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Requests\Auth;
 
+use App\Entities\User;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class RegisterRequest extends FormRequest
 {
@@ -15,14 +19,18 @@ class RegisterRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string'],
-            'email' => ['required', 'string', 'unique:App\Entities\User,email'],
+            'email' => [
+                'required',
+                'string',
+                Rule::unique(User::class,'email'),
+            ],
             'password' => ['required', 'string'],
-            'nickname' => ['sometimes', 'string', 'nullable', 'unique:App\Entities\User,nickname']
+            'nickname' => [
+                'sometimes',
+                'string',
+                'nullable',
+                Rule::unique(User::class,'nickname'),
+            ],
         ];
-    }
-
-    public function credentials(): array
-    {
-        return $this->only(['email', 'password']);
     }
 }
