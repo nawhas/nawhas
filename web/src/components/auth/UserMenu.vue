@@ -39,8 +39,8 @@
                 <v-btn v-if="authenticated" color="primary" text @click="logout">Log Out</v-btn>
                 <template v-else>
                   <div>
-                    <v-btn v-if="canRegisterFeature" color="primary" text @click="register">Sign Up</v-btn>
-                    <v-btn color="primary" text @click="login">Log In</v-btn>
+                    <v-btn v-if="canRegister" color="accent" text @click="register">Sign Up</v-btn>
+                    <v-btn color="accent" text @click="login">Log In</v-btn>
                   </div>
                 </template>
               </v-list-item-action>
@@ -125,6 +125,8 @@ import AppChangelog from '@/components/notifications/AppChangelog.vue';
 import BugReportForm from '@/components/BugReportForm.vue';
 import { User, Role } from '@/entities/user';
 import { Getters as AuthGetters, Actions as AuthActions } from '@/store/modules/auth';
+import { Getters as FeatureGetters } from '@/store/modules/features';
+import { PUBLIC_USER_REGISTRATION } from '@/entities/features';
 
 @Component({
   components: {
@@ -162,15 +164,8 @@ export default class UserMenu extends Vue {
     this.$store.commit('preferences/SET_THEME', value);
   }
 
-  // This deterimes if the feature is marked as true or false for public registration
-  get canRegisterFeature() {
-    const { features } = this.$store.state;
-
-    if (features.features['registration.public'] === undefined) {
-      return true;
-    }
-
-    return features.features['registration.public'];
+  get canRegister() {
+    return this.$store.getters[FeatureGetters.Enabled](PUBLIC_USER_REGISTRATION);
   }
 
   login() {

@@ -43,10 +43,13 @@ class AuthController extends Controller
         $name = $request->get('name');
         $email = $request->get('email');
         $password = bcrypt($request->get('password'));
+
         $user = new User($role, $name, $email, $password);
+
         if ($request->get('nickname')) {
             $user->setNickname($request->get('nickname'));
         }
+
         $this->em->persist($user);
 
         $this->guard->login($user, false);

@@ -17,7 +17,7 @@ class RegisterRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string'],
-            'email' => ['required', 'string', 'unique:App\Entities\User,email'],
+            'email' => ['required', 'string', 'email', 'unique:App\Entities\User,email'],
             'password' => ['required', 'string'],
             'nickname' => ['sometimes', 'string', 'nullable', 'unique:App\Entities\User,nickname']
         ];

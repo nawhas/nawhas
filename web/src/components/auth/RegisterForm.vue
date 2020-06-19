@@ -24,7 +24,7 @@
         />
         <v-text-field
           outlined
-          label="Nickname"
+          label="Nickname (optional)"
           v-model="nickname"
           :error-messages="invalid.nickname"
         />
