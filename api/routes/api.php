@@ -2,10 +2,13 @@
 
 use App\Http\Controllers\Api\AlbumsController;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\FeaturesController;
 use App\Http\Controllers\Api\FeedbackController;
 use App\Http\Controllers\Api\PopularEntitiesController;
 use App\Http\Controllers\Api\RecitersController;
 use App\Http\Controllers\Api\TracksController;
+use App\Modules\Features\Definitions\PublicUserRegistration;
+use App\Modules\Features\Http\Middleware\EnforceFeatureFlags;
 use Illuminate\Http\Request;
 
 /*
@@ -31,6 +34,13 @@ Route::prefix('v1')->group(function () {
         Route::post('register', [AuthController::class, 'register']);
         Route::post('logout', [AuthController::class, 'logout'])->middleware('auth:airlock');
         Route::get('user', [AuthController::class, 'user'])->middleware('auth:airlock');
+    });
+
+    // Features
+    Route::prefix('features')->group(function () {
+        Route::get('/', [FeaturesController::class, 'index']);
+        Route::get('secret', [FeaturesController::class, 'secret'])
+            ->middleware(EnforceFeatureFlags::in([PublicUserRegistration::NAME]));
     });
 
     // Reciters
