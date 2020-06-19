@@ -39,7 +39,7 @@
                 <v-btn v-if="authenticated" color="primary" text @click="logout">Log Out</v-btn>
                 <template v-else>
                   <div>
-                    <v-btn color="primary" text @click="register">Sign Up</v-btn>
+                    <v-btn v-if="canRegisterFeature" color="primary" text @click="register">Sign Up</v-btn>
                     <v-btn color="primary" text @click="login">Log In</v-btn>
                   </div>
                 </template>
@@ -160,6 +160,17 @@ export default class UserMenu extends Vue {
 
   set theme(value) {
     this.$store.commit('preferences/SET_THEME', value);
+  }
+
+  // This deterimes if the feature is marked as true or false for public registration
+  get canRegisterFeature() {
+    const { features } = this.$store.state;
+
+    if (features.features['registration.public'] === undefined) {
+      return true;
+    }
+
+    return features.features['registration.public'];
   }
 
   login() {

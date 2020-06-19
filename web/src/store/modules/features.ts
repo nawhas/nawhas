@@ -49,7 +49,7 @@ const actions = {
     const response = await client.get('/v1/features');
 
     const payload: FeaturesPayload = {
-      features: response.data,
+      features: response.data.data,
     };
 
     commit(Mutations.Initialize, payload);
