@@ -18,10 +18,10 @@ class User implements Entity, TimestampedEntity, Authenticatable
 
     private UuidInterface $id;
     private string $name;
-    private ?string $nickname;
     private Role $role;
     private string $email;
     private string $password;
+    private ?string $nickname;
     private ?string $rememberToken;
 
     public function __construct(Role $role, string $name, string $email, string $password)
@@ -32,6 +32,7 @@ class User implements Entity, TimestampedEntity, Authenticatable
         $this->email = $email;
         $this->password = $password;
         $this->rememberToken = null;
+        $this->nickname = null;
     }
 
     public function getId(): string

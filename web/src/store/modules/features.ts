@@ -22,6 +22,10 @@ export enum Actions {
   Fetch = 'features.fetch',
 }
 
+export enum Getters {
+  Enabled = 'features.enabled',
+}
+
 interface FeaturesPayload {
   features: Features;
 }
@@ -35,7 +39,9 @@ const state: FeaturesState = {
   initialized: false,
 };
 
-const getters = {};
+const getters = {
+  [Getters.Enabled]: (state: FeaturesState) => (feature: string) => !!state.features[feature],
+};
 
 const mutations = {
   [Mutations.Initialize](state: FeaturesState, { features }: FeaturesPayload) {
@@ -49,7 +55,7 @@ const actions = {
     const response = await client.get('/v1/features');
 
     const payload: FeaturesPayload = {
-      features: response.data,
+      features: response.data.data,
     };
 
     commit(Mutations.Initialize, payload);

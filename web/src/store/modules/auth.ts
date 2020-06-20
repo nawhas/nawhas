@@ -8,7 +8,7 @@ import { ActionContext } from 'vuex';
 |--------------------------------------------------------------------------
 */
 export interface AuthState {
-  user: UserData|null;
+  user: UserData | null;
   initialized: boolean;
 }
 
@@ -17,8 +17,15 @@ export interface LoginActionPayload {
   password: string;
 }
 
+export interface RegisterActionPayload {
+  name: string;
+  email: string;
+  password: string;
+  nickname: string | null;
+}
+
 export interface UserPayload {
-  user: UserData|null;
+  user: UserData | null;
 }
 
 type Context = ActionContext<AuthState, any>;
@@ -27,12 +34,14 @@ export enum Mutations {
   Initialize = '[Auth] Initialize auth state',
   Login = '[Auth] User logged in',
   Logout = '[Auth] User logged out',
+  Register = '[Auth] User registered',
 }
 
 export enum Actions {
   Login = 'auth.login',
   Logout = 'auth.logout',
   Check = 'auth.check',
+  Register = 'auth.register',
 }
 
 export enum Getters {
@@ -63,6 +72,9 @@ const mutations = {
   [Mutations.Logout](state: AuthState) {
     state.user = null;
   },
+  [Mutations.Register](state: AuthState, { user }: UserPayload) {
+    state.user = user;
+  },
 };
 
 
@@ -71,6 +83,21 @@ const actions = {
     const response = await client.post('/v1/auth/login', { email, password });
 
     commit(Mutations.Login, { user: response.data });
+  },
+  async [Actions.Register]({ commit }: Context, {
+    name,
+    email,
+    password,
+    nickname,
+  }: RegisterActionPayload) {
+    const response = await client.post('/v1/auth/register', {
+      name,
+      email,
+      password,
+      nickname,
+    });
+
+    commit(Mutations.Register, { user: response.data });
   },
   async [Actions.Logout]({ commit }: Context) {
     commit(Mutations.Logout);
@@ -89,7 +116,7 @@ const actions = {
 };
 
 const getters = {
-  [Getters.User](state: AuthState): User|null {
+  [Getters.User](state: AuthState): User | null {
     return state.user ? new User(state.user) : null;
   },
   [Getters.Authenticated](state: AuthState): boolean {

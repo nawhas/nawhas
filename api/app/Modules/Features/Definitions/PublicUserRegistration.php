@@ -12,7 +12,7 @@ class PublicUserRegistration implements Feature
 
     public function enabled(?User $user): bool
     {
-        return true;
+        return false;
     }
 
     public function name(): string

@@ -31,6 +31,8 @@ Route::prefix('v1')->group(function () {
     // Auth
     Route::prefix('auth')->group(function () {
         Route::post('login', [AuthController::class, 'login']);
+        Route::post('register', [AuthController::class, 'register'])
+            ->middleware(EnforceFeatureFlags::in([PublicUserRegistration::NAME]));
         Route::post('logout', [AuthController::class, 'logout'])->middleware('auth:airlock');
         Route::get('user', [AuthController::class, 'user'])->middleware('auth:airlock');
     });

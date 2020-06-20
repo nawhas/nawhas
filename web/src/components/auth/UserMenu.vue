@@ -38,7 +38,10 @@
               <v-list-item-action>
                 <v-btn v-if="authenticated" color="primary" text @click="logout">Log Out</v-btn>
                 <template v-else>
-                  <v-btn color="primary" text @click="login">Log In</v-btn>
+                  <div>
+                    <v-btn v-if="canRegister" color="accent" text @click="register">Sign Up</v-btn>
+                    <v-btn color="accent" text @click="login">Log In</v-btn>
+                  </div>
                 </template>
               </v-list-item-action>
             </v-list-item>
@@ -102,6 +105,9 @@
     <v-dialog v-model="showLoginDialog" width="500">
       <login-form @close="showLoginDialog = false" />
     </v-dialog>
+    <v-dialog v-model="showRegisterDialog" width="500">
+      <register-form @close="showRegisterDialog = false" />
+    </v-dialog>
     <v-dialog v-model="showWhatsNewDialog" width="500">
       <app-changelog @close="showWhatsNewDialog = false" />
     </v-dialog>
@@ -114,22 +120,27 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import LoginForm from '@/components/auth/LoginForm.vue';
+import RegisterForm from '@/components/auth/RegisterForm.vue';
 import AppChangelog from '@/components/notifications/AppChangelog.vue';
 import BugReportForm from '@/components/BugReportForm.vue';
 import { User, Role } from '@/entities/user';
-import { Getters as AuthGetters } from '@/store/modules/auth';
+import { Getters as AuthGetters, Actions as AuthActions } from '@/store/modules/auth';
+import { Getters as FeatureGetters } from '@/store/modules/features';
+import { PUBLIC_USER_REGISTRATION } from '@/entities/features';
 
 @Component({
   components: {
     BugReportForm,
     AppChangelog,
     LoginForm,
+    RegisterForm,
   },
 })
 export default class UserMenu extends Vue {
   private readonly Role = Role;
   private open = false;
   private showLoginDialog = false;
+  private showRegisterDialog = false;
   private showWhatsNewDialog = false;
   private showBugReportDialog = false;
 
@@ -153,13 +164,17 @@ export default class UserMenu extends Vue {
     this.$store.commit('preferences/SET_THEME', value);
   }
 
+  get canRegister() {
+    return this.$store.getters[FeatureGetters.Enabled](PUBLIC_USER_REGISTRATION);
+  }
+
   login() {
     this.showLoginDialog = true;
     this.open = false;
   }
 
-  logout() {
-    this.$store.dispatch('auth/logout');
+  async logout() {
+    await this.$store.dispatch(AuthActions.Logout);
     this.open = false;
   }
 
@@ -174,7 +189,8 @@ export default class UserMenu extends Vue {
   }
 
   register() {
-    // todo
+    this.showRegisterDialog = true;
+    this.open = false;
   }
 }
 </script>
