@@ -15,6 +15,7 @@ use App\Enum\Role;
 use Illuminate\Contracts\Auth\{Factory as AuthFactory, StatefulGuard};
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
+use Laravel\Socialite\Facades\Socialite;
 
 class AuthController extends Controller
 {
@@ -67,5 +68,19 @@ class AuthController extends Controller
     public function user(): JsonResponse
     {
         return $this->respondWithItem($this->guard->user());
+    }
+
+    public function getSocialRedirect($social)
+    {
+        try {
+            return Socialite::with($social)->stateless()->redirect();
+        } catch ( \InvalidArgumentException $e ){
+            return redirect('/login');
+        }
+    }
+
+    public function getSocialCallback($social): void
+    {
+        $socialUser = Socialite::with($social)->user();
     }
 }
