@@ -20,17 +20,17 @@ class User implements Entity, TimestampedEntity, Authenticatable
     private string $name;
     private Role $role;
     private string $email;
-    private string $password;
+    private ?string $password;
     private ?string $nickname;
     private ?string $rememberToken;
 
-    public function __construct(Role $role, string $name, string $email, string $password)
+    public function __construct(Role $role, string $name, string $email)
     {
         $this->id = Uuid::uuid1();
         $this->role = $role;
         $this->name = $name;
         $this->email = $email;
-        $this->password = $password;
+        $this->password = null;
         $this->rememberToken = null;
         $this->nickname = null;
     }
@@ -128,6 +128,11 @@ class User implements Entity, TimestampedEntity, Authenticatable
     public function getPassword(): string
     {
         return $this->password;
+    }
+
+    public function setPassword(string $password): void
+    {
+        $this->password = bcrypt($password);
     }
 
     public function getAvatar($size = 128): string

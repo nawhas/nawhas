@@ -22,7 +22,7 @@ class UserMapping extends EntityMapping
         $map->field(Role::class, 'role');
         $map->string('nickname')->unique()->nullable();
         $map->string('email')->unique();
-        $map->string('password');
+        $map->string('password')->nullable();
         $map->string('rememberToken')->nullable();
         $map->timestamps();
     }
