@@ -18,8 +18,8 @@ class SocialAccountQuery extends Query
 
     public function whereProviderId(string $providerId): self
     {
-        $this->builder->andWhere('t.provider_id = :provider_id')
-            ->setParameter('provider_id', $providerId);
+        $this->builder->andWhere('t.providerId = :providerId')
+            ->setParameter('providerId', $providerId);
 
         return $this;
     }
