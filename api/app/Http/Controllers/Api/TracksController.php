@@ -72,7 +72,7 @@ class TracksController extends Controller
         }
         if ($request->has('lyrics')) {
             $format = $request->get('format', Format::PLAIN_TEXT);
-            (new ReplaceLyrics())->execute();
+            $track->replaceLyrics(new Lyrics($track, $request->get('lyrics'), new Format($format)));
         }
 
         $this->repository->persist($track);
