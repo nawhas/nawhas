@@ -7,6 +7,8 @@ namespace App\Http\Controllers\Api;
 use App\Entities\Reciter;
 use App\Http\Controllers\Controller;
 use App\Http\Transformers\ReciterTransformer;
+use App\Modules\Library\Events\ReciterCreated;
+use App\Modules\Library\Events\ReciterModified;
 use App\Repositories\ReciterRepository;
 use App\Support\Pagination\PaginationState;
 use App\Visits\Manager as VisitsManager;
@@ -41,6 +43,8 @@ class RecitersController extends Controller
             $request->get('description')
         );
 
+        event(new ReciterCreated($reciter));
+
         $this->repository->persist($reciter);
 
         return $this->respondWithItem($reciter);
@@ -61,6 +65,8 @@ class RecitersController extends Controller
         if ($request->has('description')) {
             $reciter->setDescription($request->get('description'));
         }
+
+        event(new ReciterModified($reciter));
 
         $this->repository->persist($reciter);
 

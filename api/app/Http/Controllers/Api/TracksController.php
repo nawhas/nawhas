@@ -12,7 +12,11 @@ use App\Entities\Track;
 use App\Entities\Media;
 use App\Http\Controllers\Controller;
 use App\Http\Transformers\TrackTransformer;
-use App\Modules\Lyrics\Actions\ReplaceLyrics;
+use App\Modules\Library\Events\LyricsCreated;
+use App\Modules\Library\Events\LyricsModified;
+use App\Modules\Library\Events\TrackCreated;
+use App\Modules\Library\Events\TrackDeleted;
+use App\Modules\Library\Events\TrackModified;
 use App\Modules\Lyrics\Documents\Format;
 use App\Repositories\TrackRepository;
 use App\Visits\Manager as VisitsManager;
@@ -50,8 +54,12 @@ class TracksController extends Controller
 
         if ($request->has('lyrics')) {
             $format = $request->get('format', Format::PLAIN_TEXT);
-            $track->replaceLyrics(new Lyrics($track, $request->get('lyrics'), new Format($format)));
+            $lyric = new Lyrics($track, $request->get('lyrics'), new Format($format));
+            $track->replaceLyrics($lyric);
+            event(new LyricsCreated($lyric));
         }
+
+        event(new TrackCreated($track));
 
         $this->repository->persist($track);
 
@@ -72,8 +80,12 @@ class TracksController extends Controller
         }
         if ($request->has('lyrics')) {
             $format = $request->get('format', Format::PLAIN_TEXT);
-            $track->replaceLyrics(new Lyrics($track, $request->get('lyrics'), new Format($format)));
+            $lyric = new Lyrics($track, $request->get('lyrics'), new Format($format));
+            $track->replaceLyrics($lyric);
+            event(new LyricsModified($lyric));
         }
+
+        event(new TrackModified($track));
 
         $this->repository->persist($track);
 
@@ -88,6 +100,8 @@ class TracksController extends Controller
             logger()->debug("Deleting media file at {$media->getPath()}");
             Storage::delete($media->getPath());
         }
+
+        event(new TrackDeleted($track));
 
         $this->repository->remove($track);
 

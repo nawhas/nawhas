@@ -8,6 +8,10 @@ use App\Entities\Album;
 use App\Entities\Reciter;
 use App\Http\Controllers\Controller;
 use App\Http\Transformers\AlbumTransformer;
+use App\Modules\Library\Events\AlbumCreated;
+use App\Modules\Library\Events\AlbumDeleted;
+use App\Modules\Library\Events\AlbumModified;
+use App\Modules\Library\Events\TrackDeleted;
 use App\Repositories\AlbumRepository;
 use App\Repositories\TrackRepository;
 use App\Support\Pagination\PaginationState;
@@ -42,6 +46,8 @@ class AlbumsController extends Controller
     {
         $album = new Album($reciter, $request->get('title'), $request->get('year'));
 
+        event(new AlbumCreated($album));
+
         $this->repository->persist($album);
 
         return $this->respondWithItem($album);
@@ -62,6 +68,8 @@ class AlbumsController extends Controller
             $album->setYear($request->get('year'));
         }
 
+        event(new AlbumModified($album));
+
         $this->repository->persist($album);
 
         return $this->respondWithItem($album);
@@ -80,8 +88,12 @@ class AlbumsController extends Controller
                 Storage::delete($media->getPath());
             }
 
+            event(new TrackDeleted($track));
+
             $trackRepository->remove($track);
         }
+
+        event(new AlbumDeleted($album));
 
         $this->repository->remove($album);
 
