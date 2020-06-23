@@ -10,9 +10,7 @@
         </v-alert>
         <v-text-field outlined label="Email" v-model="email" :error-messages="invalid.email" />
         <v-text-field outlined label="Password" type="password" v-model="password" :error-messages="invalid.password" />
-        <v-btn text @click="loginWithSocial('facebook')">
-          <v-icon>mdi-facebook</v-icon> Log in with Facebook
-        </v-btn>
+        <social-login-buttons />
       </v-card-text>
       <v-card-actions>
         <v-btn @click="close" text>Cancel</v-btn>
@@ -26,11 +24,13 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import HeroBanner from '@/components/HeroBanner.vue';
+import SocialLoginButtons from '@/components/auth/SocialLoginButtons.vue';
 import { Actions as AuthActions } from '@/store/modules/auth';
 
 @Component({
   components: {
     HeroBanner,
+    SocialLoginButtons,
   },
 })
 export default class LoginForm extends Vue {
@@ -72,10 +72,6 @@ export default class LoginForm extends Vue {
     this.email = '';
     this.password = '';
     this.$emit('close');
-  }
-
-  async loginWithSocial(provider: string) {
-    window.location.href = `https://api.nawhas.test/v1/auth/login/${provider}`;
   }
 }
 </script>
