@@ -33,19 +33,18 @@ return [
     'facebook' => [
         'client_id' => env('FACEBOOK_APP_ID'),
         'client_secret' => env('FACEBOOK_APP_SECRET'),
-        'redirect' => env('FACEBOOK_REDIRECT'),
-    ],
-
-    'twitter' => [
-        'client_id' => env('TWITTER_APP_ID'),
-        'client_secret' => env('TWITTER_APP_SECRET'),
-        'redirect' => env('TWITTER_REDIRECT')
+        'redirect' => 'https://api.' . env('APP_DOMAIN') . '/v1/auth/login/facebook/callback',
     ],
 
     'google' => [
         'client_id' => env('GOOGLE_APP_ID'),
         'client_secret' => env('GOOGLE_APP_SECRET'),
-        'redirect' => env('GOOGLE_REDIRECT')
+        'redirect' => 'https://api.' . env('APP_DOMAIN') . '/v1/auth/login/google/callback',
     ],
 
+    "apple" => [
+        "client_id" => env("APPLE_CLIENT_ID"),
+        "client_secret" => env("APPLE_CLIENT_SECRET"),
+        'redirect' => 'https://api.' . env('APP_DOMAIN') . '/v1/auth/login/apple/callback',
+    ],
 ];

@@ -42,8 +42,6 @@ export enum Actions {
   Logout = 'auth.logout',
   Check = 'auth.check',
   Register = 'auth.register',
-  SocialLogin = 'auth.social_login',
-  SocialLoginCallback = 'auth.social_login_callback',
 }
 
 export enum Getters {
@@ -114,16 +112,6 @@ const actions = {
       // User not logged in.
       commit(Mutations.Initialize, { user: null });
     }
-  },
-  async [Actions.SocialLogin](_Context, { provider }) {
-    const response = await client.post(`v1/auth/login/${provider}`);
-    return response;
-  },
-  async [Actions.SocialLoginCallback]({ commit }: Context, { provider, code }) {
-    const response = await client.post(`v1/auth/login/${provider}/callback`, {
-      code,
-    });
-    commit(Mutations.Login, { user: response.data });
   },
 };
 

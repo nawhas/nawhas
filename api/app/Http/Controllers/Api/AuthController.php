@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Database\Doctrine\EntityManager;
 use App\Entities\SocialAccount;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\Auth\RegisterRequest;
@@ -14,7 +13,6 @@ use Illuminate\Auth\AuthenticationException;
 use App\Entities\User;
 use App\Enum\Role;
 use App\Repositories\SocialAccountRepository;
-use App\Repositories\UserProviderRepository;
 use App\Repositories\UserRepository;
 use Illuminate\Contracts\Auth\{Factory as AuthFactory, StatefulGuard};
 use Illuminate\Http\JsonResponse;
@@ -79,14 +77,10 @@ class AuthController extends Controller
 
     public function getSocialRedirect($provider)
     {
-        $url = Socialite::with($provider)->stateless()->redirect()->getTargetUrl();
-
-        return response()->json([
-            'url' => $url,
-        ]);
+        return Socialite::with($provider)->stateless()->redirect();
     }
 
-    public function getSocialCallback($provider): JsonResponse
+    public function getSocialCallback($provider)
     {
         $socialUser = Socialite::with($provider)->stateless()->user();
         $socialUserId = $socialUser->getId();
@@ -98,18 +92,22 @@ class AuthController extends Controller
         } else {
             $user = $this->userRepository->findByEmail($socialUser->getEmail());
             if (!$user) {
-                $role = Role::CONTRIBUTOR();
-                $name = $socialUser->getName();
-                $email = $socialUser->getEmail();
+                // If the user email already exists then we need to handle the correct behaviour
+                // For now throwing an exception
 
-                $user = new User($role, $name, $email);
-                $this->userRepository->persist($user);
+                // $role = Role::CONTRIBUTOR();
+                // $name = $socialUser->getName();
+                // $email = $socialUser->getEmail();
+
+                // $user = new User($role, $name, $email);
+                // $this->userRepository->persist($user);
+                throw new AuthenticationException(__('auth.failed'));
             }
             $SocialAccount = new SocialAccount($user, $provider, $socialUserId);
             $this->socialAccountRepository->persist($SocialAccount);
         }
         $this->guard->login($user, false);
 
-        return $this->respondWithItem($this->guard->user());
+        return redirect(config('app.url'));
     }
 }

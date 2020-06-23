@@ -75,8 +75,7 @@ export default class LoginForm extends Vue {
   }
 
   async loginWithSocial(provider: string) {
-    const response = await this.$store.dispatch(AuthActions.SocialLogin, { provider });
-    window.location.href = response.data.url;
+    window.location.href = `https://api.nawhas.test/v1/auth/login/${provider}`;
   }
 }
 </script>

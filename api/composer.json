@@ -26,6 +26,7 @@
         "php-http/guzzle6-adapter": "^2.0",
         "ramsey/uuid-doctrine": "^1.6",
         "sentry/sentry-laravel": "1.7.0",
+        "socialiteproviders/apple": "^3.0",
         "spatie/laravel-cors": "^1.6",
         "timacdonald/has-parameters": "^1.0",
         "weirdan/doctrine-psalm-plugin": "^0.10.0",
