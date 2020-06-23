@@ -32,7 +32,7 @@ Route::prefix('v1')->group(function () {
     Route::prefix('auth')->group(function () {
         Route::post('login', [AuthController::class, 'login']);
         Route::post( 'login/{social}', [AuthController::class, 'getSocialRedirect']);
-        Route::get( 'login/{social}/callback', [AuthController::class, 'getSocialCallback'] );
+        Route::post( 'login/{social}/callback', [AuthController::class, 'getSocialCallback'] );
         Route::post('register', [AuthController::class, 'register'])
             ->middleware(EnforceFeatureFlags::in([PublicUserRegistration::NAME]));
         Route::post('logout', [AuthController::class, 'logout'])->middleware('auth:airlock');

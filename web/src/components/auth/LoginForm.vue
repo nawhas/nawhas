@@ -10,6 +10,9 @@
         </v-alert>
         <v-text-field outlined label="Email" v-model="email" :error-messages="invalid.email" />
         <v-text-field outlined label="Password" type="password" v-model="password" :error-messages="invalid.password" />
+        <v-btn text @click="loginWithSocial('facebook')">
+          <v-icon>mdi-facebook</v-icon> Log in with Facebook
+        </v-btn>
       </v-card-text>
       <v-card-actions>
         <v-btn @click="close" text>Cancel</v-btn>
@@ -69,6 +72,11 @@ export default class LoginForm extends Vue {
     this.email = '';
     this.password = '';
     this.$emit('close');
+  }
+
+  async loginWithSocial(provider: string) {
+    const response = await this.$store.dispatch(AuthActions.SocialLogin, { provider });
+    window.location.href = response.data.url;
   }
 }
 </script>

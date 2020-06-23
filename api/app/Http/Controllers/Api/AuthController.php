@@ -79,11 +79,11 @@ class AuthController extends Controller
 
     public function getSocialRedirect($provider)
     {
-        try {
-            return Socialite::with($provider)->stateless()->redirect();
-        } catch ( \InvalidArgumentException $e ){
-            return $e;
-        }
+        $url = Socialite::with($provider)->stateless()->redirect()->getTargetUrl();
+
+        return response()->json([
+            'url' => $url,
+        ]);
     }
 
     public function getSocialCallback($provider): JsonResponse

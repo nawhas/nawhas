@@ -17,6 +17,11 @@ const routes = [
         component: () => import(/* webpackChunkName: "home" */'@/views/public/HomeView.vue'),
       },
       {
+        path: 'auth/login/:provider/callback',
+        name: 'SocialLoginCallback',
+        component: () => import(/* webpackChunkName: "home" */'@/views/public/auth/SocialLoginCallback.vue'),
+      },
+      {
         path: 'reciters',
         name: 'reciters.index',
         component: () => import(/* webpackChunkName: "reciters" */'@/views/public/reciters/RecitersView.vue'),
