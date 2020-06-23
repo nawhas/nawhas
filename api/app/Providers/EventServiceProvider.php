@@ -18,8 +18,8 @@ class EventServiceProvider extends ServiceProvider
         Registered::class => [
             SendEmailVerificationNotification::class,
         ],
-        SocialiteProviders\Manager\SocialiteWasCalled::class => [
-            'SocialiteProviders\\Apple\\AppleExtendSocialite@handle',
+        \SocialiteProviders\Manager\SocialiteWasCalled::class => [
+            '\SocialiteProviders\\Apple\\AppleExtendSocialite@handle',
         ],
     ];
 
