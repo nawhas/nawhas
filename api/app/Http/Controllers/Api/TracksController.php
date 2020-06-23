@@ -12,6 +12,7 @@ use App\Entities\Track;
 use App\Entities\Media;
 use App\Http\Controllers\Controller;
 use App\Http\Transformers\TrackTransformer;
+use App\Modules\Lyrics\Actions\ReplaceLyrics;
 use App\Modules\Lyrics\Documents\Format;
 use App\Repositories\TrackRepository;
 use App\Visits\Manager as VisitsManager;
@@ -71,7 +72,7 @@ class TracksController extends Controller
         }
         if ($request->has('lyrics')) {
             $format = $request->get('format', Format::PLAIN_TEXT);
-            $track->replaceLyrics(new Lyrics($track, $request->get('lyrics'), new Format($format)));
+            (new ReplaceLyrics())->execute();
         }
 
         $this->repository->persist($track);
