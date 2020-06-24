@@ -6,7 +6,6 @@ namespace App\Modules\Audit\Events\Listeners;
 
 use App\Modules\Audit\Auditor;
 use App\Modules\Audit\Events\AuditableEvent;
-use Doctrine\ORM\EntityManager;
 
 class TrackEntityChanges
 {
@@ -19,13 +18,6 @@ class TrackEntityChanges
 
     public function handle(AuditableEvent $event): void
     {
-        $this->auditor->record($event->getEntity(), $event->get);
-        logger()->debug('Found auditable event', [
-            'event' => get_class($event),
-            'entity_class' => get_class($event->getEntity()),
-            'user' => $event->getUser()->getId(),
-            'old' => $old,
-            'entity' => $event->getEntity()->toArray(),
-        ]);
+        $this->auditor->record($event->getEntity(), $event->getChangeType(), $event->getUser());
     }
 }

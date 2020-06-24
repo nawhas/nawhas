@@ -8,7 +8,7 @@ use App\Enum\ChangeType;
 
 class LyricsCreated extends LyricsModified
 {
-    public function getPersistenceType(): ChangeType
+    public function getChangeType(): ChangeType
     {
         return ChangeType::CREATED();
     }

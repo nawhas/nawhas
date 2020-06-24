@@ -8,7 +8,7 @@ use App\Enum\ChangeType;
 
 class AlbumDeleted extends AlbumModified
 {
-    public function getPersistenceType(): ChangeType
+    public function getChangeType(): ChangeType
     {
         return ChangeType::DELETED();
     }

@@ -11,5 +11,5 @@ interface EntityPersisted
 {
     public function getEntity(): Entity;
     public function getEntityType(): string;
-    public function getPersistenceType(): ChangeType;
+    public function getChangeType(): ChangeType;
 }

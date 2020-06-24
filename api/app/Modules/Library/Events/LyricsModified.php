@@ -31,7 +31,7 @@ class LyricsModified implements EntityPersisted, AuditableEvent
         return Lyrics::class;
     }
 
-    public function getPersistenceType(): ChangeType
+    public function getChangeType(): ChangeType
     {
         return ChangeType::UPDATED();
     }

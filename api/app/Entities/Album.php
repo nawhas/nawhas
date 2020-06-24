@@ -92,4 +92,13 @@ class Album implements Entity, TimestampedEntity
     {
         return $this->tracks;
     }
+
+    public function getTrackedFields(): array
+    {
+        return [
+            'title',
+            'year',
+            'artwork',
+        ];
+    }
 }

@@ -130,4 +130,11 @@ class Track implements Entity, TimestampedEntity, Visitable
     {
         return new TrackVisit($this);
     }
+
+    public function getTrackedFields(): array
+    {
+        return [
+            'title',
+        ];
+    }
 }

@@ -8,7 +8,7 @@ use App\Enum\ChangeType;
 
 class ReciterCreated extends ReciterModified
 {
-    public function getPersistenceType(): ChangeType
+    public function getChangeType(): ChangeType
     {
         return ChangeType::CREATED();
     }

@@ -31,7 +31,7 @@ class AlbumModified implements EntityPersisted, AuditableEvent
         return Album::class;
     }
 
-    public function getPersistenceType(): ChangeType
+    public function getChangeType(): ChangeType
     {
         return ChangeType::UPDATED();
     }

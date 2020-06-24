@@ -31,7 +31,7 @@ class TrackModified implements EntityPersisted, AuditableEvent
         return Track::class;
     }
 
-    public function getPersistenceType(): ChangeType
+    public function getChangeType(): ChangeType
     {
         return ChangeType::UPDATED();
     }

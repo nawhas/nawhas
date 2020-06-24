@@ -2,6 +2,10 @@
 
 namespace App\Console\Commands;
 
+use App\Entities\Reciter;
+use App\Entities\User;
+use App\Enum\Role;
+use App\Modules\Library\Events\ReciterCreated;
 use Illuminate\Console\Command;
 
 class TestEvent extends Command
@@ -25,7 +29,7 @@ class TestEvent extends Command
      */
     public function handle()
     {
-        // event(new ReciterCreated(new Reciter('Zain Mehdi')));
+        event(new ReciterCreated(new Reciter('Asif Ali'), new User(Role::MODERATOR(), 'Asif Ali', 'shea786@live.co.uk', bcrypt('secret'))));
         // event(new ReciterModified(new Reciter('Zain Mehdi')));
     }
 }

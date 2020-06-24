@@ -31,7 +31,7 @@ class ReciterModified implements EntityPersisted, AuditableEvent
         return Reciter::class;
     }
 
-    public function getPersistenceType(): ChangeType
+    public function getChangeType(): ChangeType
     {
         return ChangeType::UPDATED();
     }
