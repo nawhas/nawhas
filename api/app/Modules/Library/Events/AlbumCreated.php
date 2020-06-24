@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Modules\Library\Events;
 
-use App\Enum\PersistenceType;
+use App\Enum\ChangeType;
 
 class AlbumCreated extends AlbumModified
 {
-    public function getPersistenceType(): PersistenceType
+    public function getPersistenceType(): ChangeType
     {
-        return PersistenceType::CREATE();
+        return ChangeType::CREATED();
     }
 }

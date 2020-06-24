@@ -7,7 +7,7 @@ namespace App\Modules\Library\Events;
 use App\Entities\Album;
 use App\Entities\Contracts\Events\EntityPersisted;
 use App\Entities\User;
-use App\Enum\PersistenceType;
+use App\Enum\ChangeType;
 use App\Modules\Audit\Events\AuditableEvent;
 
 class AlbumModified implements EntityPersisted, AuditableEvent
@@ -31,9 +31,9 @@ class AlbumModified implements EntityPersisted, AuditableEvent
         return Album::class;
     }
 
-    public function getPersistenceType(): PersistenceType
+    public function getPersistenceType(): ChangeType
     {
-        return PersistenceType::UPDATE();
+        return ChangeType::UPDATED();
     }
 
     public function getUser(): User

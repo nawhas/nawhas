@@ -51,4 +51,11 @@ class EntityManager
     {
         $this->em->flush();
     }
+
+    public function getOriginalEntityData(Entity $entity): array
+    {
+        $unit = $this->em->getUnitOfWork();
+
+        return $unit->getOriginalEntityData($entity);
+    }
 }

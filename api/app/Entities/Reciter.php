@@ -7,6 +7,7 @@ namespace App\Entities;
 use App\Entities\Behaviors\HasTimestamps;
 use App\Entities\Contracts\Entity;
 use App\Entities\Contracts\TimestampedEntity;
+use App\Modules\Audit\Entities\AuditableEntity;
 use App\Visits\Visitable;
 use App\Visits\Entities\ReciterVisit;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -16,7 +17,7 @@ use Illuminate\Support\Facades\Storage;
 use Ramsey\Uuid\{Uuid, UuidInterface};
 use Zain\LaravelDoctrine\Jetpack\Serializer\SerializesAttributes;
 
-class Reciter implements Entity, TimestampedEntity, Visitable
+class Reciter implements Entity, TimestampedEntity, Visitable, AuditableEntity
 {
     use HasTimestamps;
     use SerializesAttributes;
@@ -94,5 +95,14 @@ class Reciter implements Entity, TimestampedEntity, Visitable
     public function visit(): ReciterVisit
     {
         return new ReciterVisit($this);
+    }
+
+    public function getTrackedFields(): array
+    {
+        return [
+            'name',
+            'description',
+            'avatar',
+        ];
     }
 }
