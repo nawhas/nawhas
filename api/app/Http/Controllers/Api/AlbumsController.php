@@ -46,7 +46,7 @@ class AlbumsController extends Controller
     {
         $album = new Album($reciter, $request->get('title'), $request->get('year'));
 
-        event(new AlbumCreated($album));
+        event(new AlbumCreated($album, $request->user()));
 
         $this->repository->persist($album);
 
@@ -68,7 +68,7 @@ class AlbumsController extends Controller
             $album->setYear($request->get('year'));
         }
 
-        event(new AlbumModified($album));
+        event(new AlbumModified($album, $request->user()));
 
         $this->repository->persist($album);
 
@@ -88,12 +88,12 @@ class AlbumsController extends Controller
                 Storage::delete($media->getPath());
             }
 
-            event(new TrackDeleted($track));
+            event(new TrackDeleted($track, $request->user()));
 
             $trackRepository->remove($track);
         }
 
-        event(new AlbumDeleted($album));
+        event(new AlbumDeleted($album, $request->user()));
 
         $this->repository->remove($album);
 

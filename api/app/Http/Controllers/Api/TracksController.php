@@ -56,10 +56,10 @@ class TracksController extends Controller
             $format = $request->get('format', Format::PLAIN_TEXT);
             $lyric = new Lyrics($track, $request->get('lyrics'), new Format($format));
             $track->replaceLyrics($lyric);
-            event(new LyricsCreated($lyric));
+            event(new LyricsCreated($lyric, $request->user()));
         }
 
-        event(new TrackCreated($track));
+        event(new TrackCreated($track, $request->user()));
 
         $this->repository->persist($track);
 
@@ -82,10 +82,10 @@ class TracksController extends Controller
             $format = $request->get('format', Format::PLAIN_TEXT);
             $lyric = new Lyrics($track, $request->get('lyrics'), new Format($format));
             $track->replaceLyrics($lyric);
-            event(new LyricsModified($lyric));
+            event(new LyricsModified($lyric, $request->user()));
         }
 
-        event(new TrackModified($track));
+        event(new TrackModified($track, $request->user()));
 
         $this->repository->persist($track);
 
@@ -101,7 +101,7 @@ class TracksController extends Controller
             Storage::delete($media->getPath());
         }
 
-        event(new TrackDeleted($track));
+        event(new TrackDeleted($track, $request->user()));
 
         $this->repository->remove($track);
 
@@ -122,6 +122,8 @@ class TracksController extends Controller
         if ($existing !== null) {
             Storage::delete($existing->getPath());
         }
+
+        event(new TrackModified($track, $request->user()));
 
         $this->repository->persist($track);
 
