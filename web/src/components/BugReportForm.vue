@@ -1,6 +1,6 @@
 <template>
-  <v-form @submit.prevent="submit">
-    <v-card class="bug-report-form" :loading="loading">
+  <v-card class="bug-report-form" :loading="loading">
+    <v-form @submit.prevent="submit">
       <v-card-title>
         <h2 class="card-title">Report an Issue</h2>
       </v-card-title>
@@ -46,8 +46,8 @@
         <v-spacer></v-spacer>
         <v-btn type="submit" text color="primary" :loading="loading">Submit</v-btn>
       </v-card-actions>
-    </v-card>
-  </v-form>
+    </v-form>
+  </v-card>
 </template>
 
 <script lang="ts">

@@ -1,25 +1,27 @@
 <template>
   <v-card class="auth-dialog" :loading="loading">
-    <div class="auth-dialog__header">
-      <div class="auth-dialog__icon-container">
-        <logo-icon class="auth-dialog__icon" />
+    <div class="auth-dialog__content">
+      <div class="auth-dialog__header">
+        <div class="auth-dialog__icon-container">
+          <logo-icon class="auth-dialog__icon" />
+        </div>
+        <h2 class="auth-dialog__title">
+          <slot name="title">Authenticate</slot>
+        </h2>
       </div>
-      <h2 class="auth-dialog__title">
-        <slot name="title">Authenticate</slot>
-      </h2>
-    </div>
-    <div class="auth-dialog__message">
-      <slot name="message"></slot>
-    </div>
-    <v-form @submit.prevent="$emit('submit')">
-      <v-alert type="error" v-if="error" outlined class="mb-6">
-        {{ error }}
-      </v-alert>
-      <slot></slot>
-    </v-form>
-    <div class="auth-dialog__social">
-      <labeled-divider label="or" />
-      <slot name="social"></slot>
+      <div class="auth-dialog__message">
+        <slot name="message"></slot>
+      </div>
+      <v-form @submit.prevent="$emit('submit')">
+        <v-alert type="error" v-if="error" outlined class="mb-6">
+          {{ error }}
+        </v-alert>
+        <slot></slot>
+      </v-form>
+      <div class="auth-dialog__social">
+        <labeled-divider label="or" />
+        <slot name="social"></slot>
+      </div>
     </div>
   </v-card>
 </template>
@@ -42,8 +44,8 @@ export default class AuthDialog extends Vue {
 </script>
 
 <style lang="scss" scoped>
-.auth-dialog {
-  padding: 36px 64px;
+.auth-dialog__content {
+  padding: 32px 64px;
 }
 .auth-dialog__header {
   padding: 0 0 12px 0;

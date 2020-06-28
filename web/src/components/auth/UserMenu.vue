@@ -102,16 +102,37 @@
         </div>
       </v-card>
     </v-menu>
-    <v-dialog v-model="showLoginDialog" width="500">
+    <v-dialog
+        v-model="showLoginDialog"
+        width="500"
+        :fullscreen="$vuetify.breakpoint.smAndDown"
+        transition="slide-y-reverse-transition"
+    >
       <login-form @close="showLoginDialog = false" />
     </v-dialog>
-    <v-dialog v-model="showRegisterDialog" width="500">
+    <v-dialog
+        width="500"
+        transition="slide-y-reverse-transition"
+        :fullscreen="$vuetify.breakpoint.smAndDown"
+        v-model="showRegisterDialog"
+    >
       <register-form @close="showRegisterDialog = false" />
     </v-dialog>
-    <v-dialog v-model="showWhatsNewDialog" width="500">
+    <v-dialog
+        width="500"
+        v-model="showWhatsNewDialog"
+        transition="slide-y-reverse-transition"
+        :fullscreen="$vuetify.breakpoint.smAndDown"
+    >
       <app-changelog @close="showWhatsNewDialog = false" />
     </v-dialog>
-    <v-dialog persistent v-model="showBugReportDialog" width="500">
+    <v-dialog
+        persistent
+        width="500"
+        v-model="showBugReportDialog"
+        transition="slide-y-reverse-transition"
+        :fullscreen="$vuetify.breakpoint.smAndDown"
+    >
       <bug-report-form @close="showBugReportDialog = false" />
     </v-dialog>
   </div>
