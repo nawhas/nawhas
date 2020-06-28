@@ -79,7 +79,7 @@
 
           <div class="user-menu__section">
             <v-list>
-              <v-list-item @click="goToModeratorTools">
+              <v-list-item @click="goToModeratorDashboard" v-if="isModerator">
                 <v-list-item-content>
                   <v-list-item-title class="user-menu__action">
                     <v-icon>security</v-icon> <div class="user-menu__action__text">Moderator Tools</div>
@@ -159,6 +159,16 @@ export default class UserMenu extends Vue {
     return this.$store.getters[AuthGetters.Authenticated];
   }
 
+  get isModerator(): boolean {
+    if (!this.user) {
+      return false;
+    }
+    if (this.user.role !== Role.Moderator) {
+      return false;
+    }
+    return true;
+  }
+
   get initialized(): boolean {
     return this.$store.state.auth.initialized;
   }
@@ -200,8 +210,8 @@ export default class UserMenu extends Vue {
     this.open = false;
   }
 
-  goToModeratorTools() {
-    this.$router.push({ name: 'ModeratorTools' });
+  goToModeratorDashboard() {
+    this.$router.push({ name: 'ModeratorDashboard' });
   }
 }
 </script>

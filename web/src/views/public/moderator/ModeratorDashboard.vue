@@ -7,7 +7,7 @@
 import { Component, Vue } from 'vue-property-decorator';
 
 @Component
-export default class ModeratorTools extends Vue {}
+export default class ModeratorDashboard extends Vue {}
 </script>
 
 <style lang="scss" scoped>

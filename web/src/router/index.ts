@@ -54,9 +54,10 @@ const routes = [
         component: () => import(/* webpackChunkName: "about" */ '@/views/public/AboutView.vue'),
       },
       {
-        path: 'moderator-tools',
-        name: 'ModeratorTools',
-        component: () => import(/* webpackChunkName: "moderator-tools" */ '@/views/public/ModeratorTools.vue'),
+        path: 'moderator-dashboard',
+        name: 'ModeratorDashboard',
+        component:
+        () => import(/* webpackChunkName: "moderator-dashboard" */ '@/views/public/moderator/ModeratorDashboard.vue'),
       },
     ],
   },
@@ -73,7 +74,7 @@ const router = new VueRouter({
   base: process.env.BASE_URL,
   routes,
   scrollBehavior(to, from, savedPosition) {
-    let scrollTo: number|string = 0;
+    let scrollTo: number | string = 0;
 
     if (to.hash) {
       scrollTo = to.hash;
