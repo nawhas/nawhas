@@ -2,11 +2,12 @@
   <auth-dialog :loading="loading" @submit="submit" :error="error">
     <template slot="title">Log In</template>
     <template slot="message">
-      <p class="message-line"><strong>Welcome back!</strong> To continue, log into your account.<br>
+      <p class="message-line"><strong>Welcome back!</strong> To continue, log into your account.<br></p>
       <p class="message-line">Don't have an account yet? <a class="link" href="#">Sign up.</a></p>
     </template>
     <v-text-field
         outlined
+        autofocus
         label="Email"
         type="email"
         v-model="form.email"
@@ -25,7 +26,15 @@
       </div>
       <v-spacer></v-spacer>
       <v-btn @click="close" text>Cancel</v-btn>
-      <v-btn type="submit" elevation="0" color="primary" :loading="loading">Log In</v-btn>
+      <v-btn
+          type="submit"
+          elevation="0"
+          color="primary"
+          :loading="loading"
+          :disabled="disabled"
+      >
+        Log In
+      </v-btn>
     </div>
     <template slot="social">
       <social-login-button type="login" provider="google" />
@@ -60,6 +69,10 @@ export default class LoginForm extends Vue {
   private error: string|null = null;
   private invalid: any = {};
   private loading = false;
+
+  get disabled() {
+    return !this.form.email || !this.form.password;
+  }
 
   async submit() {
     this.invalid = {};
@@ -98,7 +111,6 @@ export default class LoginForm extends Vue {
 </script>
 
 <style lang="scss" scoped>
-@import "~vuetify/src/styles/styles";
 .message-line {
   margin: 4px 0;
 }

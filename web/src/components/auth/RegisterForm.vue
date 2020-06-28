@@ -1,69 +1,86 @@
 <template>
-  <v-form @submit.prevent="submit">
-    <v-card class="login-card" :loading="loading">
-      <v-card-title>
-        <h2 class="card-title">Sign Up</h2>
-      </v-card-title>
-      <v-card-text>
-        <v-alert type="error" v-if="error" outlined class="mb-6">{{ error }}</v-alert>
-        <v-text-field outlined label="Name" v-model="name" :error-messages="invalid.name" />
-        <v-text-field outlined label="Email" type="email" v-model="email" :error-messages="invalid.email" />
-        <v-text-field
-          outlined
-          label="Password"
-          type="password"
-          v-model="password"
-          :error-messages="invalid.password"
-        />
-        <v-text-field
-          outlined
-          label="Confirm Password"
-          type="password"
-          v-model="confirmPassword"
-          :error-messages="invalid.confirmPassword"
-        />
-        <v-text-field
-          outlined
-          label="Nickname (optional)"
-          v-model="nickname"
-          :error-messages="invalid.nickname"
-        />
-      </v-card-text>
-      <v-card-actions>
-        <v-btn @click="close" text>Cancel</v-btn>
-        <v-spacer></v-spacer>
-        <v-btn type="submit" :disabled="!canSubmit" text color="primary" :loading="loading">Sign Up</v-btn>
-      </v-card-actions>
-    </v-card>
-  </v-form>
+  <auth-dialog :loading="loading" @submit="submit" :error="error">
+    <template slot="title">Sign Up</template>
+    <template slot="message">
+      <p class="message-line">
+        Create an account on Nawhas.com to
+        <br>
+        create collections, edit write-ups, and more.
+      <p class="message-line">
+        Already have an account? <a class="link" href="#">Log in.</a>
+      </p>
+    </template>
+    <v-text-field
+        outlined
+        autofocus
+        label="Name"
+        v-model="form.name"
+        :error-messages="invalid.name"
+    />
+    <v-text-field
+        outlined
+        label="Email"
+        type="email"
+        v-model="form.email"
+        :error-messages="invalid.email"
+    />
+    <v-text-field
+        outlined
+        label="Password"
+        type="password"
+        v-model="form.password"
+        :error-messages="invalid.password"
+    />
+    <div class="actions">
+      <v-spacer></v-spacer>
+      <v-btn @click="close" text>Cancel</v-btn>
+      <v-btn
+          type="submit"
+          elevation="0"
+          color="primary"
+          :loading="loading"
+          :disabled="disabled"
+      >
+        Sign up
+      </v-btn>
+    </div>
+    <template slot="social">
+      <social-login-button type="register" provider="google" />
+      <social-login-button type="register" provider="facebook" />
+    </template>
+  </auth-dialog>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import HeroBanner from '@/components/HeroBanner.vue';
+import AuthDialog from '@/components/auth/AuthDialog.vue';
+import SocialLoginButton from '@/components/auth/SocialLoginButton.vue';
 import { Actions as AuthActions } from '@/store/modules/auth';
+
+interface SignUpFormData {
+  name: string;
+  email: string;
+  password: string;
+}
+
+function createForm(): SignUpFormData {
+  return { name: '', email: '', password: '' };
+}
 
 @Component({
   components: {
-    HeroBanner,
+    AuthDialog,
+    SocialLoginButton,
   },
 })
 export default class RegisterForm extends Vue {
-  private name = '';
-  private email = '';
-  private password = '';
-  private confirmPassword = '';
-  private nickname: null|string = null;
+  private form: SignUpFormData = createForm();
   private error: string | null = null;
   private invalid: any = {};
   private loading = false;
 
-  get canSubmit() {
-    if (!this.email || !this.name || !this.password || !this.confirmPassword) {
-      return false;
-    }
-
-    return true;
+  get disabled() {
+    return !this.form.email || !this.form.name || !this.form.password;
   }
 
   async submit() {
@@ -71,19 +88,8 @@ export default class RegisterForm extends Vue {
     this.error = null;
     this.loading = true;
 
-    if (this.password !== this.confirmPassword) {
-      this.invalid.confirmPassword = 'The password confirmation does not match.';
-      this.loading = false;
-      return false;
-    }
-
     try {
-      await this.$store.dispatch(AuthActions.Register, {
-        name: this.name,
-        email: this.email,
-        password: this.password,
-        nickname: this.nickname,
-      });
+      await this.$store.dispatch(AuthActions.Register, this.form);
       this.close();
     } catch (e) {
       if (!e.response) {
@@ -105,24 +111,21 @@ export default class RegisterForm extends Vue {
   }
 
   close() {
-    this.name = '';
-    this.email = '';
-    this.password = '';
-    this.confirmPassword = '';
-    this.nickname = '';
+    this.form = createForm();
     this.$emit('close');
   }
 }
 </script>
 
 <style lang="scss" scoped>
-@import '~vuetify/src/styles/styles';
-.login-card {
-  padding: 0 24px 24px;
+.message-line {
+  margin: 4px 0;
 }
-.card-title {
-  text-align: center;
-  margin: 24px auto 16px;
-  font-weight: 300;
+.link {
+  text-decoration: none;
+}
+.actions {
+  display: flex;
+  align-items: center;
 }
 </style>
