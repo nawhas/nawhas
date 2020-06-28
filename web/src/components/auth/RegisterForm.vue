@@ -6,7 +6,7 @@
         Create an account on Nawhas.com to
         <br>
         create collections, edit write-ups, and more.
-      <p class="message-line">
+      <p class="message-line" v-if="false">
         Already have an account? <a class="link" href="#">Log in.</a>
       </p>
     </template>

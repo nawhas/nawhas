@@ -3,7 +3,7 @@
     <template slot="title">Log In</template>
     <template slot="message">
       <p class="message-line"><strong>Welcome back!</strong> To continue, log into your account.<br></p>
-      <p class="message-line">Don't have an account yet? <a class="link" href="#">Sign up.</a></p>
+      <p class="message-line" v-if="false">Don't have an account yet? <a class="link" href="#">Sign up.</a></p>
     </template>
     <v-text-field
         outlined
@@ -21,7 +21,7 @@
         :error-messages="invalid.password"
     />
     <div class="actions">
-      <div class="forgot-password">
+      <div class="forgot-password" v-if="false">
         <a class="link body-2" href="#">Forgot password?</a>
       </div>
       <v-spacer></v-spacer>
