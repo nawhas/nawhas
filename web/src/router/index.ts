@@ -53,6 +53,11 @@ const routes = [
         name: 'About',
         component: () => import(/* webpackChunkName: "about" */ '@/views/public/AboutView.vue'),
       },
+      {
+        path: 'moderator-tools',
+        name: 'ModeratorTools',
+        component: () => import(/* webpackChunkName: "moderator-tools" */ '@/views/public/ModeratorTools.vue'),
+      },
     ],
   },
   {

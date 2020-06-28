@@ -79,6 +79,13 @@
 
           <div class="user-menu__section">
             <v-list>
+              <v-list-item @click="goToModeratorTools">
+                <v-list-item-content>
+                  <v-list-item-title class="user-menu__action">
+                    <v-icon>security</v-icon> <div class="user-menu__action__text">Moderator Tools</div>
+                  </v-list-item-title>
+                </v-list-item-content>
+              </v-list-item>
               <v-list-item @click="showWhatsNew">
                 <v-list-item-content>
                   <v-list-item-title class="user-menu__action">
@@ -191,6 +198,10 @@ export default class UserMenu extends Vue {
   register() {
     this.showRegisterDialog = true;
     this.open = false;
+  }
+
+  goToModeratorTools() {
+    this.$router.push({ name: 'ModeratorTools' });
   }
 }
 </script>
