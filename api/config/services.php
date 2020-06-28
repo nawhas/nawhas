@@ -42,18 +42,18 @@ return [
     'facebook' => [
         'client_id' => env('FACEBOOK_APP_ID'),
         'client_secret' => env('FACEBOOK_APP_SECRET'),
-        'redirect' => 'https://api.' . env('APP_DOMAIN') . '/oauth/facebook/callback',
+        'redirect' => '/oauth/facebook/callback',
     ],
 
     'google' => [
         'client_id' => env('GOOGLE_APP_ID'),
         'client_secret' => env('GOOGLE_APP_SECRET'),
-        'redirect' => 'https://api.' . env('APP_DOMAIN') . '/oauth/google/callback',
+        'redirect' => '/oauth/google/callback',
     ],
 
     'apple' => [
         'client_id' => env('APPLE_CLIENT_ID'),
         'client_secret' => env('APPLE_CLIENT_SECRET'),
-        'redirect' => 'https://api.' . env('APP_DOMAIN') . '/oauth/apple/callback',
+        'redirect' => '/oauth/apple/callback',
     ],
 ];

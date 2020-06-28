@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 
 use App\Entities\SocialAccount;
 use App\Entities\User;
+use App\Enum\Role;
 use App\Repositories\SocialAccountRepository;
 use App\Repositories\UserRepository;
 use Illuminate\Auth\AuthenticationException;
@@ -14,6 +15,7 @@ use Illuminate\Contracts\Auth\StatefulGuard;
 use Illuminate\Http\RedirectResponse;
 use Laravel\Socialite\Contracts\Factory as Socialite;
 use Laravel\Socialite\Contracts\User as SocialiteUser;
+use OAuthException;
 use Symfony\Component\HttpFoundation\RedirectResponse as SymfonyRedirectResponse;
 
 class OAuthController extends Controller
@@ -74,15 +76,23 @@ class OAuthController extends Controller
     {
         $user = $this->userRepo->findByEmail($socialiteUser->getEmail());
 
-        if (!$user) {
+        if ($user !== null) {
             // If the user email already exists
             // then we need to redirect to a "connect account" screen.
             // For now, we'll just throw an exception.
 
-            throw new AuthenticationException(__('auth.failed'));
+            throw new OAuthException(__('auth.exists'));
         }
 
-        $this->socialAccountRepo->persist(new SocialAccount($user, $provider, $socialiteUser->getId()));
+        $user = new User(
+            Role::CONTRIBUTOR(),
+            $socialiteUser->getName(),
+            $socialiteUser->getEmail(),
+        );
+
+        $this->socialAccountRepo->persist(
+            new SocialAccount($user, $provider, $socialiteUser->getId())
+        );
 
         return $user;
     }
