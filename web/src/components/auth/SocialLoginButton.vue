@@ -53,7 +53,7 @@ export default class SocialLoginButton extends Vue {
       domain = window.location.origin + domain;
     }
 
-    window.location.assign(`${domain}/v1/auth/login/${this.provider}`);
+    window.location.assign(`${domain}/oauth/${this.provider}/redirect`);
   }
 }
 </script>
