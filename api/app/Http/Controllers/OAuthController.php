@@ -69,7 +69,7 @@ class OAuthController extends Controller
 
         $this->guard->login($user);
 
-        return redirect(config('app.url'));
+        return redirect()->to(config('app.url'));
     }
 
     private function persistUser(string $provider, SocialiteUser $socialiteUser): User
@@ -81,7 +81,7 @@ class OAuthController extends Controller
             // then we need to redirect to a "connect account" screen.
             // For now, we'll just throw an exception.
 
-            throw new OAuthException(__('auth.exists'));
+            throw new \RuntimeException('Not ready.');
         }
 
         $user = new User(
