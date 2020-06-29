@@ -125,14 +125,14 @@ class User implements Entity, TimestampedEntity, Authenticatable
         return $this->email;
     }
 
-    public function getPassword(): string
+    public function getPassword(): ?string
     {
         return $this->password;
     }
 
-    public function setPassword(string $password): void
+    public function setPassword(?string $password): void
     {
-        $this->password = bcrypt($password);
+        $this->password = $password === null ? null : bcrypt($password);
     }
 
     public function getAvatar($size = 128): string

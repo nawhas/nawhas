@@ -18,7 +18,7 @@ class SocialAccountMapping extends EntityMapping
     public function map(Fluent $map)
     {
         $map->uuidPrimaryKey();
-        $map->belongsTo(User::class, 'user');
+        $map->belongsTo(User::class, 'user')->cascadePersist();
         $map->string('provider');
         $map->string('providerId');
         $map->unique(['user_id', 'provider']);

@@ -30,21 +30,30 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | OAuth Providers
+    |--------------------------------------------------------------------------
+    */
+    'oauth' => [
+        'enabled' => ['facebook', 'google'],
+    ],
+
     'facebook' => [
         'client_id' => env('FACEBOOK_APP_ID'),
         'client_secret' => env('FACEBOOK_APP_SECRET'),
-        'redirect' => 'https://api.' . env('APP_DOMAIN') . '/v1/auth/login/facebook/callback',
+        'redirect' => '/oauth/facebook/callback',
     ],
 
     'google' => [
         'client_id' => env('GOOGLE_APP_ID'),
         'client_secret' => env('GOOGLE_APP_SECRET'),
-        'redirect' => 'https://api.' . env('APP_DOMAIN') . '/v1/auth/login/google/callback',
+        'redirect' => '/oauth/google/callback',
     ],
 
-    "apple" => [
-        "client_id" => env("APPLE_CLIENT_ID"),
-        "client_secret" => env("APPLE_CLIENT_SECRET"),
-        'redirect' => 'https://api.' . env('APP_DOMAIN') . '/v1/auth/login/apple/callback',
+    'apple' => [
+        'client_id' => env('APPLE_CLIENT_ID'),
+        'client_secret' => env('APPLE_CLIENT_SECRET'),
+        'redirect' => '/oauth/apple/callback',
     ],
 ];

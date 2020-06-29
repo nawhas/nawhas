@@ -49,11 +49,11 @@ export default class SocialLoginButton extends Vue {
 
   onClick() {
     let domain = API_DOMAIN;
-    if (!domain.startsWith('http')) {
+    if (domain !== undefined && !domain.startsWith('http')) {
       domain = window.location.origin + domain;
     }
 
-    window.location.assign(`${domain}/v1/auth/login/${this.provider}`);
+    window.location.assign(`${domain}/oauth/${this.provider}`);
   }
 }
 </script>
