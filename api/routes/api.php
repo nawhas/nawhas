@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AlbumsController;
+use App\Http\Controllers\Api\AuditController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\FeaturesController;
 use App\Http\Controllers\Api\FeedbackController;
@@ -87,5 +88,10 @@ Route::prefix('v1')->group(function () {
     Route::prefix('popular')->group(function () {
         Route::get('/reciters', [PopularEntitiesController::class, 'reciters']);
         Route::get('/tracks', [PopularEntitiesController::class, 'tracks']);
+    });
+
+    // Audit routes
+    Route::prefix('audit')->group(function () {
+        Route::get('/', [AuditController::class, 'index']);
     });
 });
