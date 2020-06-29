@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Database\Doctrine\EntityManager;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\Auth\RegisterRequest;
 use App\Http\Transformers\UserTransformer;
 use Illuminate\Auth\AuthenticationException;
 use App\Entities\User;
 use App\Enum\Role;
+use App\Repositories\UserRepository;
 use Illuminate\Contracts\Auth\{Factory as AuthFactory, StatefulGuard};
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
@@ -19,13 +19,13 @@ use Illuminate\Http\Response;
 class AuthController extends Controller
 {
     private StatefulGuard $guard;
-    private EntityManager $em;
+    private UserRepository $userRepository;
 
-    public function __construct(AuthFactory $auth, UserTransformer $transformer, EntityManager $em)
+    public function __construct(AuthFactory $auth, UserTransformer $transformer, UserRepository $userRepository)
     {
         $this->guard = $auth->guard('web');
         $this->transformer = $transformer;
-        $this->em = $em;
+        $this->userRepository = $userRepository;
     }
 
     public function login(LoginRequest $request): JsonResponse
@@ -42,15 +42,16 @@ class AuthController extends Controller
         $role = Role::CONTRIBUTOR();
         $name = $request->get('name');
         $email = $request->get('email');
-        $password = bcrypt($request->get('password'));
+        $password = $request->get('password');
 
-        $user = new User($role, $name, $email, $password);
+        $user = new User($role, $name, $email);
+        $user->setPassword($password);
 
         if ($request->get('nickname')) {
             $user->setNickname($request->get('nickname'));
         }
 
-        $this->em->persist($user);
+        $this->userRepository->persist($user);
 
         $this->guard->login($user, false);
 

@@ -15,7 +15,14 @@ class EventServiceProvider extends ServiceProvider
      *
      * @var array
      */
-    protected $listen = [];
+    protected $listen = [
+        Registered::class => [
+            SendEmailVerificationNotification::class,
+        ],
+        \SocialiteProviders\Manager\SocialiteWasCalled::class => [
+            '\SocialiteProviders\\Apple\\AppleExtendSocialite@handle',
+        ],
+    ];
 
     /**
      * Register any events for your application.
