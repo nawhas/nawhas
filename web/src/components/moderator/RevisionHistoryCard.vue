@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-card class="audit-card" outlined>
+    <v-card class="audit-card" outlined @click="open = !open">
       <div class="audit-card__avatar">
         <v-avatar size="40" class="avatar">
           <v-icon color="white">{{ icon }}</v-icon>
@@ -21,6 +21,17 @@
         <div class="audit-card__name caption">{{ audit.user.email }}</div>
       </div>
     </v-card>
+    <v-card v-show="open">
+      <template v-for="(value, propertyName) in audit.new">
+        <div v-if="displayChange(value, propertyName)" :key="propertyName" class="changes">
+          <div
+            class="old-values"
+            v-if="!isCreated"
+          >Old {{ propertyName }} => {{ audit.old[propertyName] }}</div>
+          <div class="new-values">New {{ propertyName }} => {{ value }}</div>
+        </div>
+      </template>
+    </v-card>
   </div>
 </template>
 
@@ -30,6 +41,7 @@ import { Data as AuditData, ChangeType, Entity } from '@/entities/audit';
 
 @Component
 export default class RevisionHistoryCard extends Vue {
+  private open = false;
   @Prop() private audit!: AuditData;
 
   get changeTypeColor() {
@@ -55,6 +67,7 @@ export default class RevisionHistoryCard extends Vue {
     return this.audit.new.name;
   }
 
+  // Need to return the correct value
   get subtitle() {
     if (this.audit.entity === Entity.Reciter) {
       return false;
@@ -85,6 +98,26 @@ export default class RevisionHistoryCard extends Vue {
 
   get isDeleted() {
     return this.audit.type === ChangeType.Deleted;
+  }
+
+  displayChange(value, propertyName) {
+    if (this.isDeleted) {
+      return false;
+    }
+    if (this.isCreated && !value) {
+      return false;
+    }
+    if (this.isCreated) {
+      return true;
+    }
+    if (this.audit.old[propertyName] === undefined) {
+      return false;
+    }
+    console.log(propertyName, value);
+    if (value === this.audit.old[propertyName]) {
+      return false;
+    }
+    return true;
   }
 }
 </script>
@@ -132,5 +165,13 @@ export default class RevisionHistoryCard extends Vue {
 .change-type-icon {
   margin-top: -4px;
   margin-right: 6px;
+}
+
+.changes {
+  display: flex;
+
+  .old-values {
+    margin-right: 6px;
+  }
 }
 </style>

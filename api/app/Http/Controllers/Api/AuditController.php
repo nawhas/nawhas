@@ -20,16 +20,17 @@ class AuditController extends Controller
             ],
             "entity" => "reciter",
             "entityId" => "a6655aa2-b9c4-11ea-864d-0242ac120005",
-            "old" => [
-                "name" => "Asif Ali",
-                "description" => null,
-                "avatar" => null,
-                "createdAt" => null,
-                "updatedAt" => null
-            ],
+            // "old" => [
+            //     "name" => "Asif Ali",
+            //     "description" => null,
+            //     "avatar" => null,
+            //     "createdAt" => null,
+            //     "updatedAt" => null
+            // ],
+            "old" => null,
             "new" => [
                 "name" => "Zain Mehdi",
-                "description" => null,
+                "description" => 'Description has been changed',
                 "avatar" => null,
                 "createdAt" => null,
                 "updatedAt" => null
