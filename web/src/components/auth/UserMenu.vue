@@ -211,7 +211,7 @@ export default class UserMenu extends Vue {
   }
 
   goToModeratorDashboard() {
-    this.$router.push({ name: 'ModeratorDashboard' });
+    this.$router.push('/moderator-dashboard');
     this.open = false;
   }
 }

@@ -57,7 +57,18 @@ const routes = [
       {
         path: 'moderator-dashboard',
         component: ModeratorLayout,
-        children: [],
+        children: [
+          {
+            path: 'revision-history',
+            name: 'ModeratorRevisionHistory',
+            component: () => import(/* webpackChunkName: "revision-history" */ '@/views/moderator/RevisionHistory.vue'),
+          },
+          {
+            path: 'users',
+            name: 'ModeratorUsers',
+            component: () => import(/* webpackChunkName: "revision-history" */ '@/views/moderator/RevisionHistory.vue'),
+          },
+        ],
       },
     ],
   },
