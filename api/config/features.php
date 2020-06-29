@@ -6,6 +6,11 @@ return [
     'overrides' => [
         'local' => [
             Definitions\PublicUserRegistration::NAME => true,
+            Definitions\SocialAuthentication::NAME => true,
+        ],
+        'staging' => [
+            Definitions\PublicUserRegistration::NAME => true,
+            Definitions\SocialAuthentication::NAME => true,
         ],
     ],
 ];
