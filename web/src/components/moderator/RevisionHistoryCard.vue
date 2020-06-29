@@ -7,17 +7,17 @@
         </v-avatar>
       </div>
       <div class="audit-card__text">
-        <div class="audit-card__name body-2">
+        <div class="audit-card__name body-1">
           {{ name }}
           <span class="subtitle" v-if="subtitle">{{ subtitle }}</span>
         </div>
-        <div class="audit-card__name caption">
-          <v-avatar :color="changeTypeColor" size="18" class="change-type-icon" />
-          <span class="change-type">{{ audit.type }}</span>
+        <div class="audit-card__name change-type-container">
+          <v-avatar :color="changeTypeColor" size="12" class="change-type-icon" />
+          <span class="change-type overline">{{ audit.type }}</span>
         </div>
       </div>
       <div class="audit-card__text audit-card__text-right">
-        <div class="audit-card__name body-2">2 hours ago</div>
+        <div class="audit-card__name caption">2 hours ago</div>
         <div class="audit-card__name caption">{{ audit.user.email }}</div>
       </div>
     </v-card>
@@ -130,7 +130,9 @@ export default class RevisionHistoryCard extends Vue {
   display: flex;
   align-items: center;
   cursor: pointer;
+  background-color: transparent;
   @include transition(background-color, box-shadow);
+  margin-bottom: 10px;
 
   &:hover:not(.audit-card--featured) {
     background-color: rgba(0, 0, 0, 0.1) !important;
@@ -151,6 +153,7 @@ export default class RevisionHistoryCard extends Vue {
 
   .audit-card__text-right {
     margin-left: auto;
+    text-align: right;
   }
 
   .audit-card__avatar .avatar {
@@ -158,12 +161,16 @@ export default class RevisionHistoryCard extends Vue {
   }
 }
 
+.change-type-container {
+  display: flex;
+  align-items: center;
+}
+
 .change-type {
   text-transform: uppercase;
 }
 
 .change-type-icon {
-  margin-top: -4px;
   margin-right: 6px;
 }
 

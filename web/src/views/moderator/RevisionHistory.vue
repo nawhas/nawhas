@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>Revision History</h1>
+    <h2>Revision History</h2>
     <revision-history-card v-for="item in items" :key="item.id" :audit="item" />
   </div>
 </template>
@@ -24,9 +24,8 @@ export default class RevisionHistory extends Vue {
   }
 
   async fetchAudit() {
-    this.items = [];
     const response = await client.get('v1/audit');
-    this.items.push(new Audit(response.data));
+    this.items = response.data.data.map((data) => new Audit(data));
   }
 }
 </script>
@@ -34,5 +33,11 @@ export default class RevisionHistory extends Vue {
 <style lang="scss" scoped>
 .audit-card {
   height: 75px;
+}
+
+h2 {
+  font-weight: 300;
+  font-size: 34px;
+  margin-bottom: 16px;
 }
 </style>

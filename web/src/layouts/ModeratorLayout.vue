@@ -1,20 +1,18 @@
 <template>
   <v-container>
     <div class="moderator">
-      <v-card max-width="300">
-        <v-list class="pa-0">
-          <v-list-item-group v-model="item" color="primary">
-            <v-list-item v-for="(item, i) in items" :key="i" :to="{ name: item.linkName }">
-              <v-list-item-icon>
-                <v-icon v-text="item.icon"></v-icon>
-              </v-list-item-icon>
-              <v-list-item-content>
-                <v-list-item-title v-text="item.text"></v-list-item-title>
-              </v-list-item-content>
-            </v-list-item>
-          </v-list-item-group>
-        </v-list>
-      </v-card>
+      <v-list nav dense width="250" class="side-nav pa-0">
+        <v-list-item-group v-model="item" color="primary">
+          <v-list-item v-for="(item, i) in items" :key="i" :to="{ name: item.linkName }">
+            <v-list-item-icon>
+              <v-icon v-text="item.icon"></v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title v-text="item.text"></v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+        </v-list-item-group>
+      </v-list>
       <v-content class="moderator-content pa-0">
         <router-view />
       </v-content>
@@ -46,5 +44,8 @@ export default class ModeratorLayout extends Vue {
 }
 .moderator-content {
   margin-left: 20px;
+}
+.side-nav {
+  background-color: transparent;
 }
 </style>
