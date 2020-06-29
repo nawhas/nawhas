@@ -82,7 +82,7 @@
               <v-list-item @click="goToModeratorDashboard" v-if="isModerator">
                 <v-list-item-content>
                   <v-list-item-title class="user-menu__action">
-                    <v-icon>security</v-icon> <div class="user-menu__action__text">Moderator Tools</div>
+                    <v-icon>security</v-icon> <div class="user-menu__action__text">Moderator dashboard</div>
                   </v-list-item-title>
                 </v-list-item-content>
               </v-list-item>
@@ -212,6 +212,7 @@ export default class UserMenu extends Vue {
 
   goToModeratorDashboard() {
     this.$router.push({ name: 'ModeratorDashboard' });
+    this.open = false;
   }
 }
 </script>

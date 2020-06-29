@@ -2,6 +2,7 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 import Public from '@/layouts/Public.vue';
 import LyricsPrint from '@/layouts/LyricsPrint.vue';
+import ModeratorLayout from '@/layouts/ModeratorLayout.vue';
 import goTo from 'vuetify/es5/services/goto';
 
 Vue.use(VueRouter);
@@ -55,9 +56,8 @@ const routes = [
       },
       {
         path: 'moderator-dashboard',
-        name: 'ModeratorDashboard',
-        component:
-        () => import(/* webpackChunkName: "moderator-dashboard" */ '@/views/public/moderator/ModeratorDashboard.vue'),
+        component: ModeratorLayout,
+        children: [],
       },
     ],
   },
