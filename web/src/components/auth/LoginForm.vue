@@ -1,48 +1,86 @@
 <template>
-  <v-form @submit.prevent="submit">
-    <v-card class="login-card" :loading="loading">
-      <v-card-title>
-        <h2 class="card-title">Welcome Back</h2>
-      </v-card-title>
-      <v-card-text>
-        <v-alert type="error" v-if="error" outlined class="mb-6">
-          {{ error }}
-        </v-alert>
-        <v-text-field outlined label="Email" v-model="email" :error-messages="invalid.email" />
-        <v-text-field outlined label="Password" type="password" v-model="password" :error-messages="invalid.password" />
-      </v-card-text>
-      <v-card-actions>
-        <v-btn @click="close" text>Cancel</v-btn>
-        <v-spacer></v-spacer>
-        <v-btn type="submit" text color="primary" :loading="loading">Log In</v-btn>
-      </v-card-actions>
-    </v-card>
-  </v-form>
+  <auth-dialog :loading="loading" @submit="submit" :error="error">
+    <template slot="title">Log In</template>
+    <template slot="message">
+      <p class="message-line"><strong>Welcome back!</strong> To continue, log into your account.<br></p>
+      <p class="message-line" v-if="false">Don't have an account yet? <a class="link" href="#">Sign up.</a></p>
+    </template>
+    <v-text-field
+        outlined
+        autofocus
+        label="Email"
+        type="email"
+        v-model="form.email"
+        :error-messages="invalid.email"
+    />
+    <v-text-field
+        outlined
+        label="Password"
+        type="password"
+        v-model="form.password"
+        :error-messages="invalid.password"
+    />
+    <div class="actions">
+      <div class="forgot-password" v-if="false">
+        <a class="link body-2" href="#">Forgot password?</a>
+      </div>
+      <v-spacer></v-spacer>
+      <v-btn @click="close" text>Cancel</v-btn>
+      <v-btn
+          type="submit"
+          elevation="0"
+          color="primary"
+          :loading="loading"
+          :disabled="disabled"
+      >
+        Log In
+      </v-btn>
+    </div>
+    <template slot="social">
+      <social-login-button type="login" provider="google" />
+      <social-login-button type="login" provider="facebook" />
+    </template>
+  </auth-dialog>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import HeroBanner from '@/components/HeroBanner.vue';
+import AuthDialog from '@/components/auth/AuthDialog.vue';
 import { Actions as AuthActions } from '@/store/modules/auth';
+import SocialLoginButton from '@/components/auth/SocialLoginButton.vue';
+
+interface LoginFormData {
+  email: string;
+  password: string;
+}
+
+function createForm(): LoginFormData {
+  return { email: '', password: '' };
+}
 
 @Component({
   components: {
-    HeroBanner,
+    SocialLoginButton,
+    AuthDialog,
   },
 })
 export default class LoginForm extends Vue {
-  private email = '';
-  private password = '';
+  private form: LoginFormData = createForm();
   private error: string|null = null;
   private invalid: any = {};
   private loading = false;
+
+  get disabled() {
+    return !this.form.email || !this.form.password;
+  }
 
   async submit() {
     this.invalid = {};
     this.error = null;
     this.loading = true;
+
     try {
-      await this.$store.dispatch(AuthActions.Login, { email: this.email, password: this.password });
+      await this.$store.dispatch(AuthActions.Login, this.form);
       this.close();
     } catch (e) {
       if (!e.response) {
@@ -66,21 +104,21 @@ export default class LoginForm extends Vue {
   }
 
   close() {
-    this.email = '';
-    this.password = '';
+    this.form = createForm();
     this.$emit('close');
   }
 }
 </script>
 
 <style lang="scss" scoped>
-@import "~vuetify/src/styles/styles";
-.login-card {
-  padding: 0 24px 24px;
+.message-line {
+  margin: 4px 0;
 }
-.card-title {
-  text-align: center;
-  margin: 24px auto 16px;
-  font-weight: 300;
+.link {
+  text-decoration: none;
+}
+.actions {
+  display: flex;
+  align-items: center;
 }
 </style>
