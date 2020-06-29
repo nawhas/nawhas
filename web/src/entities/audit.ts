@@ -4,18 +4,25 @@ export interface Data {
   id: string;
   type: ChangeType;
   user: User;
-  entity: string;
+  entity: Entity;
   entityId: string;
-  old?: Array<object>;
-  new?: Array<object>;
+  old?: any;
+  new?: any;
   createdAt?: string;
   updatedAt?: string;
 }
 
 export enum ChangeType {
-  Created = 'creaded',
+  Created = 'created',
   Modified = 'modified',
   Deleted = 'deleted',
+}
+
+export enum Entity {
+  Reciter = 'reciter',
+  Album = 'album',
+  Track = 'track',
+  Lyrics = 'lyrics'
 }
 
 export class Audit {
@@ -33,7 +40,7 @@ export class Audit {
     return this.data.user;
   }
 
-  get entity(): string {
+  get entity(): Entity {
     return this.data.entity;
   }
 
@@ -41,11 +48,11 @@ export class Audit {
     return this.data.entityId;
   }
 
-  get old(): Array<object> | undefined {
+  get old(): any | undefined {
     return this.data.old;
   }
 
-  get new(): Array<object> | undefined {
+  get new(): any | undefined {
     return this.data.new;
   }
 
