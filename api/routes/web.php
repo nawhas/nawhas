@@ -7,7 +7,11 @@ use App\Modules\Features\Http\Middleware\EnforceFeatureFlags;
 Route::get('/alive', [Controllers\HealthCheckController::class, 'status']);
 
 Route::get('/oauth/{provider}', [Controllers\OAuthController::class, 'redirect'])
-    ->middleware(EnforceFeatureFlags::in([Features\PublicUserRegistration::NAME]));
+    ->middleware(EnforceFeatureFlags::in([
+        Features\SocialAuthentication::NAME,
+    ]));
 
 Route::get('/oauth/{provider}/callback', [Controllers\OAuthController::class, 'callback'])
-    ->middleware(EnforceFeatureFlags::in([Features\PublicUserRegistration::NAME]));
+    ->middleware(EnforceFeatureFlags::in([
+        Features\SocialAuthentication::NAME,
+    ]));

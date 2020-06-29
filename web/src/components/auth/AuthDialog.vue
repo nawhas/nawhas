@@ -18,7 +18,7 @@
         </v-alert>
         <slot></slot>
       </v-form>
-      <div class="auth-dialog__social">
+      <div class="auth-dialog__social" v-show="socialAuthEnabled">
         <labeled-divider label="or" />
         <slot name="social"></slot>
       </div>
@@ -30,6 +30,8 @@
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import LogoIcon from '@/assets/icon.svgx';
 import LabeledDivider from '@/components/ui/LabeledDivider.vue';
+import { Getters as FeatureGetters } from '@/store/modules/features';
+import { SOCIAL_AUTHENTICATION } from '@/entities/features';
 
 @Component({
   components: {
@@ -40,6 +42,11 @@ import LabeledDivider from '@/components/ui/LabeledDivider.vue';
 export default class AuthDialog extends Vue {
   @Prop({ type: Boolean }) private readonly loading !: boolean;
   @Prop({ type: String }) private readonly error !: string;
+
+
+  get socialAuthEnabled() {
+    return this.$store.getters[FeatureGetters.Enabled](SOCIAL_AUTHENTICATION);
+  }
 }
 </script>
 

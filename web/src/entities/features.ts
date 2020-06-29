@@ -3,3 +3,4 @@ export interface Features {
 }
 
 export const PUBLIC_USER_REGISTRATION = 'registration.public';
+export const SOCIAL_AUTHENTICATION = 'auth.social';
