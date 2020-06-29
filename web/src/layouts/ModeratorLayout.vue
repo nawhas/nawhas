@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <div class="moderator">
-      <v-card max-width="300" flat>
+      <v-card max-width="300">
         <v-list class="pa-0">
           <v-list-item-group v-model="item" color="primary">
             <v-list-item v-for="(item, i) in items" :key="i" :to="{ name: item.linkName }">
