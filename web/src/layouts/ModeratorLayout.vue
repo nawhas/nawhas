@@ -29,7 +29,11 @@ import { Component, Vue } from 'vue-property-decorator';
 export default class ModeratorLayout extends Vue {
   private item = 0;
   private items: Array<object> = [
-    { text: 'Revision History', icon: 'history', linkName: 'ModeratorRevisionHistory' },
+    {
+      text: 'Revision History',
+      icon: 'history',
+      linkName: 'ModeratorRevisionHistory',
+    },
     { text: 'Users', icon: 'people', linkName: 'ModeratorUsers' },
   ];
 }
@@ -41,7 +45,6 @@ export default class ModeratorLayout extends Vue {
   margin-top: 20px;
 }
 .moderator-content {
-  width: 100%;
   margin-left: 20px;
 }
 </style>
