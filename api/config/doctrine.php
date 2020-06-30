@@ -29,6 +29,7 @@ return [
             'paths' => [
                 base_path('app/Entities'),
                 base_path('app/Visits/Entities'),
+                ...glob(base_path('app/Modules/**/Entities')),
             ],
             'repository' => Doctrine\ORM\EntityRepository::class,
             'proxies' => [
