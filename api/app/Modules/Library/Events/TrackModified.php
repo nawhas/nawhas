@@ -6,19 +6,16 @@ namespace App\Modules\Library\Events;
 
 use App\Entities\Contracts\Events\EntityPersisted;
 use App\Entities\Track;
-use App\Entities\User;
 use App\Enum\ChangeType;
 use App\Modules\Audit\Events\AuditableEvent;
 
 class TrackModified implements EntityPersisted, AuditableEvent
 {
     public Track $track;
-    public User $user;
 
-    public function __construct(Track $track, User $user)
+    public function __construct(Track $track)
     {
         $this->track = $track;
-        $this->user = $user;
     }
 
     public function getEntity(): Track
@@ -34,10 +31,5 @@ class TrackModified implements EntityPersisted, AuditableEvent
     public function getChangeType(): ChangeType
     {
         return ChangeType::UPDATED();
-    }
-
-    public function getUser(): User
-    {
-        return $this->user;
     }
 }
