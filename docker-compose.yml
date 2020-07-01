@@ -69,7 +69,7 @@ services:
       - ./docker/postgres/.env
     volumes:
       - postgres:/var/lib/postgresql/data
-      - ./docker/postgres/sync.sh:/usr/bin/syncdb
+      - ./docker/postgres/scripts:/usr/local/sbin
     networks:
       - nawhas
   cache:
