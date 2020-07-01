@@ -36,11 +36,16 @@ if [ $# -gt 0 ];then
       run api \
         ./vendor/bin/phpunit "$@"
 
-    # If "db" is used, run mysql
-    elif [ "$1" == "db" ] || [ "$1" == "mysql" ]; then
-      shift 1
-      run db \
-        mysql -u docker -d nawhas "$@"
+    elif [ "$1" == "db:sync" ]; then
+      $COMPOSE up -d --force-recreate db
+      run api php artisan doctrine:migrations:migrate
+      run db sync_database
+
+    elif [ "$1" == "db:refresh" ]; then
+      $COMPOSE up -d --force-recreate db
+      run db clean_database
+      run api php artisan doctrine:migrations:migrate
+      run db sync_database
 
     # Else, pass-thru args to docker-compose
     else

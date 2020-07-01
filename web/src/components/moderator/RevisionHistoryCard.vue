@@ -113,7 +113,6 @@ export default class RevisionHistoryCard extends Vue {
     if (this.audit.old[propertyName] === undefined) {
       return false;
     }
-    console.log(propertyName, value);
     if (value === this.audit.old[propertyName]) {
       return false;
     }
