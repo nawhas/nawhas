@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Entities;
 
 use App\Entities\Behaviors\HasTimestamps;
+use App\Modules\Audit\Entities\AuditableEntity;
 use App\Visits\Entities\TrackVisit;
 use App\Visits\Visitable;
 use App\Entities\Contracts\{Entity, TimestampedEntity};
@@ -18,7 +19,7 @@ use Illuminate\Support\Str;
 use Ramsey\Uuid\{Uuid, UuidInterface};
 use Zain\LaravelDoctrine\Jetpack\Serializer\SerializesAttributes;
 
-class Track implements Entity, TimestampedEntity, Visitable
+class Track implements Entity, TimestampedEntity, Visitable, AuditableEntity
 {
     use HasTimestamps;
     use SerializesAttributes;
@@ -129,6 +130,18 @@ class Track implements Entity, TimestampedEntity, Visitable
     public function visit(): TrackVisit
     {
         return new TrackVisit($this);
+    }
+
+    public function toArray()
+    {
+        return [
+            'id' => $this->getId(),
+            'reciterId' => $this->getReciter()->getId(),
+            'albumId' => $this->getAlbum()->getId(),
+            'title' => $this->getTitle(),
+            'slug' => $this->getSlug(),
+            'lyrics' => $this->getLyrics()->toArray(),
+        ];
     }
 
     public function getTrackedFields(): array
