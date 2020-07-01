@@ -7,7 +7,7 @@ namespace App\Http\Controllers\Api;
 use App\Entities\Reciter;
 use App\Http\Controllers\Controller;
 use App\Http\Transformers\ReciterTransformer;
-use App\Modules\Library\Events\ReciterCreated;
+use App\Modules\Library\Actions\CreateReciterAction;
 use App\Modules\Library\Events\ReciterModified;
 use App\Repositories\ReciterRepository;
 use App\Support\Pagination\PaginationState;
@@ -36,16 +36,12 @@ class RecitersController extends Controller
         return $this->respondWithPaginator($reciters);
     }
 
-    public function store(Request $request): JsonResponse
+    public function store(Request $request, CreateReciterAction $action): JsonResponse
     {
-        $reciter = new Reciter(
+        $reciter = $action->execute(
             $request->get('name'),
             $request->get('description')
         );
-
-        event(new ReciterCreated($reciter, $request->user()));
-
-        $this->repository->persist($reciter);
 
         return $this->respondWithItem($reciter);
     }
@@ -66,7 +62,7 @@ class RecitersController extends Controller
             $reciter->setDescription($request->get('description'));
         }
 
-        event(new ReciterModified($reciter, $request->user()));
+        event(new ReciterModified($reciter));
 
         $this->repository->persist($reciter);
 
@@ -87,7 +83,7 @@ class RecitersController extends Controller
             Storage::delete($existing);
         }
 
-        event(new ReciterModified($reciter, $request->user()));
+        event(new ReciterModified($reciter));
         $this->repository->persist($reciter);
 
         return $this->respondWithItem($reciter);
