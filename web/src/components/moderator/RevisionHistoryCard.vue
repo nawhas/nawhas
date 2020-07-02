@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-card class="audit-card" outlined @click="open = !open">
+    <v-card class="audit-card" outlined>
       <div class="audit-card__avatar">
         <v-avatar size="40" class="avatar">
           <v-icon color="white">{{ icon }}</v-icon>
@@ -21,16 +21,8 @@
         <div class="audit-card__name caption">{{ audit.user.email }}</div>
       </div>
     </v-card>
-    <v-card v-show="open">
-      <template v-for="(value, propertyName) in audit.new">
-        <div v-if="displayChange(value, propertyName)" :key="propertyName" class="changes">
-          <div
-            class="old-values"
-            v-if="!isCreated"
-          >Old {{ propertyName }} => {{ audit.old[propertyName] }}</div>
-          <div class="new-values">New {{ propertyName }} => {{ value }}</div>
-        </div>
-      </template>
+    <v-card v-if="diff">
+      <prism language="diff" class="language-diff-json" :code="diff"></prism>
     </v-card>
   </div>
 </template>
@@ -38,11 +30,24 @@
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator';
 import { Data as AuditData, ChangeType, Entity } from '@/entities/audit';
+import * as Diff from 'diff';
+import 'prismjs';
+import 'prismjs/components/prism-json';
+import 'prismjs/components/prism-diff';
+import 'prismjs/plugins/diff-highlight/prism-diff-highlight';
+import Prism from 'vue-prism-component';
 
-@Component
+@Component({
+  components: {
+    Prism,
+  },
+})
 export default class RevisionHistoryCard extends Vue {
-  private open = false;
   @Prop() private audit!: AuditData;
+
+  get test() {
+    return JSON.stringify(this.audit.old, null, 2);
+  }
 
   get changeTypeColor() {
     if (this.isCreated) {
@@ -100,29 +105,16 @@ export default class RevisionHistoryCard extends Vue {
     return this.audit.type === ChangeType.Deleted;
   }
 
-  displayChange(value, propertyName) {
-    if (this.isDeleted) {
-      return false;
+  get diff() {
+    if (!this.isModified) {
+      return null;
     }
-    if (this.isCreated && !value) {
-      return false;
-    }
-    if (this.isCreated) {
-      return true;
-    }
-    if (this.audit.old[propertyName] === undefined) {
-      return false;
-    }
-    console.log(propertyName, value);
-    if (value === this.audit.old[propertyName]) {
-      return false;
-    }
-    return true;
+    return Diff.createPatch('patch', JSON.stringify(this.audit.old, null, 2), JSON.stringify(this.audit.new, null, 2));
   }
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 @import '../../styles/theme';
 
 .audit-card {
@@ -180,5 +172,114 @@ export default class RevisionHistoryCard extends Vue {
   .old-values {
     margin-right: 6px;
   }
+}
+
+pre,
+code {
+  margin: 0;
+  background: transparent;
+  font-family: 'Inconsolata', monospace;
+  font-weight: 300;
+  font-size: 15px;
+  line-height: 1.55;
+}
+code {
+  position: relative;
+  box-shadow: none;
+  overflow-x: auto;
+  overflow-y: hidden;
+  word-break: break-word;
+  flex-wrap: wrap;
+  align-items: center;
+  vertical-align: middle;
+  white-space: pre-wrap;
+}
+
+code[class*='language-'],
+pre[class*='language-'] {
+  color: #ccc;
+  background: none;
+  font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+  font-size: 1rem;
+  text-align: left;
+  white-space: pre;
+  word-spacing: normal;
+  word-break: normal;
+  word-wrap: normal;
+  line-height: 1.5;
+  tab-size: 4;
+  hyphens: none;
+}
+pre[class*='language-'] {
+  padding: 1rem;
+  margin: 0;
+  overflow: auto;
+}
+:not(pre) > code[class*='language-'] {
+  padding: 0.1rem;
+  border-radius: 0.3rem;
+  white-space: normal;
+}
+.token.comment,
+.token.block-comment,
+.token.prolog,
+.token.doctype,
+.token.cdata {
+  color: #999;
+}
+.token.punctuation {
+  color: #ccc;
+}
+.token.tag,
+.token.attr-name,
+.token.namespace,
+.token.deleted {
+  color: #e2777a;
+}
+.token.function-name {
+  color: #6196cc;
+}
+.token.boolean,
+.token.number,
+.token.function {
+  color: #f08d49;
+}
+.token.property,
+.token.class-name,
+.token.constant,
+.token.symbol {
+  color: #f8c555;
+}
+.token.selector,
+.token.important,
+.token.atrule,
+.token.keyword,
+.token.builtin {
+  color: #cc99cd;
+}
+.token.string,
+.token.char,
+.token.attr-value,
+.token.regex,
+.token.variable {
+  color: #7ec699;
+}
+.token.operator,
+.token.entity,
+.token.url {
+  color: #67cdcc;
+}
+.token.important,
+.token.bold {
+  font-weight: bold;
+}
+.token.italic {
+  font-style: italic;
+}
+.token.entity {
+  cursor: help;
+}
+.token.inserted {
+  color: green;
 }
 </style>

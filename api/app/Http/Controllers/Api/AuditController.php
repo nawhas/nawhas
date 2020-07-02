@@ -74,6 +74,31 @@ class AuditController extends Controller
                         "createdAt" => null,
                         "updatedAt" => null
                     ]
+                ],
+                [
+                    "id" => "a66d7326-b9c4-11ea-3211-0242acddd005",
+                    "type" => "modified",
+                    "user" => [
+                        "name" => "Asif Ali",
+                        "role" => "moderator",
+                        "email" => "asif@nawhas.com"
+                    ],
+                    "entity" => "track",
+                    "entityId" => "a6655aa2-b9c4-11ea-864d-0242ac120005",
+                    "old" => [
+                        "name" => "Asif Ali",
+                        "description" => 'Description has been changed',
+                        "avatar" => null,
+                        "createdAt" => null,
+                        "updatedAt" => null
+                    ],
+                    "new" => [
+                        "name" => "Zain Mehdi",
+                        "description" => 'Description has been modified',
+                        "avatar" => 'http://avatar.com',
+                        "createdAt" => null,
+                        "updatedAt" => null
+                    ]
                 ]
             ]
         ]);
