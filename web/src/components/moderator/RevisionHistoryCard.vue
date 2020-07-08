@@ -1,6 +1,9 @@
 <template>
-  <div>
-    <v-card class="audit-card" outlined>
+  <v-card
+      :class="{ 'audit-card': true, 'audit-card--dark': $vuetify.theme.dark }"
+      outlined
+  >
+    <div class="audit-card__content">
       <div class="audit-card__avatar">
         <v-avatar size="40" class="avatar">
           <v-icon color="white">{{ icon }}</v-icon>
@@ -12,7 +15,7 @@
           <span class="subtitle" v-if="subtitle">{{ subtitle }}</span>
         </div>
         <div class="audit-card__name change-type-container">
-          <v-avatar :color="changeTypeColor" size="12" class="change-type-icon" />
+          <v-avatar :color="indicatorColor" size="12" class="change-type-icon" />
           <span class="change-type overline">{{ audit.type }}</span>
         </div>
       </div>
@@ -20,26 +23,36 @@
         <div class="audit-card__name caption">2 hours ago</div>
         <div class="audit-card__name caption">{{ audit.user.email }}</div>
       </div>
-    </v-card>
-    <v-card v-if="diff">
-      <prism language="diff" class="language-diff-json" :code="diff"></prism>
-    </v-card>
-  </div>
+    </div>
+    <div class="audit-card__diff" v-if="isModified">
+      <diff-viewer
+          :original="JSON.stringify(audit.old, null, 2)"
+          :modified="JSON.stringify(audit.new, null, 2)"
+      />
+    </div>
+  </v-card>
 </template>
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator';
-import { Data as AuditData, ChangeType, Entity } from '@/entities/audit';
-import * as Diff from 'diff';
-import 'prismjs';
-import 'prismjs/components/prism-json';
-import 'prismjs/components/prism-diff';
-import 'prismjs/plugins/diff-highlight/prism-diff-highlight';
-import Prism from 'vue-prism-component';
+import { Data as AuditData, ChangeType, EntityType } from '@/entities/audit';
+import DiffViewer from '@/components/moderator/DiffViewer.vue';
+
+const colors = {
+  [ChangeType.Created]: 'green',
+  [ChangeType.Modified]: 'orange',
+  [ChangeType.Deleted]: 'red',
+};
+
+const icons = {
+  [EntityType.Reciter]: 'record_voice_over',
+  [EntityType.Album]: 'album',
+  [EntityType.Track]: 'music_note',
+};
 
 @Component({
   components: {
-    Prism,
+    DiffViewer,
   },
 })
 export default class RevisionHistoryCard extends Vue {
@@ -49,48 +62,40 @@ export default class RevisionHistoryCard extends Vue {
     return JSON.stringify(this.audit.old, null, 2);
   }
 
-  get changeTypeColor() {
-    if (this.isCreated) {
-      return 'green';
-    }
-    if (this.isModified) {
-      return 'orange';
-    }
-    if (this.isDeleted) {
-      return 'red';
-    }
-    return null;
+  get indicatorColor() {
+    return colors[this.audit.type];
   }
 
   get name() {
-    if (this.audit.new === undefined && this.audit.old === undefined) {
+    // TODO - this needs to be specific to each type of audit record.
+    if (!this.audit.new && !this.audit.old) {
       return false;
     }
-    if (this.isDeleted) {
-      return this.audit.old.name;
+    if (this.audit.new) {
+      return this.audit.new.name;
     }
-    return this.audit.new.name;
+    return this.audit.old ? this.audit.old.name : null;
   }
 
-  // Need to return the correct value
-  get subtitle() {
-    if (this.audit.entity === Entity.Reciter) {
-      return false;
+  get subtitle(): string | null {
+    // TODO - Need to return the correct value
+    if (this.audit.entity === EntityType.Reciter) {
+      return null;
     }
-    if (this.isDeleted) {
+
+    if (this.audit.new) {
+      return this.audit.new.name;
+    }
+
+    if (this.audit.old) {
       return this.audit.old.name;
     }
-    return this.audit.new.name;
+
+    return null;
   }
 
-  get icon() {
-    if (this.audit.entity === Entity.Album) {
-      return 'album';
-    }
-    if (this.audit.entity === Entity.Track) {
-      return 'music_note';
-    }
-    return 'record_voice_over';
+  get icon(): string {
+    return icons[this.audit.entity];
   }
 
   get isCreated() {
@@ -104,13 +109,6 @@ export default class RevisionHistoryCard extends Vue {
   get isDeleted() {
     return this.audit.type === ChangeType.Deleted;
   }
-
-  get diff() {
-    if (!this.isModified) {
-      return null;
-    }
-    return Diff.createPatch('patch', JSON.stringify(this.audit.old, null, 2), JSON.stringify(this.audit.new, null, 2));
-  }
 }
 </script>
 
@@ -118,16 +116,13 @@ export default class RevisionHistoryCard extends Vue {
 @import '../../styles/theme';
 
 .audit-card {
-  padding: 16px;
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-  background-color: transparent;
-  @include transition(background-color, box-shadow);
   margin-bottom: 10px;
+  background-color: transparent;
 
-  &:hover:not(.audit-card--featured) {
-    background-color: rgba(0, 0, 0, 0.1) !important;
+  .audit-card__content {
+    padding: 16px;
+    display: flex;
+    align-items: center;
   }
 
   .audit-card__text {
@@ -174,6 +169,15 @@ export default class RevisionHistoryCard extends Vue {
   }
 }
 
+.audit-card__diff {
+  border-top: 1px solid rgba(0,0,0,0.07);
+}
+
+.audit-card--dark {
+  .audit-card__diff {
+    border-top: 1px solid rgba(255,255,255,0.07);
+  }
+}
 pre,
 code {
   margin: 0;

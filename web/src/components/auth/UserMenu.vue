@@ -232,7 +232,7 @@ export default class UserMenu extends Vue {
   }
 
   goToModeratorDashboard() {
-    this.$router.push('/moderator-dashboard');
+    this.$router.push('/moderator');
     this.open = false;
   }
 }

@@ -1,9 +1,9 @@
 <template>
   <v-container>
     <div class="moderator">
-      <v-list nav dense width="250" class="side-nav pa-0">
-        <v-list-item-group v-model="item" color="primary">
-          <v-list-item v-for="(item, i) in items" :key="i" :to="{ name: item.linkName }">
+      <v-list nav dense class="side-nav pa-0">
+        <v-list-item-group color="primary">
+          <v-list-item v-for="(item, i) in nav" :key="i" :to="{ name: item.to }" exact>
             <v-list-item-icon>
               <v-icon v-text="item.icon"></v-icon>
             </v-list-item-icon>
@@ -14,7 +14,7 @@
         </v-list-item-group>
       </v-list>
       <v-content class="moderator-content pa-0">
-        <router-view />
+        <router-view/>
       </v-content>
     </div>
   </v-container>
@@ -23,17 +23,27 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 
+interface NavItem {
+  text: string;
+  icon: string;
+  to: string;
+}
 @Component
 export default class ModeratorLayout extends Vue {
-  private item = 0;
-  private items: Array<object> = [
-    {
-      text: 'Revision History',
-      icon: 'history',
-      linkName: 'ModeratorRevisionHistory',
-    },
-    { text: 'Users', icon: 'people', linkName: 'ModeratorUsers' },
-  ];
+  get nav(): Array<NavItem> {
+    return [
+      {
+        text: 'Revision history',
+        icon: 'history',
+        to: 'moderator.history',
+      },
+      {
+        text: 'Users',
+        icon: 'people',
+        to: 'moderator.users',
+      },
+    ];
+  }
 }
 </script>
 
@@ -42,10 +52,13 @@ export default class ModeratorLayout extends Vue {
   display: flex;
   margin-top: 20px;
 }
+
 .moderator-content {
-  margin-left: 20px;
+  margin-left: 32px;
 }
+
 .side-nav {
   background-color: transparent;
+  min-width: 250px;
 }
 </style>
