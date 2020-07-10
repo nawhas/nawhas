@@ -32,11 +32,13 @@ export default class DiffViewer extends Vue {
 @import '../../styles/theme';
 
 .diff-viewer {
+  width: 100%;
   display: block;
   padding: 12px;
 }
 .segment {
   display: inline;
+  white-space: pre-wrap;
 }
 .segment--removed {
   background-color: map-deep-get($colors, 'red', 'lighten-4');

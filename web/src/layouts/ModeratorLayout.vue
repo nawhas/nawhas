@@ -1,7 +1,7 @@
 <template>
-  <v-container>
-    <div class="moderator">
-      <v-list nav dense class="side-nav pa-0">
+  <v-container class="app__section moderator-layout">
+    <div class="moderator-layout__nav">
+      <v-list nav dense class="pa-0" color="transparent">
         <v-list-item-group color="primary">
           <v-list-item v-for="(item, i) in nav" :key="i" :to="{ name: item.to }" exact>
             <v-list-item-icon>
@@ -13,9 +13,9 @@
           </v-list-item>
         </v-list-item-group>
       </v-list>
-      <v-content class="moderator-content pa-0">
-        <router-view/>
-      </v-content>
+    </div>
+    <div class="moderator-layout__content">
+      <router-view />
     </div>
   </v-container>
 </template>
@@ -48,17 +48,18 @@ export default class ModeratorLayout extends Vue {
 </script>
 
 <style lang="scss" scoped>
-.moderator {
+.moderator-layout {
   display: flex;
-  margin-top: 20px;
+  align-items: flex-start;
+  padding-top: 24px;
+  width: 100%;
+  overflow: hidden;
 }
-
-.moderator-content {
-  margin-left: 32px;
-}
-
-.side-nav {
-  background-color: transparent;
+.moderator-layout__nav {
   min-width: 250px;
+  margin-right: 24px;
+}
+.moderator-layout__content {
+  flex: 1 1;
 }
 </style>
