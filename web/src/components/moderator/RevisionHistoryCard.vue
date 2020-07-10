@@ -26,8 +26,8 @@
     </div>
     <div class="audit-card__diff" v-if="isModified">
       <diff-viewer
-          :original="JSON.stringify(audit.old, null, 2)"
-          :modified="JSON.stringify(audit.new, null, 2)"
+          :original="audit.old"
+          :modified="audit.new"
       />
     </div>
   </v-card>

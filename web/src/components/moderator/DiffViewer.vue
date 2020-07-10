@@ -17,13 +17,17 @@
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import * as Diff from 'diff';
 
+function stringify(data: object): string {
+  return JSON.stringify(data, null, 2);
+}
+
 @Component
 export default class DiffViewer extends Vue {
-  @Prop({ type: String, required: true }) private readonly original !: string;
-  @Prop({ type: String, required: true }) private readonly modified !: string;
+  @Prop({ type: Object, required: true }) private readonly original !: object;
+  @Prop({ type: Object, required: true }) private readonly modified !: object;
 
   get diff() {
-    return Diff.diffWords(this.original, this.modified);
+    return Diff.diffWords(stringify(this.original), stringify(this.modified));
   }
 }
 </script>
