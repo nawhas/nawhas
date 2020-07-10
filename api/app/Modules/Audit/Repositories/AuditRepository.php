@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Repositories;
+namespace App\Modules\Audit\Repositories;
 
 use App\Modules\Audit\Entities\AuditRecord;
-use App\Queries\AuditRecordQuery;
+use App\Modules\Audit\Queries\AuditRecordQuery;
 use Illuminate\Support\Collection;
 
 interface AuditRepository
@@ -14,5 +14,5 @@ interface AuditRepository
     public function all(string ...$ids): Collection;
     public function get(string $id): AuditRecord;
     public function query(): AuditRecordQuery;
-    public function persist(AuditRecord ...$auditRecord): void
+    public function persist(AuditRecord ...$auditRecord): void;
 }

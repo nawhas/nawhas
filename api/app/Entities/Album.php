@@ -7,13 +7,14 @@ namespace App\Entities;
 use App\Entities\Behaviors\HasTimestamps;
 use App\Entities\Contracts\Entity;
 use App\Entities\Contracts\TimestampedEntity;
+use App\Modules\Audit\Entities\AuditableEntity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Illuminate\Support\Facades\Storage;
 use Ramsey\Uuid\{Uuid, UuidInterface};
 use Zain\LaravelDoctrine\Jetpack\Serializer\SerializesAttributes;
 
-class Album implements Entity, TimestampedEntity
+class Album implements Entity, TimestampedEntity, AuditableEntity
 {
     use HasTimestamps;
     use SerializesAttributes;
@@ -91,6 +92,17 @@ class Album implements Entity, TimestampedEntity
     public function getTracks(): Collection
     {
         return $this->tracks;
+    }
+
+    public function toArray()
+    {
+        return [
+            'id' => $this->getId(),
+            'reciterId' => $this->getReciter()->getId(),
+            'title' => $this->getTitle(),
+            'year' => $this->getYear(),
+            'artwork' => $this->getArtwork(),
+        ];
     }
 
     public function getTrackedFields(): array
