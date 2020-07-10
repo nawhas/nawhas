@@ -26,6 +26,12 @@
     </div>
     <div class="audit-card__diff" v-if="isModified">
       <diff-viewer
+          v-if="view === DiffView.Code"
+          :original="audit.old"
+          :modified="audit.new"
+      />
+      <diff-table
+          v-if="view === DiffView.Table"
           :original="audit.old"
           :modified="audit.new"
       />
@@ -37,6 +43,7 @@
 import { Component, Vue, Prop } from 'vue-property-decorator';
 import { Data as AuditData, ChangeType, EntityType } from '@/entities/audit';
 import DiffViewer from '@/components/moderator/DiffViewer.vue';
+import DiffTable from '@/components/moderator/DiffTable.vue';
 
 const colors = {
   [ChangeType.Created]: 'green',
@@ -50,16 +57,26 @@ const icons = {
   [EntityType.Track]: 'music_note',
 };
 
+enum DiffView {
+  Table, Code
+}
+
 @Component({
   components: {
     DiffViewer,
+    DiffTable,
   },
 })
 export default class RevisionHistoryCard extends Vue {
   @Prop() private audit!: AuditData;
+  private DiffView = DiffView;
 
   get test() {
     return JSON.stringify(this.audit.old, null, 2);
+  }
+
+  get view(): DiffView {
+    return DiffView.Table;
   }
 
   get indicatorColor() {
