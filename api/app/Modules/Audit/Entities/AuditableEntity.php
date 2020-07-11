@@ -8,5 +8,6 @@ use App\Entities\Contracts\Entity;
 
 interface AuditableEntity extends Entity
 {
+    public function getId(): string;
     public function getTrackedFields(): array;
 }

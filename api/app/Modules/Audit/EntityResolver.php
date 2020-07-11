@@ -9,6 +9,7 @@ use App\Entities\Contracts\Entity;
 use App\Entities\Lyrics;
 use App\Entities\Reciter;
 use App\Entities\Track;
+use InvalidArgumentException;
 
 class EntityResolver
 {
@@ -26,6 +27,13 @@ class EntityResolver
 
     public function toLabel(Entity $entity): string
     {
-        return collect(self::MAP)->flip()->get(get_class($entity));
+        $class = get_class($entity);
+        $label = collect(self::MAP)->flip()->get($class);
+
+        if ($label === null) {
+            throw new InvalidArgumentException('No mapping found for ' . $class);
+        }
+
+        return $label;
     }
 }

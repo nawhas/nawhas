@@ -2,9 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Queries;
+namespace App\Modules\Audit\Queries;
 
 use App\Modules\Audit\Entities\AuditRecord;
+use App\Queries\Query;
 
 class AuditRecordQuery extends Query
 {
@@ -20,7 +21,7 @@ class AuditRecordQuery extends Query
     {
         $this->builder->andWhere('t.entityId = :entityId')
             ->setParameter(':entityId', $entityId);
-        
+
         return $this;
     }
 

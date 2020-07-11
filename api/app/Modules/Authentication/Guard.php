@@ -38,4 +38,10 @@ class Guard
 
         return $id ? (string)$id : null;
     }
+
+    public function login(User $user): void
+    {
+        $this->guard->login($user);
+    }
 }
+
