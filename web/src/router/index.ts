@@ -3,8 +3,6 @@ import VueRouter from 'vue-router';
 import Public from '@/layouts/Public.vue';
 import LyricsPrint from '@/layouts/LyricsPrint.vue';
 import goTo from 'vuetify/es5/services/goto';
-import { enforceRole } from '@/router/guards';
-import { Role } from '@/entities/user';
 
 Vue.use(VueRouter);
 
@@ -54,13 +52,6 @@ const routes = [
         path: 'about',
         name: 'about',
         component: () => import(/* webpackChunkName: "about" */ '@/views/public/AboutView.vue'),
-      },
-      {
-        // TODO - remove this route, just an example.
-        path: 'secret',
-        name: 'secret',
-        component: () => import(/* webpackChunkName: "about" */ '@/views/public/AboutView.vue'),
-        beforeEnter: enforceRole(Role.Moderator),
       },
     ],
   },
