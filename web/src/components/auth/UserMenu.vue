@@ -214,6 +214,7 @@ export default class UserMenu extends Vue {
   async logout() {
     await this.$store.dispatch(AuthActions.Logout);
     this.open = false;
+    this.$router.push('/');
   }
 
   showWhatsNew() {

@@ -3,6 +3,8 @@ import VueRouter from 'vue-router';
 import Public from '@/layouts/Public.vue';
 import LyricsPrint from '@/layouts/LyricsPrint.vue';
 import goTo from 'vuetify/es5/services/goto';
+import { Role } from '@/entities/user';
+import { enforceRole } from './guards';
 
 Vue.use(VueRouter);
 
@@ -56,6 +58,7 @@ const routes = [
       {
         path: 'moderator',
         component: () => import(/* webpackChunkName: "moderator" */ '@/layouts/ModeratorLayout.vue'),
+        beforeEnter: enforceRole(Role.Moderator),
         children: [
           {
             path: '',
