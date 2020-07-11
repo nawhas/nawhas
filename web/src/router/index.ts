@@ -4,6 +4,8 @@ import Public from '@/layouts/Public.vue';
 import LyricsPrint from '@/layouts/LyricsPrint.vue';
 import ModeratorLayout from '@/layouts/ModeratorLayout.vue';
 import goTo from 'vuetify/es5/services/goto';
+import { Getters as AuthGetters } from '@/store/modules/auth';
+import store from '@/store';
 
 Vue.use(VueRouter);
 
@@ -57,6 +59,7 @@ const routes = [
       {
         path: 'moderator-dashboard',
         component: ModeratorLayout,
+        meta: { moderatorOnly: true },
         children: [
           {
             path: 'revision-history',
@@ -95,6 +98,15 @@ const router = new VueRouter({
 
     return goTo(scrollTo);
   },
+});
+
+router.beforeEach((to, from, next) => {
+  if (to.matched.some((record) => record.meta.moderatorOnly)) {
+    if (!store.getters[AuthGetters.IsModerator]) {
+      next('/');
+    }
+  }
+  next();
 });
 
 export default router;
