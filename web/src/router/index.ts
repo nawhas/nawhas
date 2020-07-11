@@ -3,8 +3,8 @@ import VueRouter from 'vue-router';
 import Public from '@/layouts/Public.vue';
 import LyricsPrint from '@/layouts/LyricsPrint.vue';
 import goTo from 'vuetify/es5/services/goto';
-import { Getters as AuthGetters } from '@/store/modules/auth';
-import store from '@/store';
+import { Role } from '@/entities/user';
+import { enforceRole } from './guards';
 
 Vue.use(VueRouter);
 
@@ -58,9 +58,7 @@ const routes = [
       {
         path: 'moderator',
         component: () => import(/* webpackChunkName: "moderator" */ '@/layouts/ModeratorLayout.vue'),
-        meta: {
-          moderatorOnly: true,
-        },
+        beforeEnter: enforceRole(Role.Moderator),
         children: [
           {
             path: '',
@@ -104,15 +102,6 @@ const router = new VueRouter({
 
     return goTo(scrollTo);
   },
-});
-
-router.beforeEach((to, from, next) => {
-  if (to.matched.some((record) => record.meta.moderatorOnly)) {
-    if (!store.getters[AuthGetters.IsModerator]) {
-      return next('/');
-    }
-  }
-  return next();
 });
 
 export default router;
