@@ -12,8 +12,14 @@
         <tbody class="diff-table__body">
           <tr v-for="attr in attributes" :key="attr" :class="rowClasses(attr)">
             <td class="overline">{{ attr | startCase }}</td>
-            <td>{{ original[attr] || 'N/A' }}</td>
-            <td>{{ modified[attr] || 'N/A' }}</td>
+            <td>
+              <span v-if="original[attr]" v-text="original[attr]"></span>
+              <span v-else class="text--disabled">N/A</span>
+            </td>
+            <td>
+              <span v-if="modified[attr]" v-text="modified[attr]"></span>
+              <span v-else class="text--disabled">N/A</span>
+            </td>
           </tr>
         </tbody>
       </template>
@@ -56,13 +62,19 @@ export default class DiffTable extends Vue {
     padding-bottom: 8px;
   }
 }
-.diff-table__row--modified {
-  background-color: map-deep-get($colors, 'amber', 'lighten-5');
+.diff-table__row--modified, .diff-table__row--modified:hover {
+  background-color: map-deep-get($colors, 'amber', 'lighten-5') !important;
 }
 
 .diff-table--dark {
-  .diff-table__row--modified {
-    background-color: change-color(map-deep-get($colors, 'blue', 'base'), $alpha: 0.05);
+  .diff-table__row--modified, .diff-table__row--modified:hover {
+    background-color: change-color(map-deep-get($colors, 'blue', 'base'), $alpha: 0.05) !important;
+  }
+}
+
+tbody {
+  tr:not(.diff-table__row--modified):hover {
+    background-color: transparent !important;
   }
 }
 </style>
