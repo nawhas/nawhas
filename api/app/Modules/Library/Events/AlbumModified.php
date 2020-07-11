@@ -6,19 +6,16 @@ namespace App\Modules\Library\Events;
 
 use App\Entities\Album;
 use App\Entities\Contracts\Events\EntityPersisted;
-use App\Entities\User;
 use App\Enum\ChangeType;
 use App\Modules\Audit\Events\AuditableEvent;
 
 class AlbumModified implements EntityPersisted, AuditableEvent
 {
     public Album $album;
-    public User $user;
 
-    public function __construct(Album $album, User $user)
+    public function __construct(Album $album)
     {
         $this->album = $album;
-        $this->user = $user;
     }
 
     public function getEntity(): Album
@@ -34,10 +31,5 @@ class AlbumModified implements EntityPersisted, AuditableEvent
     public function getChangeType(): ChangeType
     {
         return ChangeType::UPDATED();
-    }
-
-    public function getUser(): User
-    {
-        return $this->user;
     }
 }

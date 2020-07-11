@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Repositories\Doctrine;
+namespace App\Modules\Audit\Repositories;
 
 use App\Exceptions\EntityNotFoundException;
 use App\Modules\Audit\Entities\AuditRecord;
-use App\Queries\AuditRecordQuery;
-use App\Repositories\AuditRepository;
+use App\Modules\Audit\Queries\AuditRecordQuery;
+use App\Repositories\Doctrine\DoctrineRepository;
 use Illuminate\Support\Collection;
 
 class DoctrineAuditRepository extends DoctrineRepository implements AuditRepository

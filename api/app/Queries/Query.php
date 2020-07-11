@@ -52,8 +52,11 @@ abstract class Query
 
     public function first(): ?Entity
     {
+        $query = $this->builder->getQuery();
+        $query->setMaxResults(1);
+
         try {
-            $result = $this->builder->getQuery()->getResult();
+            $result = $query->getResult();
         } catch (NoResultException $e) {
             return null;
         }

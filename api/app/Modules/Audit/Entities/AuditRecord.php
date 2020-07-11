@@ -26,8 +26,14 @@ class AuditRecord implements Entity, TimestampedEntity
     private ?array $old;
     private ?array $new;
 
-    public function __construct(ChangeType $changeType, User $user, string $entity, string $entityId, ?array $old, ?array $new)
-    {
+    public function __construct(
+        ChangeType $changeType,
+        User $user,
+        string $entity,
+        string $entityId,
+        ?array $old,
+        ?array $new
+    ) {
         $this->id = Uuid::uuid1();
         $this->type = $changeType;
         $this->user = $user;
@@ -56,14 +62,17 @@ class AuditRecord implements Entity, TimestampedEntity
     {
         return $this->entity;
     }
+
     public function getEntityId(): string
     {
         return $this->entityId;
     }
+
     public function getOld(): ?array
     {
         return $this->old;
     }
+
     public function getNew(): ?array
     {
         return $this->new;

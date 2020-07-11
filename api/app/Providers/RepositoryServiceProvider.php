@@ -2,19 +2,23 @@
 
 namespace App\Providers;
 
-use App\Repositories\AlbumRepository;
-use App\Repositories\Cache\CachedPopularEntitiesRepository;
-use App\Repositories\Doctrine\DoctrineAlbumRepository;
-use App\Repositories\Doctrine\DoctrinePopularEntitiesRepository;
-use App\Repositories\Doctrine\DoctrineReciterRepository;
-use App\Repositories\Doctrine\DoctrineSocialAccountRepository;
-use App\Repositories\Doctrine\DoctrineTrackRepository;
-use App\Repositories\Doctrine\DoctrineUserRepository;
-use App\Repositories\PopularEntitiesRepository;
-use App\Repositories\ReciterRepository;
-use App\Repositories\SocialAccountRepository;
-use App\Repositories\TrackRepository;
-use App\Repositories\UserRepository;
+use App\Modules\Audit\Repositories\{AuditRepository, DoctrineAuditRepository};
+use App\Repositories\Doctrine\{
+    DoctrineAlbumRepository,
+    DoctrinePopularEntitiesRepository,
+    DoctrineReciterRepository,
+    DoctrineSocialAccountRepository,
+    DoctrineTrackRepository,
+    DoctrineUserRepository,
+};
+use App\Repositories\{
+    AlbumRepository,
+    PopularEntitiesRepository,
+    ReciterRepository,
+    SocialAccountRepository,
+    TrackRepository,
+    UserRepository,
+};
 use Illuminate\Support\ServiceProvider;
 
 class RepositoryServiceProvider extends ServiceProvider
@@ -32,14 +36,7 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(PopularEntitiesRepository::class, DoctrinePopularEntitiesRepository::class);
         $this->app->bind(SocialAccountRepository::class, DoctrineSocialAccountRepository::class);
         $this->app->bind(UserRepository::class, DoctrineUserRepository::class);
-
-        // Cached Repositories
-        /*
-        $this->app->bind(PopularEntitiesRepository::class, CachedPopularEntitiesRepository::class);
-        $this->app->when(CachedPopularEntitiesRepository::class)
-            ->needs(PopularEntitiesRepository::class)
-            ->give(DoctrinePopularEntitiesRepository::class);
-        */
+        $this->app->bind(AuditRepository::class, DoctrineAuditRepository::class);
     }
 
     /**
