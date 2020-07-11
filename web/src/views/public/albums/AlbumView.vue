@@ -26,7 +26,7 @@
               <div class="meta__line">
                 <span class="meta__line__text">
                   <v-icon class="meta__line__icon">playlist_play</v-icon>
-                  {{ album.related.tracks | string('track', 'tracks') }}
+                  {{ album.related.tracks | pluralize('track', 'tracks') }}
                 </span>
               </div>
             </template>

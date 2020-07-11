@@ -9,7 +9,7 @@
       <div class="reciter-card__text" :style="{ 'color': textColor }">
         <div class="reciter-card__name body-2" :title="name">{{ name }}</div>
          <div class="reciter-card__name caption" v-if="related">
-           {{ related.albums | string('album', 'albums') }}
+           {{ related.albums | pluralize('album', 'albums') }}
          </div>
       </div>
     </v-card>
