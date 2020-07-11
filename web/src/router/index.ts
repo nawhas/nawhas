@@ -111,7 +111,6 @@ router.beforeEach((to, from, next) => {
     if (!store.getters[AuthGetters.IsModerator]) {
       return next('/');
     }
-    return next();
   }
   return next();
 });
