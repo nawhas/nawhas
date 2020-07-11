@@ -109,10 +109,11 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
   if (to.matched.some((record) => record.meta.moderatorOnly)) {
     if (!store.getters[AuthGetters.IsModerator]) {
-      next('/');
+      return next('/');
     }
+    return next();
   }
-  next();
+  return next();
 });
 
 export default router;
