@@ -1,7 +1,10 @@
 <template>
   <div>
     <h2>Revision History</h2>
-    <revision-history-card v-for="item in items" :key="item.id" :audit="item" />
+    <revision-history-card
+        v-for="revision in revisions"
+        :key="revision.id"
+        :revision="revision" />
   </div>
 </template>
 
@@ -9,7 +12,7 @@
 import { Component, Vue } from 'vue-property-decorator';
 import client from '@/services/client';
 import RevisionHistoryCard from '@/components/moderator/RevisionHistoryCard.vue';
-import { Data as AuditData, Audit } from '@/entities/audit';
+import { Revision } from '@/entities/revision';
 
 @Component({
   components: {
@@ -17,15 +20,15 @@ import { Data as AuditData, Audit } from '@/entities/audit';
   },
 })
 export default class RevisionHistory extends Vue {
-  private items: Array<AuditData> = [];
+  private revisions: Array<Revision> = [];
 
   created() {
-    this.fetchAudit();
+    this.fetch();
   }
 
-  async fetchAudit() {
-    const response = await client.get('v1/audit');
-    this.items = response.data.data.map((data) => new Audit(data));
+  async fetch() {
+    const response = await client.get('v1/revisions');
+    this.revisions = response.data.data.map((data) => new Revision(data));
   }
 }
 </script>

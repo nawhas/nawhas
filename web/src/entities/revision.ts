@@ -17,7 +17,7 @@ export interface Data {
 
 export enum ChangeType {
   Created = 'created',
-  Modified = 'modified',
+  Updated = 'updated',
   Deleted = 'deleted',
 }
 
@@ -28,7 +28,7 @@ export enum EntityType {
   Lyrics = 'lyrics'
 }
 
-export class Audit {
+export class Revision {
   constructor(private data: Data) { }
 
   get id(): string {

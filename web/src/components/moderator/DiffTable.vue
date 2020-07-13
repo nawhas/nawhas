@@ -55,6 +55,7 @@ export default class DiffTable extends Vue {
   width: 100%;
   display: block;
   table-layout: fixed;
+  overflow-x: auto;
 }
 .diff-table__row {
   td, th {
