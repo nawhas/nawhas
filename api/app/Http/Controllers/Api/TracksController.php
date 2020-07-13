@@ -77,10 +77,17 @@ class TracksController extends Controller
             $track->setTitle($request->get('title'));
         }
         if ($request->has('lyrics')) {
+            $old = $track->getLyrics();
+
             $format = $request->get('format', Format::PLAIN_TEXT);
-            $lyric = new Lyrics($track, $request->get('lyrics'), new Format($format));
-            $track->replaceLyrics($lyric);
-            event(new LyricsModified($lyric));
+            $lyrics = new Lyrics($track, $request->get('lyrics'), new Format($format));
+            $track->replaceLyrics($lyrics);
+
+            if ($old === null) {
+                event(new LyricsCreated($lyrics));
+            } else {
+                event(new LyricsModified($old, $lyrics));
+            }
         }
 
         event(new TrackModified($track));
