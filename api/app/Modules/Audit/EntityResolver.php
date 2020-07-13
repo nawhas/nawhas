@@ -14,10 +14,10 @@ use InvalidArgumentException;
 class EntityResolver
 {
     private const MAP = [
-        'reciter' => Reciter::class,
-        'album' => Album::class,
-        'track' => Track::class,
-        'lyrics' => Lyrics::class,
+        EntityType::RECITER => Reciter::class,
+        EntityType::ALBUM => Album::class,
+        EntityType::TRACK => Track::class,
+        EntityType::LYRICS => Lyrics::class,
     ];
 
     public function toClassName(string $type): string
