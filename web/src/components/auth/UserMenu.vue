@@ -214,6 +214,7 @@ export default class UserMenu extends Vue {
   async logout() {
     await this.$store.dispatch(AuthActions.Logout);
     this.open = false;
+    this.$router.push('/');
   }
 
   showWhatsNew() {
@@ -232,7 +233,7 @@ export default class UserMenu extends Vue {
   }
 
   goToModeratorDashboard() {
-    this.$router.push('/moderator-dashboard');
+    this.$router.push('/moderator');
     this.open = false;
   }
 }

@@ -1,6 +1,9 @@
 <template>
-  <div>
-    <v-card class="audit-card" outlined @click="open = !open">
+  <v-card
+      :class="{ 'audit-card': true, 'audit-card--dark': $vuetify.theme.dark }"
+      outlined
+  >
+    <div class="audit-card__content">
       <div class="audit-card__avatar">
         <v-avatar size="40" class="avatar">
           <v-icon color="white">{{ icon }}</v-icon>
@@ -12,7 +15,7 @@
           <span class="subtitle" v-if="subtitle">{{ subtitle }}</span>
         </div>
         <div class="audit-card__name change-type-container">
-          <v-avatar :color="changeTypeColor" size="12" class="change-type-icon" />
+          <v-avatar :color="indicatorColor" size="12" class="change-type-icon" />
           <span class="change-type overline">{{ audit.type }}</span>
         </div>
       </div>
@@ -20,72 +23,96 @@
         <div class="audit-card__name caption">2 hours ago</div>
         <div class="audit-card__name caption">{{ audit.user.email }}</div>
       </div>
-    </v-card>
-    <v-card v-show="open">
-      <template v-for="(value, propertyName) in audit.new">
-        <div v-if="displayChange(value, propertyName)" :key="propertyName" class="changes">
-          <div
-            class="old-values"
-            v-if="!isCreated"
-          >Old {{ propertyName }} => {{ audit.old[propertyName] }}</div>
-          <div class="new-values">New {{ propertyName }} => {{ value }}</div>
-        </div>
-      </template>
-    </v-card>
-  </div>
+    </div>
+    <div class="audit-card__diff" v-if="isModified">
+      <diff-viewer
+          v-if="view === DiffView.Code"
+          :original="audit.old"
+          :modified="audit.new"
+      />
+      <diff-table
+          v-if="view === DiffView.Table"
+          :original="audit.old"
+          :modified="audit.new"
+      />
+    </div>
+  </v-card>
 </template>
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator';
-import { Data as AuditData, ChangeType, Entity } from '@/entities/audit';
+import { Data as AuditData, ChangeType, EntityType } from '@/entities/audit';
+import DiffViewer from '@/components/moderator/DiffViewer.vue';
+import DiffTable from '@/components/moderator/DiffTable.vue';
 
-@Component
+const colors = {
+  [ChangeType.Created]: 'green',
+  [ChangeType.Modified]: 'orange',
+  [ChangeType.Deleted]: 'red',
+};
+
+const icons = {
+  [EntityType.Reciter]: 'record_voice_over',
+  [EntityType.Album]: 'album',
+  [EntityType.Track]: 'music_note',
+};
+
+enum DiffView {
+  Table, Code
+}
+
+@Component({
+  components: {
+    DiffViewer,
+    DiffTable,
+  },
+})
 export default class RevisionHistoryCard extends Vue {
-  private open = false;
   @Prop() private audit!: AuditData;
+  private DiffView = DiffView;
 
-  get changeTypeColor() {
-    if (this.isCreated) {
-      return 'green';
-    }
-    if (this.isModified) {
-      return 'orange';
-    }
-    if (this.isDeleted) {
-      return 'red';
-    }
-    return null;
+  get test() {
+    return JSON.stringify(this.audit.old, null, 2);
+  }
+
+  get view(): DiffView {
+    return DiffView.Table;
+  }
+
+  get indicatorColor() {
+    return colors[this.audit.type];
   }
 
   get name() {
-    if (this.audit.new === undefined && this.audit.old === undefined) {
+    // TODO - this needs to be specific to each type of audit record.
+    if (!this.audit.new && !this.audit.old) {
       return false;
     }
-    if (this.isDeleted) {
-      return this.audit.old.name;
+    if (this.audit.new) {
+      return this.audit.new.name;
     }
-    return this.audit.new.name;
+    return this.audit.old ? this.audit.old.name : null;
   }
 
-  // Need to return the correct value
-  get subtitle() {
-    if (this.audit.entity === Entity.Reciter) {
-      return false;
+  get subtitle(): string | null {
+    // TODO - Need to return the correct value
+    if (this.audit.entity === EntityType.Reciter) {
+      return null;
     }
-    if (this.isDeleted) {
+
+    if (this.audit.new) {
+      return this.audit.new.name;
+    }
+
+    if (this.audit.old) {
       return this.audit.old.name;
     }
-    return this.audit.new.name;
+
+    return null;
   }
 
-  get icon() {
-    if (this.audit.entity === Entity.Album) {
-      return 'album';
-    }
-    if (this.audit.entity === Entity.Track) {
-      return 'music_note';
-    }
-    return 'record_voice_over';
+  get icon(): string {
+    return icons[this.audit.entity];
   }
 
   get isCreated() {
@@ -99,42 +126,20 @@ export default class RevisionHistoryCard extends Vue {
   get isDeleted() {
     return this.audit.type === ChangeType.Deleted;
   }
-
-  displayChange(value, propertyName) {
-    if (this.isDeleted) {
-      return false;
-    }
-    if (this.isCreated && !value) {
-      return false;
-    }
-    if (this.isCreated) {
-      return true;
-    }
-    if (this.audit.old[propertyName] === undefined) {
-      return false;
-    }
-    if (value === this.audit.old[propertyName]) {
-      return false;
-    }
-    return true;
-  }
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 @import '../../styles/theme';
 
 .audit-card {
-  padding: 16px;
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-  background-color: transparent;
-  @include transition(background-color, box-shadow);
   margin-bottom: 10px;
+  background-color: transparent;
 
-  &:hover:not(.audit-card--featured) {
-    background-color: rgba(0, 0, 0, 0.1) !important;
+  .audit-card__content {
+    padding: 16px;
+    display: flex;
+    align-items: center;
   }
 
   .audit-card__text {
@@ -178,6 +183,17 @@ export default class RevisionHistoryCard extends Vue {
 
   .old-values {
     margin-right: 6px;
+  }
+}
+
+.audit-card__diff {
+  width: 100%;
+  border-top: 1px solid rgba(0,0,0,0.07);
+}
+
+.audit-card--dark {
+  .audit-card__diff {
+    border-top: 1px solid rgba(255,255,255,0.07);
   }
 }
 </style>
