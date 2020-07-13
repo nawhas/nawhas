@@ -5,8 +5,7 @@ declare(strict_types=1);
 namespace App\Modules\Authentication;
 
 use App\Entities\User;
-use Illuminate\Contracts\Auth\Factory as AuthFactory;
-use Illuminate\Contracts\Auth\StatefulGuard;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * This class wraps Laravel's Guard implementation and provides
@@ -15,33 +14,26 @@ use Illuminate\Contracts\Auth\StatefulGuard;
  */
 class Guard
 {
-    private StatefulGuard $guard;
-
-    public function __construct(AuthFactory $auth)
-    {
-        $this->guard = $auth->guard();
-    }
-
     public function user(): ?User
     {
-        return $this->guard->user();
+        return Auth::user();
     }
 
     public function check(): bool
     {
-        return $this->guard->check();
+        return Auth::check();
     }
 
     public function id(): ?string
     {
-        $id = $this->guard->id();
+        $id = Auth::id();
 
         return $id ? (string)$id : null;
     }
 
     public function login(User $user): void
     {
-        $this->guard->login($user);
+        Auth::login($user);
     }
 }
 
