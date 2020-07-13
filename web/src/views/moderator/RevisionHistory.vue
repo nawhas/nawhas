@@ -31,10 +31,6 @@ export default class RevisionHistory extends Vue {
 </script>
 
 <style lang="scss" scoped>
-.audit-card {
-  height: 75px;
-}
-
 h2 {
   font-weight: 300;
   font-size: 34px;
