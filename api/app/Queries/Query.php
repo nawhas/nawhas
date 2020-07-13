@@ -44,9 +44,10 @@ abstract class Query
         return new static($queryBuilder);
     }
 
-    public function sortRandom(): self
+    public function orderBy(string $property, string $direction = 'ASC'): self
     {
-        // TODO - ???
+        $this->builder->orderBy(self::QUERY_ALIAS . ".{$property}", $direction);
+
         return $this;
     }
 
