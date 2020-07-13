@@ -10,17 +10,13 @@
           </tr>
         </thead>
         <tbody class="diff-table__body">
-          <tr v-for="attr in attributes" :key="attr" :class="rowClasses(attr)">
-            <td class="overline">{{ attr | startCase }}</td>
-            <td>
-              <span v-if="original[attr]" v-text="original[attr]"></span>
-              <span v-else class="text--disabled">N/A</span>
-            </td>
-            <td>
-              <span v-if="modified[attr]" v-text="modified[attr]"></span>
-              <span v-else class="text--disabled">N/A</span>
-            </td>
-          </tr>
+          <diff-table-row
+              v-for="attr in attributes"
+              :key="attr"
+              :attribute="attr"
+              :modified="modified[attr]"
+              :original="original[attr]"
+          />
         </tbody>
       </template>
     </v-simple-table>
@@ -29,8 +25,10 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
-
-@Component
+import DiffTableRow from '@/components/moderator/DiffTableRow.vue';
+@Component({
+  components: { DiffTableRow },
+})
 export default class DiffTable extends Vue {
   @Prop({ type: Object, required: true }) private readonly original !: object;
   @Prop({ type: Object, required: true }) private readonly modified !: object;
@@ -38,44 +36,14 @@ export default class DiffTable extends Vue {
   get attributes() {
     return Object.keys(this.modified);
   }
-
-  rowClasses(attr: string) {
-    return {
-      'diff-table__row': true,
-      'diff-table__row--modified': this.original[attr] !== this.modified[attr],
-    };
-  }
 }
 </script>
 
 <style lang="scss" scoped>
-@import '../../styles/theme';
-
 .diff-table {
   width: 100%;
   display: block;
   table-layout: fixed;
   overflow-x: auto;
-}
-.diff-table__row {
-  td, th {
-    padding-top: 12px;
-    padding-bottom: 8px;
-  }
-}
-.diff-table__row--modified, .diff-table__row--modified:hover {
-  background-color: map-deep-get($colors, 'amber', 'lighten-5') !important;
-}
-
-.diff-table--dark {
-  .diff-table__row--modified, .diff-table__row--modified:hover {
-    background-color: change-color(map-deep-get($colors, 'blue', 'base'), $alpha: 0.05) !important;
-  }
-}
-
-tbody {
-  tr:not(.diff-table__row--modified):hover {
-    background-color: transparent !important;
-  }
 }
 </style>

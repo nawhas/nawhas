@@ -1,5 +1,5 @@
 <template>
-  <v-card :class="['revision-card', ...classes]" outlined>
+  <v-card :class="classes" outlined>
     <div class="revision-card__content">
       <div class="revision-card__avatar">
         <v-avatar size="40" class="avatar">
@@ -74,9 +74,10 @@ export default class RevisionHistoryCard extends Vue {
   private readonly ChangeType = ChangeType;
 
   get classes() {
-    return Object.keys({
+    return {
+      'revision-card': true,
       'revision-card--dark': this.$vuetify.theme.dark,
-    });
+    };
   }
 
   get view(): DiffView {
