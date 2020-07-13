@@ -53,6 +53,7 @@ const icons = {
   [EntityType.Reciter]: 'record_voice_over',
   [EntityType.Album]: 'album',
   [EntityType.Track]: 'music_note',
+  [EntityType.Lyrics]: 'speaker_notes',
 };
 
 enum DiffView {
