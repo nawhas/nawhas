@@ -3,6 +3,12 @@ import { Data as UserData } from './user';
 interface EntitySnapshot {
   [key: string]: any;
 }
+
+interface Metadata {
+  link: string;
+  [key: string]: string;
+}
+
 export interface Data {
   id: string;
   type: ChangeType;
@@ -11,6 +17,7 @@ export interface Data {
   entityId: string;
   old: EntitySnapshot | null;
   new: EntitySnapshot | null;
+  meta: Metadata;
   createdAt: string | null;
   updatedAt: string | null;
 }
@@ -61,6 +68,10 @@ export class Revision {
 
   get createdAt(): string | null {
     return this.data.createdAt;
+  }
+
+  get meta(): Metadata {
+    return this.data.meta;
   }
 
   get updatedAt(): string | null {

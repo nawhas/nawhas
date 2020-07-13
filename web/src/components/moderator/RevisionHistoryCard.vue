@@ -1,15 +1,15 @@
 <template>
   <v-card :class="classes" outlined>
-    <div class="revision-card__content">
+    <router-link tag="div" :to="revision.meta.link" class="revision-card__content" v-ripple>
       <div class="revision-card__avatar">
         <v-avatar size="40" class="avatar">
-          <v-icon color="white">{{ icon }}</v-icon>
+          <v-icon>{{ icon }}</v-icon>
         </v-avatar>
       </div>
       <div class="revision-card__text">
-        <div class="revision-card__name body-1">
-          {{ name }}
-          <span class="subtitle" v-if="false"></span>
+        <div class="revision-card__title body-1">
+          {{ title }}
+          <span class="body-2 text--disabled" v-if="subtitle" v-text="subtitle"></span>
         </div>
         <div class="revision-card__name change-type-container">
           <v-avatar :color="indicator" size="12" class="change-type-icon" />
@@ -20,7 +20,7 @@
         <div class="revision-card__name caption">{{ revision.createdAt | relative }}</div>
         <div class="revision-card__name caption">by {{ revision.user.email }}</div>
       </div>
-    </div>
+    </router-link>
     <div class="revision-card__diff" v-if="revision.type === ChangeType.Updated">
       <diff-viewer
           v-if="view === DiffView.Code"
@@ -89,20 +89,33 @@ export default class RevisionHistoryCard extends Vue {
     return colors[this.revision.type];
   }
 
-  get name() {
+  get title() {
     const data = this.revision.new || this.revision.old || {};
 
     switch (this.revision.entity) {
       case EntityType.Reciter:
         return data.name;
       case EntityType.Album:
-        return `${data.title} – ${data.year}`;
       case EntityType.Track:
-        return `${data.title}`;
+        return data.title;
       case EntityType.Lyrics:
-        return 'Lyrics';
+        return this.revision.meta.title;
       default:
         return 'Unknown';
+    }
+  }
+
+  get subtitle() {
+    const { meta } = this.revision;
+
+    switch (this.revision.entity) {
+      case EntityType.Album:
+        return `(${meta.reciter})`;
+      case EntityType.Track:
+      case EntityType.Lyrics:
+        return `(${meta.reciter} • ${meta.year})`;
+      default:
+        return null;
     }
   }
 
@@ -123,28 +136,25 @@ export default class RevisionHistoryCard extends Vue {
     padding: 16px;
     display: flex;
     align-items: center;
+    cursor: pointer;
   }
 
   .revision-card__text {
     margin-left: 16px;
     overflow: hidden;
-    @include transition(color);
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    width: auto;
+  }
 
-    .revision-card__name {
-      white-space: nowrap;
-      text-overflow: ellipsis;
-      overflow: hidden;
-      width: auto;
-    }
+  .revision-card__title {
+    text-decoration: none;
+    color: inherit;
   }
 
   .revision-card__text-right {
     margin-left: auto;
     text-align: right;
-  }
-
-  .revision-card__avatar .avatar {
-    background-color: grey;
   }
 }
 

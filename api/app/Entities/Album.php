@@ -94,6 +94,11 @@ class Album implements Entity, TimestampedEntity, AuditableEntity
         return $this->tracks;
     }
 
+    public function getUrlPath(): string
+    {
+        return "{$this->getReciter()->getUrlPath()}/albums/{$this->getYear()}";
+    }
+
     public function toArray()
     {
         return [
