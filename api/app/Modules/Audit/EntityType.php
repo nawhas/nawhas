@@ -8,6 +8,7 @@ use MyCLabs\Enum\Enum;
 
 /**
  * @psalm-immutable
+ *
  * @method static self RECITER()
  * @method static self ALBUM()
  * @method static self TRACK()
