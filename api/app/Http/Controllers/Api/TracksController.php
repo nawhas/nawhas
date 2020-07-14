@@ -86,7 +86,7 @@ class TracksController extends Controller
             if ($old === null) {
                 event(new LyricsCreated($lyrics));
             } else {
-                event(new LyricsModified($old, $lyrics));
+                event(new LyricsModified($lyrics, $old));
             }
         }
 

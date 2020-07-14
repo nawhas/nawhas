@@ -31,22 +31,39 @@ class Auditor
         $this->guard = $guard;
     }
 
-    public function record(AuditableEvent $event): AuditRecord
+    public function record(AuditableEvent $event): ?AuditRecord
     {
+        $name = get_class($event);
         $entity = $event->getEntity();
+
+        $old = $this->getPreviousAttributes($event);
+        $new = $this->getCurrentAttributes($event);
+
+        if (!$this->hasChanges($old, $new)) {
+            logger()->debug('[Auditor] No changes found in event: ' . $name);
+            return null;
+        }
 
         $audit = new AuditRecord(
             $event->getChangeType(),
             $this->guard->user(),
             $this->resolver->toLabel($entity),
             $entity->getId(),
-            $this->getPreviousAttributes($event),
-            $this->getCurrentAttributes($event)
+            $old,
+            $new,
         );
 
         $this->repository->persist($audit);
+        logger()->debug('[Auditor] Wrote audit record for event: ' . $name);
 
         return $audit;
+    }
+
+    private function hasChanges(array $old, array $new): bool
+    {
+        return collect($new)
+            ->filter(fn ($value, $key) => $value !== $old[$key])
+            ->isNotEmpty();
     }
 
     private function getPreviousAttributes(AuditableEvent $event): ?array

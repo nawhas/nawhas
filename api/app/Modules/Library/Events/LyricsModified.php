@@ -16,10 +16,10 @@ class LyricsModified implements EntityPersisted, AuditableEvent, ChangeAwareAudi
     public Lyrics $current;
     public Lyrics $previous;
 
-    public function __construct(Lyrics $previous, Lyrics $current)
+    public function __construct(Lyrics $current, Lyrics $previous)
     {
-        $this->current = $previous;
-        $this->previous = $current;
+        $this->current = $current;
+        $this->previous = $previous;
     }
 
     public function getEntity(): Lyrics

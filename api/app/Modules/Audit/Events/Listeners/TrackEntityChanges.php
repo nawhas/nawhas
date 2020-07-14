@@ -18,7 +18,6 @@ class TrackEntityChanges
 
     public function handle(AuditableEvent $event): void
     {
-        logger()->debug('TrackEntityChanges :: received ' . get_class($event));
         $this->auditor->record($event);
     }
 }
