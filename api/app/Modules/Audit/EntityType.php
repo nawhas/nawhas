@@ -6,6 +6,13 @@ namespace App\Modules\Audit;
 
 use MyCLabs\Enum\Enum;
 
+/**
+ * @psalm-immutable
+ * @method static self RECITER()
+ * @method static self ALBUM()
+ * @method static self TRACK()
+ * @method static self LYRICS()
+ */
 class EntityType extends Enum
 {
     public const RECITER = 'reciter';
