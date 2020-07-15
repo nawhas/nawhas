@@ -11,6 +11,7 @@ import './plugins/progress';
 import './plugins/algolia';
 import './filters';
 import { Actions as FeaturesActions } from './store/modules/features';
+import { Actions as AuthActions } from './store/modules/auth';
 
 axios.defaults.withCredentials = true;
 
@@ -23,11 +24,14 @@ Vue.use(VueGtag, {
 
 sync(store, router);
 
-store.dispatch(FeaturesActions.Fetch).then(() => {
-  new Vue({
-    router,
-    store,
-    vuetify,
-    render: (h) => h(App),
-  }).$mount('#app');
-});
+const bootstrap = () => Promise.all([
+  store.dispatch(FeaturesActions.Fetch),
+  store.dispatch(AuthActions.Check),
+]);
+
+bootstrap().then(() => new Vue({
+  router,
+  store,
+  vuetify,
+  render: (h) => h(App),
+}).$mount('#app'));

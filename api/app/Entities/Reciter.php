@@ -92,6 +92,11 @@ class Reciter implements Entity, TimestampedEntity, Visitable, AuditableEntity
         $this->avatar = $path;
     }
 
+    public function getUrlPath(): string
+    {
+        return "/reciters/{$this->getSlug()}";
+    }
+
     public function visit(): ReciterVisit
     {
         return new ReciterVisit($this);

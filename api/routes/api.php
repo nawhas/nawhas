@@ -91,7 +91,7 @@ Route::prefix('v1')->group(function () {
     });
 
     // Audit routes
-    Route::prefix('audit')->group(function () {
+    Route::prefix('revisions')->group(function () {
         Route::get('/', [AuditController::class, 'index']);
     });
 });

@@ -13,27 +13,29 @@ use InvalidArgumentException;
 
 class EntityResolver
 {
-    private const MAP = [
-        'reciter' => Reciter::class,
-        'album' => Album::class,
-        'track' => Track::class,
-        'lyrics' => Lyrics::class,
-    ];
-
     public function toClassName(string $type): string
     {
-        return self::MAP[$type];
+        return [
+            EntityType::RECITER => Reciter::class,
+            EntityType::ALBUM => Album::class,
+            EntityType::TRACK => Track::class,
+            EntityType::LYRICS => Lyrics::class,
+        ][$type];
     }
 
     public function toLabel(Entity $entity): string
     {
-        $class = get_class($entity);
-        $label = collect(self::MAP)->flip()->get($class);
-
-        if ($label === null) {
-            throw new InvalidArgumentException('No mapping found for ' . $class);
+        switch (true) {
+            case $entity instanceof Reciter:
+                return EntityType::RECITER;
+            case $entity instanceof Album:
+                return EntityType::ALBUM;
+            case $entity instanceof Track:
+                return EntityType::TRACK;
+            case $entity instanceof Lyrics:
+                return EntityType::LYRICS;
+            default:
+                throw new InvalidArgumentException("Unknown entity type " . get_class($entity));
         }
-
-        return $label;
     }
 }

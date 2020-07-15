@@ -29,16 +29,14 @@ use Illuminate\Validation\ValidationException;
 class TracksController extends Controller
 {
     private TrackRepository $repository;
-    private EntityManager $em;
 
-    public function __construct(EntityManager $em, TrackRepository $repository, TrackTransformer $transformer)
+    public function __construct(TrackRepository $repository, TrackTransformer $transformer)
     {
         $this->transformer = $transformer;
         $this->repository = $repository;
-        $this->em = $em;
     }
 
-    public function index(Reciter $reciter, Album $album, Request $request): JsonResponse
+    public function index(Reciter $reciter, Album $album): JsonResponse
     {
         $tracks = $this->repository->allFromAlbum($album);
 
@@ -56,10 +54,10 @@ class TracksController extends Controller
             $format = $request->get('format', Format::PLAIN_TEXT);
             $lyric = new Lyrics($track, $request->get('lyrics'), new Format($format));
             $track->replaceLyrics($lyric);
-            event(new LyricsCreated($lyric, $request->user()));
+            event(new LyricsCreated($lyric));
         }
 
-        event(new TrackCreated($track, $request->user()));
+        event(new TrackCreated($track));
 
         $this->repository->persist($track);
 
@@ -79,13 +77,20 @@ class TracksController extends Controller
             $track->setTitle($request->get('title'));
         }
         if ($request->has('lyrics')) {
+            $old = $track->getLyrics();
+
             $format = $request->get('format', Format::PLAIN_TEXT);
-            $lyric = new Lyrics($track, $request->get('lyrics'), new Format($format));
-            $track->replaceLyrics($lyric);
-            event(new LyricsModified($lyric, $request->user()));
+            $lyrics = new Lyrics($track, $request->get('lyrics'), new Format($format));
+            $track->replaceLyrics($lyrics);
+
+            if ($old === null) {
+                event(new LyricsCreated($lyrics));
+            } else {
+                event(new LyricsModified($lyrics, $old));
+            }
         }
 
-        event(new TrackModified($track, $request->user()));
+        event(new TrackModified($track));
 
         $this->repository->persist($track);
 
@@ -101,7 +106,7 @@ class TracksController extends Controller
             Storage::delete($media->getPath());
         }
 
-        event(new TrackDeleted($track, $request->user()));
+        event(new TrackDeleted($track));
 
         $this->repository->remove($track);
 
@@ -123,7 +128,7 @@ class TracksController extends Controller
             Storage::delete($existing->getPath());
         }
 
-        event(new TrackModified($track, $request->user()));
+        event(new TrackModified($track));
 
         $this->repository->persist($track);
 

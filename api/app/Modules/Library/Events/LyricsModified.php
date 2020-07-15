@@ -8,19 +8,22 @@ use App\Entities\Contracts\Events\EntityPersisted;
 use App\Entities\Lyrics;
 use App\Enum\ChangeType;
 use App\Modules\Audit\Events\AuditableEvent;
+use App\Modules\Audit\Events\ChangeAwareAuditableEvent;
 
-class LyricsModified implements EntityPersisted, AuditableEvent
+class LyricsModified implements EntityPersisted, AuditableEvent, ChangeAwareAuditableEvent
 {
-    public Lyrics $lyrics;
+    public Lyrics $current;
+    public Lyrics $previous;
 
-    public function __construct(Lyrics $lyrics)
+    public function __construct(Lyrics $current, Lyrics $previous)
     {
-        $this->lyrics = $lyrics;
+        $this->current = $current;
+        $this->previous = $previous;
     }
 
     public function getEntity(): Lyrics
     {
-        return $this->lyrics;
+        return $this->current;
     }
 
     public function getEntityType(): string
@@ -31,5 +34,10 @@ class LyricsModified implements EntityPersisted, AuditableEvent
     public function getChangeType(): ChangeType
     {
         return ChangeType::UPDATED();
+    }
+
+    public function getPreviousEntity(): Lyrics
+    {
+        return $this->previous;
     }
 }

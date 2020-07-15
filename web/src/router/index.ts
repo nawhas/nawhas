@@ -2,8 +2,9 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 import Public from '@/layouts/Public.vue';
 import LyricsPrint from '@/layouts/LyricsPrint.vue';
-import ModeratorLayout from '@/layouts/ModeratorLayout.vue';
 import goTo from 'vuetify/es5/services/goto';
+import { Role } from '@/entities/user';
+import { enforceRole } from './guards';
 
 Vue.use(VueRouter);
 
@@ -51,22 +52,28 @@ const routes = [
       },
       {
         path: 'about',
-        name: 'About',
+        name: 'about',
         component: () => import(/* webpackChunkName: "about" */ '@/views/public/AboutView.vue'),
       },
       {
-        path: 'moderator-dashboard',
-        component: ModeratorLayout,
+        path: 'moderator',
+        component: () => import(/* webpackChunkName: "moderator" */ '@/layouts/ModeratorLayout.vue'),
+        beforeEnter: enforceRole(Role.Moderator),
         children: [
           {
-            path: 'revision-history',
-            name: 'ModeratorRevisionHistory',
-            component: () => import(/* webpackChunkName: "revision-history" */ '@/views/moderator/RevisionHistory.vue'),
+            path: '',
+            name: 'moderator.dashboard',
+            redirect: { name: 'moderator.history' },
+          },
+          {
+            path: 'history',
+            name: 'moderator.history',
+            component: () => import(/* webpackChunkName: "moderator" */ '@/views/moderator/RevisionHistory.vue'),
           },
           {
             path: 'users',
-            name: 'ModeratorUsers',
-            component: () => import(/* webpackChunkName: "revision-history" */ '@/views/moderator/RevisionHistory.vue'),
+            name: 'moderator.users',
+            component: () => import(/* webpackChunkName: "moderator" */ '@/views/moderator/RevisionHistory.vue'),
           },
         ],
       },

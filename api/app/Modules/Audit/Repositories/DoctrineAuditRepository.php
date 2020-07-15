@@ -8,10 +8,15 @@ use App\Exceptions\EntityNotFoundException;
 use App\Modules\Audit\Entities\AuditRecord;
 use App\Modules\Audit\Queries\AuditRecordQuery;
 use App\Repositories\Doctrine\DoctrineRepository;
+use App\Repositories\Doctrine\PaginatesQueries;
+use App\Support\Pagination\PaginationState;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 
 class DoctrineAuditRepository extends DoctrineRepository implements AuditRepository
 {
+    use PaginatesQueries;
+
     public function find(string $id): ?AuditRecord
     {
         return $this->query()->whereIdentifier($id)->first();
@@ -50,5 +55,13 @@ class DoctrineAuditRepository extends DoctrineRepository implements AuditReposit
     protected function entity(): string
     {
         return AuditRecord::class;
+    }
+
+    public function paginate(PaginationState $state): LengthAwarePaginator
+    {
+        $query = AuditRecordQuery::make()
+            ->orderBy('createdAt', 'DESC');
+
+        return $this->getPaginator($state, $query);
     }
 }
