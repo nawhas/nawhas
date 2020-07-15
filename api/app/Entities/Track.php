@@ -132,6 +132,11 @@ class Track implements Entity, TimestampedEntity, Visitable, AuditableEntity
         return new TrackVisit($this);
     }
 
+    public function getUrlPath(): string
+    {
+        return "{$this->getAlbum()->getUrlPath()}/tracks/{$this->getSlug()}";
+    }
+
     public function toArray()
     {
         return [

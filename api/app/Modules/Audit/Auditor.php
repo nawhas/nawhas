@@ -6,11 +6,11 @@ namespace App\Modules\Audit;
 
 use App\Database\Doctrine\EntityManager;
 use App\Enum\ChangeType;
-use App\Modules\Audit\Entities\AuditableEntity;
 use App\Modules\Audit\Entities\AuditRecord;
+use App\Modules\Audit\Events\AuditableEvent;
+use App\Modules\Audit\Events\ChangeAwareAuditableEvent;
 use App\Modules\Audit\Repositories\AuditRepository;
 use App\Modules\Authentication\Guard;
-use Illuminate\Support\Collection;
 
 class Auditor
 {
@@ -31,31 +31,64 @@ class Auditor
         $this->guard = $guard;
     }
 
-    public function record(AuditableEntity $entity, ChangeType $type): AuditRecord
+    public function record(AuditableEvent $event): ?AuditRecord
     {
-        $original = $type->equals(ChangeType::CREATED()) ? null : $this->getPreviousAttributes($entity)->toArray();
-        $new = $type->equals(ChangeType::DELETED()) ? null : $this->getCurrentAttributes($entity)->toArray();
+        $name = get_class($event);
+        $entity = $event->getEntity();
 
-        $entityId = $entity->getId();
-        $user = $this->guard->user();
+        $old = $this->getPreviousAttributes($event);
+        $new = $this->getCurrentAttributes($event);
 
-        $audit = new AuditRecord($type, $user, $this->resolver->toLabel($entity), $entityId, $original, $new);
+        if ($event->getChangeType() === ChangeType::UPDATED() && !$this->hasChanges($old, $new)) {
+            logger()->debug('[Auditor] No changes found in event: ' . $name);
+            return null;
+        }
+
+        $audit = new AuditRecord(
+            $event->getChangeType(),
+            $this->guard->user(),
+            $this->resolver->toLabel($entity),
+            $entity->getId(),
+            $old,
+            $new,
+        );
+
         $this->repository->persist($audit);
+        logger()->debug('[Auditor] Wrote audit record for event: ' . $name);
 
         return $audit;
     }
 
-    private function getPreviousAttributes(AuditableEntity $entity): Collection
+    private function hasChanges(array $old, array $new): bool
     {
-        $data = $this->em->getOriginalEntityData($entity);
-
-        return collect($data)->only($entity->getTrackedFields());
+        return collect($new)
+            ->filter(fn ($value, $key) => $value !== $old[$key])
+            ->isNotEmpty();
     }
 
-    private function getCurrentAttributes(AuditableEntity $entity): Collection
+    private function getPreviousAttributes(AuditableEvent $event): ?array
     {
-        $data = $entity->toArray();
+        if ($event->getChangeType()->equals(ChangeType::CREATED())) {
+            return null;
+        }
 
-        return collect($data)->only($entity->getTrackedFields());
+        if ($event instanceof ChangeAwareAuditableEvent) {
+            $data = $event->getPreviousEntity()->toArray();
+        } else {
+            $data = $this->em->getOriginalEntityData($event->getEntity());
+        }
+
+        return collect($data)->only($event->getEntity()->getTrackedFields())->toArray();
+    }
+
+    private function getCurrentAttributes(AuditableEvent $event): ?array
+    {
+        if ($event->getChangeType()->equals(ChangeType::DELETED())) {
+            return null;
+        }
+
+        $data = $event->getEntity()->toArray();
+
+        return collect($data)->only($event->getEntity()->getTrackedFields())->toArray();
     }
 }

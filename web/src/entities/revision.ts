@@ -3,6 +3,12 @@ import { Data as UserData } from './user';
 interface EntitySnapshot {
   [key: string]: any;
 }
+
+interface Metadata {
+  link: string;
+  [key: string]: string;
+}
+
 export interface Data {
   id: string;
   type: ChangeType;
@@ -11,13 +17,14 @@ export interface Data {
   entityId: string;
   old: EntitySnapshot | null;
   new: EntitySnapshot | null;
+  meta: Metadata;
   createdAt: string | null;
   updatedAt: string | null;
 }
 
 export enum ChangeType {
   Created = 'created',
-  Modified = 'modified',
+  Updated = 'updated',
   Deleted = 'deleted',
 }
 
@@ -28,7 +35,7 @@ export enum EntityType {
   Lyrics = 'lyrics'
 }
 
-export class Audit {
+export class Revision {
   constructor(private data: Data) { }
 
   get id(): string {
@@ -61,6 +68,10 @@ export class Audit {
 
   get createdAt(): string | null {
     return this.data.createdAt;
+  }
+
+  get meta(): Metadata {
+    return this.data.meta;
   }
 
   get updatedAt(): string | null {

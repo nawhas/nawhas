@@ -61,5 +61,6 @@ export default class ModeratorLayout extends Vue {
 }
 .moderator-layout__content {
   flex: 1 1;
+  max-width: calc(100% - 250px - 24px);
 }
 </style>

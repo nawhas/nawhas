@@ -1,53 +1,51 @@
 <template>
-  <v-card
-      :class="{ 'audit-card': true, 'audit-card--dark': $vuetify.theme.dark }"
-      outlined
-  >
-    <div class="audit-card__content">
-      <div class="audit-card__avatar">
+  <v-card :class="classes" outlined>
+    <router-link tag="div" :to="revision.meta.link" class="revision-card__content" v-ripple>
+      <div class="revision-card__avatar">
         <v-avatar size="40" class="avatar">
-          <v-icon color="white">{{ icon }}</v-icon>
+          <v-icon>{{ icon }}</v-icon>
         </v-avatar>
       </div>
-      <div class="audit-card__text">
-        <div class="audit-card__name body-1">
-          {{ name }}
-          <span class="subtitle" v-if="subtitle">{{ subtitle }}</span>
+      <div class="revision-card__text">
+        <div class="revision-card__title body-1">
+          {{ title }}
+          <span class="body-2 text--disabled" v-if="subtitle" v-text="subtitle"></span>
         </div>
-        <div class="audit-card__name change-type-container">
-          <v-avatar :color="indicatorColor" size="12" class="change-type-icon" />
-          <span class="change-type overline">{{ audit.type }}</span>
+        <div class="revision-card__name change-type-container">
+          <v-avatar :color="indicator" size="12" class="change-type-icon" />
+          <span class="change-type overline">{{ revision.type }}</span>
         </div>
       </div>
-      <div class="audit-card__text audit-card__text-right">
-        <div class="audit-card__name caption">2 hours ago</div>
-        <div class="audit-card__name caption">{{ audit.user.email }}</div>
+      <div class="revision-card__text revision-card__text-right">
+        <div class="revision-card__name caption">{{ revision.createdAt | relative }}</div>
+        <div class="revision-card__name caption">by {{ revision.user.email }}</div>
       </div>
-    </div>
-    <div class="audit-card__diff" v-if="isModified">
+    </router-link>
+    <div class="revision-card__diff" v-if="revision.type === ChangeType.Updated">
       <diff-viewer
           v-if="view === DiffView.Code"
-          :original="audit.old"
-          :modified="audit.new"
+          :original="revision.old"
+          :modified="revision.new"
       />
       <diff-table
           v-if="view === DiffView.Table"
-          :original="audit.old"
-          :modified="audit.new"
+          :original="revision.old"
+          :modified="revision.new"
       />
     </div>
   </v-card>
 </template>
 
 <script lang="ts">
-import { Component, Vue, Prop } from 'vue-property-decorator';
-import { Data as AuditData, ChangeType, EntityType } from '@/entities/audit';
+import { Component, Prop, Vue } from 'vue-property-decorator';
+import { relative } from '@/filters/date';
+import { ChangeType, EntityType, Revision } from '@/entities/revision';
 import DiffViewer from '@/components/moderator/DiffViewer.vue';
 import DiffTable from '@/components/moderator/DiffTable.vue';
 
 const colors = {
   [ChangeType.Created]: 'green',
-  [ChangeType.Modified]: 'orange',
+  [ChangeType.Updated]: 'orange',
   [ChangeType.Deleted]: 'red',
 };
 
@@ -55,6 +53,7 @@ const icons = {
   [EntityType.Reciter]: 'record_voice_over',
   [EntityType.Album]: 'album',
   [EntityType.Track]: 'music_note',
+  [EntityType.Lyrics]: 'speaker_notes',
 };
 
 enum DiffView {
@@ -62,69 +61,66 @@ enum DiffView {
 }
 
 @Component({
+  filters: {
+    relative,
+  },
   components: {
     DiffViewer,
     DiffTable,
   },
 })
 export default class RevisionHistoryCard extends Vue {
-  @Prop() private audit!: AuditData;
-  private DiffView = DiffView;
+  @Prop({ type: Object, required: true }) private readonly revision!: Revision;
+  private readonly DiffView = DiffView;
+  private readonly ChangeType = ChangeType;
 
-  get test() {
-    return JSON.stringify(this.audit.old, null, 2);
+  get classes() {
+    return {
+      'revision-card': true,
+      'revision-card--dark': this.$vuetify.theme.dark,
+    };
   }
 
   get view(): DiffView {
     return DiffView.Table;
   }
 
-  get indicatorColor() {
-    return colors[this.audit.type];
+  get indicator() {
+    return colors[this.revision.type];
   }
 
-  get name() {
-    // TODO - this needs to be specific to each type of audit record.
-    if (!this.audit.new && !this.audit.old) {
-      return false;
+  get title() {
+    const data = this.revision.new || this.revision.old || {};
+
+    switch (this.revision.entity) {
+      case EntityType.Reciter:
+        return data.name;
+      case EntityType.Album:
+      case EntityType.Track:
+        return data.title;
+      case EntityType.Lyrics:
+        return this.revision.meta.title;
+      default:
+        return 'Unknown';
     }
-    if (this.audit.new) {
-      return this.audit.new.name;
-    }
-    return this.audit.old ? this.audit.old.name : null;
   }
 
-  get subtitle(): string | null {
-    // TODO - Need to return the correct value
-    if (this.audit.entity === EntityType.Reciter) {
-      return null;
-    }
+  get subtitle() {
+    const { meta } = this.revision;
 
-    if (this.audit.new) {
-      return this.audit.new.name;
+    switch (this.revision.entity) {
+      case EntityType.Album:
+        return `(${meta.reciter})`;
+      case EntityType.Track:
+      case EntityType.Lyrics:
+        return `(${meta.reciter} • ${meta.year})`;
+      default:
+        return null;
     }
-
-    if (this.audit.old) {
-      return this.audit.old.name;
-    }
-
-    return null;
   }
 
   get icon(): string {
-    return icons[this.audit.entity];
-  }
-
-  get isCreated() {
-    return this.audit.type === ChangeType.Created;
-  }
-
-  get isModified() {
-    return this.audit.type === ChangeType.Modified;
-  }
-
-  get isDeleted() {
-    return this.audit.type === ChangeType.Deleted;
+    return icons[this.revision.entity];
   }
 }
 </script>
@@ -132,36 +128,33 @@ export default class RevisionHistoryCard extends Vue {
 <style lang="scss">
 @import '../../styles/theme';
 
-.audit-card {
+.revision-card {
   margin-bottom: 10px;
   background-color: transparent;
 
-  .audit-card__content {
+  .revision-card__content {
     padding: 16px;
     display: flex;
     align-items: center;
+    cursor: pointer;
   }
 
-  .audit-card__text {
+  .revision-card__text {
     margin-left: 16px;
     overflow: hidden;
-    @include transition(color);
-
-    .audit-card__name {
-      white-space: nowrap;
-      text-overflow: ellipsis;
-      overflow: hidden;
-      width: auto;
-    }
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    width: auto;
   }
 
-  .audit-card__text-right {
+  .revision-card__title {
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .revision-card__text-right {
     margin-left: auto;
     text-align: right;
-  }
-
-  .audit-card__avatar .avatar {
-    background-color: grey;
   }
 }
 
@@ -186,13 +179,13 @@ export default class RevisionHistoryCard extends Vue {
   }
 }
 
-.audit-card__diff {
+.revision-card__diff {
   width: 100%;
   border-top: 1px solid rgba(0,0,0,0.07);
 }
 
-.audit-card--dark {
-  .audit-card__diff {
+.revision-card--dark {
+  .revision-card__diff {
     border-top: 1px solid rgba(255,255,255,0.07);
   }
 }

@@ -18,6 +18,6 @@ class TrackEntityChanges
 
     public function handle(AuditableEvent $event): void
     {
-        $this->auditor->record($event->getEntity(), $event->getChangeType());
+        $this->auditor->record($event);
     }
 }
