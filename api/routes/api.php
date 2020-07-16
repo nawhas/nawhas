@@ -33,8 +33,8 @@ Route::prefix('v1')->group(function () {
         Route::post('login', [AuthController::class, 'login']);
         Route::post('register', [AuthController::class, 'register'])
             ->middleware(EnforceFeatureFlags::in([PublicUserRegistration::NAME]));
-        Route::post('logout', [AuthController::class, 'logout'])->middleware('auth:airlock');
-        Route::get('user', [AuthController::class, 'user'])->middleware('auth:airlock');
+        Route::post('logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
+        Route::get('user', [AuthController::class, 'user'])->middleware('auth:sanctum');
     });
 
     // Features
@@ -49,7 +49,7 @@ Route::prefix('v1')->group(function () {
         Route::get('/', [RecitersController::class, 'index']);
         Route::get('/{reciter}', [RecitersController::class, 'show']);
 
-        Route::middleware('auth:airlock')->group(function () {
+        Route::middleware('auth:sanctum')->group(function () {
             Route::post('/', [RecitersController::class, 'store']);
             Route::patch('/{reciter}', [RecitersController::class, 'update']);
             Route::post('/{reciter}/avatar', [RecitersController::class, 'uploadAvatar']);
@@ -62,7 +62,7 @@ Route::prefix('v1')->group(function () {
         Route::get('/', [AlbumsController::class, 'index']);
         Route::get('/{album}', [AlbumsController::class, 'show']);
 
-        Route::middleware('auth:airlock')->group(function () {
+        Route::middleware('auth:sanctum')->group(function () {
             Route::post('/', [AlbumsController::class, 'store']);
             Route::patch('/{album}', [AlbumsController::class, 'update']);
             Route::post('/{album}/artwork', [AlbumsController::class, 'uploadArtwork']);
@@ -75,7 +75,7 @@ Route::prefix('v1')->group(function () {
         Route::get('/', [TracksController::class, 'index']);
         Route::get('/{track}', [TracksController::class, 'show']);
 
-        Route::middleware('auth:airlock')->group(function () {
+        Route::middleware('auth:sanctum')->group(function () {
             Route::post('/', [TracksController::class, 'store']);
             Route::patch('/{track}', [TracksController::class, 'update']);
             Route::post('/{track}/media/audio', [TracksController::class, 'uploadTrackMedia']);
