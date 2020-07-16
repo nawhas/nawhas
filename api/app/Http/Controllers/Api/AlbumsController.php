@@ -11,10 +11,11 @@ use App\Http\Transformers\AlbumTransformer;
 use App\Repositories\AlbumRepository;
 use App\Repositories\TrackRepository;
 use App\Support\Pagination\PaginationState;
-use Illuminate\Support\Facades\Storage;
+use Doctrine\ORM\EntityManager;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
 use Zain\LaravelDoctrine\Algolia\SearchService;
 
@@ -88,8 +89,13 @@ class AlbumsController extends Controller
         return response()->noContent();
     }
 
-    public function uploadArtwork(Request $request, Reciter $reciter, Album $album, SearchService $search): JsonResponse
-    {
+    public function uploadArtwork(
+        Request $request,
+        Reciter $reciter,
+        Album $album,
+        SearchService $search,
+        EntityManager $em
+    ): JsonResponse {
         if (!$request->file('artwork')) {
             throw ValidationException::withMessages(['artwork' => 'An artwork file is required.']);
         }
@@ -105,7 +111,7 @@ class AlbumsController extends Controller
         $this->repository->persist($album);
 
         // Re-index associated tracks.
-        $search->index(app('em'), $album->getTracks()->toArray());
+        $search->index($em, $album->getTracks()->toArray());
 
         return $this->respondWithItem($album);
     }

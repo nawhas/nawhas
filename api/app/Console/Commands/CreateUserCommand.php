@@ -24,11 +24,6 @@ class CreateUserCommand extends Command
      */
     protected $description = 'Provision a user account.';
 
-    /**
-     * Execute the console command.
-     *
-     * @return bool
-     */
     public function handle(EntityManager $em): int
     {
         // Get variables from input scrypt
