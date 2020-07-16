@@ -7,7 +7,6 @@ namespace App\Modules\Library\Events;
 use App\Entities\Contracts\Events\EntityPersisted;
 use App\Entities\Lyrics;
 use App\Enum\ChangeType;
-use App\Modules\Audit\Entities\AuditableEntity;
 use App\Modules\Audit\Events\AuditableEvent;
 use App\Modules\Audit\Events\ChangeAwareAuditableEvent;
 
@@ -37,7 +36,7 @@ class LyricsModified implements EntityPersisted, AuditableEvent, ChangeAwareAudi
         return ChangeType::UPDATED();
     }
 
-    public function getPreviousEntity(): AuditableEntity
+    public function getPreviousEntity(): Lyrics
     {
         return $this->previous;
     }

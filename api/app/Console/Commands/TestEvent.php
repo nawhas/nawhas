@@ -29,7 +29,7 @@ class TestEvent extends Command
      */
     public function handle()
     {
-        event(new ReciterCreated(new Reciter('Asif Ali'), new User(Role::MODERATOR(), 'Asif Ali', 'shea786@live.co.uk', bcrypt('secret'))));
+        event(new ReciterCreated(new Reciter('Asif Ali')));
         // event(new ReciterModified(new Reciter('Zain Mehdi')));
     }
 }

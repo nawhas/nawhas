@@ -43,7 +43,7 @@ class RecitersController extends Controller
             $request->get('description')
         );
 
-        event(new ReciterCreated($reciter, $request->user()));
+        event(new ReciterCreated($reciter));
 
         $this->repository->persist($reciter);
 
@@ -66,7 +66,7 @@ class RecitersController extends Controller
             $reciter->setDescription($request->get('description'));
         }
 
-        event(new ReciterModified($reciter, $request->user()));
+        event(new ReciterModified($reciter));
 
         $this->repository->persist($reciter);
 
@@ -87,7 +87,7 @@ class RecitersController extends Controller
             Storage::delete($existing);
         }
 
-        event(new ReciterModified($reciter, $request->user()));
+        event(new ReciterModified($reciter));
         $this->repository->persist($reciter);
 
         return $this->respondWithItem($reciter);
