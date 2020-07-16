@@ -40,7 +40,7 @@
         "nunomaduro/collision": "^3",
         "nunomaduro/larastan": "^0.5.2",
         "phpstan/phpstan": "^0.12.11",
-        "phpunit/phpunit": "^8.0",
+        "phpunit/phpunit": "^9.0",
         "psalm/plugin-laravel": "^1.1",
         "vimeo/psalm": "^3.9"
     },
@@ -68,6 +68,7 @@
             "Tests\\": "tests/"
         }
     },
+    "minimum-stability": "dev",
     "prefer-stable": true,
     "scripts": {
         "phpstan": [
