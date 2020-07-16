@@ -6,6 +6,7 @@
           v-for="revision in revisions"
           :key="revision.id"
           :revision="revision" />
+      <v-pagination color="deep-orange" v-model="page" :length="length" circle @input="goToPage"></v-pagination>
     </div>
     <div class="revisions__loading text-center" v-else-if="loading">
       <v-progress-circular indeterminate />
@@ -30,16 +31,26 @@ import { Revision } from '@/entities/revision';
 export default class RevisionHistory extends Vue {
   private revisions: Array<Revision> = [];
   private loading = true;
+  private page = 1;
+  private length = 0;
 
   created() {
-    this.fetch();
+    this.fetch(this.page);
   }
 
-  async fetch() {
+  async fetch(page) {
     this.loading = true;
-    const response = await client.get('v1/revisions');
+    this.revisions = [];
+    const response = await client.get('v1/revisions', {
+      page,
+    });
     this.revisions = response.data.data.map((data) => new Revision(data));
+    this.length = response.data.meta.pagination.total_pages;
     this.loading = false;
+  }
+
+  goToPage(number) {
+    this.fetch(number);
   }
 }
 </script>
