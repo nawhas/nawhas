@@ -15,6 +15,7 @@ use App\Modules\Audit\Entities\AuditRecord;
 use App\Modules\Audit\EntityType;
 use App\Modules\Lyrics\Documents\Factory as DocumentFactory;
 use App\Modules\Lyrics\Documents\Format;
+use App\Modules\Lyrics\Documents\JsonV1\Document as JsonDocument;
 use Illuminate\Support\Facades\Storage;
 use League\Fractal\Resource\Item;
 
@@ -66,10 +67,16 @@ class AuditRecordTransformer extends Transformer
 
         if ($type->getValue() === EntityType::LYRICS) {
             if ($data['format'] !== null && $data['content'] !== null) {
-                $data['content'] = DocumentFactory::create(
+                $document = DocumentFactory::create(
                     $data['content'],
                     new Format($data['format'])
-                )->render();
+                );
+                $data['content'] = $document->render();
+                $data['timestamps'] = null;
+
+                if ($document instanceof JsonDocument) {
+                    $data['timestamps'] = $document->meta()->showTimestamps() ? 'Yes' : 'No';
+                }
             }
         }
 
