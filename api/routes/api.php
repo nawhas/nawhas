@@ -91,7 +91,7 @@ Route::prefix('v1')->group(function () {
     });
 
     // Audit routes
-    Route::prefix('revisions')->group(function () {
+    Route::middleware('auth:sanctum')->prefix('revisions')->group(function () {
         Route::get('/', [AuditController::class, 'index']);
     });
 });
