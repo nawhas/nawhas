@@ -9,6 +9,7 @@
 >
   <projectFiles>
     <directory name="app"/>
+    <directory name="database"/>
     <ignoreFiles>
       <directory name="vendor"/>
     </ignoreFiles>
