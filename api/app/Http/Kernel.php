@@ -19,7 +19,7 @@ class Kernel extends HttpKernel
         \Illuminate\Foundation\Http\Middleware\ValidatePostSize::class,
         \App\Http\Middleware\TrimStrings::class,
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
-        \Spatie\Cors\Cors::class,
+        \Fruitcake\Cors\HandleCors::class,
         \Zain\LaravelDoctrine\Jetpack\Middleware\FlushEntityManager::class,
     ];
 
@@ -39,7 +39,7 @@ class Kernel extends HttpKernel
         ],
 
         'api' => [
-            \Laravel\Airlock\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
+            \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
             // 'throttle:60,1', // TODO - Make this work with proxies.
             // TODO - Make this work with lower precedence than the explicit binding
              \App\Http\Middleware\SubstituteDoctrineBindings::class,

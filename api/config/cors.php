@@ -3,66 +3,39 @@
 return [
 
     /*
-     * A cors profile determines which origins, methods, headers are allowed for
-     * a given requests. The `DefaultProfile` reads its configuration from this
-     * config file.
-     *
-     * You can easily create your own cors profile.
-     * More info: https://github.com/spatie/laravel-cors/#creating-your-own-cors-profile
-     */
-    'cors_profile' => Spatie\Cors\CorsProfile\DefaultProfile::class,
+    |--------------------------------------------------------------------------
+    | Cross-Origin Resource Sharing (CORS) Configuration
+    |--------------------------------------------------------------------------
+    |
+    | Here you may configure your settings for cross-origin resource sharing
+    | or "CORS". This determines what cross-origin operations may execute
+    | in web browsers. You are free to adjust these settings as needed.
+    |
+    | To learn more: https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS
+    |
+    */
 
-    /*
-     * This configuration is used by `DefaultProfile`.
-     */
-    'default_profile' => [
+    'paths' => ['*'],
 
-        'allow_credentials' => true,
+    'allowed_methods' => ['*'],
 
-        'allow_origins' => [
-            'https://localhost:8080',
-            'https://*.onrender.com',
-            'https://' . env('APP_DOMAIN'),
-            'https://*.' . env('APP_DOMAIN'),
-            'https://' . env('APP_DOMAIN') . ':8080',
-            'https://*.' . env('APP_DOMAIN') . ':8080',
-            'https://*.ngrok.io',
-        ],
-
-        'allow_methods' => [
-            'POST',
-            'GET',
-            'OPTIONS',
-            'PUT',
-            'PATCH',
-            'DELETE',
-        ],
-
-        'allow_headers' => [
-            'Content-Type',
-            'X-Auth-Token',
-            'Origin',
-            'Authorization',
-            'X-XSRF-Token',
-        ],
-
-        'expose_headers' => [
-            'Cache-Control',
-            'Content-Language',
-            'Content-Type',
-            'Expires',
-            'Last-Modified',
-            'Pragma',
-        ],
-
-        'forbidden_response' => [
-            'message' => 'Forbidden (cors).',
-            'status' => 403,
-        ],
-
-        /*
-         * Preflight request will respond with value for the max age header.
-         */
-        'max_age' => 60 * 60 * 24,
+    'allowed_origins' => [
+        'https://localhost:8080',
+        'https://' . env('APP_DOMAIN'),
+        'https://*.' . env('APP_DOMAIN'),
+        'https://' . env('APP_DOMAIN') . ':8080',
+        'https://*.' . env('APP_DOMAIN') . ':8080',
+        'https://*.ngrok.io',
     ],
+
+    'allowed_origins_patterns' => [],
+
+    'allowed_headers' => ['*'],
+
+    'exposed_headers' => [],
+
+    'max_age' => 60 * 60 * 24,
+
+    'supports_credentials' => true,
+
 ];

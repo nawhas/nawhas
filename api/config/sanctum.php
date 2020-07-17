@@ -1,5 +1,13 @@
 <?php
 
+$local = env('APP_ENV') === 'local' ? [
+    env('APP_DOMAIN') . ':8080',
+    'localhost',
+    '127.0.0.1',
+    '127.0.0.1:8000',
+    '::1',
+] : [];
+
 return [
 
     /*
@@ -15,7 +23,7 @@ return [
 
     'stateful' => [
         env('APP_DOMAIN'),
-        env('APP_ENV') === 'local' ? 'localhost' : null,
+        ...$local,
     ],
 
     /*
@@ -33,17 +41,18 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Airlock Middleware
+    | Sanctum Middleware
     |--------------------------------------------------------------------------
     |
-    | When authenticating your first-party SPA with Airlock you may need to
-    | customize some of the middleware Airlock uses while processing the
+    | When authenticating your first-party SPA with Sanctum you may need to
+    | customize some of the middleware Sanctum uses while processing the
     | request. You may change the middleware listed below as required.
     |
     */
 
     'middleware' => [
         'verify_csrf_token' => App\Http\Middleware\VerifyCsrfToken::class,
+        'encrypt_cookies' => App\Http\Middleware\EncryptCookies::class,
     ],
 
 ];
