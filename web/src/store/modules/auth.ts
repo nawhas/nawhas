@@ -104,7 +104,7 @@ const actions = {
     client.post('/v1/auth/logout');
   },
   async [Actions.Check]({ commit }: Context) {
-    await client.get('/airlock/csrf-cookie');
+    await client.get('/sanctum/csrf-cookie');
     try {
       const response = await client.get('/v1/auth/user');
       commit(Mutations.Initialize, { user: response.data });

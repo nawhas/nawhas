@@ -24,12 +24,7 @@ class CreateUserCommand extends Command
      */
     protected $description = 'Provision a user account.';
 
-    /**
-     * Execute the console command.
-     *
-     * @return bool
-     */
-    public function handle(EntityManager $em): bool
+    public function handle(EntityManager $em): int
     {
         // Get variables from input scrypt
         $name = $this->option('name');
@@ -50,13 +45,13 @@ class CreateUserCommand extends Command
 
         $confirmed = $this->confirm('Are the details displayed above correct?');
         if (!$confirmed) {
-            return false;
+            return 1;
         }
         $password = bcrypt($password);
         // Create a new user with the information supplied
         $user = new User($role, $name, $email, $password);
         $em->persist($user);
         $em->flush();
-        return true;
+        return 0;
     }
 }

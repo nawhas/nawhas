@@ -3,9 +3,9 @@
 namespace App\Exceptions;
 
 use App\Modules\Features\Exceptions\FeatureNotEnabledException;
-use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Throwable;
 
 class Handler extends ExceptionHandler
 {
@@ -28,7 +28,7 @@ class Handler extends ExceptionHandler
         'password_confirmation',
     ];
 
-    protected function prepareException(Exception $e)
+    protected function prepareException(Throwable $e)
     {
         $e = parent::prepareException($e);
 
@@ -45,16 +45,7 @@ class Handler extends ExceptionHandler
         return $e;
     }
 
-
-    /**
-     * Report or log an exception.
-     *
-     * @param  \Exception  $exception
-     * @return void
-     *
-     * @throws \Exception
-     */
-    public function report(Exception $exception)
+    public function report(Throwable $exception)
     {
         if (app()->bound('sentry') && $this->shouldReport($exception)) {
             app('sentry')->captureException($exception);
@@ -63,16 +54,7 @@ class Handler extends ExceptionHandler
         parent::report($exception);
     }
 
-    /**
-     * Render an exception into an HTTP response.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Exception  $exception
-     * @return \Symfony\Component\HttpFoundation\Response
-     *
-     * @throws \Exception
-     */
-    public function render($request, Exception $exception)
+    public function render($request, Throwable $exception)
     {
         return parent::render($request, $exception);
     }

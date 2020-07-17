@@ -40,7 +40,7 @@ class ImportDataCommand extends Command
         AlbumRepository $albums,
         TrackRepository $tracks,
         EntityManager $em
-    ): bool {
+    ): int {
         $this->source = Storage::disk('import');
         $this->reciters = $reciters;
         $this->albums = $albums;
@@ -54,7 +54,7 @@ class ImportDataCommand extends Command
         if (!$this->source->exists('reciters')) {
             $this->error("The directory 'reciters' does not exist.");
 
-            return false;
+            return 1;
         }
 
         $this->comment('Importing data from S3...');
@@ -68,7 +68,7 @@ class ImportDataCommand extends Command
         $this->em->flush();
         $this->info('✅  Done!');
 
-        return true;
+        return 0;
     }
 
     private function importReciters(string $base): void
