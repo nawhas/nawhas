@@ -1,6 +1,6 @@
 <template>
-  <tr :class="classes">
-    <td class="overline">{{ attribute | startCase }}</td>
+  <tr :class="classes" v-show="!hideUnchanged || original !== modified">
+    <td class="row__label overline">{{ attribute | startCase }}</td>
     <td>
       <span v-if="original && isImage">
         <a class="external-link" :href="original" target="_blank">View Image</a>
@@ -51,6 +51,7 @@ export default class DiffTableRow extends Vue {
   @Prop({ type: String, required: true }) private readonly attribute !: string;
   @Prop() private readonly original !: string;
   @Prop() private readonly modified !: string;
+  @Prop({ type: Boolean, default: false }) private readonly hideUnchanged !: string;
 
   get classes() {
     return {
@@ -90,9 +91,10 @@ export default class DiffTableRow extends Vue {
     padding-bottom: 8px;
     white-space: pre-wrap;
   }
-  td.overline {
+  td.row__label {
     vertical-align: top;
     padding-top: 16px;
+    width: 120px;
   }
 }
 .diff-table__row--modified, .diff-table__row--modified:hover {
