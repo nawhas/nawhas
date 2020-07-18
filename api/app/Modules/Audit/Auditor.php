@@ -39,7 +39,7 @@ class Auditor
         $old = $this->getPreviousAttributes($event);
         $new = $this->getCurrentAttributes($event);
 
-        if ($event->getChangeType() === ChangeType::UPDATED() && !$this->hasChanges($old, $new)) {
+        if ($event->getChangeType()->equals(ChangeType::UPDATED()) && !$this->hasChanges($old, $new)) {
             logger()->debug('[Auditor] No changes found in event: ' . $name);
             return null;
         }

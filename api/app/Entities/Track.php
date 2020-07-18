@@ -145,7 +145,7 @@ class Track implements Entity, TimestampedEntity, Visitable, AuditableEntity
             'albumId' => $this->getAlbum()->getId(),
             'title' => $this->getTitle(),
             'slug' => $this->getSlug(),
-            'lyrics' => $this->getLyrics()->toArray(),
+            'lyrics' => optional($this->getLyrics())->toArray(),
         ];
     }
 

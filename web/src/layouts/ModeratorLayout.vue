@@ -37,11 +37,11 @@ export default class ModeratorLayout extends Vue {
         icon: 'history',
         to: 'moderator.history',
       },
-      {
-        text: 'Users',
-        icon: 'people',
-        to: 'moderator.users',
-      },
+      // {
+      //   text: 'Users',
+      //   icon: 'people',
+      //   to: 'moderator.users',
+      // },
     ];
   }
 }
