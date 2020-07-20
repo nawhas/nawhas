@@ -13,8 +13,6 @@ use App\Enum\MediaProvider;
 use App\Enum\MediaType;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\Common\Collections\Criteria;
-use Doctrine\Common\Collections\Selectable;
 use Illuminate\Support\Str;
 use Ramsey\Uuid\{Uuid, UuidInterface};
 use Zain\LaravelDoctrine\Jetpack\Serializer\SerializesAttributes;
@@ -92,6 +90,11 @@ class Track implements Entity, TimestampedEntity, Visitable, AuditableEntity
     public function replaceLyrics(Lyrics $lyrics): void
     {
         $this->lyrics = $lyrics;
+    }
+
+    public function removeLyrics(): void
+    {
+        $this->lyrics = null;
     }
 
     /**

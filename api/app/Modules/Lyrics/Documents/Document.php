@@ -8,5 +8,6 @@ interface Document
 {
     public function getFormat(): Format;
     public function render(): string;
+    public function isEmpty(): bool;
     public function __toString();
 }
