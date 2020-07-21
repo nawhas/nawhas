@@ -6,17 +6,24 @@ namespace App\Modules\Library\Projectors;
 
 use App\Modules\Library\Events\ReciterCreated;
 use App\Modules\Library\Models\Reciter;
-use Illuminate\Support\Str;
 use Spatie\EventSourcing\Projectors\{Projector, ProjectsEvents};
+use Throwable;
 
 class RecitersProjector implements Projector
 {
     use ProjectsEvents;
 
+    /**
+     * @param ReciterCreated $event
+     * @throws Throwable
+     */
     public function onReciterCreated(ReciterCreated $event): void
     {
-        $reciter = new Reciter($event->attributes);
-        $reciter->slug = Str::slug($reciter->name);
-        $reciter->save();
+        $data = collect($event->attributes);
+        $data->put('id', $event->id);
+
+        $reciter = new Reciter($data->all());
+
+        $reciter->saveOrFail();
     }
 }

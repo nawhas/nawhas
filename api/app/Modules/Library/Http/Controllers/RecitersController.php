@@ -5,33 +5,34 @@ declare(strict_types=1);
 namespace App\Modules\Library\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Http\Transformers\ReciterTransformer;
-use App\Modules\Library\Events\ReciterCreated;
 use App\Modules\Library\Http\Requests\CreateReciterRequest;
-use App\Modules\Library\Http\Resources\Reciter as ReciterResource;
+use App\Modules\Library\Http\Resources\ReciterResource;
 use App\Modules\Library\Models\Reciter;
-use App\Queries\ReciterQuery;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Http;
-use Ramsey\Uuid\Uuid;
+use App\Modules\Library\Services\ReciterService;
+use Illuminate\Http\Resources\Json\JsonResource;
 
 class RecitersController extends Controller
 {
-    public function __construct(ReciterTransformer $transformer)
+    private ReciterService $service;
+
+    public function __construct(ReciterService $service)
     {
-        $this->transformer = $transformer;
+        $this->service = $service;
     }
 
-    public function store(CreateReciterRequest $request)
+    public function store(CreateReciterRequest $request): JsonResource
     {
-        $fields = $request->fields();
-        $fields['id'] = Uuid::uuid1()->toString();
-
-        event(new ReciterCreated($fields));
-
-        $reciter = Reciter::find($fields['id']);
+        $reciter = $this->service->createReciter(
+            $request->get('name'),
+            $request->get('description'),
+            $request->get('avatar'),
+        );
 
         return new ReciterResource($reciter);
+    }
+
+    public function show(string $id): JsonResource
+    {
+        return new ReciterResource(Reciter::findOrFail($id));
     }
 }

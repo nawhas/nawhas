@@ -8,10 +8,12 @@ use Spatie\EventSourcing\ShouldBeStored;
 
 class ReciterCreated implements ShouldBeStored
 {
+    public string $id;
     public array $attributes = [];
 
-    public function __construct(array $attributes)
+    public function __construct(string $id, array $attributes)
     {
+        $this->id = $id;
         $this->attributes = $attributes;
     }
 }

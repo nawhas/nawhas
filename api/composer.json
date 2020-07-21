@@ -29,6 +29,7 @@
         "sentry/sentry-laravel": "1.7.0",
         "socialiteproviders/apple": "^3.0",
         "spatie/laravel-event-sourcing": "^3.2",
+        "spatie/laravel-sluggable": "^2.5",
         "timacdonald/has-parameters": "^1.0",
         "weirdan/doctrine-psalm-plugin": "^0.10.0",
         "zain/laravel-doctrine-algolia": "^0.1.0",
