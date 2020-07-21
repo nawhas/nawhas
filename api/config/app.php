@@ -182,6 +182,7 @@ return [
          * Application Module Service Providers
          */
         App\Modules\Features\ServiceProvider::class,
+        App\Modules\Library\ServiceProvider::class,
     ],
 
     /*
