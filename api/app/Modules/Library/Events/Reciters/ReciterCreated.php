@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Modules\Library\Events;
+namespace App\Modules\Library\Events\Reciters;
 
 use Spatie\EventSourcing\ShouldBeStored;
 

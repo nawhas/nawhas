@@ -6,7 +6,7 @@ namespace App\Modules\Library\Http\Requests;
 
 use App\Http\Requests\Request;
 
-class CreateReciterRequest extends Request
+class UpdateReciterRequest extends Request
 {
     public function authorize(): bool
     {

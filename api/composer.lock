@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "153466172b59afc9048cea12cb6dbfb7",
+    "content-hash": "2a3ff77a9b80539640c792171ca6d8a7",
     "packages": [
         {
             "name": "acelaya/doctrine-enum-type",
@@ -10810,12 +10810,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/barryvdh/laravel-ide-helper.git",
-                "reference": "4ffda148ce48b83eee2229f1819622566055083d"
+                "reference": "1b5881c1e2d616410011b1d5d8341a30bc249b62"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/barryvdh/laravel-ide-helper/zipball/4ffda148ce48b83eee2229f1819622566055083d",
-                "reference": "4ffda148ce48b83eee2229f1819622566055083d",
+                "url": "https://api.github.com/repos/barryvdh/laravel-ide-helper/zipball/1b5881c1e2d616410011b1d5d8341a30bc249b62",
+                "reference": "1b5881c1e2d616410011b1d5d8341a30bc249b62",
                 "shasum": ""
             },
             "require": {
@@ -10882,7 +10882,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2020-07-16T20:02:19+00:00"
+            "time": "2020-07-21T05:53:35+00:00"
         },
         {
             "name": "barryvdh/reflection-docblock",
