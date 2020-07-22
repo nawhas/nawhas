@@ -39,7 +39,6 @@ class TrackTransformer extends Transformer
 
     public function includeLyrics(Track $track): ?ResourceInterface
     {
-        // TODO
         if (($lyrics = $track->lyrics) === null) {
             return $this->null();
         }
@@ -50,7 +49,9 @@ class TrackTransformer extends Transformer
     public function includeMedia(Track $track): Primitive
     {
         return $this->primitive([
-            // todo
+            'data' => [
+
+            ],
         ]);
     }
 

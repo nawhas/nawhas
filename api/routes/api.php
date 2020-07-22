@@ -44,19 +44,6 @@ Route::prefix('v1')->group(function () {
             ->middleware(EnforceFeatureFlags::in([PublicUserRegistration::NAME]));
     });
 
-    // Album Tracks
-    Route::prefix('reciters/{reciter}/albums/{album}/tracks')->group(function () {
-        Route::get('/', [TracksController::class, 'index']);
-        Route::get('/{track}', [TracksController::class, 'show']);
-
-        Route::middleware('auth:sanctum')->group(function () {
-            Route::post('/', [TracksController::class, 'store']);
-            Route::patch('/{track}', [TracksController::class, 'update']);
-            Route::post('/{track}/media/audio', [TracksController::class, 'uploadTrackMedia']);
-            Route::delete('/{track}', [TracksController::class, 'destroy']);
-        });
-    });
-
     // Popular Routes
     Route::prefix('popular')->group(function () {
         Route::get('/reciters', [PopularEntitiesController::class, 'reciters']);

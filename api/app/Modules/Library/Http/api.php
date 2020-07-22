@@ -37,4 +37,21 @@ Route::prefix('v1')->group(function () {
             Route::delete('/{albumId}', [Controllers\AlbumsController::class, 'destroy']);
         });
     });
+
+    /*
+    |--------------------------------------------------------------------------
+    | Track Routes
+    |--------------------------------------------------------------------------
+    */
+    Route::prefix('reciters/{reciterId}/albums/{albumId}/tracks')->group(function () {
+        Route::get('/', [Controllers\TracksController::class, 'index']);
+        Route::get('/{trackId}', [Controllers\TracksController::class, 'show']);
+
+        Route::middleware('auth:sanctum')->group(function () {
+            Route::post('/', [Controllers\TracksController::class, 'store']);
+            Route::patch('/{trackId}', [Controllers\TracksController::class, 'update']);
+            Route::post('/{trackId}/media/audio', [Controllers\TracksController::class, 'uploadTrackMedia']);
+            Route::delete('/{trackId}', [Controllers\TracksController::class, 'destroy']);
+        });
+    });
 });

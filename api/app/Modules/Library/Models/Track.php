@@ -12,6 +12,7 @@ use App\Modules\Library\Events\Albums\{
     AlbumViewed,
     AlbumYearChanged
 };
+use App\Modules\Library\Events\Tracks\TrackAudioChanged;
 use App\Modules\Library\Events\Tracks\TrackCreated;
 use App\Modules\Library\Events\Tracks\TrackTitleChanged;
 use App\Modules\Library\Events\Tracks\TrackViewed;
@@ -20,6 +21,8 @@ use DateTimeInterface;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Ramsey\Uuid\Uuid;
 use Spatie\Sluggable\HasSlug;
 use Spatie\Sluggable\SlugOptions;
@@ -84,6 +87,11 @@ class Track extends Model implements TimestampedEntity
         }
     }
 
+    public function changeAudio(?string $path): void
+    {
+        event(new TrackAudioChanged($this->id, $path));
+    }
+
     public function getCreatedAt(): ?DateTimeInterface
     {
         return Carbon::make($this->created_at);
@@ -102,6 +110,16 @@ class Track extends Model implements TimestampedEntity
     public function album(): BelongsTo
     {
         return $this->belongsTo(Album::class);
+    }
+
+    public function lyrics(): BelongsTo
+    {
+        return $this->belongsTo(Lyrics::class, 'lyric_id');
+    }
+
+    public function media(): BelongsToMany
+    {
+        return $this->belongsToMany(Media::class, 'track_media');
     }
 
     public function getSlugOptions(): SlugOptions
