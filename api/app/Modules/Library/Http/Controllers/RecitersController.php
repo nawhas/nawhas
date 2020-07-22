@@ -6,43 +6,46 @@ namespace App\Modules\Library\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Modules\Library\Events\Reciters\ReciterDeleted;
+use App\Modules\Library\Http\Transformers\ReciterTransformer;
 use App\Modules\Library\Http\Requests\{CreateReciterRequest, UpdateReciterRequest};
-use App\Modules\Library\Http\Resources\{ReciterCollection, ReciterResource};
 use App\Modules\Library\Models\Reciter;
 use App\Support\Pagination\PaginationState;
-use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Http\Response;
+use Illuminate\Http\{JsonResponse, Request, Response};
 use Illuminate\Validation\ValidationException;
 
 class RecitersController extends Controller
 {
-    public function store(CreateReciterRequest $request): JsonResource
+    public function __construct(ReciterTransformer $transformer)
+    {
+        $this->transformer = $transformer;
+    }
+
+    public function store(CreateReciterRequest $request): JsonResponse
     {
         $reciter = Reciter::create(
             $request->name(),
             $request->description(),
         );
 
-        return new ReciterResource($reciter);
+        return $this->respondWithItem($reciter);
     }
 
-    public function index(Request $request): JsonResource
+    public function index(Request $request): JsonResponse
     {
         $reciters = Reciter::query()->orderBy('name')
             ->paginate(PaginationState::fromRequest($request)->getLimit());
 
-        return new ReciterCollection($reciters);
+        return $this->respondWithPaginator($reciters);
     }
 
-    public function show(string $id): JsonResource
+    public function show(string $id): JsonResponse
     {
         $reciter = Reciter::show($id);
 
-        return new ReciterResource($reciter);
+        return $this->respondWithItem($reciter);
     }
 
-    public function update(string $id, UpdateReciterRequest $request): JsonResource
+    public function update(string $id, UpdateReciterRequest $request): JsonResponse
     {
         $reciter = Reciter::retrieve($id);
 
@@ -54,10 +57,10 @@ class RecitersController extends Controller
             $reciter->changeDescription($request->description());
         }
 
-        return new ReciterResource($reciter->fresh());
+        return $this->respondWithItem($reciter->fresh());
     }
 
-    public function uploadAvatar(string $id, Request $request): JsonResource
+    public function uploadAvatar(string $id, Request $request): JsonResponse
     {
         $reciter = Reciter::retrieve($id);
 
@@ -69,7 +72,7 @@ class RecitersController extends Controller
 
         $reciter->changeAvatar($path);
 
-        return new ReciterResource($reciter->fresh());
+        return $this->respondWithItem($reciter->fresh());
     }
 
     public function delete(string $id): Response

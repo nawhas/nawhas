@@ -6,7 +6,7 @@ use Illuminate\Database\Migrations\Migration;
 
 class CreateStoredEventsTable extends Migration
 {
-    public function up()
+    public function up(): void
     {
         Schema::create('stored_events', function (Blueprint $table) {
             $table->bigIncrements('id');

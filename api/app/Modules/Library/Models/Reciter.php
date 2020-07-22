@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Modules\Library\Models;
 
+use App\Entities\Contracts\TimestampedEntity;
+use DateTimeInterface;
 use Illuminate\Database\Eloquent\Builder;
 use App\Modules\Library\Events\Reciters\{
     ReciterAvatarChanged,
@@ -22,7 +24,7 @@ use Throwable;
 /**
  * @property string $id
  */
-class Reciter extends Model
+class Reciter extends Model implements TimestampedEntity
 {
     use HasSlug;
 
@@ -103,5 +105,15 @@ class Reciter extends Model
         } catch (Throwable $e) {
             throw new RuntimeException('Failed to persist ' . self::class, 0, $e);
         }
+    }
+
+    public function getCreatedAt(): ?DateTimeInterface
+    {
+        return $this->created_at;
+    }
+
+    public function getUpdatedAt(): ?DateTimeInterface
+    {
+        return $this->updated_at;
     }
 }

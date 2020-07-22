@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Console\Commands\ImportDataCommand;
 use Illuminate\Contracts\Filesystem\Filesystem;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Sanctum\Sanctum;
@@ -42,6 +43,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        JsonResource::withoutWrapping();
     }
 }
