@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace App\Modules\Library\Http\Transformers;
 
+use App\Enum\MediaType;
 use App\Http\Transformers\Transformer;
 use App\Modules\Library\Models\Track;
+use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\Item;
 use League\Fractal\Resource\Primitive;
 use League\Fractal\Resource\ResourceInterface;
@@ -46,20 +48,16 @@ class TrackTransformer extends Transformer
         return $this->item($lyrics, new LyricsTransformer());
     }
 
-    public function includeMedia(Track $track): Primitive
+    public function includeMedia(Track $track): Collection
     {
-        return $this->primitive([
-            'data' => [
-
-            ],
-        ]);
+        return $this->collection($track->media, new MediaTransformer());
     }
 
     public function includeRelated(Track $track): Primitive
     {
         return $this->primitive([
             'lyrics' => $track->lyrics_id !== null,
-            'audio' => $track->audio !== null,
+            'audio' => $track->media()->where('type', MediaType::AUDIO)->count() > 0,
         ]);
     }
 }
