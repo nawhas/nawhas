@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Modules\Library\Http\Transformers;
 
-use App\Http\Transformers\TrackTransformer;
 use App\Http\Transformers\Transformer;
 use App\Modules\Library\Models\Album;
 use Illuminate\Support\Facades\Storage;

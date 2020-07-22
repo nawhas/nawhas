@@ -10,12 +10,12 @@ class TrackCreated implements ShouldBeStored
 {
     public string $id;
     public string $albumId;
-    public string $title;
+    public array $attributes = [];
 
-    public function __construct(string $id, string $albumId, string $title)
+    public function __construct(string $id, string $albumId, array $attributes)
     {
         $this->id = $id;
         $this->albumId = $albumId;
-        $this->title = $title;
+        $this->attributes = $attributes;
     }
 }

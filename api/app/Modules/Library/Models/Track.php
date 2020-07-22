@@ -12,30 +12,34 @@ use App\Modules\Library\Events\Albums\{
     AlbumViewed,
     AlbumYearChanged
 };
+use App\Modules\Library\Events\Tracks\TrackCreated;
+use App\Modules\Library\Events\Tracks\TrackTitleChanged;
+use App\Modules\Library\Events\Tracks\TrackViewed;
 use Carbon\Carbon;
 use DateTimeInterface;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Ramsey\Uuid\Uuid;
+use Spatie\Sluggable\HasSlug;
+use Spatie\Sluggable\SlugOptions;
 
 /**
  * @property string $id
  */
-class Album extends Model implements TimestampedEntity
+class Track extends Model implements TimestampedEntity
 {
+    use HasSlug;
+
     protected $keyType = 'string';
     protected $guarded = [];
 
-    public static function create(Reciter $reciter, string $title, string $year, ?string $artwork = null): self
+    public static function create(Album $album, string $title): self
     {
         $id = Uuid::uuid1()->toString();
 
-        event(new AlbumCreated($id, $reciter->id, [
+        event(new TrackCreated($id, $album->id, [
             'title' => $title,
-            'year' => $year,
-            'artwork' => $artwork,
         ]));
 
         return self::retrieve($id);
@@ -44,7 +48,7 @@ class Album extends Model implements TimestampedEntity
     /**
      * @throws ModelNotFoundException
      */
-    public static function retrieve(string $identifier, ?string $reciterId = null): self
+    public static function retrieve(string $identifier, ?string $albumId = null): self
     {
         if (Uuid::isValid($identifier)) {
             /** @var self $model */
@@ -54,8 +58,8 @@ class Album extends Model implements TimestampedEntity
 
         /** @var self $model */
         $model = self::query()
-            ->where('reciter_id', $reciterId)
-            ->where('year', $identifier)
+            ->where('album_id', $albumId)
+            ->where('slug', $identifier)
             ->firstOrFail();
 
         return $model;
@@ -66,31 +70,17 @@ class Album extends Model implements TimestampedEntity
      */
     public static function show(string $id): self
     {
-        $album = self::retrieve($id);
+        $track = self::retrieve($id);
 
-        event(new AlbumViewed($album->id));
+        event(new TrackViewed($track->id));
 
-        return $album;
+        return $track;
     }
 
     public function changeTitle(string $title): void
     {
         if ($title !== $this->title) {
-            event(new AlbumTitleChanged($this->id, $title));
-        }
-    }
-
-    public function changeYear(string $year): void
-    {
-        if ($year !== $this->year) {
-            event(new AlbumYearChanged($this->id, $year));
-        }
-    }
-
-    public function changeArtwork(string $artwork): void
-    {
-        if ($this->artwork !== $artwork) {
-            event(new AlbumArtworkChanged($this->id, $artwork));
+            event(new TrackTitleChanged($this->id, $title));
         }
     }
 
@@ -109,8 +99,16 @@ class Album extends Model implements TimestampedEntity
         return $this->belongsTo(Reciter::class);
     }
 
-    public function tracks(): HasMany
+    public function album(): BelongsTo
     {
-        return $this->hasMany(Track::class);
+        return $this->belongsTo(Album::class);
+    }
+
+    public function getSlugOptions(): SlugOptions
+    {
+        return SlugOptions::create()
+            ->generateSlugsFrom('title')
+            ->saveSlugsTo('slug')
+            ->allowDuplicateSlugs();
     }
 }
