@@ -28,7 +28,7 @@ class ReciterTransformer extends Transformer
     public function includeRelated(Reciter $reciter): Primitive
     {
         return $this->primitive([
-            'albums' => 0, // TODO - when album model is done.
+            'albums' => $reciter->albums()->count(),
         ]);
     }
 }

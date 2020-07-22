@@ -23,28 +23,28 @@ class RecitersProjector implements Projector
 
         $reciter = new Reciter($data->all());
 
-        $reciter->persist();
+        $reciter->saveOrFail();
     }
 
     public function onReciterNameChanged(ReciterNameChanged $event): void
     {
         $reciter = Reciter::retrieve($event->id);
         $reciter->name = $event->name;
-        $reciter->persist();
+        $reciter->saveOrFail();
     }
 
     public function onReciterDescriptionChanged(ReciterDescriptionChanged $event): void
     {
         $reciter = Reciter::retrieve($event->id);
         $reciter->description = $event->description;
-        $reciter->persist();
+        $reciter->saveOrFail();
     }
 
     public function onReciterAvatarChanged(ReciterAvatarChanged $event): void
     {
         $reciter = Reciter::retrieve($event->id);
         $reciter->avatar = $event->avatar;
-        $reciter->persist();
+        $reciter->saveOrFail();
     }
 
     public function onReciterDeleted(ReciterDeleted $event): void

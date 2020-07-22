@@ -6,7 +6,7 @@ namespace App\Modules\Library\Events\Reciters;
 
 use Spatie\EventSourcing\ShouldBeStored;
 
-class ReciterVisited implements ShouldBeStored
+class ReciterViewed implements ShouldBeStored
 {
     public string $id;
 

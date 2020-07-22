@@ -5,21 +5,20 @@ declare(strict_types=1);
 namespace App\Modules\Library\Models;
 
 use App\Entities\Contracts\TimestampedEntity;
+use Carbon\Carbon;
 use DateTimeInterface;
-use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use App\Modules\Library\Events\Reciters\{
     ReciterAvatarChanged,
     ReciterCreated,
     ReciterDescriptionChanged,
     ReciterNameChanged,
-    ReciterVisited
+    ReciterViewed
 };
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Ramsey\Uuid\Uuid;
-use RuntimeException;
 use Spatie\Sluggable\{HasSlug, SlugOptions};
-use Throwable;
 
 /**
  * @property string $id
@@ -40,7 +39,7 @@ class Reciter extends Model implements TimestampedEntity
 
     public static function create(string $name, ?string $description = null, ?string $avatar = null): self
     {
-        $id = (string)Uuid::uuid1();
+        $id = Uuid::uuid1()->toString();
 
         event(new ReciterCreated($id, [
             'name' => $name,
@@ -56,13 +55,18 @@ class Reciter extends Model implements TimestampedEntity
      */
     public static function retrieve(string $identifier): self
     {
-        /** @var Reciter $reciter */
-        $reciter = self::query()
-            ->when(Uuid::isValid($identifier), fn (Builder $query) => $query->where('id', $identifier))
-            ->orWhere('slug', $identifier)
+        if (Uuid::isValid($identifier)) {
+            /** @var self $model */
+            $model = self::query()->findOrFail($identifier);
+            return $model;
+        }
+
+        /** @var self $model */
+        $model = self::query()
+            ->where('slug', $identifier)
             ->firstOrFail();
 
-        return $reciter;
+        return $model;
     }
 
     /**
@@ -72,7 +76,7 @@ class Reciter extends Model implements TimestampedEntity
     {
         $reciter = self::retrieve($id);
 
-        event(new ReciterVisited($id));
+        event(new ReciterViewed($reciter->id));
 
         return $reciter;
     }
@@ -98,22 +102,18 @@ class Reciter extends Model implements TimestampedEntity
         }
     }
 
-    public function persist(): void
-    {
-        try {
-            self::saveOrFail();
-        } catch (Throwable $e) {
-            throw new RuntimeException('Failed to persist ' . self::class, 0, $e);
-        }
-    }
-
     public function getCreatedAt(): ?DateTimeInterface
     {
-        return $this->created_at;
+        return Carbon::make($this->created_at);
     }
 
     public function getUpdatedAt(): ?DateTimeInterface
     {
-        return $this->updated_at;
+        return Carbon::make($this->updated_at);
+    }
+
+    public function albums(): HasMany
+    {
+        return $this->hasMany(Album::class);
     }
 }
