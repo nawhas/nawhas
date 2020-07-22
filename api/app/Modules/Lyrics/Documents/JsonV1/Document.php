@@ -8,6 +8,7 @@ use App\Modules\Lyrics\Documents\Document as DocumentContract;
 use App\Modules\Lyrics\Documents\Format;
 use Illuminate\Contracts\Support\Jsonable;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Stringable;
 
 class Document implements DocumentContract, Jsonable
 {
@@ -86,5 +87,12 @@ class Document implements DocumentContract, Jsonable
     public function __toString()
     {
         return $this->render();
+    }
+
+    public function isEmpty(): bool
+    {
+        return (new Stringable($this->render()))
+            ->trim()
+            ->isEmpty();
     }
 }
