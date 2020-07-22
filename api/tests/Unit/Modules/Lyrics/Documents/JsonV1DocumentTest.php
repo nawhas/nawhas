@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace Tests\Unit\Modules\Lyrics\Documents;
 
 use App\Modules\Lyrics\Documents\JsonV1\Document;
-use Illuminate\Validation\ValidationException;
-use JsonException;
 use Tests\TestCase;
 
 class JsonV1DocumentTest extends TestCase
@@ -125,7 +123,6 @@ class JsonV1DocumentTest extends TestCase
      */
     public function it_renders_to_string_properly(): void
     {
-
         $source = /** @lang JSON */ <<<JSON
         {
            "meta": {
@@ -169,5 +166,146 @@ class JsonV1DocumentTest extends TestCase
         $doc = Document::fromJson($source);
 
         $this->assertEquals($expected, $doc->render());
+    }
+
+    /**
+     * @test
+     * @dataProvider provideContentsForEmptyTest
+     */
+    public function it_determines_empty_documents_correctly(string $content, bool $expected): void
+    {
+
+        $doc = Document::fromJson($content);
+
+        $this->assertEquals($expected, $doc->isEmpty());
+    }
+
+    public function provideContentsForEmptyTest(): array
+    {
+        return [
+            'empty json' => ['{}', true],
+            'empty document with timestamps enabled' => [
+                /** @lang JSON */ <<<JSON
+                {
+                  "meta": {
+                    "timestamps": true
+                  },
+                  "data": [
+                    {
+                      "timestamp": 0,
+                      "lines": [
+                        {
+                          "text": "",
+                          "repeat": 0
+                        }
+                      ]
+                    }
+                  ]
+                }
+                JSON,
+                true,
+            ],
+            'empty document with timestamps disabled' => [
+                /** @lang JSON */ <<<JSON
+                {
+                  "meta": {
+                    "timestamps": false
+                  },
+                  "data": [
+                    {
+                      "timestamp": 0,
+                      "lines": [
+                        {
+                          "text": "",
+                          "repeat": 0
+                        }
+                      ]
+                    }
+                  ]
+                }
+                JSON,
+                true,
+            ],
+            'lots_of_empty_document_lines' => [
+                /** @lang JSON */ <<<JSON
+                {
+                  "meta": {
+                    "timestamps": false
+                  },
+                  "data": [
+                    {
+                      "timestamp": 0,
+                      "lines": [
+                        {
+                          "text": "",
+                          "repeat": 0
+                        },
+                        {
+                          "text": "",
+                          "repeat": 0
+                        },
+                        {
+                          "text": "\\t\\t\\t",
+                          "repeat": 0
+                        },
+                        {
+                          "text": "\\t",
+                          "repeat": 0
+                        }
+                      ]
+                    },
+                    {
+                      "timestamp": 0,
+                      "lines": [
+                        {
+                          "text": "    ",
+                          "repeat": 0
+                        },
+                        {
+                          "text": "     ",
+                          "repeat": 0
+                        }
+                      ]
+                    }
+                  ]
+                }
+                JSON,
+                true,
+            ],
+            'not empty' => [
+                /** @lang JSON */ <<<JSON
+                {
+                  "meta": {
+                    "timestamps": true
+                  },
+                  "data": [
+                    {
+                      "timestamp": 0,
+                      "lines": [
+                        {
+                          "text": "h",
+                          "repeat": 0
+                        }
+                      ]
+                    },
+                    {
+                      "timestamp": 0,
+                      "lines": [
+                        {
+                          "text": "    ",
+                          "repeat": 0
+                        },
+                        {
+                          "text": "     ",
+                          "repeat": 0
+                        }
+                      ]
+                    }
+                  ]
+                }
+                JSON,
+                false,
+            ],
+        ];
     }
 }

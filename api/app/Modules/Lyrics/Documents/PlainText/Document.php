@@ -6,6 +6,7 @@ namespace App\Modules\Lyrics\Documents\PlainText;
 
 use App\Modules\Lyrics\Documents\Document as DocumentContract;
 use App\Modules\Lyrics\Documents\Format;
+use Illuminate\Support\Stringable;
 
 class Document implements DocumentContract
 {
@@ -29,6 +30,13 @@ class Document implements DocumentContract
         $content = trim($content);
 
         return $content;
+    }
+
+    public function isEmpty(): bool
+    {
+        return (new Stringable($this->render()))
+            ->trim()
+            ->isEmpty();
     }
 
     public function __toString()
