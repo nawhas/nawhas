@@ -56,7 +56,7 @@ class TrackTransformer extends Transformer
     public function includeRelated(Track $track): Primitive
     {
         return $this->primitive([
-            'lyrics' => $track->lyrics_id !== null,
+            'lyrics' => $track->lyric_id !== null,
             'audio' => $track->media()->where('type', MediaType::AUDIO)->count() > 0,
         ]);
     }
