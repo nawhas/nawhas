@@ -8,7 +8,7 @@ class CreateStoredEventsTable extends Migration
 {
     public function up(): void
     {
-        Schema::create('stored_events', function (Blueprint $table) {
+        Schema::connection('events')->create('stored_events', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->uuid('aggregate_uuid')->nullable();
             $table->unsignedBigInteger('aggregate_version')->nullable();
@@ -23,6 +23,6 @@ class CreateStoredEventsTable extends Migration
 
     public function down(): void
     {
-        Schema::drop('stored_events');
+        Schema::connection('events')->drop('stored_events');
     }
 }

@@ -8,7 +8,7 @@ class CreateSnapshotsTable extends Migration
 {
     public function up(): void
     {
-        Schema::create('snapshots', function (Blueprint $table) {
+        Schema::connection('events')->create('snapshots', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->uuid('aggregate_uuid');
             $table->unsignedInteger('aggregate_version');
@@ -22,6 +22,6 @@ class CreateSnapshotsTable extends Migration
 
     public function down(): void
     {
-        Schema::drop('snapshots');
+        Schema::connection('events')->drop('snapshots');
     }
 }

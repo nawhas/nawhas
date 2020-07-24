@@ -27,9 +27,7 @@ class BootApplication extends Command
                 'config:cache',
                 'route:cache',
                 'wait:database',
-                ['doctrine:migrations:migrate', [
-                    '--force' => true, '--allow-no-migration' => true,
-                ]],
+                'migrate:all',
                 'doctrine:clear:metadata:cache',
                 'doctrine:generate:proxies',
                 'search:settings:push',
