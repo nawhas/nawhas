@@ -7,7 +7,7 @@ return [
      * will be registered to Projectionist automatically.
      */
     'auto_discover_projectors_and_reactors' => [
-        app()->path(),
+        app()->path('Modules'),
     ],
 
     /*
@@ -46,7 +46,7 @@ return [
      * To add extra behaviour you can change this to a class of your own. It should
      * extend the \Spatie\EventSourcing\Models\EloquentStoredEvent model.
      */
-    'stored_event_model' => \Spatie\EventSourcing\Models\EloquentStoredEvent::class,
+    'stored_event_model' => \App\Events\StoredEvent::class,
 
     /*
      * This class is responsible for storing events. To add extra behaviour you

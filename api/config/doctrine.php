@@ -24,7 +24,7 @@ return [
         'default' => [
             'dev' => env('APP_DEBUG', false),
             'meta' => 'fluent',
-            'connection' => env('DB_CONNECTION', 'pgsql'),
+            'connection' => 'pgsql',
             'namespaces' => [],
             'paths' => [
                 base_path('app/Entities'),

@@ -5,6 +5,8 @@ networks:
 
 volumes:
   postgres:
+  pg_events:
+  pg_data:
   redis:
 
 services:
@@ -70,6 +72,36 @@ services:
     volumes:
       - postgres:/var/lib/postgresql/data
       - ./docker/postgres/scripts:/usr/local/sbin
+    networks:
+      - nawhas
+  events_db:
+    image: postgres:11
+    container_name: nawhas_events_db
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "5433:5432"
+    environment:
+      - POSTGRES_DB=nawhas_events
+      - POSTGRES_USER=docker
+      - POSTGRES_PASSWORD=secret
+    volumes:
+      - pg_events:/var/lib/postgresql/data
+    networks:
+      - nawhas
+  data_db:
+    image: postgres:11
+    container_name: nawhas_data_db
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "5434:5432"
+    environment:
+      - POSTGRES_DB=nawhas_data
+      - POSTGRES_USER=docker
+      - POSTGRES_PASSWORD=secret
+    volumes:
+      - pg_data:/var/lib/postgresql/data
     networks:
       - nawhas
   cache:
