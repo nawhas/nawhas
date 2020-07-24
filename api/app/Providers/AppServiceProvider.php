@@ -4,8 +4,10 @@ namespace App\Providers;
 
 use App\Console\Commands\ImportDataCommand;
 use Illuminate\Contracts\Filesystem\Filesystem;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\ServiceProvider;
+use Laravel\Sanctum\Sanctum;
 use League\Fractal\Manager as Fractal;
 use League\Fractal\Serializer\ArraySerializer;
 
@@ -18,6 +20,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        Sanctum::ignoreMigrations();
+
         $this->app->singleton(Fractal::class, function (): Fractal {
             $fractal = new Fractal();
 
@@ -39,6 +43,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        JsonResource::withoutWrapping();
     }
 }
