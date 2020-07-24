@@ -17,10 +17,10 @@ class CreateTracksTable extends Migration
             $table->uuid('id')->primary();
             $table->uuid('reciter_id');
             $table->uuid('album_id');
-            $table->uuid('lyrics_id')->nullable();
             $table->string('title');
             $table->string('slug')->unique();
             $table->string('audio')->nullable();
+            $table->json('lyrics')->nullable();
             $table->timestamps();
         });
     }
