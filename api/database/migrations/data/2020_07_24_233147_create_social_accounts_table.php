@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateAlbumsTable extends Migration
+class CreateSocialAccountsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,15 +13,14 @@ class CreateAlbumsTable extends Migration
      */
     public function up()
     {
-        Schema::connection('data')->create('albums', function (Blueprint $table) {
+        Schema::connection('data')->create('social_accounts', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->uuid('reciter_id');
-            $table->string('title');
-            $table->string('year');
-            $table->string('artwork')->nullable();
+            $table->uuid('user_id');
+            $table->string('provider');
+            $table->string('provider_id');
             $table->timestamps();
 
-            $table->unique(['reciter_id', 'year']);
+            $table->unique(['provider', 'provider_id']);
         });
     }
 
@@ -32,6 +31,6 @@ class CreateAlbumsTable extends Migration
      */
     public function down()
     {
-        Schema::connection('data')->dropIfExists('albums');
+        Schema::connection('data')->dropIfExists('social_accounts');
     }
 }

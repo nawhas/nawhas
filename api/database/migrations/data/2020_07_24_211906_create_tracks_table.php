@@ -22,6 +22,8 @@ class CreateTracksTable extends Migration
             $table->string('audio')->nullable();
             $table->json('lyrics')->nullable();
             $table->timestamps();
+
+            $table->unique(['album_id', 'slug']);
         });
     }
 
