@@ -15,11 +15,11 @@ use App\Modules\Authentication\Events\UserRememberTokenChanged;
 use App\Modules\Authentication\Events\UserRoleChanged;
 use Carbon\Carbon;
 use DateTimeInterface;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Ramsey\Uuid\Uuid;
 
-class User extends Model implements TimestampedEntity
+class User extends Authenticatable implements TimestampedEntity
 {
     protected $keyType = 'string';
 

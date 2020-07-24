@@ -51,7 +51,7 @@ class OAuthController extends Controller
         $socialiteUser = $this->socialite->driver($provider)->user();
 
         // Need to change this to the new Repo
-        $socialAccount = SocialAccount::findByProviderId($provider, $socialiteUser->getId())
+        $socialAccount = SocialAccount::findByProviderId($provider, $socialiteUser->getId());
 
         if ($socialAccount !== null) {
             $user = $socialAccount->user;
