@@ -1,11 +1,11 @@
 <?php
 
+declare(strict_types=1);
 
 namespace App\Modules\Authentication\Models;
 
-
 use App\Entities\Contracts\TimestampedEntity;
-use App\Enum\Role;
+use App\Modules\Authentication\Enum\Role;
 use App\Modules\Authentication\Events\UserEmailChanged;
 use App\Modules\Authentication\Events\UserNameChanged;
 use App\Modules\Authentication\Events\UserNicknameChanged;
@@ -15,11 +15,11 @@ use App\Modules\Authentication\Events\UserRememberTokenChanged;
 use App\Modules\Authentication\Events\UserRoleChanged;
 use Carbon\Carbon;
 use DateTimeInterface;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Ramsey\Uuid\Uuid;
 
-class User extends Model implements TimestampedEntity
+class User extends Authenticatable implements TimestampedEntity
 {
     protected $keyType = 'string';
 
@@ -31,7 +31,7 @@ class User extends Model implements TimestampedEntity
             'role' => $role,
             'name' => $name,
             'email' => $email,
-            'password' => $password,
+            'password' => bcrypt($password),
             'rememberToken' => $rememberToken,
             'nickname' => $nickname,
         ]));
@@ -40,14 +40,19 @@ class User extends Model implements TimestampedEntity
     }
 
     /**
-     * @param string $identifier
      * @throws ModelNotFoundException
-     * @return User
      */
     public static function retrieve(string $identifier): self
     {
         /** @var self $model */
         $model = self::query()->findOrFail($identifier);
+        return $model;
+    }
+
+    public static function findByEmail(string $email): self
+    {
+        /** @var self $model */
+        $model = self::query()->where('email', $email)->firstOrFail();
         return $model;
     }
 
@@ -91,6 +96,13 @@ class User extends Model implements TimestampedEntity
         if ($nickname !== $this->nickname) {
             event(new UserNicknameChanged($this->id, $nickname));
         }
+    }
+
+    public function getAvatar($size = 128): string
+    {
+        $hash = md5(strtolower(trim($this->email)));
+
+        return "https://www.gravatar.com/avatar/{$hash}?s={$size}";
     }
 
     public function getCreatedAt(): ?DateTimeInterface

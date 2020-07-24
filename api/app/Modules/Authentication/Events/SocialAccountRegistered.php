@@ -6,7 +6,7 @@ namespace App\Modules\Authentication\Events;
 
 use Spatie\EventSourcing\ShouldBeStored;
 
-class UserRegistered implements ShouldBeStored
+class SocialAccountRegistered implements ShouldBeStored
 {
     public string $id;
     public array $attributes = [];

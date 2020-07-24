@@ -1,10 +1,10 @@
 <?php
 
+declare(strict_types=1);
 
 namespace App\Modules\Authentication\Events;
 
-
-use App\Enum\Role;
+use App\Modules\Authentication\Enum\Role;
 use Spatie\EventSourcing\ShouldBeStored;
 
 class UserRoleChanged implements ShouldBeStored

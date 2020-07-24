@@ -6,14 +6,12 @@ namespace App\Modules\Authentication\Events;
 
 use Spatie\EventSourcing\ShouldBeStored;
 
-class UserEmailChanged implements ShouldBeStored
+class UserLoggedOut implements ShouldBeStored
 {
     public string $id;
-    public string $email;
 
-    public function __construct(string $id, string $email)
+    public function __construct(string $id)
     {
         $this->id = $id;
-        $this->email = $email;
     }
 }
