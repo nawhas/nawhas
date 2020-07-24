@@ -15,7 +15,7 @@ return [
     |
     */
 
-    'default' => env('DB_CONNECTION', 'pgsql'),
+    'default' => env('DB_CONNECTION', 'data'),
 
     /*
     |--------------------------------------------------------------------------
@@ -71,6 +71,36 @@ return [
             'database' => env('DB_DATABASE', 'nawhas'),
             'username' => env('DB_USERNAME', 'docker'),
             'password' => env('DB_PASSWORD', 'secret'),
+            'charset' => 'utf8',
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'schema' => 'public',
+            'sslmode' => 'prefer',
+        ],
+
+        'events' => [
+            'driver' => 'pgsql',
+            'url' => env('DATABASE_URL'),
+            'host' => env('EVENTS_DB_HOST', env('DB_HOST', 'nawhas_events_db')),
+            'port' => env('EVENTS_DB_PORT', env('DB_PORT', '5432')),
+            'database' => env('EVENTS_DB_DATABASE', env('DB_DATABASE', 'nawhas_events')),
+            'username' => env('EVENTS_DB_USERNAME', env('DB_USERNAME', 'docker')),
+            'password' => env('EVENTS_DB_PASSWORD', env('DB_PASSWORD', 'secret')),
+            'charset' => 'utf8',
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'schema' => 'public',
+            'sslmode' => 'prefer',
+        ],
+
+        'data' => [
+            'driver' => 'pgsql',
+            'url' => env('DATABASE_URL'),
+            'host' => env('DATA_DB_HOST', env('DB_HOST', 'nawhas_data_db')),
+            'port' => env('DATA_DB_PORT', env('DB_PORT', '5432')),
+            'database' => env('DATA_DB_DATABASE', env('DB_DATABASE', 'nawhas_data')),
+            'username' => env('DATA_DB_USERNAME', env('DB_USERNAME', 'docker')),
+            'password' => env('DATA_DB_PASSWORD', env('DB_PASSWORD', 'secret')),
             'charset' => 'utf8',
             'prefix' => '',
             'prefix_indexes' => true,
