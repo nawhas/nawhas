@@ -8,7 +8,6 @@ use App\Http\Controllers\Controller;
 use App\Modules\Authentication\Enum\Role;
 use App\Modules\Authentication\Events\UserLoggedIn;
 use App\Modules\Authentication\Events\UserLoggedOut;
-use App\Modules\Authentication\Events\UserRegistered;
 use App\Modules\Authentication\Http\Requests\LoginRequest;
 use App\Modules\Authentication\Http\Requests\RegisterRequest;
 use App\Modules\Authentication\Http\Transformers\UserTransformer;
