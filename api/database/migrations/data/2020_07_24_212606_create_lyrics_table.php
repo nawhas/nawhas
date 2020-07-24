@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateRecitersTable extends Migration
+class CreateLyricsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,11 @@ class CreateRecitersTable extends Migration
      */
     public function up()
     {
-        Schema::connection('data')->create('reciters', function (Blueprint $table) {
+        Schema::create('lyrics', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->string('name');
-            $table->string('slug')->unique();
-            $table->text('description')->nullable();
-            $table->string('avatar');
+            $table->uuid('track_id');
+            $table->text('content');
+            $table->unsignedBigInteger('format');
             $table->timestamps();
         });
     }
@@ -30,6 +29,6 @@ class CreateRecitersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('reciters');
+        Schema::dropIfExists('lyrics');
     }
 }

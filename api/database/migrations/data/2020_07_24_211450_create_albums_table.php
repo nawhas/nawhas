@@ -14,7 +14,8 @@ class CreateAlbumsTable extends Migration
     public function up()
     {
         Schema::connection('data')->create('albums', function (Blueprint $table) {
-            $table->uuid()->primary();
+            $table->uuid('id')->primary();
+            $table->uuid('reciter_id');
             $table->string('title');
             $table->string('year');
             $table->string('artwork');
