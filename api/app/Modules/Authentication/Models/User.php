@@ -1,11 +1,11 @@
 <?php
 
+declare(strict_types=1);
 
 namespace App\Modules\Authentication\Models;
 
-
 use App\Entities\Contracts\TimestampedEntity;
-use App\Enum\Role;
+use App\Modules\Authentication\Enum\Role;
 use App\Modules\Authentication\Events\UserEmailChanged;
 use App\Modules\Authentication\Events\UserNameChanged;
 use App\Modules\Authentication\Events\UserNicknameChanged;
