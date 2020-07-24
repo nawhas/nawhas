@@ -18,12 +18,12 @@ class SocialAccount extends Model implements TimestampedEntity
 {
     protected $keyType = 'string';
 
-    public static function create(string $user_id, string $provider, string $providerId): self
+    public static function create(string $userId, string $provider, string $providerId): self
     {
         $id = Uuid::uuid1()->toString();
 
         event(new SocialAccountRegistered($id, [
-            'user_id' => $user_id,
+            'userId' => $userId,
             'provider' => $provider,
             'providerId' => $providerId,
         ]));
@@ -32,9 +32,7 @@ class SocialAccount extends Model implements TimestampedEntity
     }
 
     /**
-     * @param string $identifier
      * @throws ModelNotFoundException
-     * @return SocialAccount
      */
     public static function retrieve(string $identifier): self
     {

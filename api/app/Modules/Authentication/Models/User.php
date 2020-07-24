@@ -40,9 +40,7 @@ class User extends Model implements TimestampedEntity
     }
 
     /**
-     * @param string $identifier
      * @throws ModelNotFoundException
-     * @return User
      */
     public static function retrieve(string $identifier): self
     {
