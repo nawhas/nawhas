@@ -98,6 +98,13 @@ class User extends Model implements TimestampedEntity
         }
     }
 
+    public function getAvatar($size = 128): string
+    {
+        $hash = md5(strtolower(trim($this->email)));
+
+        return "https://www.gravatar.com/avatar/{$hash}?s={$size}";
+    }
+
     public function getCreatedAt(): ?DateTimeInterface
     {
         return Carbon::make($this->created_at);
