@@ -23,5 +23,9 @@ class ServiceProvider extends CoreServiceProvider
         Router::middleware('api')
             ->namespace(__NAMESPACE__)
             ->group(__DIR__ . '/Http/api.php');
+
+        Router::middleware('web')
+            ->namespace(__NAMESPACE__)
+            ->group(__DIR__ . '/Http/web.php');
     }
 }

@@ -51,6 +51,13 @@ class User extends Model implements TimestampedEntity
         return $model;
     }
 
+    public static function findByEmail(string $email): self
+    {
+        /** @var self $model */
+        $model = self::query()->where('email', $email)->firstOrFail();
+        return $model;
+    }
+
     public function changeName(string $name): void
     {
         if ($name !== $this->name) {
