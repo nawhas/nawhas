@@ -32,6 +32,6 @@ class CreateTracksTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('tracks');
+        Schema::connection('data')->dropIfExists('tracks');
     }
 }

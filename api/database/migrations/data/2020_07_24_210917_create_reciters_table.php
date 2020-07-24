@@ -30,6 +30,6 @@ class CreateRecitersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('reciters');
+        Schema::connection('data')->dropIfExists('reciters');
     }
 }
