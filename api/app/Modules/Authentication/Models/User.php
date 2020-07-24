@@ -31,7 +31,7 @@ class User extends Model implements TimestampedEntity
             'role' => $role,
             'name' => $name,
             'email' => $email,
-            'password' => $password,
+            'password' => bcrypt($password),
             'rememberToken' => $rememberToken,
             'nickname' => $nickname,
         ]));
