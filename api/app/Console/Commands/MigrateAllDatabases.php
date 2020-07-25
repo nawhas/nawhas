@@ -27,6 +27,12 @@ class MigrateAllDatabases extends Command
      */
     public function handle(): int
     {
+        $this->warn('>> Running doctrine migrations...');
+        $this->call('doctrine:migrations:migrate', [
+            '--force' => true,
+            '--allow-no-migration' => true,
+        ]);
+
         $this->warn('>> Running events migrations...');
         $this->call('migrate', [
             '--database' => 'events',
@@ -39,12 +45,6 @@ class MigrateAllDatabases extends Command
             '--database' => 'data',
             '--path' => 'database/migrations/data',
             '--force' => true,
-        ]);
-
-        $this->warn('>> Running doctrine migrations...');
-        $this->call('doctrine:migrations:migrate', [
-            '--force' => true,
-            '--allow-no-migration' => true,
         ]);
         return 0;
     }
