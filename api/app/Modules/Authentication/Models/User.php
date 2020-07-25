@@ -22,6 +22,24 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Ramsey\Uuid\Uuid;
 
+/**
+ * App\Modules\Authentication\Models\User
+ *
+ * @property string $id
+ * @property string $name
+ * @property string $email
+ * @property string|null $email_verified_at
+ * @property string $password
+ * @property string $role
+ * @property string|null $nickname
+ * @property string|null $remember_token
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Authentication\Models\User newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Authentication\Models\User newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Authentication\Models\User query()
+ * @mixin \Eloquent
+ */
 class User extends Authenticatable implements TimestampedEntity
 {
     use HasUuid;

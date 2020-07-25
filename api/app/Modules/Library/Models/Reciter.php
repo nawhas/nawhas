@@ -24,7 +24,21 @@ use Ramsey\Uuid\Uuid;
 use Spatie\Sluggable\{HasSlug, SlugOptions};
 
 /**
+ * App\Modules\Library\Models\Reciter
+ *
  * @property string $id
+ * @property string $name
+ * @property string $slug
+ * @property string|null $description
+ * @property string|null $avatar
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\Library\Models\Album[] $albums
+ * @property-read int|null $albums_count
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Library\Models\Reciter newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Library\Models\Reciter newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Library\Models\Reciter query()
+ * @mixin \Eloquent
  */
 class Reciter extends Model implements TimestampedEntity
 {

@@ -24,7 +24,22 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Ramsey\Uuid\Uuid;
 
 /**
+ * App\Modules\Library\Models\Album
+ *
  * @property string $id
+ * @property string $reciter_id
+ * @property string $title
+ * @property string $year
+ * @property string|null $artwork
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Modules\Library\Models\Reciter $reciter
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\Library\Models\Track[] $tracks
+ * @property-read int|null $tracks_count
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Library\Models\Album newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Library\Models\Album newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Library\Models\Album query()
+ * @mixin \Eloquent
  */
 class Album extends Model implements TimestampedEntity
 {

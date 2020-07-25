@@ -17,6 +17,21 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Ramsey\Uuid\Uuid;
 
+/**
+ * App\Modules\Authentication\Models\SocialAccount
+ *
+ * @property string $id
+ * @property string $user_id
+ * @property string $provider
+ * @property string $provider_id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Modules\Authentication\Models\User $user
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Authentication\Models\SocialAccount newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Authentication\Models\SocialAccount newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Authentication\Models\SocialAccount query()
+ * @mixin \Eloquent
+ */
 class SocialAccount extends Model implements TimestampedEntity
 {
     use HasTimestamps;

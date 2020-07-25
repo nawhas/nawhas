@@ -17,8 +17,10 @@ use App\Modules\Core\Models\HasUuid;
 use App\Modules\Core\Models\UsesDataConnection;
 use App\Modules\Library\Events\Tracks\TrackAudioChanged;
 use App\Modules\Library\Events\Tracks\TrackCreated;
+use App\Modules\Library\Events\Tracks\TrackLyricsChanged;
 use App\Modules\Library\Events\Tracks\TrackTitleChanged;
 use App\Modules\Library\Events\Tracks\TrackViewed;
+use App\Modules\Lyrics\Documents\Document;
 use Carbon\Carbon;
 use DateTimeInterface;
 use Illuminate\Contracts\Routing\UrlRoutable;
@@ -32,7 +34,23 @@ use Spatie\Sluggable\HasSlug;
 use Spatie\Sluggable\SlugOptions;
 
 /**
+ * App\Modules\Library\Models\Track
+ *
  * @property string $id
+ * @property string $reciter_id
+ * @property string $album_id
+ * @property string $title
+ * @property string $slug
+ * @property string|null $audio
+ * @property mixed|null $lyrics
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Modules\Library\Models\Album $album
+ * @property-read \App\Modules\Library\Models\Reciter $reciter
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Library\Models\Track newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Library\Models\Track newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Library\Models\Track query()
+ * @mixin \Eloquent
  */
 class Track extends Model implements TimestampedEntity
 {
@@ -95,7 +113,14 @@ class Track extends Model implements TimestampedEntity
 
     public function changeAudio(?string $path): void
     {
-        event(new TrackAudioChanged($this->id, $path));
+        if ($path !== $this->audio) {
+            event(new TrackAudioChanged($this->id, $path));
+        }
+    }
+
+    public function changeLyrics(?Document $document): void
+    {
+        event(new TrackLyricsChanged($this->id, $document));
     }
 
     public function reciter(): BelongsTo
@@ -106,16 +131,6 @@ class Track extends Model implements TimestampedEntity
     public function album(): BelongsTo
     {
         return $this->belongsTo(Album::class);
-    }
-
-    public function lyrics(): BelongsTo
-    {
-        return $this->belongsTo(Lyrics::class, 'lyric_id');
-    }
-
-    public function media(): BelongsToMany
-    {
-        return $this->belongsToMany(Media::class, 'track_media');
     }
 
     public function getSlugOptions(): SlugOptions
