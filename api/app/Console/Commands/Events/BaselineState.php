@@ -2,6 +2,8 @@
 
 namespace App\Console\Commands\Events;
 
+use App\Modules\Lyrics\Documents\Factory;
+use App\Modules\Lyrics\Documents\Format;
 use Illuminate\Console\Command;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\DB;
@@ -99,7 +101,8 @@ class BaselineState extends Command
         });
 
         $this->processTable('lyrics', function ($lyrics) {
-            event(new Library\Tracks\TrackLyricsChanged($lyrics->track_id, $lyrics->content, $lyrics->format));
+            $document = Factory::create($lyrics->content, new Format($lyrics->format));
+            event(new Library\Tracks\TrackLyricsChanged($lyrics->track_id, $document));
         });
 
         // Process Track Audio
