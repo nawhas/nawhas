@@ -5,13 +5,10 @@ declare(strict_types=1);
 namespace App\Modules\Authentication\Models;
 
 use App\Entities\Contracts\TimestampedEntity;
-use App\Modules\Authentication\Events\SocialAccountProviderIdChanged;
 use App\Modules\Authentication\Events\SocialAccountRegistered;
 use App\Modules\Core\Models\HasTimestamps;
 use App\Modules\Core\Models\HasUuid;
 use App\Modules\Core\Models\UsesDataConnection;
-use Carbon\Carbon;
-use DateTimeInterface;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -69,13 +66,6 @@ class SocialAccount extends Model implements TimestampedEntity
         /** @var self $model */
         $model = self::query()->where('provider', $provider)->where('provider_id', $providerId)->firstOrFail();
         return $model;
-    }
-
-    public function changeProviderId(string $providerId): void
-    {
-        if ($providerId !== $this->providerId) {
-            event(new SocialAccountProviderIdChanged($this->id, $providerId));
-        }
     }
 
     public function user(): BelongsTo

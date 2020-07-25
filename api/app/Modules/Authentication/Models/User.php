@@ -16,8 +16,6 @@ use App\Modules\Authentication\Events\UserRoleChanged;
 use App\Modules\Core\Models\HasTimestamps;
 use App\Modules\Core\Models\HasUuid;
 use App\Modules\Core\Models\UsesDataConnection;
-use Carbon\Carbon;
-use DateTimeInterface;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Ramsey\Uuid\Uuid;
@@ -109,7 +107,7 @@ class User extends Authenticatable implements TimestampedEntity
 
     public function changeRememberToken(bool $rememberToken): void
     {
-        if ($rememberToken !== $this->rememberToken) {
+        if ($rememberToken !== $this->remember_token) {
             event(new UserRememberTokenChanged($this->id, $rememberToken));
         }
     }

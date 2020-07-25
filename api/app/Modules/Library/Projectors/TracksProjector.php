@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace App\Modules\Library\Projectors;
 
-use App\Enum\{MediaProvider, MediaType};
 use App\Modules\Library\Events\Tracks\{
     TrackAudioChanged,
     TrackCreated,
     TrackDeleted,
+    TrackLyricsChanged,
     TrackTitleChanged
 };
-use App\Modules\Library\Models\{Album, Media, Track};
+use App\Modules\Library\Models\{Album, Track};
 use Spatie\EventSourcing\EventHandlers\Projectors\Projector;
 
 class TracksProjector extends Projector
@@ -39,25 +39,19 @@ class TracksProjector extends Projector
         $track->delete();
     }
 
+    public function onTrackLyricsChanged(TrackLyricsChanged $event): void
+    {
+        $track = Track::retrieve($event->id);
+        $track->lyrics = $event->document;
+        $track->saveOrFail();
+    }
+
     public function onTrackAudioChanged(TrackAudioChanged $event): void
     {
         $track = Track::retrieve($event->id);
 
-        $existing = $track->media()
-            ->where('type', MediaType::AUDIO)
-            ->where('provider', MediaProvider::FILE)
-            ->first();
+        $track->audio = $event->path;
 
-        if ($existing) {
-            $track->media()->detach($existing->id);
-        }
-
-        $media = new Media([
-           'type' => MediaType::AUDIO,
-           'provider' => MediaProvider::FILE,
-           'path' => $event->path,
-        ]);
-
-        $track->media()->save($media);
+        $track->saveOrFail();
     }
 }

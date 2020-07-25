@@ -5,13 +5,6 @@ declare(strict_types=1);
 namespace App\Modules\Library\Models;
 
 use App\Entities\Contracts\TimestampedEntity;
-use App\Modules\Library\Events\Albums\{
-    AlbumArtworkChanged,
-    AlbumCreated,
-    AlbumTitleChanged,
-    AlbumViewed,
-    AlbumYearChanged
-};
 use App\Modules\Core\Models\HasTimestamps;
 use App\Modules\Core\Models\HasUuid;
 use App\Modules\Core\Models\UsesDataConnection;
@@ -21,14 +14,9 @@ use App\Modules\Library\Events\Tracks\TrackLyricsChanged;
 use App\Modules\Library\Events\Tracks\TrackTitleChanged;
 use App\Modules\Library\Events\Tracks\TrackViewed;
 use App\Modules\Lyrics\Documents\Document;
-use Carbon\Carbon;
-use DateTimeInterface;
-use Illuminate\Contracts\Routing\UrlRoutable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 use Ramsey\Uuid\Uuid;
 use Spatie\Sluggable\HasSlug;
 use Spatie\Sluggable\SlugOptions;
@@ -42,7 +30,7 @@ use Spatie\Sluggable\SlugOptions;
  * @property string $title
  * @property string $slug
  * @property string|null $audio
- * @property mixed|null $lyrics
+ * @property \App\Modules\Lyrics\Documents\Document|null|null $lyrics
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Modules\Library\Models\Album $album
@@ -60,6 +48,10 @@ class Track extends Model implements TimestampedEntity
     use UsesDataConnection;
 
     protected $guarded = [];
+
+    protected $casts = [
+        'lyrics' => Casts\Lyrics::class,
+    ];
 
     public static function create(Album $album, string $title): self
     {

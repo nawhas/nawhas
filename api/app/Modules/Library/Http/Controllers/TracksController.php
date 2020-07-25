@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Modules\Library\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Modules\Lyrics\Documents\Factory as DocumentFactory;
 use App\Modules\Lyrics\Documents\Format;
 use Illuminate\Validation\ValidationException;
 use App\Modules\Library\Events\{Tracks\TrackDeleted, Tracks\TrackViewed};
@@ -38,11 +39,7 @@ class TracksController extends Controller
         $track = Track::create($album, $request->get('title'));
 
         if ($request->has('lyrics')) {
-            Lyrics::create(
-                $track,
-                $request->get('content'),
-                $request->get('format', Format::PLAIN_TEXT)
-            );
+            $this->updateLyrics($track, $request);
         }
 
         return $this->respondWithItem($track->fresh());
@@ -68,7 +65,7 @@ class TracksController extends Controller
         }
 
         if ($request->has('lyrics')) {
-            // todo
+            $this->updateLyrics($track, $request);
         }
 
         return $this->respondWithItem($track->fresh());
@@ -107,5 +104,17 @@ class TracksController extends Controller
         $track->changeAudio($path);
 
         return $this->respondWithItem($track);
+    }
+
+    private function updateLyrics(Track $track, Request $request)
+    {
+        $document = DocumentFactory::create(
+            $request->get('lyrics'),
+            new Format($request->get('format', Format::PLAIN_TEXT))
+        );
+
+        if (!$document->isEmpty()) {
+            $track->changeLyrics($document);
+        }
     }
 }
