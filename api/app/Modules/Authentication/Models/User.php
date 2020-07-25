@@ -13,6 +13,9 @@ use App\Modules\Authentication\Events\UserPasswordChanged;
 use App\Modules\Authentication\Events\UserRegistered;
 use App\Modules\Authentication\Events\UserRememberTokenChanged;
 use App\Modules\Authentication\Events\UserRoleChanged;
+use App\Modules\Core\Models\HasTimestamps;
+use App\Modules\Core\Models\HasUuid;
+use App\Modules\Core\Models\UsesDataConnection;
 use Carbon\Carbon;
 use DateTimeInterface;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -21,7 +24,9 @@ use Ramsey\Uuid\Uuid;
 
 class User extends Authenticatable implements TimestampedEntity
 {
-    protected $keyType = 'string';
+    use HasUuid;
+    use HasTimestamps;
+    use UsesDataConnection;
 
     public static function create(Role $role, string $name, string $email, ?string $password = null, ?bool $rememberToken = null, ?string $nickname = null ): self
     {
@@ -103,15 +108,5 @@ class User extends Authenticatable implements TimestampedEntity
         $hash = md5(strtolower(trim($this->email)));
 
         return "https://www.gravatar.com/avatar/{$hash}?s={$size}";
-    }
-
-    public function getCreatedAt(): ?DateTimeInterface
-    {
-        return Carbon::make($this->created_at);
-    }
-
-    public function getUpdatedAt(): ?DateTimeInterface
-    {
-        return Carbon::make($this->updated_at);
     }
 }

@@ -12,12 +12,16 @@ use App\Modules\Library\Events\Albums\{
     AlbumViewed,
     AlbumYearChanged
 };
+use App\Modules\Core\Models\HasTimestamps;
+use App\Modules\Core\Models\HasUuid;
+use App\Modules\Core\Models\UsesDataConnection;
 use App\Modules\Library\Events\Tracks\TrackAudioChanged;
 use App\Modules\Library\Events\Tracks\TrackCreated;
 use App\Modules\Library\Events\Tracks\TrackTitleChanged;
 use App\Modules\Library\Events\Tracks\TrackViewed;
 use Carbon\Carbon;
 use DateTimeInterface;
+use Illuminate\Contracts\Routing\UrlRoutable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -33,8 +37,10 @@ use Spatie\Sluggable\SlugOptions;
 class Track extends Model implements TimestampedEntity
 {
     use HasSlug;
+    use HasTimestamps;
+    use HasUuid;
+    use UsesDataConnection;
 
-    protected $keyType = 'string';
     protected $guarded = [];
 
     public static function create(Album $album, string $title): self
@@ -90,16 +96,6 @@ class Track extends Model implements TimestampedEntity
     public function changeAudio(?string $path): void
     {
         event(new TrackAudioChanged($this->id, $path));
-    }
-
-    public function getCreatedAt(): ?DateTimeInterface
-    {
-        return Carbon::make($this->created_at);
-    }
-
-    public function getUpdatedAt(): ?DateTimeInterface
-    {
-        return Carbon::make($this->updated_at);
     }
 
     public function reciter(): BelongsTo

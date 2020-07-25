@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace App\Modules\Library\Models;
 
 use App\Entities\Contracts\TimestampedEntity;
+use App\Modules\Core\Models\HasTimestamps;
+use App\Modules\Core\Models\HasUuid;
+use App\Modules\Core\Models\UsesDataConnection;
 use App\Modules\Library\Events\Lyrics\LyricsChanged;
 use App\Modules\Library\Events\Lyrics\LyricsCreated;
 use Carbon\Carbon;
@@ -16,7 +19,10 @@ use Ramsey\Uuid\Uuid;
 
 class Lyrics extends Model implements TimestampedEntity
 {
-    protected $keyType = 'string';
+    use HasTimestamps;
+    use HasUuid;
+    use UsesDataConnection;
+
     protected $guarded = [];
 
     public static function create(Track $track, string $content, int $format)
@@ -42,16 +48,6 @@ class Lyrics extends Model implements TimestampedEntity
         if ($content !== $this->content) {
             event(new LyricsChanged($this->id, $this->track_id, $content, $format ?? $this->format));
         }
-    }
-
-    public function getCreatedAt(): ?DateTimeInterface
-    {
-        return Carbon::make($this->created_at);
-    }
-
-    public function getUpdatedAt(): ?DateTimeInterface
-    {
-        return Carbon::make($this->updated_at);
     }
 
     public function track(): BelongsTo

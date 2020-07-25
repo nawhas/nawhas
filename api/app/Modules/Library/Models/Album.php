@@ -12,6 +12,9 @@ use App\Modules\Library\Events\Albums\{
     AlbumViewed,
     AlbumYearChanged
 };
+use App\Modules\Core\Models\HasTimestamps;
+use App\Modules\Core\Models\HasUuid;
+use App\Modules\Core\Models\UsesDataConnection;
 use Carbon\Carbon;
 use DateTimeInterface;
 use Illuminate\Database\Eloquent\Model;
@@ -25,7 +28,10 @@ use Ramsey\Uuid\Uuid;
  */
 class Album extends Model implements TimestampedEntity
 {
-    protected $keyType = 'string';
+    use HasTimestamps;
+    use HasUuid;
+    use UsesDataConnection;
+
     protected $guarded = [];
 
     public static function create(Reciter $reciter, string $title, string $year, ?string $artwork = null): self
@@ -92,16 +98,6 @@ class Album extends Model implements TimestampedEntity
         if ($this->artwork !== $artwork) {
             event(new AlbumArtworkChanged($this->id, $artwork));
         }
-    }
-
-    public function getCreatedAt(): ?DateTimeInterface
-    {
-        return Carbon::make($this->created_at);
-    }
-
-    public function getUpdatedAt(): ?DateTimeInterface
-    {
-        return Carbon::make($this->updated_at);
     }
 
     public function reciter(): BelongsTo

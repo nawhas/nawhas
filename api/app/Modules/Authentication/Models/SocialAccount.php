@@ -7,6 +7,9 @@ namespace App\Modules\Authentication\Models;
 use App\Entities\Contracts\TimestampedEntity;
 use App\Modules\Authentication\Events\SocialAccountProviderIdChanged;
 use App\Modules\Authentication\Events\SocialAccountRegistered;
+use App\Modules\Core\Models\HasTimestamps;
+use App\Modules\Core\Models\HasUuid;
+use App\Modules\Core\Models\UsesDataConnection;
 use Carbon\Carbon;
 use DateTimeInterface;
 use Illuminate\Database\Eloquent\Model;
@@ -16,7 +19,9 @@ use Ramsey\Uuid\Uuid;
 
 class SocialAccount extends Model implements TimestampedEntity
 {
-    protected $keyType = 'string';
+    use HasTimestamps;
+    use HasUuid;
+    use UsesDataConnection;
 
     public static function create(string $userId, string $provider, string $providerId): self
     {
@@ -56,16 +61,6 @@ class SocialAccount extends Model implements TimestampedEntity
         if ($providerId !== $this->providerId) {
             event(new SocialAccountProviderIdChanged($this->id, $providerId));
         }
-    }
-
-    public function getCreatedAt(): ?DateTimeInterface
-    {
-        return Carbon::make($this->created_at);
-    }
-
-    public function getUpdatedAt(): ?DateTimeInterface
-    {
-        return Carbon::make($this->updated_at);
     }
 
     public function user(): BelongsTo
