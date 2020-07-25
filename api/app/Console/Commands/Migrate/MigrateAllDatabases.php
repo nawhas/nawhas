@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Console\Commands;
+namespace App\Console\Commands\Migrate;
 
 use Illuminate\Console\Command;
 
@@ -34,18 +34,10 @@ class MigrateAllDatabases extends Command
         ]);
 
         $this->warn('>> Running events migrations...');
-        $this->call('migrate', [
-            '--database' => 'events',
-            '--path' => 'database/migrations/events',
-            '--force' => true,
-        ]);
+        $this->call('migrate:events');
 
         $this->warn('>> Running data migrations...');
-        $this->call('migrate', [
-            '--database' => 'data',
-            '--path' => 'database/migrations/data',
-            '--force' => true,
-        ]);
+        $this->call('migrate:data');
         return 0;
     }
 }
