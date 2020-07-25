@@ -115,6 +115,21 @@ class BaselineState extends Command
             event(new Library\Tracks\TrackAudioChanged($media->track_id, $media->path));
         });
 
+        // Process Visits
+        $builder = DB::connection('pgsql')->table('reciter_visits')->orderBy('date');
+        $this->processTableWithQuery($builder, 'reciter_visits', function ($visit) {
+            event(new Library\Reciters\ReciterViewed($visit->reciter_id, [
+                'date' => $visit->date,
+            ]));
+        });
+
+        $builder = DB::connection('pgsql')->table('track_visits')->orderBy('date');
+        $this->processTableWithQuery($builder, 'track_visits', function ($visit) {
+            event(new Library\Tracks\TrackViewed($visit->track_id, [
+                'date' => $visit->date,
+            ]));
+        });
+
         $this->info('>>> ✅  All events initialized.');
         return 0;
     }
