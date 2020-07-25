@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Modules\Authentication\Events;
 
-use Spatie\EventSourcing\ShouldBeStored;
+use Spatie\EventSourcing\StoredEvents\ShouldBeStored;
 
-class UserEmailChanged implements ShouldBeStored
+class UserEmailChanged extends ShouldBeStored
 {
     public string $id;
     public string $email;

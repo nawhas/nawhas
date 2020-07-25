@@ -12,12 +12,10 @@ use App\Modules\Library\Events\Albums\{
     AlbumYearChanged
 };
 use App\Modules\Library\Models\{Album, Reciter};
-use Spatie\EventSourcing\Projectors\{Projector, ProjectsEvents};
+use Spatie\EventSourcing\EventHandlers\Projectors\Projector;
 
-class AlbumsProjector implements Projector
+class AlbumsProjector extends Projector
 {
-    use ProjectsEvents;
-
     public function onAlbumCreated(AlbumCreated $event): void
     {
         $reciter = Reciter::retrieve($event->reciterId);

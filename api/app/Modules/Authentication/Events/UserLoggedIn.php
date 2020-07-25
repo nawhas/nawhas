@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Modules\Authentication\Events;
 
-use Spatie\EventSourcing\ShouldBeStored;
+use Spatie\EventSourcing\StoredEvents\ShouldBeStored;
 
-class UserLoggedIn implements ShouldBeStored
+class UserLoggedIn extends ShouldBeStored
 {
     public string $id;
 
