@@ -6,12 +6,10 @@ namespace App\Modules\Library\Projectors;
 
 use App\Modules\Library\Events\Lyrics\{LyricsChanged, LyricsCreated, LyricsDeleted};
 use App\Modules\Library\Models\{Lyrics, Track};
-use Spatie\EventSourcing\Projectors\{Projector, ProjectsEvents};
+use Spatie\EventSourcing\EventHandlers\Projectors\Projector;
 
-class LyricsProjector implements Projector
+class LyricsProjector extends Projector
 {
-    use ProjectsEvents;
-
     public function onLyricsCreated(LyricsCreated $event): void
     {
         $track = Track::retrieve($event->trackId);

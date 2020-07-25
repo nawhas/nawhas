@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Modules\Library\Events\Reciters;
 
-use Spatie\EventSourcing\ShouldBeStored;
+use Spatie\EventSourcing\StoredEvents\ShouldBeStored;
 
-class ReciterDescriptionChanged implements ShouldBeStored
+class ReciterDescriptionChanged extends ShouldBeStored
 {
     public string $id;
     public ?string $description;

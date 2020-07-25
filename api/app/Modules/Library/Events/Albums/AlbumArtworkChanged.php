@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Modules\Library\Events\Albums;
 
-use Spatie\EventSourcing\ShouldBeStored;
+use Spatie\EventSourcing\StoredEvents\ShouldBeStored;
 
-class AlbumArtworkChanged implements ShouldBeStored
+class AlbumArtworkChanged extends ShouldBeStored
 {
     public string $id;
     public ?string $artwork;

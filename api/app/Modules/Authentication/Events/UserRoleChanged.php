@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\Modules\Authentication\Events;
 
 use App\Modules\Authentication\Enum\Role;
-use Spatie\EventSourcing\ShouldBeStored;
+use Spatie\EventSourcing\StoredEvents\ShouldBeStored;
 
-class UserRoleChanged implements ShouldBeStored
+class UserRoleChanged extends ShouldBeStored
 {
     public string $id;
     public Role $role;
