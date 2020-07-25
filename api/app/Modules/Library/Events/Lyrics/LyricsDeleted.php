@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Modules\Library\Events\Lyrics;
 
-use Spatie\EventSourcing\ShouldBeStored;
+use Spatie\EventSourcing\StoredEvents\ShouldBeStored;
 
-class LyricsDeleted implements ShouldBeStored
+class LyricsDeleted extends ShouldBeStored
 {
     public string $id;
 

@@ -12,12 +12,10 @@ use App\Modules\Library\Events\Tracks\{
     TrackTitleChanged
 };
 use App\Modules\Library\Models\{Album, Media, Track};
-use Spatie\EventSourcing\{Projectors\Projector, Projectors\ProjectsEvents};
+use Spatie\EventSourcing\EventHandlers\Projectors\Projector;
 
-class TracksProjector implements Projector
+class TracksProjector extends Projector
 {
-    use ProjectsEvents;
-
     public function onTrackCreated(TrackCreated $event): void
     {
         $album = Album::retrieve($event->albumId);

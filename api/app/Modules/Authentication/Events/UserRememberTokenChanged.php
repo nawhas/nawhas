@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Modules\Authentication\Events;
 
-use Spatie\EventSourcing\ShouldBeStored;
+use Spatie\EventSourcing\StoredEvents\ShouldBeStored;
 
-class UserRememberTokenChanged implements ShouldBeStored
+class UserRememberTokenChanged extends ShouldBeStored
 {
     public string $id;
     public bool $rememberToken;

@@ -10,12 +10,10 @@ use App\Modules\Library\Events\Reciters\{ReciterAvatarChanged,
     ReciterDescriptionChanged,
     ReciterNameChanged};
 use App\Modules\Library\Models\Reciter;
-use Spatie\EventSourcing\Projectors\{Projector, ProjectsEvents};
+use Spatie\EventSourcing\EventHandlers\Projectors\Projector;
 
-class RecitersProjector implements Projector
+class RecitersProjector extends Projector
 {
-    use ProjectsEvents;
-
     public function onReciterCreated(ReciterCreated $event): void
     {
         $data = collect($event->attributes);

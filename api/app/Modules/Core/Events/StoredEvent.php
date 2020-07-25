@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Events;
+namespace App\Modules\Core\Events;
 
-use Spatie\EventSourcing\Models\EloquentStoredEvent;
+use Spatie\EventSourcing\StoredEvents\Models\EloquentStoredEvent;
 
 class StoredEvent extends EloquentStoredEvent
 {
