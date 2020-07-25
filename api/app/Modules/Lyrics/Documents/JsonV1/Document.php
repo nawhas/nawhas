@@ -61,6 +61,14 @@ class Document implements DocumentContract, Jsonable
         return $this->data;
     }
 
+    public function getContent(): string
+    {
+        return json_encode([
+            'meta' => $this->meta->toArray(),
+            'data' => $this->data->toArray(),
+        ]);
+    }
+
     public function getFormat(): Format
     {
         return Format::JSON_V1();
@@ -69,8 +77,8 @@ class Document implements DocumentContract, Jsonable
     public function toArray(): array
     {
         return [
-            'meta' => $this->meta->toArray(),
-            'data' => $this->data->toArray(),
+            'content' => $this->getContent(),
+            'format' => $this->getFormat(),
         ];
     }
 

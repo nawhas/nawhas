@@ -23,7 +23,7 @@ class JsonV1DocumentTest extends TestCase
         }
         JSON;
 
-        $this->assertJsonStringEqualsJsonString($expected, Document::make()->toJson());
+        $this->assertJsonStringEqualsJsonString($expected, Document::make()->getContent());
     }
 
     /**
@@ -115,7 +115,7 @@ class JsonV1DocumentTest extends TestCase
 
         $doc = Document::fromJson($source);
 
-        $this->assertJsonStringEqualsJsonString($expected, $doc->toJson());
+        $this->assertJsonStringEqualsJsonString($expected, $doc->getContent());
     }
 
     /**

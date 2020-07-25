@@ -43,4 +43,17 @@ class Document implements DocumentContract
     {
         return $this->render();
     }
+
+    public function getContent(): string
+    {
+        return $this->content;
+    }
+
+    public function toArray(): array
+    {
+        return [
+            'content' => $this->getContent(),
+            'format' => $this->getFormat(),
+        ];
+    }
 }

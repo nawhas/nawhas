@@ -9,9 +9,11 @@ use Spatie\EventSourcing\StoredEvents\ShouldBeStored;
 class ReciterViewed extends ShouldBeStored
 {
     public string $id;
+    public array $data;
 
-    public function __construct(string $id)
+    public function __construct(string $id, array $data = [])
     {
         $this->id = $id;
+        $this->data = $data;
     }
 }
