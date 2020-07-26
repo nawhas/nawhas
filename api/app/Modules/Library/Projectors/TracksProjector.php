@@ -21,6 +21,7 @@ class TracksProjector extends Projector
         $album = Album::retrieve($event->albumId);
         $data = collect($event->attributes);
         $data->put('id', $event->id);
+        $data->put('reciter_id', $album->reciter_id);
 
         $track = new Track($data->all());
         $album->tracks()->save($track);
@@ -49,9 +50,12 @@ class TracksProjector extends Projector
     public function onTrackAudioChanged(TrackAudioChanged $event): void
     {
         $track = Track::retrieve($event->id);
-
         $track->audio = $event->path;
-
         $track->saveOrFail();
+    }
+
+    public function resetState(): void
+    {
+        Track::truncate();
     }
 }

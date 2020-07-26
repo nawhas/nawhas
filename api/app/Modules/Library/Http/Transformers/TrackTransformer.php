@@ -48,11 +48,10 @@ class TrackTransformer extends Transformer
         return $this->item($lyrics, new LyricsTransformer());
     }
 
-//    public function includeMedia(Track $track): Collection
-//    {
-//        // TODO - fix.
-//        // return $this->collection($track->media, new MediaTransformer());
-//    }
+    public function includeMedia(Track $track): Collection
+    {
+        return $this->collection(collect([$track->audio])->filter(), new MediaTransformer());
+    }
 
     public function includeRelated(Track $track): Primitive
     {
