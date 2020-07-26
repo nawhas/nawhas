@@ -50,14 +50,14 @@ class TrackTransformer extends Transformer
 
     public function includeMedia(Track $track): Collection
     {
-        return $this->collection($track->media, new MediaTransformer());
+        return $this->collection(collect([$track->audio])->filter(), new MediaTransformer());
     }
 
     public function includeRelated(Track $track): Primitive
     {
         return $this->primitive([
-            'lyrics' => $track->lyric_id !== null,
-            'audio' => $track->media()->where('type', MediaType::AUDIO)->count() > 0,
+            'lyrics' => $track->lyrics !== null,
+            'audio' => $track->audio !== null,
         ]);
     }
 }

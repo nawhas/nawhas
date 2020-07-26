@@ -138,7 +138,7 @@ class BaselineState extends Command
     {
         $connection = DB::connection('pgsql');
         $this->processTableWithQuery(
-            $connection->table($table)->orderBy('created_at'),
+            $connection->table($table)->orderBy('id'),
             $table,
             $callback
         );

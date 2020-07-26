@@ -13,15 +13,36 @@ use App\Modules\Authentication\Events\UserPasswordChanged;
 use App\Modules\Authentication\Events\UserRegistered;
 use App\Modules\Authentication\Events\UserRememberTokenChanged;
 use App\Modules\Authentication\Events\UserRoleChanged;
-use Carbon\Carbon;
-use DateTimeInterface;
+use App\Modules\Core\Models\HasTimestamps;
+use App\Modules\Core\Models\HasUuid;
+use App\Modules\Core\Models\UsesDataConnection;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Ramsey\Uuid\Uuid;
 
+/**
+ * App\Modules\Authentication\Models\User
+ *
+ * @property string $id
+ * @property string $name
+ * @property string $email
+ * @property string|null $email_verified_at
+ * @property string $password
+ * @property string $role
+ * @property string|null $nickname
+ * @property string|null $remember_token
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Authentication\Models\User newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Authentication\Models\User newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Authentication\Models\User query()
+ * @mixin \Eloquent
+ */
 class User extends Authenticatable implements TimestampedEntity
 {
-    protected $keyType = 'string';
+    use HasUuid;
+    use HasTimestamps;
+    use UsesDataConnection;
 
     public static function create(Role $role, string $name, string $email, ?string $password = null, ?bool $rememberToken = null, ?string $nickname = null ): self
     {
@@ -86,7 +107,7 @@ class User extends Authenticatable implements TimestampedEntity
 
     public function changeRememberToken(bool $rememberToken): void
     {
-        if ($rememberToken !== $this->rememberToken) {
+        if ($rememberToken !== $this->remember_token) {
             event(new UserRememberTokenChanged($this->id, $rememberToken));
         }
     }
@@ -103,15 +124,5 @@ class User extends Authenticatable implements TimestampedEntity
         $hash = md5(strtolower(trim($this->email)));
 
         return "https://www.gravatar.com/avatar/{$hash}?s={$size}";
-    }
-
-    public function getCreatedAt(): ?DateTimeInterface
-    {
-        return Carbon::make($this->created_at);
-    }
-
-    public function getUpdatedAt(): ?DateTimeInterface
-    {
-        return Carbon::make($this->updated_at);
     }
 }

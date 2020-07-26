@@ -12,8 +12,9 @@ use App\Modules\Library\Events\Albums\{
     AlbumViewed,
     AlbumYearChanged
 };
-use Carbon\Carbon;
-use DateTimeInterface;
+use App\Modules\Core\Models\HasTimestamps;
+use App\Modules\Core\Models\HasUuid;
+use App\Modules\Core\Models\UsesDataConnection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -21,11 +22,29 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Ramsey\Uuid\Uuid;
 
 /**
+ * App\Modules\Library\Models\Album
+ *
  * @property string $id
+ * @property string $reciter_id
+ * @property string $title
+ * @property string $year
+ * @property string|null $artwork
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Modules\Library\Models\Reciter $reciter
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\Library\Models\Track[] $tracks
+ * @property-read int|null $tracks_count
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Library\Models\Album newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Library\Models\Album newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Library\Models\Album query()
+ * @mixin \Eloquent
  */
 class Album extends Model implements TimestampedEntity
 {
-    protected $keyType = 'string';
+    use HasTimestamps;
+    use HasUuid;
+    use UsesDataConnection;
+
     protected $guarded = [];
 
     public static function create(Reciter $reciter, string $title, string $year, ?string $artwork = null): self
@@ -92,16 +111,6 @@ class Album extends Model implements TimestampedEntity
         if ($this->artwork !== $artwork) {
             event(new AlbumArtworkChanged($this->id, $artwork));
         }
-    }
-
-    public function getCreatedAt(): ?DateTimeInterface
-    {
-        return Carbon::make($this->created_at);
-    }
-
-    public function getUpdatedAt(): ?DateTimeInterface
-    {
-        return Carbon::make($this->updated_at);
     }
 
     public function reciter(): BelongsTo

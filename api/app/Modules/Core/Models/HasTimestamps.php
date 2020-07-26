@@ -2,18 +2,17 @@
 
 declare(strict_types=1);
 
-namespace App\Modules\Library\Models;
+namespace App\Modules\Core\Models;
 
-use App\Entities\Contracts\TimestampedEntity;
 use Carbon\Carbon;
 use DateTimeInterface;
-use Illuminate\Database\Eloquent\Model;
 
-class Media extends Model implements TimestampedEntity
+/**
+ * @property-read Carbon $created_at
+ * @property-read Carbon $updated_at
+ */
+trait HasTimestamps
 {
-    protected $keyType = 'string';
-    protected $guarded = [];
-
     public function getCreatedAt(): ?DateTimeInterface
     {
         return Carbon::make($this->created_at);

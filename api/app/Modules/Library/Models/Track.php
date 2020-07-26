@@ -5,37 +5,53 @@ declare(strict_types=1);
 namespace App\Modules\Library\Models;
 
 use App\Entities\Contracts\TimestampedEntity;
-use App\Modules\Library\Events\Albums\{
-    AlbumArtworkChanged,
-    AlbumCreated,
-    AlbumTitleChanged,
-    AlbumViewed,
-    AlbumYearChanged
-};
+use App\Modules\Core\Models\HasTimestamps;
+use App\Modules\Core\Models\HasUuid;
+use App\Modules\Core\Models\UsesDataConnection;
 use App\Modules\Library\Events\Tracks\TrackAudioChanged;
 use App\Modules\Library\Events\Tracks\TrackCreated;
+use App\Modules\Library\Events\Tracks\TrackLyricsChanged;
 use App\Modules\Library\Events\Tracks\TrackTitleChanged;
 use App\Modules\Library\Events\Tracks\TrackViewed;
-use Carbon\Carbon;
-use DateTimeInterface;
+use App\Modules\Lyrics\Documents\Document;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 use Ramsey\Uuid\Uuid;
 use Spatie\Sluggable\HasSlug;
 use Spatie\Sluggable\SlugOptions;
 
 /**
+ * App\Modules\Library\Models\Track
+ *
  * @property string $id
+ * @property string $reciter_id
+ * @property string $album_id
+ * @property string $title
+ * @property string $slug
+ * @property string|null $audio
+ * @property \App\Modules\Lyrics\Documents\Document|null|null $lyrics
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Modules\Library\Models\Album $album
+ * @property-read \App\Modules\Library\Models\Reciter $reciter
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Library\Models\Track newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Library\Models\Track newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Library\Models\Track query()
+ * @mixin \Eloquent
  */
 class Track extends Model implements TimestampedEntity
 {
     use HasSlug;
+    use HasTimestamps;
+    use HasUuid;
+    use UsesDataConnection;
 
-    protected $keyType = 'string';
     protected $guarded = [];
+
+    protected $casts = [
+        'lyrics' => Casts\Lyrics::class,
+    ];
 
     public static function create(Album $album, string $title): self
     {
@@ -89,17 +105,14 @@ class Track extends Model implements TimestampedEntity
 
     public function changeAudio(?string $path): void
     {
-        event(new TrackAudioChanged($this->id, $path));
+        if ($path !== $this->audio) {
+            event(new TrackAudioChanged($this->id, $path));
+        }
     }
 
-    public function getCreatedAt(): ?DateTimeInterface
+    public function changeLyrics(?Document $document): void
     {
-        return Carbon::make($this->created_at);
-    }
-
-    public function getUpdatedAt(): ?DateTimeInterface
-    {
-        return Carbon::make($this->updated_at);
+        event(new TrackLyricsChanged($this->id, $document));
     }
 
     public function reciter(): BelongsTo
@@ -110,16 +123,6 @@ class Track extends Model implements TimestampedEntity
     public function album(): BelongsTo
     {
         return $this->belongsTo(Album::class);
-    }
-
-    public function lyrics(): BelongsTo
-    {
-        return $this->belongsTo(Lyrics::class, 'lyric_id');
-    }
-
-    public function media(): BelongsToMany
-    {
-        return $this->belongsToMany(Media::class, 'track_media');
     }
 
     public function getSlugOptions(): SlugOptions

@@ -4,20 +4,22 @@ declare(strict_types=1);
 
 namespace App\Modules\Library\Http\Transformers;
 
+use App\Enum\MediaProvider;
+use App\Enum\MediaType;
 use App\Http\Transformers\Transformer;
-use App\Modules\Library\Models\Media;
 use Illuminate\Support\Facades\Storage;
 
 class MediaTransformer extends Transformer
 {
-    public function toArray(Media $media): array
+    public function toArray($media): array
     {
         return [
-            'id' => $media->id,
-            'uri' => Storage::url($media->path),
-            'type' => $media->type,
-            'provider' => $media->provider,
-            $this->timestamps($media),
+            'id' => '(deprecated)',
+            'uri' => Storage::url($media),
+            'type' => MediaType::AUDIO,
+            'provider' => MediaProvider::FILE,
+            'createdAt' => $this->dateTime(now()),
+            'updatedAt' => $this->dateTime(now()),
         ];
     }
 }

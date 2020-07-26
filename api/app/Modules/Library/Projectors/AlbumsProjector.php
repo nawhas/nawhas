@@ -22,6 +22,7 @@ class AlbumsProjector extends Projector
 
         $data = collect($event->attributes);
         $data->put('id', $event->id);
+        $data->put('reciter_id', $reciter->id);
 
         $album = new Album($data->all());
 
@@ -52,5 +53,10 @@ class AlbumsProjector extends Projector
     public function onAlbumDeleted(AlbumDeleted $event): void
     {
         Album::retrieve($event->id)->delete();
+    }
+
+    public function resetState(): void
+    {
+        Album::truncate();
     }
 }

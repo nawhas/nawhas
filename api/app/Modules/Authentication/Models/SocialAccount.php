@@ -5,18 +5,35 @@ declare(strict_types=1);
 namespace App\Modules\Authentication\Models;
 
 use App\Entities\Contracts\TimestampedEntity;
-use App\Modules\Authentication\Events\SocialAccountProviderIdChanged;
 use App\Modules\Authentication\Events\SocialAccountRegistered;
-use Carbon\Carbon;
-use DateTimeInterface;
+use App\Modules\Core\Models\HasTimestamps;
+use App\Modules\Core\Models\HasUuid;
+use App\Modules\Core\Models\UsesDataConnection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Ramsey\Uuid\Uuid;
 
+/**
+ * App\Modules\Authentication\Models\SocialAccount
+ *
+ * @property string $id
+ * @property string $user_id
+ * @property string $provider
+ * @property string $provider_id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Modules\Authentication\Models\User $user
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Authentication\Models\SocialAccount newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Authentication\Models\SocialAccount newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Authentication\Models\SocialAccount query()
+ * @mixin \Eloquent
+ */
 class SocialAccount extends Model implements TimestampedEntity
 {
-    protected $keyType = 'string';
+    use HasTimestamps;
+    use HasUuid;
+    use UsesDataConnection;
 
     public static function create(string $userId, string $provider, string $providerId): self
     {
@@ -49,23 +66,6 @@ class SocialAccount extends Model implements TimestampedEntity
         /** @var self $model */
         $model = self::query()->where('provider', $provider)->where('provider_id', $providerId)->firstOrFail();
         return $model;
-    }
-
-    public function changeProviderId(string $providerId): void
-    {
-        if ($providerId !== $this->providerId) {
-            event(new SocialAccountProviderIdChanged($this->id, $providerId));
-        }
-    }
-
-    public function getCreatedAt(): ?DateTimeInterface
-    {
-        return Carbon::make($this->created_at);
-    }
-
-    public function getUpdatedAt(): ?DateTimeInterface
-    {
-        return Carbon::make($this->updated_at);
     }
 
     public function user(): BelongsTo

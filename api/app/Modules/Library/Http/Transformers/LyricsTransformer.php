@@ -5,18 +5,19 @@ declare(strict_types=1);
 namespace App\Modules\Library\Http\Transformers;
 
 use App\Http\Transformers\Transformer;
-use App\Modules\Library\Models\Lyrics;
+use App\Modules\Lyrics\Documents\Document;
 
 class LyricsTransformer extends Transformer
 {
-    public function toArray(Lyrics $lyrics): array
+    public function toArray(Document $document): array
     {
         return [
-            'id' => $lyrics->id,
-            'trackId' => $lyrics->track_id,
-            'content' => $lyrics->content,
-            'format' => $lyrics->format,
-            $this->timestamps($lyrics),
+            'id' => '(deprecated)',
+            'trackId' => '(deprecated)',
+            'content' => $document->getContent(),
+            'format' => $document->getFormat()->getValue(),
+            'createdAt' => $this->dateTime(now()),
+            'updatedAt' => $this->dateTime(now()),
         ];
     }
 }

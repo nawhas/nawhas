@@ -5,8 +5,9 @@ declare(strict_types=1);
 namespace App\Modules\Library\Models;
 
 use App\Entities\Contracts\TimestampedEntity;
-use Carbon\Carbon;
-use DateTimeInterface;
+use App\Modules\Core\Models\HasTimestamps;
+use App\Modules\Core\Models\HasUuid;
+use App\Modules\Core\Models\UsesDataConnection;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use App\Modules\Library\Events\Reciters\{
     ReciterAvatarChanged,
@@ -21,13 +22,29 @@ use Ramsey\Uuid\Uuid;
 use Spatie\Sluggable\{HasSlug, SlugOptions};
 
 /**
+ * App\Modules\Library\Models\Reciter
+ *
  * @property string $id
+ * @property string $name
+ * @property string $slug
+ * @property string|null $description
+ * @property string|null $avatar
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\Library\Models\Album[] $albums
+ * @property-read int|null $albums_count
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Library\Models\Reciter newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Library\Models\Reciter newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Library\Models\Reciter query()
+ * @mixin \Eloquent
  */
 class Reciter extends Model implements TimestampedEntity
 {
     use HasSlug;
+    use HasTimestamps;
+    use HasUuid;
+    use UsesDataConnection;
 
-    protected $keyType = 'string';
     protected $guarded = [];
 
     public function getSlugOptions(): SlugOptions
@@ -102,16 +119,6 @@ class Reciter extends Model implements TimestampedEntity
         if ($this->avatar !== $avatar) {
             event(new ReciterAvatarChanged($this->id, $avatar));
         }
-    }
-
-    public function getCreatedAt(): ?DateTimeInterface
-    {
-        return Carbon::make($this->created_at);
-    }
-
-    public function getUpdatedAt(): ?DateTimeInterface
-    {
-        return Carbon::make($this->updated_at);
     }
 
     public function albums(): HasMany

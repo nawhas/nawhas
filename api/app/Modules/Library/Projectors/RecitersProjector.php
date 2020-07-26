@@ -50,4 +50,9 @@ class RecitersProjector extends Projector
         $reciter = Reciter::retrieve($event->id);
         $reciter->delete();
     }
+
+    public function resetState(): void
+    {
+        Reciter::truncate();
+    }
 }
