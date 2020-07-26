@@ -44,6 +44,8 @@ class User extends Authenticatable implements TimestampedEntity
     use HasTimestamps;
     use UsesDataConnection;
 
+    protected $fillable = ['id', 'name', 'email', 'password', 'role'];
+
     public static function create(Role $role, string $name, string $email, ?string $password = null, ?bool $rememberToken = null, ?string $nickname = null ): self
     {
         $id = Uuid::uuid1()->toString();
