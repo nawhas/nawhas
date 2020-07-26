@@ -67,4 +67,9 @@ class UsersProjector extends Projector
         $user->remember_token = $event->rememberToken;
         $user->saveOrFail();
     }
+
+    public function resetState(): void
+    {
+        User::truncate();
+    }
 }
