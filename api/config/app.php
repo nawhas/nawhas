@@ -184,6 +184,7 @@ return [
         App\Modules\Features\ServiceProvider::class,
         App\Modules\Library\ServiceProvider::class,
         App\Modules\Authentication\ServiceProvider::class,
+        App\Modules\Popular\ServiceProvider::class,
     ],
 
     /*

@@ -30,10 +30,4 @@ Route::prefix('v1')->group(function () {
         Route::get('secret', [FeaturesController::class, 'secret'])
             ->middleware(EnforceFeatureFlags::in([PublicUserRegistration::NAME]));
     });
-
-    // Popular Routes
-    Route::prefix('popular')->group(function () {
-        Route::get('/reciters', [PopularEntitiesController::class, 'reciters']);
-        Route::get('/tracks', [PopularEntitiesController::class, 'tracks']);
-    });
 });
