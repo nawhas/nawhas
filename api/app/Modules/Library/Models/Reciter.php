@@ -125,4 +125,9 @@ class Reciter extends Model implements TimestampedEntity
     {
         return $this->hasMany(Album::class);
     }
+
+    public function tracks(): HasMany
+    {
+        return $this->hasMany(Track::class);
+    }
 }

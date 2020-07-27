@@ -26,25 +26,30 @@ class PopularEntitiesController extends Controller
 
     public function reciters(Request $request, ReciterTransformer $transformer): JsonResponse
     {
+        $pagination = PaginationState::fromRequest($request);
+        $reciters = Reciter::limit($pagination->getLimit())->get();
         return $this->cache->remember(
             $this->getRecitersCacheKey($request),
             self::CACHE_TTL,
             fn() => (
                 $this->respondWithCollection(
-//                    $this->repository->reciters(PaginationState::fromRequest($request)),
-                    Reciter::all(),
+                    $reciters,
                     $transformer
                 )
             ),
         );
     }
 
-    public function tracks(Request $request, TrackTransformer $transformer): JsonResponse
+    public function tracks(Request $request, TrackTransformer $transformer)
     {
         $reciter = null;
 
+        $pagination = PaginationState::fromRequest($request);
+        $tracks = Track::limit($pagination->getLimit())->get();
+
         if ($request->has('reciterId')) {
             $reciter = Reciter::retrieve($request->get('reciterId'));
+            $tracks = $reciter->tracks()->limit($pagination->getLimit())->get();
         }
 
         $key = $this->getTracksCacheKey($request, $reciter);
@@ -55,7 +60,7 @@ class PopularEntitiesController extends Controller
             fn() => (
                 $this->respondWithCollection(
 //                    $this->repository->tracks(PaginationState::fromRequest($request), $reciter),
-                    Track::all(),
+                    $tracks,
                     $transformer
                 )
             ),
