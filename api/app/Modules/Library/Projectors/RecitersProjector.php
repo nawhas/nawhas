@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace App\Modules\Library\Projectors;
 
+use App\Modules\Library\Models\Visit;
 use App\Modules\Library\Events\Reciters\{ReciterAvatarChanged,
     ReciterCreated,
     ReciterDeleted,
     ReciterDescriptionChanged,
-    ReciterNameChanged};
+    ReciterNameChanged,
+    ReciterViewed};
 use App\Modules\Library\Models\Reciter;
 use Spatie\EventSourcing\EventHandlers\Projectors\Projector;
 
@@ -49,6 +51,18 @@ class RecitersProjector extends Projector
     {
         $reciter = Reciter::retrieve($event->id);
         $reciter->delete();
+    }
+
+    public function onReciterViewed(ReciterViewed $event): void
+    {
+        $data = collect($event->data);
+        $data->forget('created_at');
+        $data->forget('updated_at');
+        $data->put('id', $event->id);
+
+        $visit = new Visit($data->all());
+
+        $visit->saveOrFail();
     }
 
     public function resetState(): void
