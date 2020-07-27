@@ -203,7 +203,7 @@ return [
      |  Enables the Doctrine Presence Verifier for Validation
      |
      */
-    'doctrine_presence_verifier' => true,
+    'doctrine_presence_verifier' => false,
 
     /*
      |--------------------------------------------------------------------------
