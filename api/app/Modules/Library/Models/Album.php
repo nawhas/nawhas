@@ -122,4 +122,13 @@ class Album extends Model implements TimestampedEntity
     {
         return $this->hasMany(Track::class);
     }
+
+    public function resolveRouteBinding($value, $field = null)
+    {
+        if (($field === null || $field === 'id') && Uuid::isValid($value)) {
+            return $this->where('id', $value)->firstOrFail();
+        }
+
+        throw new ModelNotFoundException('Invalid UUID.');
+    }
 }
