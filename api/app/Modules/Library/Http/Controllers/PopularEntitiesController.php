@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\Modules\Popular\Http\Controllers;
+namespace App\Modules\Library\Http\Controllers;
 
 
 use App\Http\Controllers\Controller;

@@ -54,4 +54,14 @@ Route::prefix('v1')->group(function () {
             Route::delete('/{trackId}', [Controllers\TracksController::class, 'destroy']);
         });
     });
+
+    /*
+    |--------------------------------------------------------------------------
+    | Popular Routes
+    |--------------------------------------------------------------------------
+    */
+    Route::prefix('popular')->group(function () {
+        Route::get('reciters', [Controllers\PopularEntitiesController::class, 'reciters']);
+        Route::get('tracks', [Controllers\PopularEntitiesController::class, 'tracks']);
+    });
 });
