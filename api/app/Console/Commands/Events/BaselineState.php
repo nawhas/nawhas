@@ -118,14 +118,16 @@ class BaselineState extends Command
         // Process Visits
         $builder = DB::connection('pgsql')->table('reciter_visits')->orderBy('date');
         $this->processTableWithQuery($builder, 'reciter_visits', function ($visit) {
-            event(new Library\Reciters\ReciterViewed($visit->reciter_id, [
+            event(new Library\Reciters\ReciterViewed($visit->id, [
+                'reciter_id' => $visit->reciter_id,
                 'date' => $visit->date,
             ]));
         });
 
         $builder = DB::connection('pgsql')->table('track_visits')->orderBy('date');
         $this->processTableWithQuery($builder, 'track_visits', function ($visit) {
-            event(new Library\Tracks\TrackViewed($visit->track_id, [
+            event(new Library\Tracks\TrackViewed($visit->id, [
+                'track_id' => $visit->track_id,
                 'date' => $visit->date,
             ]));
         });
