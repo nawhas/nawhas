@@ -53,18 +53,6 @@ class RecitersProjector extends Projector
         $reciter->delete();
     }
 
-    public function onReciterViewed(ReciterViewed $event): void
-    {
-        $data = collect($event->data);
-        $data->forget('created_at');
-        $data->forget('updated_at');
-        $data->put('id', $event->id);
-
-        $visit = new Visit($data->all());
-
-        $visit->saveOrFail();
-    }
-
     public function resetState(): void
     {
         Reciter::truncate();
