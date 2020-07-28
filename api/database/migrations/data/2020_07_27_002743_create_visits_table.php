@@ -18,6 +18,7 @@ class CreateVisitsTable extends Migration
             $table->string('entity');
             $table->uuid('entity_id');
             $table->date('date');
+            $table->timestamps();
         });
     }
 
