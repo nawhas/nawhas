@@ -22,13 +22,9 @@ trait Visitable
             $ip = request()->ip();
         }
 
-        return Visit::firstOrCreate([
-            'ip' => $ip,
-            'date' => Carbon::now()->toDateString(),
+        $visit = Visit::create($ip, Carbon::now()->toDateString(), $this->id, (new \ReflectionClass($this))->getName());
 
-            'visitable_id' => $this->id,
-            'visitable_type' => (new \ReflectionClass($this))->getName(),
-        ]);
+        return $visit;
     }
 
     /**

@@ -8,6 +8,7 @@ use App\Entities\Contracts\TimestampedEntity;
 use App\Modules\Core\Models\HasTimestamps;
 use App\Modules\Core\Models\HasUuid;
 use App\Modules\Core\Models\UsesDataConnection;
+use App\Modules\Popular\Traits\Visitable;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use App\Modules\Library\Events\Reciters\{
     ReciterAvatarChanged,
@@ -44,6 +45,7 @@ class Reciter extends Model implements TimestampedEntity
     use HasTimestamps;
     use HasUuid;
     use UsesDataConnection;
+    use Visitable;
 
     protected $guarded = [];
 
@@ -96,6 +98,8 @@ class Reciter extends Model implements TimestampedEntity
         $reciter = self::retrieve($id);
 
         event(new ReciterViewed($reciter->id));
+
+        $reciter->visit();
 
         return $reciter;
     }
