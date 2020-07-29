@@ -9,6 +9,7 @@ use App\Modules\Core\Models\HasTimestamps;
 use App\Modules\Core\Models\HasUuid;
 use App\Modules\Core\Models\UsesDataConnection;
 use App\Modules\Popular\Traits\Visitable;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use App\Modules\Library\Events\Reciters\{
     ReciterAvatarChanged,
@@ -97,7 +98,9 @@ class Reciter extends Model implements TimestampedEntity
     {
         $reciter = self::retrieve($id);
 
-        event(new ReciterViewed($reciter->id));
+        event(new ReciterViewed($reciter->id, [
+            'date' => Carbon::now()->toDate(),
+        ]));
 
         return $reciter;
     }
