@@ -132,4 +132,13 @@ class Track extends Model implements TimestampedEntity
             ->saveSlugsTo('slug')
             ->allowDuplicateSlugs();
     }
+
+    public function resolveRouteBinding($value, $field = null)
+    {
+        if (($field === null || $field === 'id') && Uuid::isValid($value)) {
+            return $this->where('id', $value)->firstOrFail();
+        }
+
+        return $this->where($field ?? 'slug', $value)->firstOrFail();
+    }
 }
