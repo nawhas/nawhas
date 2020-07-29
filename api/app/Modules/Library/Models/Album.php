@@ -9,7 +9,6 @@ use App\Modules\Library\Events\Albums\{
     AlbumArtworkChanged,
     AlbumCreated,
     AlbumTitleChanged,
-    AlbumViewed,
     AlbumYearChanged
 };
 use App\Modules\Core\Models\HasTimestamps;

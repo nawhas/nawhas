@@ -11,10 +11,8 @@ use App\Modules\Core\Models\UsesDataConnection;
 use App\Modules\Library\Events\Reciters\{ReciterAvatarChanged,
     ReciterCreated,
     ReciterDescriptionChanged,
-    ReciterNameChanged,
-    ReciterViewed};
+    ReciterNameChanged};
 use App\Modules\Library\Models\Traits\Visitable;
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\Eloquent\Relations\HasMany;
