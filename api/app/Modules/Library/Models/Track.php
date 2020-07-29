@@ -14,6 +14,8 @@ use App\Modules\Library\Events\Tracks\TrackLyricsChanged;
 use App\Modules\Library\Events\Tracks\TrackTitleChanged;
 use App\Modules\Library\Events\Tracks\TrackViewed;
 use App\Modules\Lyrics\Documents\Document;
+use App\Modules\Popular\Traits\Visitable;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -46,6 +48,7 @@ class Track extends Model implements TimestampedEntity
     use HasTimestamps;
     use HasUuid;
     use UsesDataConnection;
+    use Visitable;
 
     protected $guarded = [];
 
@@ -91,7 +94,9 @@ class Track extends Model implements TimestampedEntity
     {
         $track = self::retrieve($id);
 
-        event(new TrackViewed($track->id));
+        event(new TrackViewed($track->id, [
+            'date' => Carbon::now()->toDate(),
+        ]));
 
         return $track;
     }
