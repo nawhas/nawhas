@@ -8,6 +8,7 @@ volumes:
   pg_events:
   pg_data:
   redis:
+  search:
 
 services:
   api:
@@ -111,3 +112,16 @@ services:
       - nawhas
     volumes:
       - redis:/data
+  search:
+    image: getmeili/meilisearch:v0.12.0
+    container_name: nawhas_search
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "7700:7700"
+    environment:
+      - MEILI_MASTER_KEY=secret
+    volumes:
+      - search:/data.ms
+    networks:
+      - nawhas
