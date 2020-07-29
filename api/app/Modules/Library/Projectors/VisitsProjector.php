@@ -15,10 +15,8 @@ class VisitsProjector extends Projector
 {
     public function onReciterViewed(ReciterViewed $event): void
     {
-        $data = collect($event->data);
-
         Visit::create([
-            'date' => $data->get('date'),
+            'visited_at' => $event->visitedAt,
             'visitable_id' => $event->id,
             'visitable_type' => Reciter::class,
         ]);
@@ -26,10 +24,8 @@ class VisitsProjector extends Projector
 
     public function onTrackViewed(TrackViewed $event): void
     {
-        $data = collect($event->data);
-
         Visit::create([
-            'date' => $data->get('date'),
+            'visited_at' => $event->visitedAt,
             'visitable_id' => $event->id,
             'visitable_type' => Track::class,
         ]);
