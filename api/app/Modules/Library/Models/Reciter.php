@@ -8,18 +8,16 @@ use App\Entities\Contracts\TimestampedEntity;
 use App\Modules\Core\Models\HasTimestamps;
 use App\Modules\Core\Models\HasUuid;
 use App\Modules\Core\Models\UsesDataConnection;
-use App\Modules\Popular\Traits\Visitable;
-use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use App\Modules\Library\Events\Reciters\{
-    ReciterAvatarChanged,
+use App\Modules\Library\Events\Reciters\{ReciterAvatarChanged,
     ReciterCreated,
     ReciterDescriptionChanged,
     ReciterNameChanged,
-    ReciterViewed
-};
+    ReciterViewed};
+use App\Modules\Library\Models\Traits\Visitable;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Ramsey\Uuid\Uuid;
 use Spatie\Sluggable\{HasSlug, SlugOptions};
 

@@ -6,9 +6,9 @@ namespace App\Modules\Library\Projectors;
 
 use App\Modules\Library\Events\Reciters\ReciterViewed;
 use App\Modules\Library\Events\Tracks\TrackViewed;
-use App\Modules\Popular\Models\Visit;
 use App\Modules\Library\Models\Reciter;
 use App\Modules\Library\Models\Track;
+use App\Modules\Library\Models\Visit;
 use Spatie\EventSourcing\EventHandlers\Projectors\Projector;
 
 class VisitsProjector extends Projector

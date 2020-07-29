@@ -2,11 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Modules\Popular\Traits;
+namespace App\Modules\Library\Models\Traits;
 
-use App\Modules\Popular\Models\Visit;
+use App\Modules\Library\Models\Visit;
 use Carbon\Carbon;
-use DateTimeInterface;
 
 trait Visitable
 {

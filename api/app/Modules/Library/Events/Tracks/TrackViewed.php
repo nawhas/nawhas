@@ -4,16 +4,9 @@ declare(strict_types=1);
 
 namespace App\Modules\Library\Events\Tracks;
 
-use Spatie\EventSourcing\StoredEvents\ShouldBeStored;
+use App\Modules\Library\Events\EntityViewed;
 
-class TrackViewed extends ShouldBeStored
+class TrackViewed extends EntityViewed
 {
-    public string $id;
-    public array $data;
 
-    public function __construct(string $id, array $data = [])
-    {
-        $this->id = $id;
-        $this->data = $data;
-    }
 }
