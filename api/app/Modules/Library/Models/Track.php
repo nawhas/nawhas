@@ -12,7 +12,7 @@ use App\Modules\Library\Events\Tracks\TrackAudioChanged;
 use App\Modules\Library\Events\Tracks\TrackCreated;
 use App\Modules\Library\Events\Tracks\TrackLyricsChanged;
 use App\Modules\Library\Events\Tracks\TrackTitleChanged;
-use App\Modules\Library\Events\Tracks\TrackViewed;
+use App\Modules\Library\Models\Traits\Visitable;
 use App\Modules\Lyrics\Documents\Document;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -39,6 +39,14 @@ use Spatie\Sluggable\SlugOptions;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Library\Models\Track newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Library\Models\Track query()
  * @mixin \Eloquent
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\Library\Models\Visit[] $visits
+ * @property-read int|null $visits_count
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Library\Models\Track popularAllTime()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Library\Models\Track popularDay()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Library\Models\Track popularLast($days)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Library\Models\Track popularMonth()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Library\Models\Track popularWeek()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Library\Models\Track popularYear()
  */
 class Track extends Model implements TimestampedEntity
 {
@@ -46,6 +54,7 @@ class Track extends Model implements TimestampedEntity
     use HasTimestamps;
     use HasUuid;
     use UsesDataConnection;
+    use Visitable;
 
     protected $guarded = [];
 
@@ -82,18 +91,6 @@ class Track extends Model implements TimestampedEntity
             ->firstOrFail();
 
         return $model;
-    }
-
-    /**
-     * @throws ModelNotFoundException
-     */
-    public static function show(string $id): self
-    {
-        $track = self::retrieve($id);
-
-        event(new TrackViewed($track->id));
-
-        return $track;
     }
 
     public function changeTitle(string $title): void

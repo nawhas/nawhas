@@ -8,16 +8,14 @@ use App\Entities\Contracts\TimestampedEntity;
 use App\Modules\Core\Models\HasTimestamps;
 use App\Modules\Core\Models\HasUuid;
 use App\Modules\Core\Models\UsesDataConnection;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use App\Modules\Library\Events\Reciters\{
-    ReciterAvatarChanged,
+use App\Modules\Library\Events\Reciters\{ReciterAvatarChanged,
     ReciterCreated,
     ReciterDescriptionChanged,
-    ReciterNameChanged,
-    ReciterViewed
-};
+    ReciterNameChanged};
+use App\Modules\Library\Models\Traits\Visitable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Ramsey\Uuid\Uuid;
 use Spatie\Sluggable\{HasSlug, SlugOptions};
 
@@ -37,6 +35,14 @@ use Spatie\Sluggable\{HasSlug, SlugOptions};
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Library\Models\Reciter newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Library\Models\Reciter query()
  * @mixin \Eloquent
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\Library\Models\Visit[] $visits
+ * @property-read int|null $visits_count
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Library\Models\Reciter popularAllTime()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Library\Models\Reciter popularDay()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Library\Models\Reciter popularLast($days)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Library\Models\Reciter popularMonth()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Library\Models\Reciter popularWeek()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Library\Models\Reciter popularYear()
  */
 class Reciter extends Model implements TimestampedEntity
 {
@@ -44,6 +50,7 @@ class Reciter extends Model implements TimestampedEntity
     use HasTimestamps;
     use HasUuid;
     use UsesDataConnection;
+    use Visitable;
 
     protected $guarded = [];
 
@@ -86,18 +93,6 @@ class Reciter extends Model implements TimestampedEntity
             ->firstOrFail();
 
         return $model;
-    }
-
-    /**
-     * @throws ModelNotFoundException
-     */
-    public static function show(string $id): self
-    {
-        $reciter = self::retrieve($id);
-
-        event(new ReciterViewed($reciter->id));
-
-        return $reciter;
     }
 
     public function changeName(string $name): void

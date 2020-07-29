@@ -4,16 +4,9 @@ declare(strict_types=1);
 
 namespace App\Modules\Library\Events\Reciters;
 
-use Spatie\EventSourcing\StoredEvents\ShouldBeStored;
+use App\Modules\Library\Events\EntityViewed;
 
-class ReciterViewed extends ShouldBeStored
+class ReciterViewed extends EntityViewed
 {
-    public string $id;
-    public array $data;
 
-    public function __construct(string $id, array $data = [])
-    {
-        $this->id = $id;
-        $this->data = $data;
-    }
 }

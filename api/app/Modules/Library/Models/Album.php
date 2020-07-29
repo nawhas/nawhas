@@ -9,7 +9,6 @@ use App\Modules\Library\Events\Albums\{
     AlbumArtworkChanged,
     AlbumCreated,
     AlbumTitleChanged,
-    AlbumViewed,
     AlbumYearChanged
 };
 use App\Modules\Core\Models\HasTimestamps;
@@ -78,18 +77,6 @@ class Album extends Model implements TimestampedEntity
             ->firstOrFail();
 
         return $model;
-    }
-
-    /**
-     * @throws ModelNotFoundException
-     */
-    public static function show(string $id): self
-    {
-        $album = self::retrieve($id);
-
-        event(new AlbumViewed($album->id));
-
-        return $album;
     }
 
     public function changeTitle(string $title): void
