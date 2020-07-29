@@ -6,6 +6,7 @@
     "require": {
         "php": "7.4.*",
         "acelaya/doctrine-enum-type": "^2.3",
+        "algolia/scout-extended": "^1.9",
         "beberlei/doctrineextensions": "^1.2",
         "fideloper/proxy": "^4.0",
         "fruitcake/laravel-cors": "^2.0",
@@ -18,6 +19,7 @@
         "laravel-doctrine/orm": "^1.6",
         "laravel/framework": "^7.0",
         "laravel/sanctum": "^2.0",
+        "laravel/scout": "^8.1",
         "laravel/socialite": "^4.4",
         "laravel/tinker": "^2.0",
         "lcobucci/jwt": "^3.3",
