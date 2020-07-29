@@ -13,6 +13,7 @@ class CreateVisitsTable extends Migration
             $table->uuid('visitable_id');
             $table->string('visitable_type');
             $table->date('date');
+            $table->timestamps();
         });
     }
 
