@@ -51,11 +51,11 @@ class User extends Authenticatable implements TimestampedEntity
         $id = Uuid::uuid1()->toString();
 
         event(new UserRegistered($id, [
-            'role' => $role,
+            'role' => $role->getValue(),
             'name' => $name,
             'email' => $email,
             'password' => bcrypt($password),
-            'rememberToken' => $rememberToken,
+            'remember_token' => $rememberToken,
             'nickname' => $nickname,
         ]));
 
