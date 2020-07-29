@@ -1,8 +1,8 @@
 <?php
 
+declare(strict_types=1);
 
 namespace App\Modules\Authentication\Projectors;
-
 
 use App\Modules\Authentication\Events\SocialAccountRegistered;
 use App\Modules\Authentication\Models\SocialAccount;

@@ -9,9 +9,9 @@ use Spatie\EventSourcing\StoredEvents\ShouldBeStored;
 class UserRememberTokenChanged extends ShouldBeStored
 {
     public string $id;
-    public bool $rememberToken;
+    public string $rememberToken;
 
-    public function __construct(string $id, bool $rememberToken)
+    public function __construct(string $id, string $rememberToken)
     {
         $this->id = $id;
         $this->rememberToken = $rememberToken;

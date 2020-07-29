@@ -4,13 +4,15 @@ declare(strict_types=1);
 
 namespace App\Modules\Authentication\Projectors;
 
-use App\Modules\Authentication\Events\UserEmailChanged;
-use App\Modules\Authentication\Events\UserNameChanged;
-use App\Modules\Authentication\Events\UserNicknameChanged;
-use App\Modules\Authentication\Events\UserPasswordChanged;
-use App\Modules\Authentication\Events\UserRegistered;
-use App\Modules\Authentication\Events\UserRememberTokenChanged;
-use App\Modules\Authentication\Events\UserRoleChanged;
+use App\Modules\Authentication\Events\{
+    UserEmailChanged,
+    UserNameChanged,
+    UserNicknameChanged,
+    UserPasswordChanged,
+    UserRegistered,
+    UserRememberTokenChanged,
+    UserRoleChanged
+};
 use App\Modules\Authentication\Models\User;
 use Spatie\EventSourcing\EventHandlers\Projectors\Projector;
 

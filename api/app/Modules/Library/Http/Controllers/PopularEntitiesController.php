@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Modules\Library\Http\Controllers;
-
 
 use App\Http\Controllers\Controller;
 use App\Modules\Library\Http\Transformers\ReciterTransformer;
