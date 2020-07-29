@@ -4,6 +4,7 @@ namespace App\Console\Commands\Events;
 
 use App\Modules\Lyrics\Documents\Factory;
 use App\Modules\Lyrics\Documents\Format;
+use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\DB;
@@ -118,16 +119,12 @@ class BaselineState extends Command
         // Process Visits
         $builder = DB::connection('pgsql')->table('reciter_visits')->orderBy('date');
         $this->processTableWithQuery($builder, 'reciter_visits', function ($visit) {
-            event(new Library\Reciters\ReciterViewed($visit->reciter_id, [
-                'date' => $visit->date,
-            ]));
+            event(new Library\Reciters\ReciterViewed($visit->reciter_id, Carbon::make($visit->date)));
         });
 
         $builder = DB::connection('pgsql')->table('track_visits')->orderBy('date');
         $this->processTableWithQuery($builder, 'track_visits', function ($visit) {
-            event(new Library\Tracks\TrackViewed($visit->track_id, [
-                'date' => $visit->date,
-            ]));
+            event(new Library\Tracks\TrackViewed($visit->track_id, Carbon::make($visit->date)));
         });
 
         $this->info('>>> ✅  All events initialized.');

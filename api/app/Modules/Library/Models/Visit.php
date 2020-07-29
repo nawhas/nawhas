@@ -11,4 +11,6 @@ class Visit extends Model
     protected $fillable = ['visited_at', 'visitable_id', 'visitable_type'];
 
     protected $dates = ['visited_at'];
+
+    public $timestamps = false;
 }

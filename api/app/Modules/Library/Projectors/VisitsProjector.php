@@ -30,4 +30,9 @@ class VisitsProjector extends Projector
             'visitable_type' => Track::class,
         ]);
     }
+
+    public function resetState(): void
+    {
+        Visit::truncate();
+    }
 }
