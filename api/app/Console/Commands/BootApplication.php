@@ -27,7 +27,7 @@ class BootApplication extends Command
                 'config:cache',
                 'route:cache',
                 'wait:database',
-                'migrate:all',
+                'doctrine:migrations:migrate',
                 'doctrine:clear:metadata:cache',
                 'doctrine:generate:proxies',
                 'search:settings:push',
@@ -36,6 +36,10 @@ class BootApplication extends Command
             if ($app->environment('integration')) {
                 $this->all('db:seed');
             }
+
+            $this->all(
+                'migrate:all'
+            );
         } catch (Exception $e) {
             $this->error("Failed to boot application.\n{$e->getMessage()}");
             return 1;
