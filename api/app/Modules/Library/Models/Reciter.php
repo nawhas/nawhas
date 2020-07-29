@@ -37,6 +37,14 @@ use Spatie\Sluggable\{HasSlug, SlugOptions};
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Library\Models\Reciter newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Library\Models\Reciter query()
  * @mixin \Eloquent
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\Library\Models\Visit[] $visits
+ * @property-read int|null $visits_count
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Library\Models\Reciter popularAllTime()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Library\Models\Reciter popularDay()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Library\Models\Reciter popularLast($days)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Library\Models\Reciter popularMonth()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Library\Models\Reciter popularWeek()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Library\Models\Reciter popularYear()
  */
 class Reciter extends Model implements TimestampedEntity
 {

@@ -41,6 +41,14 @@ use Spatie\Sluggable\SlugOptions;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Library\Models\Track newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Library\Models\Track query()
  * @mixin \Eloquent
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\Library\Models\Visit[] $visits
+ * @property-read int|null $visits_count
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Library\Models\Track popularAllTime()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Library\Models\Track popularDay()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Library\Models\Track popularLast($days)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Library\Models\Track popularMonth()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Library\Models\Track popularWeek()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Library\Models\Track popularYear()
  */
 class Track extends Model implements TimestampedEntity
 {
