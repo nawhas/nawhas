@@ -6,16 +6,16 @@ namespace App\Modules\Authentication\Models;
 
 use App\Entities\Contracts\TimestampedEntity;
 use App\Modules\Authentication\Enum\Role;
-use App\Modules\Authentication\Events\UserEmailChanged;
-use App\Modules\Authentication\Events\UserNameChanged;
-use App\Modules\Authentication\Events\UserNicknameChanged;
-use App\Modules\Authentication\Events\UserPasswordChanged;
-use App\Modules\Authentication\Events\UserRegistered;
-use App\Modules\Authentication\Events\UserRememberTokenChanged;
-use App\Modules\Authentication\Events\UserRoleChanged;
-use App\Modules\Core\Models\HasTimestamps;
-use App\Modules\Core\Models\HasUuid;
-use App\Modules\Core\Models\UsesDataConnection;
+use App\Modules\Authentication\Events\{
+    UserEmailChanged,
+    UserNameChanged,
+    UserNicknameChanged,
+    UserPasswordChanged,
+    UserRegistered,
+    UserRememberTokenChanged,
+    UserRoleChanged
+};
+use App\Modules\Core\Models\{HasTimestamps, HasUuid, UsesDataConnection};
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Ramsey\Uuid\Uuid;
@@ -43,6 +43,8 @@ class User extends Authenticatable implements TimestampedEntity
     use HasUuid;
     use HasTimestamps;
     use UsesDataConnection;
+
+    protected $guarded = [];
 
     public static function create(Role $role, string $name, string $email, ?string $password = null, ?bool $rememberToken = null, ?string $nickname = null ): self
     {
@@ -86,7 +88,7 @@ class User extends Authenticatable implements TimestampedEntity
 
     public function changeRole(Role $role): void
     {
-        if ($role !== $this->role) {
+        if ($role->getValue() === $this->role) {
             event(new UserRoleChanged($this->id, $role));
         }
     }
@@ -100,16 +102,12 @@ class User extends Authenticatable implements TimestampedEntity
 
     public function changePassword(string $password):void
     {
-        if ($password !== $this->password) {
-            event(new UserPasswordChanged($this->id, $password));
-        }
+        event(new UserPasswordChanged($this->id, bcrypt($password)));
     }
 
-    public function changeRememberToken(bool $rememberToken): void
+    public function changeRememberToken(string $rememberToken): void
     {
-        if ($rememberToken !== $this->remember_token) {
-            event(new UserRememberTokenChanged($this->id, $rememberToken));
-        }
+        event(new UserRememberTokenChanged($this->id, $rememberToken));
     }
 
     public function changeNickname(?string $nickname):void

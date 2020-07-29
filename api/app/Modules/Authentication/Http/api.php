@@ -12,8 +12,8 @@ Route::prefix('v1')->group(function () {
     |--------------------------------------------------------------------------
     */
     Route::prefix('auth')->group(function () {
-        Route::get('login', [Controllers\AuthController::class, 'login']);
-        Route::get('register', [Controllers\AuthController::class, 'register'])
+        Route::post('login', [Controllers\AuthController::class, 'login']);
+        Route::post('register', [Controllers\AuthController::class, 'register'])
             ->middleware(EnforceFeatureFlags::in([PublicUserRegistration::NAME]));
         Route::post('logout', [Controllers\AuthController::class, 'logout'])->middleware('auth:sanctum');
         Route::get('user', [Controllers\AuthController::class, 'user'])->middleware('auth:sanctum');
