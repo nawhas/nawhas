@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Modules\Popular\Projectors;
+namespace App\Modules\Library\Projectors;
 
 use App\Modules\Library\Events\Reciters\ReciterViewed;
 use App\Modules\Library\Events\Tracks\TrackViewed;
@@ -16,7 +16,7 @@ class VisitsProjector extends Projector
 {
     public function onReciterViewed(ReciterViewed $event): void
     {
-        $data = collect($event->attributes);
+        $data = collect($event->data);
 
         Visit::firstOrCreate([
             'date' => $data->get('date'),
@@ -27,7 +27,7 @@ class VisitsProjector extends Projector
 
     public function onTrackViewed(TrackViewed $event): void
     {
-        $data = collect($event->attributes);
+        $data = collect($event->data);
 
         Visit::firstOrCreate([
             'date' => $data->get('date'),

@@ -99,8 +99,6 @@ class Reciter extends Model implements TimestampedEntity
 
         event(new ReciterViewed($reciter->id));
 
-        $reciter->visit();
-
         return $reciter;
     }
 
