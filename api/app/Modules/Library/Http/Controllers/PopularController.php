@@ -11,6 +11,7 @@ use App\Modules\Library\Models\Reciter;
 use App\Modules\Library\Models\Track;
 use App\Support\Pagination\PaginationState;
 use Illuminate\Contracts\Cache\Repository as Cache;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -26,37 +27,36 @@ class PopularController extends Controller
 
     public function reciters(Request $request, ReciterTransformer $transformer): JsonResponse
     {
+        $pagination = PaginationState::fromRequest($request);
+        $reciters = Reciter::query()
+            ->popularAllTime()
+            ->paginate($pagination->getLimit());
+
         return $this->cache->remember(
             $this->getRecitersCacheKey($request),
             self::CACHE_TTL,
-            fn() => (
-                $this->respondWithCollection(
-                    Reciter::popularLast(3)->limit(PaginationState::fromRequest($request)->getLimit())->get(),
-                    $transformer
-                )
-            ),
+            fn() => $this->respondWithCollection($reciters, $transformer),
         );
     }
 
-    public function tracks(Request $request, TrackTransformer $transformer): JsonResponse
+    public function tracks(Request $request, TrackTransformer $transformer)
     {
-        $reciter = null;
+        $pagination = PaginationState::fromRequest($request);
+        $tracks = Track::query()
+            ->popularAllTime()
+            ->when($request->has('reciterId'), function (Builder $builder) use ($request) {
+                $reciter = Reciter::retrieve($request->get('reciterId'));
+                $builder->where('reciter_id', $reciter->id);
+            })
+            ->paginate($pagination->getLimit());
 
-        if ($request->has('reciterId')) {
-            $reciter = Reciter::retrieve($request->get('reciterId'));
-        }
 
-        $key = $this->getTracksCacheKey($request, $reciter);
+        $key = $this->getTracksCacheKey($request, $request->get('reciterId'));
 
         return $this->cache->remember(
             $key,
             self::CACHE_TTL,
-            fn() => (
-                $this->respondWithCollection(
-                    Track::popularLast(3)->limit(PaginationState::fromRequest($request)->getLimit())->get(),
-                    $transformer
-                )
-            ),
+            fn() => $this->respondWithCollection($tracks, $transformer),
         );
     }
 
@@ -66,9 +66,9 @@ class PopularController extends Controller
         return "controllers.popular.reciters::{$hash}";
     }
 
-    private function getTracksCacheKey(Request $request, ?Reciter $reciter = null): string
+    private function getTracksCacheKey(Request $request, ?string $reciterId = null): string
     {
-        $key = $reciter ? "controllers.popular.tracks::reciter:{$reciter->getId()}" : 'controllers.popular.tracks';
+        $key = $reciterId ? "controllers.popular.tracks::reciter:{$reciterId}" : 'controllers.popular.tracks';
 
         $hash = $this->generateRequestHash($request);
         return "$key::{$hash}";

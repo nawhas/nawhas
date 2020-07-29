@@ -123,7 +123,7 @@ trait Visitable
     public function visitsLast($days)
     {
         return $this->visits()
-            ->where('date', '>=', Carbon::now()->subDays($days)->toDateString())
+            ->where('visited_at', '>=', Carbon::now()->subDays($days)->toDateString())
             ->count();
     }
 
@@ -136,7 +136,7 @@ trait Visitable
     public function queryPopularLast($query, $days)
     {
         return $query->withCount(['visits' => function ($query) use ($days) {
-            $query->where('date', '>=', Carbon::now()->subDays($days)->toDateString());
+            $query->where('visited_at', '>=', Carbon::now()->subDays($days)->toDateString());
         }])->orderBy('visits_count', 'desc');
     }
 }
