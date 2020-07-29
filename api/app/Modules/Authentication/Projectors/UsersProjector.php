@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Authentication\Projectors;
 
+use Illuminate\Support\Str;
 use App\Modules\Authentication\Events\{
     UserEmailChanged,
     UserNameChanged,
@@ -22,6 +23,9 @@ class UsersProjector extends Projector
     {
         $data = collect($event->attributes);
         $data->put('id', $event->id);
+
+        // Convert camelCase keys to snake_case
+        $data = $data->mapWithKeys(fn ($value, $key) => [Str::snake($key) => $value]);
 
         $user = new User($data->all());
 
