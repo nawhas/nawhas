@@ -10,7 +10,7 @@ class CreateVisitsTable extends Migration
     {
         Schema::connection('data')->create('visits', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->uuid('visitable_id');
+            $table->string('visitable_id');
             $table->string('visitable_type');
             $table->date('date');
             $table->timestamps();
