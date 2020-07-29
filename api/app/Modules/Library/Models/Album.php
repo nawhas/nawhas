@@ -80,18 +80,6 @@ class Album extends Model implements TimestampedEntity
         return $model;
     }
 
-    /**
-     * @throws ModelNotFoundException
-     */
-    public static function show(string $id): self
-    {
-        $album = self::retrieve($id);
-
-        event(new AlbumViewed($album->id));
-
-        return $album;
-    }
-
     public function changeTitle(string $title): void
     {
         if ($title !== $this->title) {

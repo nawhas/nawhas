@@ -95,20 +95,6 @@ class Track extends Model implements TimestampedEntity
         return $model;
     }
 
-    /**
-     * @throws ModelNotFoundException
-     */
-    public static function show(string $id): self
-    {
-        $track = self::retrieve($id);
-
-        event(new TrackViewed($track->id, [
-            'date' => Carbon::now()->toDate(),
-        ]));
-
-        return $track;
-    }
-
     public function changeTitle(string $title): void
     {
         if ($title !== $this->title) {

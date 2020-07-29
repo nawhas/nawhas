@@ -97,20 +97,6 @@ class Reciter extends Model implements TimestampedEntity
         return $model;
     }
 
-    /**
-     * @throws ModelNotFoundException
-     */
-    public static function show(string $id): self
-    {
-        $reciter = self::retrieve($id);
-
-        event(new ReciterViewed($reciter->id, [
-            'date' => Carbon::now()->toDate(),
-        ]));
-
-        return $reciter;
-    }
-
     public function changeName(string $name): void
     {
         if ($name !== $this->name) {
