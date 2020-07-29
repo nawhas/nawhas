@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace App\Modules\Library\Projectors;
 
-use App\Modules\Library\Events\Reciters\{ReciterAvatarChanged,
+use App\Modules\Library\Events\Reciters\{
+    ReciterAvatarChanged,
     ReciterCreated,
     ReciterDeleted,
     ReciterDescriptionChanged,
-    ReciterNameChanged};
+    ReciterNameChanged
+};
 use App\Modules\Library\Models\Reciter;
 use Spatie\EventSourcing\EventHandlers\Projectors\Projector;
 

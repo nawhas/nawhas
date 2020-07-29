@@ -67,7 +67,7 @@ class BaselineState extends Command
                 'nickname' => $user->nickname,
                 'email' => $user->email,
                 'password' => $user->password,
-                'rememberToken' => $user->remember_token,
+                'remember_token' => $user->remember_token,
             ]));
         });
 
