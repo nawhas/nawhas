@@ -40,6 +40,10 @@ class BootApplication extends Command
             $this->all(
                 'migrate:all'
             );
+
+            if ($app->environment('integration')) {
+                $this->call('event-sourcing:replay', ['--no-interaction' => true]);
+            }
         } catch (Exception $e) {
             $this->error("Failed to boot application.\n{$e->getMessage()}");
             return 1;
