@@ -5,7 +5,7 @@ metadata:
   labels:
     app: postgres
 data:
-  POSTGRES_MULTIPLE_DATABASES: nawhas,nawhas_events,nawhas_data
+  POSTGRES_MULTIPLE_DATABASES: nawhas_original,nawhas_events,nawhas_data
   POSTGRES_USER: nawhas
   POSTGRES_PASSWORD: secret
   PGDATA: /var/lib/postgresql/data/pgdata
