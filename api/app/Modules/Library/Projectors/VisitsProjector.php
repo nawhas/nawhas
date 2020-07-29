@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Modules\Library\Projectors;
 
-
 use App\Modules\Library\Events\Reciters\ReciterViewed;
 use App\Modules\Library\Events\Tracks\TrackViewed;
 use App\Modules\Popular\Models\Visit;
@@ -18,7 +17,7 @@ class VisitsProjector extends Projector
     {
         $data = collect($event->data);
 
-        Visit::firstOrCreate([
+        Visit::create([
             'date' => $data->get('date'),
             'visitable_id' => $event->id,
             'visitable_type' => Reciter::class,
@@ -29,7 +28,7 @@ class VisitsProjector extends Projector
     {
         $data = collect($event->data);
 
-        Visit::firstOrCreate([
+        Visit::create([
             'date' => $data->get('date'),
             'visitable_id' => $event->id,
             'visitable_type' => Track::class,
