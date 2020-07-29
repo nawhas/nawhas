@@ -6,32 +6,18 @@ use Illuminate\Support\Facades\Schema;
 
 class CreateVisitsTable extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
     public function up()
     {
-        Schema::create('visits', function (Blueprint $table) {
-            $table->uuid('id')->primary();
-            $table->string('ip')->index();
+        Schema::connection('data')->create('visits', function (Blueprint $table) {
+            $table->bigIncrements('id');
             $table->integer('visitable_id');
             $table->string('visitable_type');
             $table->date('date');
-            $table->timestamps();
-
-            $table->unique(['ip', 'visitable_id', 'visitable_type', 'date']);
         });
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
     public function down()
     {
-        Schema::dropIfExists('visits');
+        Schema::connection('data')->dropIfExists('visits');
     }
 }

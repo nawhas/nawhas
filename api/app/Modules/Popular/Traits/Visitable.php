@@ -6,27 +6,10 @@ namespace App\Modules\Popular\Traits;
 
 use App\Modules\Popular\Models\Visit;
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Model;
+use DateTimeInterface;
 
 trait Visitable
 {
-    /**
-     * Registrates a visit into the database if it does not exist on current day
-     * (Registers unique visitors)
-     * @param string $ip
-     * @return Model
-     */
-    public function visit($ip = ''): Model
-    {
-        if(empty($ip)){
-            $ip = request()->ip();
-        }
-
-        $visit = Visit::create($ip, Carbon::now()->toDateString(), $this->id, (new \ReflectionClass($this))->getName());
-
-        return $visit;
-    }
-
     /**
      * Setting relationship
      * @return mixed
