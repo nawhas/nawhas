@@ -17,6 +17,7 @@ use App\Modules\Lyrics\Documents\Document;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Laravel\Scout\Searchable;
 use Ramsey\Uuid\Uuid;
 use Spatie\Sluggable\HasSlug;
 use Spatie\Sluggable\SlugOptions;
@@ -55,6 +56,7 @@ class Track extends Model implements TimestampedEntity
     use HasUuid;
     use UsesDataConnection;
     use Visitable;
+    use Searchable;
 
     protected $guarded = [];
 
@@ -137,5 +139,33 @@ class Track extends Model implements TimestampedEntity
         }
 
         return $this->where($field ?? 'slug', $value)->firstOrFail();
+    }
+
+    public function toSearchableArray()
+    {
+        $lyrics = $this->lyrics ? $this->lyrics->render() : null;
+
+        if ($lyrics !== null) {
+            $lyrics = substr($lyrics, 0, 8000);
+        }
+
+        return [
+            'id' => $this->id,
+            'title' => $this->title,
+            'slug' => $this->slug,
+            'reciter' => ['name' => $this->reciter->name],
+            'album' => [
+                'title' => $this->album->title,
+                'year' => $this->album->year,
+                'artwork' => $this->album->getArtworkUrl(),
+            ],
+            'lyrics' => $lyrics,
+            'url' => sprintf(
+                '/reciters/%s/albums/%s/tracks/%s',
+                $this->reciter->slug,
+                $this->album->year,
+                $this->slug
+            ),
+        ];
     }
 }

@@ -16,7 +16,7 @@ return [
 
         // React to these Doctrine events automatically.
         // Set this to [] to disable automatic sync.
-        'doctrineSubscribedEvents' => ['postPersist', 'postUpdate', 'preRemove'],
+        'doctrineSubscribedEvents' => [],
 
         'indices' => [
             'reciters' => [
