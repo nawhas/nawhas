@@ -38,40 +38,6 @@ class RouteServiceProvider extends ServiceProvider
     {
         parent::boot();
         $this->app['request']->server->set('HTTPS','on');
-        $this->bindEntities();
-    }
-
-    public function bindEntities(): void
-    {
-        Router::bind('reciter', function ($id, Route $route) {
-            /** @var ReciterRepository $repo */
-            $repo = $this->app->make(ReciterRepository::class);
-            return $repo->get($id);
-        });
-
-        Router::bind('album', function ($id, Route $route) {
-            /** @var AlbumRepository $repo */
-            $repo = $this->app->make(AlbumRepository::class);
-
-            $reciter = $route->parameter('reciter');
-            if ($reciter instanceof Reciter) {
-                return $repo->getByReciter($reciter, $id);
-            }
-
-            return $repo->get($id);
-        });
-
-        Router::bind('track', function ($id, Route $route) {
-            /** @var TrackRepository $repo */
-            $repo = $this->app->make(TrackRepository::class);
-
-            $album = $route->parameter('album');
-            if ($album instanceof Album) {
-                return $repo->getFromAlbum($album, $id);
-            }
-
-            return $repo->get($id);
-        });
     }
 
     /**

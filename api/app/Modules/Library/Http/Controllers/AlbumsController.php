@@ -23,10 +23,8 @@ class AlbumsController extends Controller
         $this->transformer = $transformer;
     }
 
-    public function index(string $reciterId, Request $request): JsonResponse
+    public function index(Reciter $reciter, Request $request): JsonResponse
     {
-        $reciter = Reciter::retrieve($reciterId);
-
         $albums = $reciter->albums()
             ->orderByDesc('year')
             ->paginate(PaginationState::fromRequest($request)->getLimit());
@@ -34,29 +32,22 @@ class AlbumsController extends Controller
         return $this->respondWithPaginator($albums);
     }
 
-    public function store(Request $request, string $reciterId): JsonResponse
+    public function store(Request $request, Reciter $reciter): JsonResponse
     {
-        $reciter = Reciter::retrieve($reciterId);
         $album = Album::create($reciter, $request->get('title'), $request->get('year'));
 
         return $this->respondWithItem($album);
     }
 
-    public function show(string $reciterId, string $albumId): JsonResponse
+    public function show(Reciter $reciter, Album $album): JsonResponse
     {
-        $reciter = Reciter::retrieve($reciterId);
-        $album = Album::retrieve($albumId, $reciter->id);
-
         event(new AlbumViewed($album->id));
 
         return $this->respondWithItem($album);
     }
 
-    public function update(Request $request, string $reciterId, string $albumId): JsonResponse
+    public function update(Request $request, Reciter $reciter, Album $album): JsonResponse
     {
-        $reciter = Reciter::retrieve($reciterId);
-        $album = Album::retrieve($albumId, $reciter->id);
-
         if ($request->has('title')) {
             $album->changeTitle($request->get('title'));
         }
@@ -68,21 +59,15 @@ class AlbumsController extends Controller
         return $this->respondWithItem($album->fresh());
     }
 
-    public function destroy(string $reciterId, string $albumId): Response
+    public function destroy(Reciter $reciter, Album $album): Response
     {
-        $reciter = Reciter::retrieve($reciterId);
-        $album = Album::retrieve($albumId, $reciter->id);
-
         event(new AlbumDeleted($album->id));
 
         return response()->noContent();
     }
 
-    public function uploadArtwork(Request $request, string $reciterId, string $albumId): JsonResponse
+    public function uploadArtwork(Request $request, Reciter $reciter, Album $album): JsonResponse
     {
-        $reciter = Reciter::retrieve($reciterId);
-        $album = Album::retrieve($albumId, $reciter->id);
-
         if (!$request->file('artwork')) {
             throw ValidationException::withMessages(['artwork' => 'An artwork file is required.']);
         }

@@ -10,7 +10,7 @@ use App\Modules\Lyrics\Documents\Format;
 use Illuminate\Validation\ValidationException;
 use App\Modules\Library\Events\{Tracks\TrackDeleted, Tracks\TrackViewed};
 use App\Modules\Library\Http\Transformers\TrackTransformer;
-use App\Modules\Library\Models\{Album, Lyrics, Reciter, Track};
+use App\Modules\Library\Models\{Album, Reciter, Track};
 use App\Support\Pagination\PaginationState;
 use Illuminate\Http\{JsonResponse, Request, Response};
 
@@ -21,10 +21,8 @@ class TracksController extends Controller
         $this->transformer = $transformer;
     }
 
-    public function index(Request $request, string $reciterId, string $albumId): JsonResponse
+    public function index(Request $request, Reciter $reciter, Album $album): JsonResponse
     {
-        $album = Album::retrieve($albumId, Reciter::retrieve($reciterId)->id);
-
         $tracks = $album->tracks()
             ->orderBy('title')
             ->paginate(PaginationState::fromRequest($request)->getLimit());
@@ -32,10 +30,8 @@ class TracksController extends Controller
         return $this->respondWithPaginator($tracks);
     }
 
-    public function store(Request $request, string $reciterId, string $albumId): JsonResponse
+    public function store(Request $request, Reciter $reciter, Album $album): JsonResponse
     {
-        $album = Album::retrieve($albumId, Reciter::retrieve($reciterId)->id);
-
         $track = Track::create($album, $request->get('title'));
 
         if ($request->has('lyrics')) {
@@ -45,21 +41,15 @@ class TracksController extends Controller
         return $this->respondWithItem($track->fresh());
     }
 
-    public function show(string $reciterId, string $albumId, string $trackId): JsonResponse
+    public function show(Reciter $reciter, Album $album, Track $track): JsonResponse
     {
-        $album = Album::retrieve($albumId, Reciter::retrieve($reciterId)->id);
-        $track = Track::retrieve($trackId, $album->id);
-
         event(new TrackViewed($track->id));
 
         return $this->respondWithItem($track);
     }
 
-    public function update(Request $request, string $reciterId, string $albumId, string $trackId): JsonResponse
+    public function update(Request $request, Reciter $reciter, Album $album, Track $track): JsonResponse
     {
-        $album = Album::retrieve($albumId, Reciter::retrieve($reciterId)->id);
-        $track = Track::retrieve($trackId, $album->id);
-
         if ($request->has('title')) {
             $track->changeTitle($request->get('title'));
         }
@@ -71,22 +61,15 @@ class TracksController extends Controller
         return $this->respondWithItem($track->fresh());
     }
 
-    public function destroy(string $reciterId, string $albumId, string $trackId): Response
+    public function destroy(Reciter $reciter, Album $album, Track $track): Response
     {
-        $album = Album::retrieve($albumId, Reciter::retrieve($reciterId)->id);
-        $track = Track::retrieve($trackId, $album->id);
-
         event(new TrackDeleted($track->id));
 
         return response()->noContent();
     }
 
-    public function uploadTrackMedia(Request $request, string $reciterId, string $albumId, string $trackId): JsonResponse
+    public function uploadTrackMedia(Request $request, Reciter $reciter, Album $album, Track $track): JsonResponse
     {
-        $reciter = Reciter::retrieve($reciterId);
-        $album = Album::retrieve($albumId, $reciter->id);
-        $track = Track::retrieve($trackId, $album->id);
-
         if (!$request->file('audio')) {
             throw ValidationException::withMessages(['audio' => 'An audio file is required.']);
         }

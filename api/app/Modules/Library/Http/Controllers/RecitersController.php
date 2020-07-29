@@ -6,6 +6,7 @@ namespace App\Modules\Library\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Modules\Library\Events\Reciters\ReciterDeleted;
+use App\Modules\Library\Events\Reciters\ReciterViewed;
 use App\Modules\Library\Http\Transformers\ReciterTransformer;
 use App\Modules\Library\Http\Requests\{CreateReciterRequest, UpdateReciterRequest};
 use App\Modules\Library\Models\Reciter;
@@ -38,17 +39,15 @@ class RecitersController extends Controller
         return $this->respondWithPaginator($reciters);
     }
 
-    public function show(string $id): JsonResponse
+    public function show(Reciter $reciter): JsonResponse
     {
-        $reciter = Reciter::show($id);
+        event(new ReciterViewed($reciter->id));
 
         return $this->respondWithItem($reciter);
     }
 
-    public function update(string $id, UpdateReciterRequest $request): JsonResponse
+    public function update(Reciter $reciter, UpdateReciterRequest $request): JsonResponse
     {
-        $reciter = Reciter::retrieve($id);
-
         if ($request->has('name')) {
             $reciter->changeName($request->name());
         }
@@ -60,10 +59,8 @@ class RecitersController extends Controller
         return $this->respondWithItem($reciter->fresh());
     }
 
-    public function uploadAvatar(string $id, Request $request): JsonResponse
+    public function uploadAvatar(Reciter $reciter, Request $request): JsonResponse
     {
-        $reciter = Reciter::retrieve($id);
-
         if (!$request->file('avatar')) {
             throw ValidationException::withMessages(['avatar' => 'An avatar file is required.']);
         }
@@ -75,9 +72,9 @@ class RecitersController extends Controller
         return $this->respondWithItem($reciter->fresh());
     }
 
-    public function delete(string $id): Response
+    public function delete(Reciter $reciter): Response
     {
-        event(new ReciterDeleted($id));
+        event(new ReciterDeleted($reciter->id));
 
         return response()->noContent();
     }
