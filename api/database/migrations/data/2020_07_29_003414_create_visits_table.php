@@ -14,7 +14,7 @@ class CreateVisitsTable extends Migration
     public function up()
     {
         Schema::create('visits', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary();
             $table->string('ip')->index();
             $table->integer('visitable_id');
             $table->string('visitable_type');
