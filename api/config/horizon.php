@@ -182,6 +182,44 @@ return [
             ],
         ],
 
+        'staging' => [
+            'supervisor-1' => [
+                'connection' => 'redis',
+                'queue' => ['default'],
+                'balance' => 'auto',
+                'minProcesses' => 1,
+                'maxProcesses' => 10,
+                'tries' => 1,
+            ],
+            // Events need to be processed one at a time to prevent issues.
+            'events-supervisor-1' => [
+                'connection' => 'redis',
+                'queue' => ['events'],
+                'balance' => 'simple',
+                'processes' => 1,
+                'tries' => 1,
+            ],
+        ],
+
+        'integration' => [
+            'supervisor-1' => [
+                'connection' => 'redis',
+                'queue' => ['default'],
+                'balance' => 'auto',
+                'minProcesses' => 1,
+                'maxProcesses' => 10,
+                'tries' => 1,
+            ],
+            // Events need to be processed one at a time to prevent issues.
+            'events-supervisor-1' => [
+                'connection' => 'redis',
+                'queue' => ['events'],
+                'balance' => 'simple',
+                'processes' => 1,
+                'tries' => 1,
+            ],
+        ],
+
         'local' => [
             'supervisor-1' => [
                 'connection' => 'redis',
