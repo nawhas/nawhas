@@ -24,7 +24,7 @@ return [
         'default' => [
             'dev' => env('APP_DEBUG', false),
             'meta' => 'fluent',
-            'connection' => env('DB_CONNECTION', 'pgsql'),
+            'connection' => 'pgsql',
             'namespaces' => [],
             'paths' => [
                 base_path('app/Entities'),
@@ -203,7 +203,7 @@ return [
      |  Enables the Doctrine Presence Verifier for Validation
      |
      */
-    'doctrine_presence_verifier' => true,
+    'doctrine_presence_verifier' => false,
 
     /*
      |--------------------------------------------------------------------------
