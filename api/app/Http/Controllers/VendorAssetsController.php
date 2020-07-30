@@ -32,6 +32,6 @@ class VendorAssetsController extends Controller
            return 'application/javascript';
        }
 
-       return 'text/plain';
+       return File::mimeType($path);
     }
 }
