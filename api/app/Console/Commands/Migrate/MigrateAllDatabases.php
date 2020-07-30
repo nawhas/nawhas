@@ -38,6 +38,10 @@ class MigrateAllDatabases extends Command
 
         $this->warn('>> Running data migrations...');
         $this->call('migrate:data');
+
+        $this->warn('>> Running other migrations...');
+        $this->call('migrate', ['--force' => true]);
+        
         return 0;
     }
 }

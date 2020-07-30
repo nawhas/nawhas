@@ -33,6 +33,7 @@ services:
     container_name: nawhas_api_nginx
     volumes:
       - ./docker/nginx/api.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./api:/var/www/api:cached
     networks:
       - nawhas
     depends_on:
