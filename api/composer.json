@@ -18,6 +18,7 @@
         "laravel-doctrine/migrations": "^2.1",
         "laravel-doctrine/orm": "^1.6",
         "laravel/framework": "^7.0",
+        "laravel/horizon": "^4.3",
         "laravel/sanctum": "^2.0",
         "laravel/scout": "^8.1",
         "laravel/socialite": "^4.4",
