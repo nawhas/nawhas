@@ -36,6 +36,7 @@ class BootApplication extends Command
                 'doctrine:generate:proxies',
                 'search:settings:push',
                 'horizon:publish',
+                'telescope:publish',
             );
 
             if ($app->environment('integration')) {

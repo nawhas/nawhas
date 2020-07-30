@@ -27,37 +27,34 @@ class PopularController extends Controller
 
     public function reciters(Request $request, ReciterTransformer $transformer): JsonResponse
     {
-        $pagination = PaginationState::fromRequest($request);
-        $reciters = Reciter::query()
-            ->popularAllTime()
-            ->paginate($pagination->getLimit());
+        $key = $this->getRecitersCacheKey($request);
+        return $this->cache->remember($key, self::CACHE_TTL, function () use ($request, $transformer) {
+            $pagination = PaginationState::fromRequest($request);
+            $reciters = Reciter::query()
+                ->popularAllTime()
+                ->paginate($pagination->getLimit());
 
-        return $this->cache->remember(
-            $this->getRecitersCacheKey($request),
-            self::CACHE_TTL,
-            fn() => $this->respondWithCollection($reciters, $transformer),
-        );
+            return $this->respondWithCollection($reciters, $transformer);
+        });
     }
 
     public function tracks(Request $request, TrackTransformer $transformer)
     {
-        $pagination = PaginationState::fromRequest($request);
-        $tracks = Track::query()
-            ->popularAllTime()
-            ->when($request->has('reciterId'), function (Builder $builder) use ($request) {
-                $reciter = Reciter::retrieve($request->get('reciterId'));
-                $builder->where('reciter_id', $reciter->id);
-            })
-            ->paginate($pagination->getLimit());
-
-
         $key = $this->getTracksCacheKey($request, $request->get('reciterId'));
 
-        return $this->cache->remember(
-            $key,
-            self::CACHE_TTL,
-            fn() => $this->respondWithCollection($tracks, $transformer),
-        );
+        return $this->cache->remember($key, self::CACHE_TTL, function () use ($request, $transformer) {
+            $pagination = PaginationState::fromRequest($request);
+
+            $tracks = Track::query()
+                ->popularAllTime()
+                ->when($request->has('reciterId'), function (Builder $builder) use ($request) {
+                    $reciter = Reciter::retrieve($request->get('reciterId'));
+                    $builder->where('reciter_id', $reciter->id);
+                })
+                ->paginate($pagination->getLimit());
+
+            return $this->respondWithCollection($tracks, $transformer);
+        });
     }
 
     private function getRecitersCacheKey(Request $request): string
