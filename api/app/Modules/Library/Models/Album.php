@@ -127,6 +127,15 @@ class Album extends Model implements TimestampedEntity
         throw new ModelNotFoundException('Invalid UUID.');
     }
 
+    public function resolveChildRouteBinding($childType, $value, $field)
+    {
+        if ($childType === 'track' && Uuid::isValid($value)) {
+            return $this->tracks()->find($value);
+        }
+
+        return parent::resolveChildRouteBinding($childType, $value, $field);
+    }
+
     public function toSearchableArray()
     {
         return [
