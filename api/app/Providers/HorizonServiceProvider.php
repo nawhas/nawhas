@@ -39,6 +39,10 @@ class HorizonServiceProvider extends HorizonApplicationServiceProvider
                 return true;
             }
 
+            if (!$user) {
+                return false;
+            }
+
             // TODO - switch this to role based access control.
             return in_array($user->email, [
                 'szainmehdi@gmail.com',
