@@ -8,5 +8,4 @@ use App\Modules\Library\Events\EntityViewed;
 
 class ReciterViewed extends EntityViewed
 {
-
 }

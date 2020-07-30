@@ -7,9 +7,8 @@ namespace App\Modules\Library\Events;
 use App\Modules\Core\Events\SerializableEvent;
 use Carbon\Carbon;
 use DateTimeInterface;
-use Spatie\EventSourcing\StoredEvents\ShouldBeStored;
 
-abstract class EntityViewed extends ShouldBeStored implements SerializableEvent
+abstract class EntityViewed extends UserAction implements SerializableEvent
 {
     public string $id;
     public DateTimeInterface $visitedAt;

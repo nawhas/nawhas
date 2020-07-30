@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Modules\Library\Events\Reciters;
 
-use Spatie\EventSourcing\StoredEvents\ShouldBeStored;
+use App\Modules\Library\Events\UserAction;
 
-class ReciterCreated extends ShouldBeStored
+class ReciterCreated extends UserAction
 {
     public string $id;
     public array $attributes = [];
