@@ -20,9 +20,50 @@ spec:
       containers:
         - name: api
           image: IMAGE:TAG
-          imagePullPolicy: Always
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
+          livenessProbe:
+            exec:
+              command:
+                - php
+                - artisan
+                - healthcheck
+            initialDelaySeconds: 10
+            timeoutSeconds: 2
+          readinessProbe:
+            exec:
+              command:
+                - php
+                - artisan
+                - healthcheck
+            initialDelaySeconds: 2
+            timeoutSeconds: 2
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: queue
+  labels:
+    app: queue
+    tier: backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: queue
+      tier: backend
+  template:
+    metadata:
+      labels:
+        app: queue
+        tier: backend
+    spec:
+      containers:
+        - name: queue
+          image: IMAGE:TAG
+          imagePullPolicy: IfNotPresent
+          command: ['php', 'artisan', 'horizon']
           livenessProbe:
             exec:
               command:
@@ -110,7 +151,7 @@ spec:
       containers:
         - name: web
           image: WEB:TAG
-          imagePullPolicy: Always
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 80
 ---
