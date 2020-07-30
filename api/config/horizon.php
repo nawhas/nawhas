@@ -1,7 +1,5 @@
 <?php
 
-use Illuminate\Support\Str;
-
 return [
 
     /*
@@ -174,12 +172,12 @@ return [
                 'maxProcesses' => 10,
                 'tries' => 1,
             ],
+            // Events need to be processed one at a time to prevent issues.
             'events-supervisor-1' => [
                 'connection' => 'redis',
                 'queue' => ['events'],
-                'balance' => 'auto',
-                'minProcesses' => 1,
-                'maxProcesses' => 10,
+                'balance' => 'simple',
+                'processes' => 1,
                 'tries' => 1,
             ],
         ],
@@ -192,11 +190,12 @@ return [
                 'processes' => 3,
                 'tries' => 1,
             ],
+            // Events need to be processed one at a time to prevent issues.
             'events-supervisor-1' => [
                 'connection' => 'redis',
                 'queue' => ['events'],
                 'balance' => 'simple',
-                'processes' => 3,
+                'processes' => 1,
                 'tries' => 1,
             ],
         ],
