@@ -26,6 +26,7 @@ class BootApplication extends Command
             $this->all(
                 'config:cache',
                 'route:cache',
+                'event-sourcing:cache-event-handlers',
                 'wait:database',
                 ['doctrine:migrations:migrate', [
                     '--force' => true, '--allow-no-migration' => true,
