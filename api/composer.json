@@ -22,6 +22,7 @@
         "laravel/sanctum": "^2.0",
         "laravel/scout": "^8.1",
         "laravel/socialite": "^4.4",
+        "laravel/telescope": "^3.5",
         "laravel/tinker": "^2.0",
         "lcobucci/jwt": "^3.3",
         "league/flysystem-aws-s3-v3": "^1.0",
