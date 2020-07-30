@@ -34,6 +34,7 @@ class BootApplication extends Command
                 'doctrine:clear:metadata:cache',
                 'doctrine:generate:proxies',
                 'search:settings:push',
+                'horizon:publish',
             );
 
             if ($app->environment('integration')) {
