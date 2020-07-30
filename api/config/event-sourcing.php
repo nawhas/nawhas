@@ -1,5 +1,8 @@
 <?php
 
+use App\Modules\Library\Events as Library;
+use App\Modules\Authentication\Events as Authentication;
+
 return [
 
     /*
@@ -74,7 +77,45 @@ return [
      * event class. This allows you to change the namespace or class names
      * of your events but still handle older events correctly.
      */
-    'event_class_map' => [],
+    'event_class_map' => [
+        // Reciter Events
+        'reciter.created' => Library\Reciters\ReciterCreated::class,
+        'reciter.changed.name' => Library\Reciters\ReciterNameChanged::class,
+        'reciter.changed.avatar' => Library\Reciters\ReciterAvatarChanged::class,
+        'reciter.changed.description' => Library\Reciters\ReciterDescriptionChanged::class,
+        'reciter.deleted' => Library\Reciters\ReciterDeleted::class,
+        'reciter.viewed' => Library\Reciters\ReciterViewed::class,
+        // Album Events
+        'album.created' => Library\Albums\AlbumCreated::class,
+        'album.changed.title' => Library\Albums\AlbumTitleChanged::class,
+        'album.changed.year' => Library\Albums\AlbumYearChanged::class,
+        'album.changed.artwork' => Library\Albums\AlbumArtworkChanged::class,
+        'album.deleted' => Library\Albums\AlbumDeleted::class,
+        'album.viewed' => Library\Albums\AlbumViewed::class,
+        // Track Events
+        'tracks.created' => Library\Tracks\TrackCreated::class,
+        'tracks.changed.title' => Library\Tracks\TrackTitleChanged::class,
+        'tracks.changed.audio' => Library\Tracks\TrackAudioChanged::class,
+        'tracks.changed.lyrics' => Library\Tracks\TrackLyricsChanged::class,
+        'tracks.deleted' => Library\Tracks\TrackViewed::class,
+        'tracks.viewed' => Library\Tracks\TrackViewed::class,
+        // Lyric Events
+        'lyrics.created' => Library\Lyrics\LyricsCreated::class,
+        'lyrics.changed' => Library\Lyrics\LyricsChanged::class,
+        'lyrics.deleted' => Library\Lyrics\LyricsDeleted::class,
+        // User Events
+        'user.registered' => Authentication\UserRegistered::class,
+        'user.changed.name' => Authentication\UserNameChanged::class,
+        'user.changed.nickname' => Authentication\UserNicknameChanged::class,
+        'user.changed.password' => Authentication\UserPasswordChanged::class,
+        'user.changed.remember.token' => Authentication\UserRememberTokenChanged::class,
+        'user.changed.role' => Authentication\UserRoleChanged::class,
+        // Auth Events
+        'auth.login' => Authentication\UserLoggedIn::class,
+        'auth.logout' => Authentication\UserLoggedOut::class,
+        // Social Accounts Events
+        'user.social.registered' => Authentication\SocialAccountRegistered::class
+    ],
 
     /*
      * This class is responsible for serializing events. By default an event will be serialized
