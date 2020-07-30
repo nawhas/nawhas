@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Modules\Authentication\Models\User;
 use Illuminate\Support\Facades\Gate;
 use Laravel\Telescope\IncomingEntry;
 use Laravel\Telescope\Telescope;
@@ -16,7 +17,7 @@ class TelescopeServiceProvider extends TelescopeApplicationServiceProvider
      */
     public function register()
     {
-        // Telescope::night();
+        Telescope::night();
 
         $this->hideSensitiveRequestDetails();
 
@@ -62,9 +63,20 @@ class TelescopeServiceProvider extends TelescopeApplicationServiceProvider
      */
     protected function gate()
     {
-        Gate::define('viewTelescope', function ($user) {
+        Gate::define('viewTelescope', function (User $user = null) {
+            if (app()->environment('integration', 'local')) {
+                return true;
+            }
+
+            if (!$user) {
+                return false;
+            }
+
+            // TODO - switch this to role based access control.
             return in_array($user->email, [
-                //
+                'szainmehdi@gmail.com',
+                'shia786.aa@gmail.com',
+                'shea786@live.co.uk',
             ]);
         });
     }

@@ -22,11 +22,6 @@ class AppServiceProvider extends ServiceProvider
     {
         Sanctum::ignoreMigrations();
 
-        if ($this->app->isLocal()) {
-            $this->app->register(\Laravel\Telescope\TelescopeServiceProvider::class);
-            $this->app->register(TelescopeServiceProvider::class);
-        }
-
         $this->app->singleton(Fractal::class, function (): Fractal {
             $fractal = new Fractal();
 
