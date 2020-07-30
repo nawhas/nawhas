@@ -27,7 +27,6 @@ COPY . .
 RUN composer install -n --no-dev --prefer-dist --no-scripts --no-autoloader \
     && composer dump-autoload -n -o --no-dev \
     && composer check-platform-reqs
-    && php artisan telescope:publish
 
 # ---------------------------------------------------------------------------
 # Production Image

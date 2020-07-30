@@ -21,7 +21,6 @@
         "laravel/sanctum": "^2.0",
         "laravel/scout": "^8.1",
         "laravel/socialite": "^4.4",
-        "laravel/telescope": "^3.5",
         "laravel/tinker": "^2.0",
         "lcobucci/jwt": "^3.3",
         "league/flysystem-aws-s3-v3": "^1.0",
@@ -42,6 +41,7 @@
         "barryvdh/laravel-ide-helper": "^2.7",
         "facade/ignition": "^2.0",
         "fzaninotto/faker": "^1.9.1",
+        "laravel/telescope": "^3.5",
         "mockery/mockery": "^1.0",
         "nunomaduro/collision": "^5",
         "nunomaduro/larastan": "^0.5.2",
@@ -57,7 +57,7 @@
     },
     "extra": {
         "laravel": {
-            "dont-discover": []
+            "dont-discover": ["laravel/telescope"]
         }
     },
     "autoload": {
