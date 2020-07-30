@@ -8,5 +8,4 @@ use App\Modules\Library\Events\EntityViewed;
 
 class TrackViewed extends EntityViewed
 {
-
 }

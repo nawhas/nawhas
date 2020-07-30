@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Modules\Library\Events\Albums;
 
-use Spatie\EventSourcing\StoredEvents\ShouldBeStored;
+use App\Modules\Library\Events\UserAction;
 
-class AlbumCreated extends ShouldBeStored
+class AlbumCreated extends UserAction
 {
     public string $id;
     public string $reciterId;

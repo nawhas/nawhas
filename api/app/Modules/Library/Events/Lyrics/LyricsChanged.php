@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Modules\Library\Events\Lyrics;
 
-use Spatie\EventSourcing\StoredEvents\ShouldBeStored;
+use App\Modules\Library\Events\UserAction;
 
-class LyricsChanged extends ShouldBeStored
+class LyricsChanged extends UserAction
 {
     public string $id;
     public string $trackId;

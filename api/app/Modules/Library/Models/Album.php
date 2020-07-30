@@ -18,6 +18,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Storage;
+use Laravel\Scout\Searchable;
 use Ramsey\Uuid\Uuid;
 
 /**
@@ -43,8 +45,14 @@ class Album extends Model implements TimestampedEntity
     use HasTimestamps;
     use HasUuid;
     use UsesDataConnection;
+    use Searchable;
 
     protected $guarded = [];
+
+    public function getArtworkUrl(): ?string
+    {
+        return $this->artwork ? Storage::url($this->artwork) : null;
+    }
 
     public static function create(Reciter $reciter, string $title, string $year, ?string $artwork = null): self
     {
@@ -117,5 +125,17 @@ class Album extends Model implements TimestampedEntity
         }
 
         throw new ModelNotFoundException('Invalid UUID.');
+    }
+
+    public function toSearchableArray()
+    {
+        return [
+            'id' => $this->id,
+            'title' => $this->title,
+            'year' => $this->year,
+            'reciter' => ['name' => $this->reciter->name],
+            'artwork' => $this->getArtworkUrl(),
+            'url' => sprintf('/reciters/%s/albums/%s', $this->reciter->slug, $this->year),
+        ];
     }
 }

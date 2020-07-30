@@ -30,6 +30,7 @@ class RecitersProjector extends Projector
     {
         $reciter = Reciter::retrieve($event->id);
         $reciter->name = $event->name;
+
         $reciter->saveOrFail();
     }
 
