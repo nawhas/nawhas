@@ -24,6 +24,7 @@ class BootApplication extends Command
 
         try {
             $this->all(
+                'package:discover',
                 'config:cache',
                 'route:cache',
                 'event-sourcing:cache-event-handlers',
