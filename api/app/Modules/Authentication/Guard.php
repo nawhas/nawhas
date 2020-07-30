@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Authentication;
 
-use App\Entities\User;
+use App\Modules\Authentication\Models\User;
 use Illuminate\Contracts\Auth\Factory as AuthFactory;
 use Illuminate\Contracts\Auth\StatefulGuard;
 
