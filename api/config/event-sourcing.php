@@ -93,12 +93,12 @@ return [
         'album.deleted' => Library\Albums\AlbumDeleted::class,
         'album.viewed' => Library\Albums\AlbumViewed::class,
         // Track Events
-        'tracks.created' => Library\Tracks\TrackCreated::class,
-        'tracks.changed.title' => Library\Tracks\TrackTitleChanged::class,
-        'tracks.changed.audio' => Library\Tracks\TrackAudioChanged::class,
-        'tracks.changed.lyrics' => Library\Tracks\TrackLyricsChanged::class,
-        'tracks.deleted' => Library\Tracks\TrackViewed::class,
-        'tracks.viewed' => Library\Tracks\TrackViewed::class,
+        'track.created' => Library\Tracks\TrackCreated::class,
+        'track.changed.title' => Library\Tracks\TrackTitleChanged::class,
+        'track.changed.audio' => Library\Tracks\TrackAudioChanged::class,
+        'track.changed.lyrics' => Library\Tracks\TrackLyricsChanged::class,
+        'track.deleted' => Library\Tracks\TrackViewed::class,
+        'track.viewed' => Library\Tracks\TrackViewed::class,
         // Lyric Events
         'lyrics.created' => Library\Lyrics\LyricsCreated::class,
         'lyrics.changed' => Library\Lyrics\LyricsChanged::class,
