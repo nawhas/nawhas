@@ -178,6 +178,7 @@ return [
         App\Providers\RouteServiceProvider::class,
         App\Providers\DoctrineServiceProvider::class,
         App\Providers\RepositoryServiceProvider::class,
+        App\Providers\TelescopeServiceProvider::class,
 
         /*
          * Application Module Service Providers
