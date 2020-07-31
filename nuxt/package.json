@@ -1,5 +1,5 @@
 {
-  "name": "Nawhas.com",
+  "name": "nawhas.com",
   "version": "1.0.0",
   "private": true,
   "scripts": {
@@ -23,7 +23,9 @@
     "@nuxt/typescript-runtime": "^1.0.0",
     "@nuxtjs/axios": "^5.12.0",
     "@nuxtjs/pwa": "^3.0.0-beta.20",
-    "nuxt": "^2.14.0"
+    "@vue/composition-api": "^1.0.0-beta.6",
+    "nuxt": "^2.14.0",
+    "vue-property-decorator": "^9.0.0"
   },
   "devDependencies": {
     "@nuxt/types": "^2.14.0",
