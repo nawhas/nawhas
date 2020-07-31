@@ -2,7 +2,8 @@
   <div>
     <header :class="{ 'header': true, 'header--dark': $vuetify.theme.dark }">
       <v-container class="app__section">
-        <h1 class="header__title">Explore the most advanced library of nawhas online.</h1>
+        <h1 clas
+            s="header__title">Explore the most advanced library of nawhas online.</h1>
       </v-container>
       <div class="search">
         <global-search hero />

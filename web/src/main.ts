@@ -2,6 +2,7 @@ import Vue from 'vue';
 import axios from 'axios';
 import VueGtag from 'vue-gtag';
 import { sync } from 'vuex-router-sync';
+import vueHeadful from 'vue-headful';
 import App from './App.vue';
 import './registerServiceWorker';
 import router from './router';
@@ -12,6 +13,8 @@ import './plugins/algolia';
 import './filters';
 import { Actions as FeaturesActions } from './store/modules/features';
 import { Actions as AuthActions } from './store/modules/auth';
+
+Vue.component('vue-headful', vueHeadful);
 
 axios.defaults.withCredentials = true;
 

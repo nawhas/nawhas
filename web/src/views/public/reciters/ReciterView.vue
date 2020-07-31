@@ -1,5 +1,9 @@
 <template>
   <div class="reciter-profile">
+    <vue-headful
+      :title="title"
+      description="Welcome to Nawhas.com"
+    />
     <hero-banner :class="{
         'reciter-profile__hero': true,
         'reciter-profile__hero--with-toolbar': showToolbar
@@ -129,6 +133,13 @@ export default class ReciterProfile extends Vue {
 
   get showToolbar() {
     return !!(this.isModerator);
+  }
+
+  get title() {
+    if (!this.reciter) {
+      return 'Nawhas.com';
+    }
+    return `${this.reciter.name} - Nawhas.com`;
   }
 
   @Watch('$route')
