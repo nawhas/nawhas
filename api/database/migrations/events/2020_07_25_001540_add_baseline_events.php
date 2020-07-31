@@ -11,12 +11,12 @@ class AddBaselineEvents extends Migration
 {
     public function up(): void
     {
-        $output = new ConsoleOutput();
-        Artisan::call('events:initialize', [], $output);
+        // $output = new ConsoleOutput();
+        // Artisan::call('events:initialize', [], $output);
     }
 
     public function down(): void
     {
-        DB::connection('events')->table('stored_events')->truncate();
+        // DB::connection('events')->table('stored_events')->truncate();
     }
 }
