@@ -92,8 +92,8 @@ export default {
         },
       },
     },
-    icons: {
-      iconfont: 'md',
+    defaultAssets: {
+      icons: 'md',
     },
   },
   /*
