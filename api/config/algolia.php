@@ -1,7 +1,5 @@
 <?php
 
-use App\Normalizers\Search as Normalizers;
-
 return [
     'enabled' => env('ALGOLIA_ENABLED', env('ALGOLIA_APP_ID') !== null),
     'app' => env('ALGOLIA_APP_ID'),
@@ -19,24 +17,14 @@ return [
         'doctrineSubscribedEvents' => [],
 
         'indices' => [
-            'reciters' => [
-                'class' => App\Entities\Reciter::class,
-            ],
-            'albums' => [
-                'class' => App\Entities\Album::class,
-            ],
-            'tracks' => [
-                'class' => App\Entities\Track::class,
-            ],
+            'reciters' => ['class' => App\Modules\Library\Models\Reciter::class],
+            'albums' => ['class' => App\Modules\Library\Models\Album::class],
+            'tracks' => ['class' => App\Modules\Library\Models\Track::class],
         ],
 
         // For entities without a normalizer specified above, prepend this stack
         // to the default normalizer stack. Order matters.
-        'normalizers' => [
-            Normalizers\ReciterNormalizer::class,
-            Normalizers\AlbumNormalizer::class,
-            Normalizers\TrackNormalizer::class,
-        ],
+        'normalizers' => [],
 
         'settingsDirectory' => storage_path('algolia'),
     ],

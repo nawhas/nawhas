@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Library\Http\Transformers;
 
-use App\Enum\MediaType;
-use App\Http\Transformers\Transformer;
+use App\Modules\Core\Transformers\Transformer;
 use App\Modules\Library\Models\Track;
 use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\Item;

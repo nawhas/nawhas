@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Library\Http\Transformers;
 
-use App\Http\Transformers\Transformer;
+use App\Modules\Core\Transformers\Transformer;
 use App\Modules\Library\Models\Reciter;
 use Illuminate\Support\Facades\Storage;
 use League\Fractal\Resource\Primitive;

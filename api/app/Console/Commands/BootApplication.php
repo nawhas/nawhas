@@ -29,11 +29,6 @@ class BootApplication extends Command
                 'route:cache',
                 'event-sourcing:cache-event-handlers',
                 'wait:database',
-                ['doctrine:migrations:migrate', [
-                    '--force' => true, '--allow-no-migration' => true,
-                ]],
-                'doctrine:clear:metadata:cache',
-                'doctrine:generate:proxies',
                 'search:settings:push',
                 'horizon:publish',
                 'telescope:publish',

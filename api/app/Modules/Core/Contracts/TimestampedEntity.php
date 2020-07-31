@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Entities\Contracts;
+namespace App\Modules\Core\Contracts;
 
 use DateTimeInterface;
 

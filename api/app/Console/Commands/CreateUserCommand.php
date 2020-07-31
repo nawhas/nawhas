@@ -2,7 +2,6 @@
 
 namespace App\Console\Commands;
 
-use App\Database\Doctrine\EntityManager;
 use App\Modules\Authentication\Enum\Role;
 use App\Modules\Authentication\Models\User;
 use Illuminate\Console\Command;
@@ -24,7 +23,7 @@ class CreateUserCommand extends Command
      */
     protected $description = 'Provision a user account.';
 
-    public function handle(EntityManager $em): int
+    public function handle(): int
     {
         // Get variables from input scrypt
         $name = $this->argument('name');
