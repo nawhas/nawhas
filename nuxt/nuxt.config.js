@@ -1,5 +1,8 @@
 import colors from 'vuetify/es5/util/colors';
 
+const TITLE_SUFFIX = 'Nawhas.com';
+const DEFAULT_DESCRIPTION = 'Welcome to Nawhas.com, the most advanced library of nawhas online.';
+
 export default {
   /*
   ** Nuxt rendering mode
@@ -16,12 +19,12 @@ export default {
   ** See https://nuxtjs.org/api/configuration-head
   */
   head: {
-    titleTemplate: '%s - ' + process.env.npm_package_name,
-    title: process.env.npm_package_name || '',
+    titleTemplate: '%s - ' + TITLE_SUFFIX,
+    title: TITLE_SUFFIX,
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { hid: 'description', name: 'description', content: process.env.npm_package_description || '' },
+      { hid: 'description', name: 'description', content: DEFAULT_DESCRIPTION },
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
