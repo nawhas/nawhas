@@ -97,21 +97,26 @@ export default {
       fixed: false,
       items: [
         {
-          icon: 'mdi-apps',
+          icon: 'apps',
           title: 'Welcome',
-          to: '/'
+          to: '/',
         },
         {
-          icon: 'mdi-chart-bubble',
+          icon: 'sms',
           title: 'Inspire',
-          to: '/inspire'
-        }
+          to: '/inspire',
+        },
+        {
+          icon: 'videogame_asset',
+          title: 'Playground',
+          to: '/components',
+        },
       ],
       miniVariant: false,
       right: true,
       rightDrawer: false,
-      title: 'Vuetify.js'
-    }
-  }
-}
+      title: 'Vuetify.js',
+    };
+  },
+};
 </script>

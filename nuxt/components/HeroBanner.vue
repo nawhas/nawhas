@@ -1,5 +1,5 @@
 <template>
-  <div :class="['hero', 'hero--' + $vuetify.breakpoint.name]" v-bind:style="style">
+  <div :class="['hero', 'hero--' + $vuetify.breakpoint.name]" :style="style">
     <div class="hero__content">
       <slot>
         Add your content here.
@@ -10,12 +10,21 @@
 
 <script>
 export default {
-  name: 'hero-banner',
-  props: ['background', 'opacity'],
+  name: 'HeroBanner',
+  props: {
+    background: {
+      type: String,
+      required: true,
+    },
+    opacity: {
+      type: Number,
+      required: false,
+      default: 0.63,
+    },
+  },
   computed: {
     style() {
-      const opacity = this.opacity || 0.63;
-      const gradient = `rgba(0, 0, 0, ${opacity})`;
+      const gradient = `rgba(0, 0, 0, ${this.opacity})`;
       return `background-image: linear-gradient(${gradient}, ${gradient}), url('${this.background}')`;
     },
   },

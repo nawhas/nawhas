@@ -1,21 +1,34 @@
 <template>
   <v-container :class="['hero-quote', 'hero-quote--' + $vuetify.breakpoint.name]">
     <div class="hero-quote__wrapper">
-      <div class="hero-quote__lig hero-quote__lig--left">&ldquo;</div>
-      <div class="hero-quote__content">
-        <slot></slot>
+      <div class="hero-quote__lig hero-quote__lig--left">
+        &ldquo;
       </div>
-      <div class="hero-quote__lig hero-quote__lig--right">&rdquo;</div>
+      <div class="hero-quote__content">
+        <slot />
+      </div>
+      <div class="hero-quote__lig hero-quote__lig--right">
+        &rdquo;
+      </div>
     </div>
-    <div class="hero-quote__author">&mdash; {{ author }}</div>
+    <div class="hero-quote__author">
+      &mdash; {{ author }}
+    </div>
   </v-container>
 </template>
 
-<script>
-export default {
-  name: 'hero-quote',
-  props: ['author'],
-};
+<script lang="ts">
+import { defineComponent } from '@vue/composition-api';
+
+export default defineComponent({
+  name: 'HeroQuote',
+  props: {
+    author: {
+      type: String,
+      required: true,
+    },
+  },
+});
 </script>
 
 <style lang="scss" scoped>

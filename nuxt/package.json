@@ -1,5 +1,5 @@
 {
-  "name": "Nawhas.com",
+  "name": "nawhas.com",
   "version": "1.0.0",
   "private": true,
   "scripts": {
@@ -33,6 +33,7 @@
     "@nuxtjs/eslint-module": "^2.0.0",
     "@nuxtjs/vuetify": "^1.11.2",
     "@vue/test-utils": "^1.0.3",
+    "@vue/composition-api": "^1.0.0-beta.6",
     "babel-core": "7.0.0-bridge.0",
     "babel-eslint": "^10.1.0",
     "babel-jest": "^26.1.0",
@@ -42,6 +43,19 @@
     "jest": "^26.1.0",
     "lint-staged": "^10.2.11",
     "ts-jest": "^26.1.3",
-    "vue-jest": "^3.0.4"
+    "vue-jest": "^3.0.4",
+    "vue-property-decorator": "^9.0.0",
+    "algoliasearch": "^4.0.3",
+    "caret-pos": "^1.2.2",
+    "howler": "^2.1.3",
+    "material-design-icons-iconfont": "^5.0.1",
+    "moment": "^2.24.0",
+    "node-vibrant": "^3.1.5",
+    "nosleep.js": "^0.9.0",
+    "query-string": "^6.10.1",
+    "vue-instantsearch": "^2.7.0",
+    "vue-progressbar": "^0.7.5",
+    "@types/howler": "^2.1.2",
+    "@types/jest": "^24.0.19"
   }
 }
