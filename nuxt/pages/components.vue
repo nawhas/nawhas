@@ -12,15 +12,32 @@
   </v-layout>
 </template>
 
-<script type="ts">
-import { defineComponent } from '@vue/composition-api';
+<script>
 import HeroBanner from '@/components/HeroBanner';
 import HeroQuote from '@/components/HeroQuote';
 
-export default defineComponent({
+export default {
   components: {
     HeroBanner,
     HeroQuote,
   },
-});
+
+  async fetch() {
+    const mountains = await fetch(
+      'https://api.nuxtjs.dev/mountains',
+    ).then(res => res.json());
+
+    this.title = mountains[0].title;
+  },
+
+  data: () => ({
+    title: 'Component Playground',
+  }),
+
+  head() {
+    return {
+      title: this.title,
+    };
+  },
+};
 </script>
