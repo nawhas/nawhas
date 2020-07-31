@@ -29,26 +29,14 @@ class BootApplication extends Command
                 'route:cache',
                 'event-sourcing:cache-event-handlers',
                 'wait:database',
-                ['doctrine:migrations:migrate', [
-                    '--force' => true, '--allow-no-migration' => true,
-                ]],
-                'doctrine:clear:metadata:cache',
-                'doctrine:generate:proxies',
                 'search:settings:push',
                 'horizon:publish',
                 'telescope:publish',
+                'migrate:all',
             );
 
             if ($app->environment('integration')) {
                 $this->all('db:seed');
-            }
-
-            $this->all(
-                'migrate:all'
-            );
-
-            if ($app->environment('integration')) {
-                $this->call('event-sourcing:replay', ['--no-interaction' => true]);
             }
         } catch (Exception $e) {
             $this->error("Failed to boot application.\n{$e->getMessage()}");

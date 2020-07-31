@@ -163,11 +163,6 @@ return [
         Illuminate\View\ViewServiceProvider::class,
 
         /*
-         * Package Service Providers...
-         */
-        LaravelDoctrine\Extensions\GedmoExtensionsServiceProvider::class,
-
-        /*
          * Application Service Providers...
          */
         App\Providers\AppServiceProvider::class,
@@ -176,8 +171,6 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\HorizonServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-        App\Providers\DoctrineServiceProvider::class,
-        App\Providers\RepositoryServiceProvider::class,
         App\Providers\TelescopeServiceProvider::class,
 
         /*

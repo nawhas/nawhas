@@ -1,8 +1,10 @@
 <?php
 
-namespace App\Http\Transformers;
+namespace App\Modules\Core\Transformers;
 
-use App\Entities\Contracts\TimestampedEntity;
+use App\Modules\Core\Contracts\TimestampedEntity;
+use BadMethodCallException;
+use DateTimeInterface;
 use Illuminate\Http\Resources\ConditionallyLoadsAttributes;
 use Illuminate\Http\Resources\MergeValue;
 use League\Fractal\Resource\Primitive;
@@ -15,13 +17,13 @@ abstract class Transformer extends TransformerAbstract
     public function __invoke($data): array
     {
         if (!method_exists($this, 'toArray')) {
-            throw new \BadMethodCallException('Transformer must implement `toArray($data): array` method.');
+            throw new BadMethodCallException('Transformer must implement `toArray($data): array` method.');
         }
 
         return $this->filter($this->toArray($data));
     }
 
-    protected function dateTime(?\DateTimeInterface $dateTime): ?string
+    protected function dateTime(?DateTimeInterface $dateTime): ?string
     {
         if (!$dateTime) {
             return null;

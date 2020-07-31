@@ -2,13 +2,7 @@
 
 namespace App\Providers;
 
-use App\Entities\Album;
-use App\Entities\Reciter;
-use App\Repositories\AlbumRepository;
-use App\Repositories\ReciterRepository;
-use App\Repositories\TrackRepository;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
-use Illuminate\Routing\Route;
 use Illuminate\Support\Facades\Route as Router;
 
 class RouteServiceProvider extends ServiceProvider

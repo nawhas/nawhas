@@ -4,15 +4,10 @@ declare(strict_types=1);
 
 namespace App\Modules\Library\Models;
 
-use App\Entities\Contracts\TimestampedEntity;
+use App\Modules\Core\Contracts\TimestampedEntity;
 use App\Modules\Core\Models\HasTimestamps;
 use App\Modules\Core\Models\HasUuid;
 use App\Modules\Core\Models\UsesDataConnection;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\HasManyThrough;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
-use Laravel\Scout\Searchable;
 use App\Modules\Library\Events\Reciters\{ReciterAvatarChanged,
     ReciterCreated,
     ReciterDescriptionChanged,
@@ -21,6 +16,8 @@ use App\Modules\Library\Models\Traits\Visitable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Storage;
+use Laravel\Scout\Searchable;
 use Ramsey\Uuid\Uuid;
 use Spatie\Sluggable\{HasSlug, SlugOptions};
 

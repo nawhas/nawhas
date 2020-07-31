@@ -2,7 +2,6 @@
 
 namespace App\Console\Commands;
 
-use App\Database\Doctrine\EntityManager;
 use App\Modules\Authentication\Models\User;
 use Illuminate\Console\Command;
 use Laravel\Telescope\Telescope;
@@ -19,7 +18,7 @@ class HealthCheck extends Command
      */
     protected $description = 'Run a health check.';
 
-    public function handle(EntityManager $em): int
+    public function handle(): int
     {
         // Check database connection.
         $start = microtime(true);
