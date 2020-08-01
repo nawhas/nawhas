@@ -3,11 +3,14 @@
     <v-container fluid>
       <h1>Components Playground</h1>
 
+      <h3>Hero Banner & Hero Quote</h3>
       <hero-banner background="/backgrounds/imam-hussain-header.jpg">
         <hero-quote author="Bob Marley">
           Don't worry. Be happy.
         </hero-quote>
       </hero-banner>
+
+      <h3>Entity Cards</h3>
       <div style="max-width:300px;">
         <reciter-card v-bind="reciter" />
       </div>
@@ -17,15 +20,19 @@
       <div style="max-width:300px;">
         <track-card v-bind="track" />
       </div>
+
+      <h3>Misc.</h3>
+      <app-changelog />
+      <labeled-divider />
+      <bug-report-form />
+
+      <h3>Loaders</h3>
       <album-skeleton />
       <lyrics-skeleton />
       <more-tracks-skeleton />
       <reciter-hero-skeleton />
       <skeleton-card-grid />
       <track-card-skeleton />
-      <app-changelog />
-      <labeled-divider />
-      <bug-report-form />
     </v-container>
   </v-layout>
 </template>
@@ -107,3 +114,10 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+h3 {
+  padding-top: 36px;
+  padding-bottom: 20px;
+}
+</style>

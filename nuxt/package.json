@@ -12,7 +12,7 @@
     "test": "jest"
   },
   "lint-staged": {
-    "*.{js,vue}": "eslint"
+    "*.{js,vue}": "cross-env NODE_ENV=production eslint"
   },
   "husky": {
     "hooks": {
@@ -41,6 +41,7 @@
     "babel-eslint": "^10.1.0",
     "babel-jest": "^26.1.0",
     "caret-pos": "^1.2.2",
+    "cross-env": "^7.0.2",
     "eslint": "^7.5.0",
     "eslint-plugin-nuxt": "^1.0.0",
     "howler": "^2.1.3",
