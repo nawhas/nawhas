@@ -12,7 +12,7 @@
     "test": "jest"
   },
   "lint-staged": {
-    "*.{js,vue}": "eslint"
+    "*.{js,vue}": "NODE_ENV=production eslint"
   },
   "husky": {
     "hooks": {
