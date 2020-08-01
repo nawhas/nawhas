@@ -23,6 +23,7 @@
       <reciter-hero-skeleton />
       <skeleton-card-grid />
       <track-card-skeleton />
+      <app-changelog />
     </v-container>
   </v-layout>
 </template>
@@ -38,6 +39,7 @@ import MoreTracksSkeleton from '@/components/loaders/MoreTracksSkeleton';
 import ReciterHeroSkeleton from '@/components/loaders/ReciterHeroSkeleton';
 import SkeletonCardGrid from '@/components/loaders/SkeletonCardGrid';
 import TrackCardSkeleton from '@/components/loaders/TrackCardSkeleton';
+import AppChangelog from '@/components/notifications/AppChangelog';
 
 export default {
   components: {
@@ -51,6 +53,7 @@ export default {
     ReciterHeroSkeleton,
     SkeletonCardGrid,
     TrackCardSkeleton,
+    AppChangelog,
   },
 
   async fetch() {
