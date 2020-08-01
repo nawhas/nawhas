@@ -8,8 +8,12 @@
           Don't worry. Be happy.
         </hero-quote>
       </hero-banner>
-
-      <reciter-card v-model="reciter" />
+      <div style="max-width:300px;">
+        <reciter-card v-bind="reciter" />
+      </div>
+      <div style="max-width:300px;">
+        <reciter-card v-bind="reciter" featured />
+      </div>
     </v-flex>
   </v-layout>
 </template>

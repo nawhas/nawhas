@@ -42,6 +42,7 @@ export default {
   */
   plugins: [
     '@/plugins/composition-api',
+    '@/plugins/filters',
   ],
   /*
   ** Auto import components
