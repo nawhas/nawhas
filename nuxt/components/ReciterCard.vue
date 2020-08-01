@@ -3,14 +3,16 @@
     <v-card :class="classObject" :style="{ 'background-color': background }">
       <div class="reciter-card__avatar">
         <v-avatar size="40" class="avatar">
-          <img crossorigin ref="avatarElement" :src="image" :alt="name" />
+          <img ref="avatarElement" crossorigin :src="image" :alt="name">
         </v-avatar>
       </div>
       <div class="reciter-card__text" :style="{ 'color': textColor }">
-        <div class="reciter-card__name body-2" :title="name">{{ name }}</div>
-         <div class="reciter-card__name caption" v-if="related">
-           {{ related.albums | pluralize('album', 'albums') }}
-         </div>
+        <div class="reciter-card__name body-2" :title="name">
+          {{ name }}
+        </div>
+        <div v-if="related" class="reciter-card__name caption">
+          {{ related.albums | pluralize('album', 'albums') }}
+        </div>
       </div>
     </v-card>
   </div>
@@ -36,8 +38,9 @@ export default class ReciterCard extends Vue {
   private vibrantTextColor: null|string = null;
 
   get image() {
-    return this.avatar || '/img/default-reciter-avatar.png';
+    return this.avatar || '/defaults/default-reciter-avatar.png';
   }
+
   get classObject() {
     return {
       'reciter-card': true,
@@ -104,7 +107,7 @@ export default class ReciterCard extends Vue {
 </script>
 
 <style lang="scss" scoped>
-@import '../styles/theme';
+@import "assets/theme";
 
 .reciter-card {
   padding: 16px;

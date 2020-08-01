@@ -8,6 +8,8 @@
           Don't worry. Be happy.
         </hero-quote>
       </hero-banner>
+
+      <reciter-card v-model="reciter" />
     </v-flex>
   </v-layout>
 </template>
@@ -15,11 +17,13 @@
 <script>
 import HeroBanner from '@/components/HeroBanner';
 import HeroQuote from '@/components/HeroQuote';
+import ReciterCard from '@/components/ReciterCard';
 
 export default {
   components: {
     HeroBanner,
     HeroQuote,
+    ReciterCard,
   },
 
   async fetch() {
@@ -32,6 +36,15 @@ export default {
 
   data: () => ({
     title: 'Component Playground',
+    reciter: {
+      id: 'ajflasdjflajfalsfj',
+      name: 'Zain Mehdi',
+      slug: 'zain-mehdi',
+      avatar: null,
+      related: {
+        albums: 2,
+      },
+    },
   }),
 
   head() {
