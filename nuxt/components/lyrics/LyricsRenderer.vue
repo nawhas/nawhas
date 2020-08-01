@@ -12,20 +12,24 @@
     </div>
     <div v-else-if="isJson">
       <div
-        :class="{ 'lyrics__group': true, 'lyrics__group--highlighted': highlighter && highlighter.current === groupId }"
         v-for="(group, groupId) in lyrics.data"
         :key="groupId"
+        :class="{ 'lyrics__group': true, 'lyrics__group--highlighted': highlighter && highlighter.current === groupId }"
       >
-        <div class="lyrics__spacer" v-if="group.type === GroupType.SPACER"></div>
+        <div v-if="group.type === GroupType.SPACER" class="lyrics__spacer" />
         <div class="lyrics__group__lines">
-          <div class="lyrics__group__lines__line" v-for="(line, lineId) in group.lines" :key="lineId">
-            <div class="lyrics__text">{{ line.text }}</div>
-            <div class="lyrics__repeat" v-if="line.repeat">x{{ line.repeat }}</div>
+          <div v-for="(line, lineId) in group.lines" :key="lineId" class="lyrics__group__lines__line">
+            <div class="lyrics__text">
+              {{ line.text }}
+            </div>
+            <div v-if="line.repeat" class="lyrics__repeat">
+              x{{ line.repeat }}
+            </div>
           </div>
         </div>
       </div>
     </div>
-    <div class="lyrics__plain-text" v-else v-html="lyrics"></div>
+    <div v-else class="lyrics__plain-text" v-html="lyrics" />
   </div>
 </template>
 

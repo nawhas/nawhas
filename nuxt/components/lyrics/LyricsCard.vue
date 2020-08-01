@@ -1,12 +1,16 @@
 <template>
   <v-card class="lyrics">
     <v-card-title class="card__title subtitle-1">
-      <v-icon class="card__title__icon material-icons-outlined">speaker_notes</v-icon>
+      <v-icon class="card__title__icon material-icons-outlined">
+        speaker_notes
+      </v-icon>
       <div>Write-Up</div>
-      <v-spacer></v-spacer>
+      <v-spacer />
       <v-tooltip v-if="synchronized" top>
         <template #activator="{ on }">
-          <v-icon v-on="on" class="card__title__right-icon" color="accent">assistant</v-icon>
+          <v-icon class="card__title__right-icon" color="accent" v-on="on">
+            assistant
+          </v-icon>
         </template>
         <span>New! Write-up synchronized with audio</span>
       </v-tooltip>
@@ -15,7 +19,7 @@
       <template v-if="track">
         <lyrics-renderer class="lyrics__renderer" :track="track" />
       </template>
-      <div class="lyrics__content__loader" v-else>
+      <div v-else class="lyrics__content__loader">
         <lyrics-skeleton />
       </div>
     </v-card-text>
@@ -25,8 +29,8 @@
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import * as Format from '@/constants/lyrics/format';
-import LyricsRenderer from '@/components/lyrics/LyricsRenderer.vue';
-import LyricsSkeleton from '@/components/loaders/LyricsSkeleton.vue';
+import LyricsRenderer from '@/components/lyrics/LyricsRenderer';
+import LyricsSkeleton from '@/components/loaders/LyricsSkeleton';
 import { Lyrics, LyricsModel } from '@/types/lyrics';
 
 @Component({
