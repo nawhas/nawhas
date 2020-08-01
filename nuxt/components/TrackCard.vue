@@ -13,11 +13,12 @@
         </div>
       </div>
       <div class="track-card__album-art">
-        <div class="track-card__album-art-gradient"
-             v-if="colored && album.artwork"
-             :style="{background: gradient}">
-        </div>
-        <img crossorigin ref="artwork" :src="artwork" :alt="title"/>
+        <div
+          v-if="colored && album.artwork"
+          class="track-card__album-art-gradient"
+          :style="{background: gradient}"
+        />
+        <img ref="artwork" crossorigin :src="artwork" :alt="title">
       </div>
     </v-card>
   </div>
@@ -28,26 +29,30 @@ import * as Vibrant from 'node-vibrant';
 
 export default {
   name: 'TrackCard',
-  props: ['title', 'slug', 'album', 'reciter', 'showReciter', 'colored'],
-  mounted() {
-    if (this.colored && this.album.artwork) {
-      this.setBackgroundFromImage();
-    }
-  },
-  methods: {
-    setBackgroundFromImage() {
-      Vibrant.from(this.artwork)
-        .getPalette().then((palette) => {
-          const swatch = palette.DarkMuted;
-          if (!swatch) {
-            return;
-          }
-          this.vibrantBackgroundColor = swatch.getHex();
-          this.vibrantTextColor = swatch.getBodyTextColor();
-        });
+  props: {
+    title: {
+      type: String,
+      required: true,
     },
-    goToTrack() {
-      this.$router.push(`/reciters/${this.reciter.slug}/albums/${this.album.year}/tracks/${this.slug}`);
+    slug: {
+      type: String,
+      required: true,
+    },
+    album: {
+      type: Object,
+      required: true,
+    },
+    reciter: {
+      type: Object,
+      required: true,
+    },
+    colored: {
+      type: Boolean,
+      default: false,
+    },
+    showReciter: {
+      type: Boolean,
+      default: false,
     },
   },
   data() {
@@ -79,7 +84,7 @@ export default {
       return this.$vuetify.theme.dark;
     },
     artwork() {
-      return this.album.artwork || '/img/default-album-image.png';
+      return this.album.artwork || '/defaults/default-album-image.png';
     },
     reciterYear() {
       if (this.showReciter) {
@@ -97,11 +102,32 @@ export default {
       `;
     },
   },
+  mounted() {
+    if (this.colored && this.album.artwork) {
+      this.setBackgroundFromImage();
+    }
+  },
+  methods: {
+    setBackgroundFromImage() {
+      Vibrant.from(this.artwork)
+        .getPalette().then((palette) => {
+          const swatch = palette.DarkMuted;
+          if (!swatch) {
+            return;
+          }
+          this.vibrantBackgroundColor = swatch.getHex();
+          this.vibrantTextColor = swatch.getBodyTextColor();
+        });
+    },
+    goToTrack() {
+      this.$router.push(`/reciters/${this.reciter.slug}/albums/${this.album.year}/tracks/${this.slug}`);
+    },
+  },
 };
 </script>
 
 <style lang="scss" scoped>
-@import "../styles/theme";
+@import "../assets/theme";
 .track-card {
   padding: 0;
   display: flex;

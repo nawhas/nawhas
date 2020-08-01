@@ -1,20 +1,24 @@
 <template>
   <v-card class="album-skeleton">
     <div class="album-skeleton__header">
-      <v-skeleton-loader type="avatar" tile :width="artworkSize" :height="artworkSize"
-                         :class="{ 'album-skeleton__artwork': true, 'album-skeleton__artwork--dark': isDark }">
-      </v-skeleton-loader>
+      <v-skeleton-loader
+        type="avatar"
+        tile
+        :width="artworkSize"
+        :height="artworkSize"
+        :class="{ 'album-skeleton__artwork': true, 'album-skeleton__artwork--dark': isDark }"
+      />
       <div class="album-skeleton__details">
         <h5 class="album-skeleton__title">
-          <v-skeleton-loader type="text" min-width="200px" min-height="24px" class="mt-1"/>
+          <v-skeleton-loader type="text" min-width="200px" min-height="24px" class="mt-1" />
         </h5>
         <h6 class="album-skeleton__release-date">
-          <v-skeleton-loader type="text" max-width="120px"  />
+          <v-skeleton-loader type="text" max-width="120px" />
         </h6>
       </div>
     </div>
     <div class="album-skeleton__tracks">
-      <div class="album-skeleton__track" v-for="index in 6" :key="index">
+      <div v-for="index in 6" :key="index" class="album-skeleton__track">
         <v-skeleton-loader type="text" :max-width="`${Math.random() * 400}px`" min-width="100px" />
       </div>
     </div>
@@ -32,6 +36,7 @@ export default class AlbumSkeleton extends Vue {
     }
     return 128;
   }
+
   get isDark() {
     return this.$vuetify.theme.dark;
   }
@@ -39,7 +44,7 @@ export default class AlbumSkeleton extends Vue {
 </script>
 
 <style lang="scss">
-@import '../../styles/theme';
+@import '../../assets/theme';
 
 .album-skeleton {
   margin-top: 90px;

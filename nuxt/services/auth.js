@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/camelcase */
 import QueryString from 'query-string';
 import { API_DOMAIN, APP_DOMAIN, CLIENT_ID } from '../config';
 

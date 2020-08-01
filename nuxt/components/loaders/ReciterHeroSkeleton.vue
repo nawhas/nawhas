@@ -3,7 +3,7 @@
     ref="skeleton"
     type="card-avatar"
     class="mx-auto"
-  ></v-skeleton-loader>
+  />
 </template>
 
 <script>

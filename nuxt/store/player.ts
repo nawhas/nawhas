@@ -42,7 +42,7 @@ export interface PlayerState {
   repeat: RepeatType;
 }
 
-const state: PlayerState = {
+const state = (): PlayerState => ({
   current: null,
   seek: 0,
   duration: 0,
@@ -50,7 +50,7 @@ const state: PlayerState = {
   shuffled: [],
   isShuffled: false,
   repeat: null,
-};
+});
 
 const getters = {
   progress: (state: PlayerState): number => {

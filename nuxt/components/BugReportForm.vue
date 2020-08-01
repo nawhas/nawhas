@@ -2,49 +2,55 @@
   <v-card class="bug-report-form" :loading="loading">
     <v-form @submit.prevent="submit">
       <v-card-title>
-        <h2 class="card-title">Report an Issue</h2>
+        <h2 class="card-title">
+          Report an Issue
+        </h2>
       </v-card-title>
       <v-card-text>
         <p class="body-2 mb-8">
           Is something not working quite right? Can we do something better? We'd love to hear from you!
         </p>
-        <v-alert type="error" v-if="error" outlined class="mb-6">
+        <v-alert v-if="error" type="error" outlined class="mb-6">
           {{ error }}
         </v-alert>
         <v-select
-            outlined
-            label="Type"
-            v-model="type"
-            :items="types"
+          v-model="type"
+          outlined
+          label="Type"
+          :items="types"
         />
         <v-text-field
-            outlined
-            label="Summary"
-            hint="Provide a brief summary of the issue."
-            counter="60"
-            v-model="summary"
-            :error-messages="invalid.summary"
+          v-model="summary"
+          outlined
+          label="Summary"
+          hint="Provide a brief summary of the issue."
+          counter="60"
+          :error-messages="invalid.summary"
         />
         <v-textarea
-            outlined
-            label="Details"
-            v-model="details"
-            :error-messages="invalid.details"
+          v-model="details"
+          outlined
+          label="Details"
+          :error-messages="invalid.details"
         />
         <p>
           In case we need to contact you for further information, please provide your email address. This is optional.
         </p>
         <v-text-field
-            outlined
-            label="Email (optional)"
-            v-model="email"
-            :error-messages="invalid.email"
+          v-model="email"
+          outlined
+          label="Email (optional)"
+          :error-messages="invalid.email"
         />
       </v-card-text>
       <v-card-actions>
-        <v-btn @click="close" text>Cancel</v-btn>
-        <v-spacer></v-spacer>
-        <v-btn type="submit" text color="primary" :loading="loading">Submit</v-btn>
+        <v-btn text @click="close">
+          Cancel
+        </v-btn>
+        <v-spacer />
+        <v-btn type="submit" text color="primary" :loading="loading">
+          Submit
+        </v-btn>
       </v-card-actions>
     </v-form>
   </v-card>

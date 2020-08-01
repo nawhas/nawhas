@@ -72,12 +72,18 @@ services:
     networks:
       - nawhas
   web:
-    image: nginx:stable-alpine
+    image: szainmehdi/node:13
     container_name: nawhas_web
-    working_dir: /var/www/web/public
+    working_dir: /var/www/nuxt
     volumes:
-      - ./web/dist:/var/www/web/public
-      - ./web/docker/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./nuxt:/var/www/nuxt
+    command: >
+      sh -c "yarn && yarn dev"
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      HOST: 0.0.0.0
     networks:
       - nawhas
   db:
