@@ -14,6 +14,12 @@
       <div style="max-width:300px;">
         <reciter-card v-bind="reciter" featured />
       </div>
+      <div style="max-width:300px;">
+        <track-card v-bind="track" />
+      </div>
+      <div style="max-width:300px;">
+        <track-card v-bind="track" colored />
+      </div>
     </v-container>
   </v-layout>
 </template>
@@ -22,12 +28,14 @@
 import HeroBanner from '@/components/HeroBanner';
 import HeroQuote from '@/components/HeroQuote';
 import ReciterCard from '@/components/ReciterCard';
+import TrackCard from '@/components/TrackCard';
 
 export default {
   components: {
     HeroBanner,
     HeroQuote,
     ReciterCard,
+    TrackCard,
   },
 
   async fetch() {
@@ -49,6 +57,23 @@ export default {
         albums: 2,
       },
     },
+    track: {
+      title: 'Testing Track',
+      slug: 'testing-track',
+      album: {
+        id: 'aljflajfla',
+        year: 2020,
+        title: 'Ya Hussain AS',
+        artwork: null,
+      },
+      reciter: {
+        id: 'ajflasdjflajfalsfj',
+        name: 'Zain Mehdi',
+        slug: 'zain-mehdi',
+        avatar: null,
+      },
+    },
+    props: ['title', 'slug', 'album', 'reciter', 'showReciter', 'colored'],
   }),
 
   head() {
