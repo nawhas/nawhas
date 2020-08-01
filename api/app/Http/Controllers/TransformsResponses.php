@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Transformers\Transformer;
+use App\Modules\Core\Transformers\Transformer;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator as Paginator;
 use Illuminate\Http\JsonResponse;
 use League\Fractal\Manager as FractalManager;

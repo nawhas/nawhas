@@ -15,6 +15,5 @@
   </projectFiles>
   <plugins>
     <pluginClass class="Psalm\LaravelPlugin\Plugin"/>
-    <pluginClass class="Weirdan\DoctrinePsalmPlugin\Plugin"/>
   </plugins>
 </psalm>

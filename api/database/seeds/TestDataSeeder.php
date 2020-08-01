@@ -1,44 +1,30 @@
 <?php
 
-use App\Database\Doctrine\EntityManager;
-use App\Entities\Album;
-use App\Entities\Lyrics;
-use App\Entities\Media;
-use App\Entities\Reciter;
-use App\Entities\Track;
-use App\Entities\User;
-use App\Enum\Role;
+use App\Modules\Authentication\Enum\Role;
+use App\Modules\Authentication\Models\User;
+use App\Modules\Library\Models\Album;
+use App\Modules\Library\Models\Reciter;
+use App\Modules\Library\Models\Track;
+use App\Modules\Lyrics\Documents\Factory;
 use App\Modules\Lyrics\Documents\Format;
 use Illuminate\Database\Seeder;
 
 class TestDataSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     *
-     * @return void
-     */
-    public function run(EntityManager $em)
+    public function run()
     {
-        $existing = $em->repository(User::class)->count([]);
-
-        if ($existing > 0) {
+        if (User::count() > 0) {
             logger()->debug('Database already seeded. Exiting');
             return;
         }
 
         $data = json_decode(file_get_contents(database_path('seeds/seed.json')), true);
 
-        $mod = new User(Role::MODERATOR(), 'Moderator', 'moderator@nawhas.com');
-        $mod->setPassword('secret');
-        $contrib = new User(Role::CONTRIBUTOR(), 'Contributor', 'contributor@nawhas.com');
-        $contrib->setPassword('secret');
-
-        $em->persist($mod, $contrib);
+        User::create(Role::MODERATOR(), 'Moderator', 'moderator@nawhas.com', 'secret');
+        User::create(Role::CONTRIBUTOR(), 'Contributor', 'contributor@nawhas.com', 'secret');
 
         foreach ($data as $r) {
-            $reciter = new Reciter($r['name'], $r['description'], $r['avatar']);
-            $em->persist($reciter);
+            $reciter = Reciter::create($r['name'], $r['description'], $r['avatar']);
 
             $albums = 0;
             foreach ($r['albums'] as $a) {
@@ -46,23 +32,23 @@ class TestDataSeeder extends Seeder
                     break;
                 }
 
-                $album = new Album($reciter, $a['title'], $a['year'], $a['artwork']);
-                $em->persist($album);
+                $album = Album::create($reciter, $a['title'], $a['year'], $a['artwork']);
 
                 foreach ($a['tracks'] as $t) {
-                    $track = new Track($album, $t['title']);
+                    $track = Track::create($album, $t['title']);
+
                     if ($t['lyrics']) {
-                        $track->replaceLyrics(new Lyrics($track, $t['lyrics'], Format::PLAIN_TEXT()));
+                        $doc = Factory::create($t['lyrics'], Format::PLAIN_TEXT());
+                        $track->changeLyrics($doc);
                     }
+
                     if ($t['audio']) {
-                        $track->addAudioFile(Media::audioFile($t['audio']));
+                        $track->changeAudio($t['audio']);
                     }
-                    $em->persist($track);
                 }
+
                 $albums++;
             }
         }
-
-        $em->flush();
     }
 }

@@ -6,7 +6,7 @@ namespace App\Modules\Library\Http\Transformers;
 
 use App\Enum\MediaProvider;
 use App\Enum\MediaType;
-use App\Http\Transformers\Transformer;
+use App\Modules\Core\Transformers\Transformer;
 use Illuminate\Support\Facades\Storage;
 
 class MediaTransformer extends Transformer
