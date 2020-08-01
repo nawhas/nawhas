@@ -24,6 +24,7 @@
       <skeleton-card-grid />
       <track-card-skeleton />
       <app-changelog />
+      <labeled-divider />
     </v-container>
   </v-layout>
 </template>
@@ -40,6 +41,7 @@ import ReciterHeroSkeleton from '@/components/loaders/ReciterHeroSkeleton';
 import SkeletonCardGrid from '@/components/loaders/SkeletonCardGrid';
 import TrackCardSkeleton from '@/components/loaders/TrackCardSkeleton';
 import AppChangelog from '@/components/notifications/AppChangelog';
+import LabeledDivider from '@/components/ui/LabeledDivider';
 
 export default {
   components: {
@@ -54,6 +56,7 @@ export default {
     SkeletonCardGrid,
     TrackCardSkeleton,
     AppChangelog,
+    LabeledDivider,
   },
 
   async fetch() {
