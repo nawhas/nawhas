@@ -1,6 +1,6 @@
 <template>
   <v-layout>
-    <v-flex class="text-center">
+    <v-container fluid>
       <h1>Components Playground</h1>
 
       <hero-banner background="/backgrounds/imam-hussain-header.jpg">
@@ -14,7 +14,7 @@
       <div style="max-width:300px;">
         <reciter-card v-bind="reciter" featured />
       </div>
-    </v-flex>
+    </v-container>
   </v-layout>
 </template>
 
