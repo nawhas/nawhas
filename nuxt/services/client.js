@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { API_DOMAIN } from '../config';
+import { API_DOMAIN } from '~/config';
 
 class Client {
   constructor() {

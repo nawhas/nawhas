@@ -1,8 +1,10 @@
 <template>
   <div class="divider">
-    <div class="divider__line" :style="lineStyles"></div>
-    <div class="divider__label overline">{{ label }}</div>
-    <div class="divider__line" :style="lineStyles"></div>
+    <div class="divider__line" :style="lineStyles" />
+    <div class="divider__label overline">
+      {{ label }}
+    </div>
+    <div class="divider__line" :style="lineStyles" />
   </div>
 </template>
 

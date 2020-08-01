@@ -25,6 +25,7 @@
       <track-card-skeleton />
       <app-changelog />
       <labeled-divider />
+      <bug-report-form />
     </v-container>
   </v-layout>
 </template>
@@ -42,6 +43,7 @@ import SkeletonCardGrid from '@/components/loaders/SkeletonCardGrid';
 import TrackCardSkeleton from '@/components/loaders/TrackCardSkeleton';
 import AppChangelog from '@/components/notifications/AppChangelog';
 import LabeledDivider from '@/components/ui/LabeledDivider';
+import BugReportForm from '@/components/BugReportForm';
 
 export default {
   components: {
@@ -57,6 +59,7 @@ export default {
     TrackCardSkeleton,
     AppChangelog,
     LabeledDivider,
+    BugReportForm,
   },
 
   async fetch() {
