@@ -7,9 +7,12 @@ namespace App\Console\Commands;
 use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Foundation\Application;
+use Illuminate\Http\Resources\ConditionallyLoadsAttributes;
 
 class BootApplication extends Command
 {
+    use ConditionallyLoadsAttributes;
+
     protected $signature = 'boot';
     protected $description = 'Boot the application.';
 
@@ -17,27 +20,25 @@ class BootApplication extends Command
     {
         $this->comment('Booting application for ' . $app->environment());
 
-        if ($app->isLocal()) {
-            $this->info('Application booted.');
-            return 0;
-        }
-
-        try {
-            $this->all(
+        $commands = [
+            $this->when($app->environment('integration', 'staging', 'production'), [
                 'package:discover',
                 'config:cache',
                 'route:cache',
                 'event-sourcing:cache-event-handlers',
-                'wait:database',
                 'search:settings:push',
                 'horizon:publish',
                 'telescope:publish',
-                'migrate:all',
-            );
+            ]),
+            'wait:database',
+            'migrate:all',
+            $this->when($app->environment('integration'), [
+                'db:seed',
+            ]),
+        ];
 
-            if ($app->environment('integration')) {
-                $this->all('db:seed');
-            }
+        try {
+            $this->all(...$this->filter($commands));
         } catch (Exception $e) {
             $this->error("Failed to boot application.\n{$e->getMessage()}");
             return 1;

@@ -21,11 +21,26 @@ services:
       - XDEBUG_IDE_KEY=PHPSTORM
       - XDEBUG_REMOTE_HOST=host.docker.internal
     volumes:
-      - ./api:/var/www/api:cached
+      - ./api:/var/www/api:delegated
     ports:
       - "9000:9000"
     networks:
       - nawhas
+    depends_on:
+      - init
+  init:
+    image: szainmehdi/php:7.4-dev
+    container_name: nawhas_init
+    working_dir: /var/www/api
+    environment:
+      - APP_ENV=local
+    volumes:
+      - ./api:/var/www/api:delegated
+    networks:
+      - nawhas
+    restart: "no"
+    command: >
+      sh -c "composer install && php artisan boot"
     depends_on:
       - db
       - cache
@@ -35,19 +50,14 @@ services:
     working_dir: /var/www/api
     environment:
       - APP_ENV=local
-      - XDEBUG_ENABLE=true
-      - XDEBUG_REMOTE_PORT=9001
-      - XDEBUG_IDE_KEY=PHPSTORM
-      - XDEBUG_REMOTE_HOST=host.docker.internal
     volumes:
-      - ./api:/var/www/api:cached
+      - ./api:/var/www/api:delegated
     networks:
       - nawhas
-    restart: always
+    restart: unless-stopped
     command: php artisan horizon
     depends_on:
-      - db
-      - cache
+      - init
   nginx:
     image: nginx:stable-alpine
     container_name: nawhas_api_nginx
@@ -76,7 +86,7 @@ services:
     container_name: nawhas_web
     working_dir: /var/www/nuxt
     volumes:
-      - ./nuxt:/var/www/nuxt
+      - ./nuxt:/var/www/nuxt:delegated
     command: >
       sh -c "yarn && yarn dev"
     restart: always
