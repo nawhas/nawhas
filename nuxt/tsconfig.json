@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
-    "target": "ES2018",
-    "module": "ESNext",
-    "moduleResolution": "Node",
+    "target": "esnext",
+    "module": "esnext",
+    "moduleResolution": "node",
     "lib": [
       "ESNext",
       "ESNext.AsyncIterable",
@@ -13,6 +13,7 @@
     "sourceMap": true,
     "strict": true,
     "noEmit": true,
+    "noImplicitAny": false,
     "experimentalDecorators": true,
     "baseUrl": ".",
     "paths": {

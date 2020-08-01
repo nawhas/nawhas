@@ -1,4 +1,4 @@
-import { PlayerState } from '@/store/modules/player';
+import { PlayerState } from '@/store/player';
 import { Lyrics } from '@/types/lyrics';
 
 export default class LyricsHighlighter {
