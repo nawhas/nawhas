@@ -94,7 +94,7 @@ jobs:
         run: yarn install --frozen-lockfile
 
       - name: Lint Codebase
-        run: yarn lint --no-fix --mode=production --format stylish
+        run: NODE_ENV=production yarn lint --no-fix --format stylish
   ################################################################
   # Build Web Image
   ################################################################
