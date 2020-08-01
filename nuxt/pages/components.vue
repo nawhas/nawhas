@@ -17,9 +17,12 @@
       <div style="max-width:300px;">
         <track-card v-bind="track" />
       </div>
-      <div style="max-width:300px;">
-        <track-card v-bind="track" colored />
-      </div>
+      <album-skeleton />
+      <lyrics-skeleton />
+      <more-tracks-skeleton />
+      <reciter-hero-skeleton />
+      <skeleton-card-grid />
+      <track-card-skeleton />
     </v-container>
   </v-layout>
 </template>
@@ -29,6 +32,12 @@ import HeroBanner from '@/components/HeroBanner';
 import HeroQuote from '@/components/HeroQuote';
 import ReciterCard from '@/components/ReciterCard';
 import TrackCard from '@/components/TrackCard';
+import AlbumSkeleton from '@/components/loaders/AlbumSkeleton';
+import LyricsSkeleton from '@/components/loaders/LyricsSkeleton';
+import MoreTracksSkeleton from '@/components/loaders/MoreTracksSkeleton';
+import ReciterHeroSkeleton from '@/components/loaders/ReciterHeroSkeleton';
+import SkeletonCardGrid from '@/components/loaders/SkeletonCardGrid';
+import TrackCardSkeleton from '@/components/loaders/TrackCardSkeleton';
 
 export default {
   components: {
@@ -36,6 +45,12 @@ export default {
     HeroQuote,
     ReciterCard,
     TrackCard,
+    AlbumSkeleton,
+    LyricsSkeleton,
+    MoreTracksSkeleton,
+    ReciterHeroSkeleton,
+    SkeletonCardGrid,
+    TrackCardSkeleton,
   },
 
   async fetch() {
