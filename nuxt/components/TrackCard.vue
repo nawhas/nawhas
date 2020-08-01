@@ -29,7 +29,32 @@ import * as Vibrant from 'node-vibrant';
 
 export default {
   name: 'TrackCard',
-  props: ['title', 'slug', 'album', 'reciter', 'showReciter', 'colored'],
+  props: {
+    title: {
+      type: String,
+      required: true,
+    },
+    slug: {
+      type: String,
+      required: true,
+    },
+    album: {
+      type: Object,
+      required: true,
+    },
+    reciter: {
+      type: Object,
+      required: true,
+    },
+    colored: {
+      type: Boolean,
+      default: false,
+    },
+    showReciter: {
+      type: Boolean,
+      default: false,
+    },
+  },
   data() {
     return {
       vibrantBackgroundColor: '#ffffff',
