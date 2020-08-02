@@ -81,21 +81,6 @@ services:
       - web
     networks:
       - nawhas
-  web:
-    image: szainmehdi/node:13
-    container_name: nawhas_web
-    working_dir: /var/www/nuxt
-    volumes:
-      - ./nuxt:/var/www/nuxt:delegated
-    command: >
-      sh -c "yarn && yarn dev"
-    restart: always
-    ports:
-      - "3000:3000"
-    environment:
-      HOST: 0.0.0.0
-    networks:
-      - nawhas
   db:
     image: postgres:11
     container_name: nawhas_db
