@@ -20,7 +20,7 @@ export default {
   */
   head: {
     titleTemplate: '%s - ' + TITLE_SUFFIX,
-    title: TITLE_SUFFIX,
+    title: 'Home',
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
@@ -30,6 +30,17 @@ export default {
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
       { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css?family=Bellefair|Roboto+Condensed:300,300i,400,400i,700,700i|Roboto+Slab:100,300,400,700|Roboto+Mono:100,300,400,700|Material+Icons|Material+Icons+Outlined' },
     ],
+  },
+  /*
+  ** PWA Module Configuration
+  */
+  pwa: {
+    meta: {
+      ogSiteName: false,
+      ogType: false,
+      ogTitle: false,
+      ogDescription: false,
+    },
   },
   /*
   ** Global CSS
