@@ -21,7 +21,7 @@ class BootApplication extends Command
         $this->comment('Booting application for ' . $app->environment());
 
         $commands = [
-            $this->when($app->environment('integration', 'staging', 'production'), [
+            $this->mergeWhen($app->environment('integration', 'staging', 'production'), [
                 'package:discover',
                 'config:cache',
                 'route:cache',
@@ -32,7 +32,7 @@ class BootApplication extends Command
             ]),
             'wait:database',
             'migrate:all',
-            $this->when($app->environment('integration'), [
+            $this->mergeWhen($app->environment('integration'), [
                 'db:seed',
             ]),
         ];
