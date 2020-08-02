@@ -2,121 +2,227 @@
   <v-app>
     <v-navigation-drawer
       v-model="drawer"
-      :mini-variant="miniVariant"
-      :clipped="clipped"
-      fixed
+      temporary
       app
+      class="nav__drawer"
     >
-      <v-list>
+      <v-list class="nav" shaped>
         <v-list-item
-          v-for="(item, i) in items"
+          v-for="(link, i) in navigation"
           :key="i"
-          :to="item.to"
-          router
-          exact
+          :to="link.to"
+          :exact="link.exact"
+          active-class="nav__tile--active"
+          class="nav__tile"
         >
-          <v-list-item-action>
-            <v-icon>{{ item.icon }}</v-icon>
+          <v-list-item-action class="nav__tile__action">
+            <v-icon class="nav__tile__action__icon" v-text="link.icon" />
           </v-list-item-action>
-          <v-list-item-content>
-            <v-list-item-title v-text="item.title" />
+          <v-list-item-content class="nav__tile__content">
+            <v-list-item-title class="nav__tile__content__title" v-text="link.title" />
           </v-list-item-content>
         </v-list-item>
       </v-list>
     </v-navigation-drawer>
     <v-app-bar
-      :clipped-left="clipped"
-      fixed
+      :color="(!isDark) ? 'white' : null"
       app
+      fixed
+      elevate-on-scroll
+      class="app-bar"
     >
-      <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
-      <v-btn
-        icon
-        @click.stop="miniVariant = !miniVariant"
-      >
-        <v-icon>mdi-{{ `chevron-${miniVariant ? 'right' : 'left'}` }}</v-icon>
-      </v-btn>
-      <v-btn
-        icon
-        @click.stop="clipped = !clipped"
-      >
-        <v-icon>mdi-application</v-icon>
-      </v-btn>
-      <v-btn
-        icon
-        @click.stop="fixed = !fixed"
-      >
-        <v-icon>mdi-minus</v-icon>
-      </v-btn>
-      <v-toolbar-title v-text="title" />
-      <v-spacer />
-      <v-btn
-        icon
-        @click.stop="rightDrawer = !rightDrawer"
-      >
-        <v-icon>mdi-menu</v-icon>
-      </v-btn>
+      <v-container class="app-bar__container">
+        <div class="app-bar__left">
+          <v-app-bar-nav-icon
+            v-if="$vuetify.breakpoint.mdAndDown"
+            @click.native="drawer = !drawer"
+          />
+          <v-toolbar-title class="nav__title">
+            <nuxt-link to="/" tag="div" class="masthead__logo">
+              <!-- <logo-icon class="masthead__logo__icon" /> -->
+              <!-- <logo-wordmark :class="{ 'masthead__logo__wordmark': true, 'masthead__logo__wordmark--dark': isDark }" /> -->
+            </nuxt-link>
+          </v-toolbar-title>
+
+          <nav v-if="$vuetify.breakpoint.lgAndUp" class="nav__buttons">
+            <v-btn
+              v-for="(link, i) in navigation"
+              :key="i"
+              text
+              class="nav__btn"
+              :to="link.to"
+              v-text="link.title"
+            />
+          </nav>
+        </div>
+        <div class="app-bar__center" />
+        <div class="app-bar__right">
+          <!-- <global-search /> -->
+          <!-- <user-menu class="user-menu" /> -->
+        </div>
+      </v-container>
     </v-app-bar>
     <v-main>
-      <v-container>
+      <v-container
+        fluid
+        :class="{ 'main-container': true, 'grey lighten-5': !isDark }"
+      >
         <nuxt />
       </v-container>
     </v-main>
-    <v-navigation-drawer
-      v-model="rightDrawer"
-      :right="right"
-      temporary
-      fixed
-    >
-      <v-list>
-        <v-list-item @click.native="right = !right">
-          <v-list-item-action>
-            <v-icon light>
-              mdi-repeat
-            </v-icon>
-          </v-list-item-action>
-          <v-list-item-title>Switch drawer (click me)</v-list-item-title>
-        </v-list-item>
-      </v-list>
-    </v-navigation-drawer>
-    <v-footer
-      :absolute="!fixed"
-      app
-    >
+    <v-footer app absolute>
       <span>&copy; {{ new Date().getFullYear() }}</span>
     </v-footer>
+    <!--    <audio-player></audio-player>-->
+    <!--    <update-service-worker />-->
+    <!--    <toaster />-->
   </v-app>
 </template>
 
-<script>
+<script lang="ts">
+const links = [
+  {
+    icon: 'home',
+    title: 'Home',
+    exact: true,
+    to: '/',
+  },
+  {
+    icon: 'pageview',
+    title: 'Browse',
+    exact: false,
+    to: '/reciters',
+  },
+  {
+    icon: 'info',
+    title: 'About',
+    exact: false,
+    to: '/about',
+  },
+];
+
 export default {
-  data () {
-    return {
-      clipped: false,
-      drawer: false,
-      fixed: false,
-      items: [
-        {
-          icon: 'apps',
-          title: 'Welcome',
-          to: '/',
-        },
-        {
-          icon: 'sms',
-          title: 'Inspire',
-          to: '/inspire',
-        },
-        {
-          icon: 'videogame_asset',
-          title: 'Playground',
-          to: '/components',
-        },
-      ],
-      miniVariant: false,
-      right: true,
-      rightDrawer: false,
-      title: 'Vuetify.js',
-    };
+  data: () => ({
+    drawer: false,
+  }),
+  computed: {
+    mobile() {
+      return this.$vuetify.breakpoint.smAndDown;
+    },
+    isDark() {
+      return this.$vuetify.theme.dark;
+    },
+    navigation: () => [
+      ...links,
+      {
+        icon: 'videogame_asset',
+        title: 'Components',
+        exact: true,
+        to: '/components',
+      },
+    ],
   },
 };
 </script>
+
+<style lang="scss" scoped>
+@import "../assets/theme";
+
+.main-container {
+  padding: 0;
+  min-height: calc(100vh - 64px);
+}
+
+.nav__tile__action {
+  justify-content: center;
+}
+
+.app-bar__right {
+  align-self: flex-start;
+}
+
+.nav__tile--active {
+  .nav__tile__action {
+    color: var(--v-primary-base);
+  }
+
+  .nav__tile__content {
+    font-weight: bold;
+    color: var(--v-primary-base);
+  }
+}
+.masthead__logo {
+  height: 38px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+
+  &__icon {
+    height: 38px;
+  }
+  &__wordmark {
+    height: 16px;
+    margin-left: 8px;
+    > path {
+      fill: $wordmark;
+    }
+  }
+  &__wordmark--dark > path {
+    fill: rgba(255, 255, 255, 0.93);
+  }
+}
+.nav__btn {
+  text-transform: none;
+  font-weight: 400;
+}
+.nav__title {
+  margin-right: 12px;
+}
+
+.app-bar__container {
+  display: flex;
+  align-items: center;
+  padding: 4px 0;
+  margin: 0 auto;
+  position: relative;
+  height: 64px;
+}
+.app-bar__left, .app-bar__right {
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+.app-bar__left {
+  justify-content: flex-start;
+}
+.app-bar__right {
+  justify-content: flex-end;
+}
+.user-menu {
+  align-self: flex-start;
+  margin: 4px 0 0 4px;
+}
+.nav__drawer {
+  z-index: 500;
+}
+@media #{map-get($display-breakpoints, 'md-and-down')} {
+  .app-bar__left {
+    flex: 0;
+  }
+}
+
+@media #{map-get($display-breakpoints, 'sm-and-down')} {
+  .main-container {
+    min-height: calc(100vh - 56px);
+  }
+
+  .user-menu {
+    margin: 0;
+    align-self: center;
+  }
+
+  .app-bar__right {
+    align-self: center;
+  }
+}
+</style>
