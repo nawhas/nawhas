@@ -80,6 +80,8 @@
 </template>
 
 <script lang="ts">
+import Vue from 'vue';
+
 const links = [
   {
     icon: 'home',
@@ -101,7 +103,7 @@ const links = [
   },
 ];
 
-export default {
+export default Vue.extend({
   data: () => ({
     drawer: false,
   }),
@@ -122,7 +124,7 @@ export default {
       },
     ],
   },
-};
+});
 </script>
 
 <style lang="scss" scoped>
