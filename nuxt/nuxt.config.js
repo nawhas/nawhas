@@ -66,6 +66,7 @@ export default {
     '@nuxt/typescript-build',
     '@nuxtjs/vuetify',
     '@nuxtjs/google-fonts',
+    '@nuxtjs/svg',
   ],
   /*
   ** Nuxt.js modules

@@ -39,8 +39,8 @@
           />
           <v-toolbar-title class="nav__title">
             <nuxt-link to="/" tag="div" class="masthead__logo">
-              <!-- <logo-icon class="masthead__logo__icon" /> -->
-              <!-- <logo-wordmark :class="{ 'masthead__logo__wordmark': true, 'masthead__logo__wordmark--dark': isDark }" /> -->
+              <logo-icon class="masthead__logo__icon" />
+              <logo-wordmark :class="{ 'masthead__logo__wordmark': true, 'masthead__logo__wordmark--dark': isDark }" />
             </nuxt-link>
           </v-toolbar-title>
 
@@ -81,6 +81,8 @@
 
 <script lang="ts">
 import Vue from 'vue';
+const LogoIcon = require('@/assets/svg/icon.svg?inline');
+const LogoWordmark = require('@/assets/svg/wordmark.svg?inline');
 
 const links = [
   {
@@ -104,6 +106,10 @@ const links = [
 ];
 
 export default Vue.extend({
+  components: {
+    LogoWordmark,
+    LogoIcon,
+  },
   data: () => ({
     drawer: false,
   }),
@@ -165,11 +171,11 @@ export default Vue.extend({
   &__wordmark {
     height: 16px;
     margin-left: 8px;
-    > path {
+    ::v-deep g g {
       fill: $wordmark;
     }
   }
-  &__wordmark--dark > path {
+  &__wordmark--dark ::v-deep g g {
     fill: rgba(255, 255, 255, 0.93);
   }
 }
