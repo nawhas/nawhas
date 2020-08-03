@@ -58,7 +58,7 @@
         <div class="app-bar__center" />
         <div class="app-bar__right">
           <!-- <global-search /> -->
-          <!-- <user-menu class="user-menu" /> -->
+          <user-menu class="user-menu" />
         </div>
       </v-container>
     </v-app-bar>
@@ -81,6 +81,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
+import UserMenu from '@/components/navigation/UserMenu.vue';
 const LogoIcon = require('@/assets/svg/icon.svg?inline');
 const LogoWordmark = require('@/assets/svg/wordmark.svg?inline');
 
@@ -109,6 +110,7 @@ export default Vue.extend({
   components: {
     LogoWordmark,
     LogoIcon,
+    UserMenu,
   },
   data: () => ({
     drawer: false,

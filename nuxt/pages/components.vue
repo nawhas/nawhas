@@ -21,6 +21,11 @@
         <track-card v-bind="track" />
       </div>
 
+      <h3>Auth</h3>
+      <auth-dialog />
+      <login-form />
+      <register-form />
+
       <h3>Misc.</h3>
       <app-changelog />
       <labeled-divider />
@@ -51,6 +56,9 @@ import TrackCardSkeleton from '@/components/loaders/TrackCardSkeleton';
 import AppChangelog from '@/components/notifications/AppChangelog';
 import LabeledDivider from '@/components/ui/LabeledDivider';
 import BugReportForm from '@/components/BugReportForm';
+import AuthDialog from '@/components/auth/AuthDialog';
+import LoginForm from '@/components/auth/LoginForm';
+import RegisterForm from '@/components/auth/RegisterForm';
 
 export default {
   components: {
@@ -67,6 +75,9 @@ export default {
     AppChangelog,
     LabeledDivider,
     BugReportForm,
+    AuthDialog,
+    LoginForm,
+    RegisterForm,
   },
 
   async fetch() {
