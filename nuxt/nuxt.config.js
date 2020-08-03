@@ -28,7 +28,6 @@ export default {
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
-      { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css?family=Bellefair|Roboto+Condensed:300,300i,400,400i,700,700i|Roboto+Slab:100,300,400,700|Roboto+Mono:100,300,400,700|Material+Icons|Material+Icons+Outlined' },
     ],
   },
   /*
@@ -66,6 +65,7 @@ export default {
   buildModules: [
     '@nuxt/typescript-build',
     '@nuxtjs/vuetify',
+    '@nuxtjs/google-fonts',
   ],
   /*
   ** Nuxt.js modules
@@ -108,8 +108,20 @@ export default {
         },
       },
     },
-    defaultAssets: {
-      icons: 'md',
+    defaultAssets: false,
+  },
+  /*
+  ** Google Fonts
+  ** See https://github.com/nuxt-community/google-fonts-module
+  */
+  googleFonts: {
+    families: {
+      'Bellefair': true,
+      'Roboto': true,
+      'Roboto Slab': [100, 300, 400, 700],
+      'Roboto Mono': [100, 300, 400, 700],
+      'Material Icons': true,
+      'Material Icons Outlined': true,
     },
   },
   /*

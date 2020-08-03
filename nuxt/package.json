@@ -31,6 +31,7 @@
     "@nuxtjs/eslint-config": "^3.1.0",
     "@nuxtjs/eslint-config-typescript": "^3.0.0",
     "@nuxtjs/eslint-module": "^2.0.0",
+    "@nuxtjs/google-fonts": "^1.0.0",
     "@nuxtjs/vuetify": "^1.11.2",
     "@types/howler": "^2.1.2",
     "@types/jest": "^24.0.19",
