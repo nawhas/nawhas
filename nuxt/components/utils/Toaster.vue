@@ -1,9 +1,9 @@
 <template>
   <div>
     <v-snackbar
-        top
-        right
-        v-model="snackbar"
+      v-model="snackbar"
+      top
+      right
     >
       {{ toast.text }}
       <v-btn dark text @click="snackbar = false">

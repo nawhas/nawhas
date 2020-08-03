@@ -33,6 +33,7 @@
       <reciter-hero-skeleton />
       <skeleton-card-grid />
       <track-card-skeleton />
+      <toaster />
     </v-container>
   </v-layout>
 </template>
@@ -51,6 +52,7 @@ import TrackCardSkeleton from '@/components/loaders/TrackCardSkeleton';
 import AppChangelog from '@/components/notifications/AppChangelog';
 import LabeledDivider from '@/components/ui/LabeledDivider';
 import BugReportForm from '@/components/BugReportForm';
+import Toaster from '@/components/utils/Toaster';
 
 export default {
   components: {
@@ -67,6 +69,7 @@ export default {
     AppChangelog,
     LabeledDivider,
     BugReportForm,
+    Toaster,
   },
 
   async fetch() {
@@ -104,7 +107,6 @@ export default {
         avatar: null,
       },
     },
-    props: ['title', 'slug', 'album', 'reciter', 'showReciter', 'colored'],
   }),
 
   head() {
