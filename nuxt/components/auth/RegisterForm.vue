@@ -1,45 +1,49 @@
 <template>
-  <auth-dialog :loading="loading" @submit="submit" :error="error">
-    <template slot="title">Sign Up</template>
+  <auth-dialog :loading="loading" :error="error" @submit="submit">
+    <template slot="title">
+      Sign Up
+    </template>
     <template slot="message">
       <p class="message-line">
         Create an account on Nawhas.com to
         <br>
         create collections, edit write-ups, and more.
-      <p class="message-line" v-if="false">
+      </p><p v-if="false" class="message-line">
         Already have an account? <a class="link" href="#">Log in.</a>
       </p>
     </template>
     <v-text-field
-        outlined
-        autofocus
-        label="Name"
-        v-model="form.name"
-        :error-messages="invalid.name"
+      v-model="form.name"
+      outlined
+      autofocus
+      label="Name"
+      :error-messages="invalid.name"
     />
     <v-text-field
-        outlined
-        label="Email"
-        type="email"
-        v-model="form.email"
-        :error-messages="invalid.email"
+      v-model="form.email"
+      outlined
+      label="Email"
+      type="email"
+      :error-messages="invalid.email"
     />
     <v-text-field
-        outlined
-        label="Password"
-        type="password"
-        v-model="form.password"
-        :error-messages="invalid.password"
+      v-model="form.password"
+      outlined
+      label="Password"
+      type="password"
+      :error-messages="invalid.password"
     />
     <div class="actions">
-      <v-spacer></v-spacer>
-      <v-btn @click="close" text>Cancel</v-btn>
+      <v-spacer />
+      <v-btn text @click="close">
+        Cancel
+      </v-btn>
       <v-btn
-          type="submit"
-          elevation="0"
-          color="primary"
-          :loading="loading"
-          :disabled="disabled"
+        type="submit"
+        elevation="0"
+        color="primary"
+        :loading="loading"
+        :disabled="disabled"
       >
         Sign up
       </v-btn>
@@ -55,7 +59,6 @@
 import { Component, Vue } from 'vue-property-decorator';
 import AuthDialog from '@/components/auth/AuthDialog.vue';
 import SocialLoginButton from '@/components/auth/SocialLoginButton.vue';
-import { Actions as AuthActions } from '@/store/modules/auth';
 
 interface SignUpFormData {
   name: string;
@@ -89,7 +92,7 @@ export default class RegisterForm extends Vue {
     this.loading = true;
 
     try {
-      await this.$store.dispatch(AuthActions.Register, this.form);
+      await this.$store.dispatch('auth/register', this.form);
       this.close();
     } catch (e) {
       if (!e.response) {

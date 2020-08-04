@@ -1,10 +1,11 @@
 <template>
   <div>
-    <v-list class="pa-0" v-if="tracks">
+    <v-list v-if="tracks" class="pa-0">
       <v-list-item
-          v-for="(track, index) in tracks" :key="index"
-          :to="getTrackLink(track)"
-          :two-line="metadata"
+        v-for="(track, index) in tracks"
+        :key="index"
+        :to="getTrackLink(track)"
+        :two-line="metadata"
       >
         <v-list-item-avatar>
           <v-avatar size="36">
@@ -20,26 +21,38 @@
           </v-list-item-subtitle>
         </v-list-item-content>
         <v-list-item-action class="track__features">
-          <v-icon :class="{
+          <v-icon
+            :class="{
               'material-icons-outlined': true,
               track__feature: true,
               'track__feature--disabled': !hasLyrics(track) && !isDark,
               'track__feature--disabled--dark': !hasLyrics(track) && isDark
-            }">
-            <template v-if="hasLyrics(track)">speaker_notes</template>
-            <template v-else>speaker_notes_off</template>
+            }"
+          >
+            <template v-if="hasLyrics(track)">
+              speaker_notes
+            </template>
+            <template v-else>
+              speaker_notes_off
+            </template>
           </v-icon>
-          <v-btn icon @click.prevent="playTrack(track)"
-                 :disabled="!hasAudioFile(track)"
-                 :class="{
-                      track__feature: true,
-                      'track__feature--disabled': !hasAudioFile(track) && !isDark,
-                      'track__feature--disabled--dark': !hasAudioFile(track) && isDark
-                   }"
+          <v-btn
+            icon
+            :disabled="!hasAudioFile(track)"
+            :class="{
+              track__feature: true,
+              'track__feature--disabled': !hasAudioFile(track) && !isDark,
+              'track__feature--disabled--dark': !hasAudioFile(track) && isDark
+            }"
+            @click.prevent="playTrack(track)"
           >
             <v-icon>
-              <template v-if="hasAudioFile(track)">play_circle_outline</template>
-              <template v-else>volume_off</template>
+              <template v-if="hasAudioFile(track)">
+                play_circle_outline
+              </template>
+              <template v-else>
+                volume_off
+              </template>
             </v-icon>
           </v-btn>
         </v-list-item-action>
@@ -47,11 +60,11 @@
     </v-list>
     <v-list v-else>
       <v-skeleton-loader
-          type="list-item-avatar"
-          class="py-1"
-          v-for="index in count"
-          boilerplate
-          :key="index"
+        v-for="index in count"
+        :key="index"
+        type="list-item-avatar"
+        class="py-1"
+        boilerplate
       />
     </v-list>
   </div>
@@ -77,7 +90,7 @@ export default class TrackList extends Vue {
       return [];
     }
 
-    return this.tracks.filter((track) => hasAudioFile(track));
+    return this.tracks.filter(track => hasAudioFile(track));
   }
 
   get isDark() {
@@ -102,7 +115,7 @@ export default class TrackList extends Vue {
 </script>
 
 <style lang="scss" scoped>
-@import "../../styles/theme";
+@import '~assets/theme';
 
 .track__features {
   white-space: nowrap;

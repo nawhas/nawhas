@@ -1,13 +1,16 @@
 <template>
   <div>
-    <v-snackbar v-model="show"
-                :timeout="0"
-                :top="$vuetify.breakpoint.mdAndUp"
-                right
-                multi-line
+    <v-snackbar
+      v-model="show"
+      :timeout="0"
+      :top="$vuetify.breakpoint.mdAndUp"
+      right
+      multi-line
     >
       An new version of Nawhas.com is available.
-      <v-btn color="primary lighten-2" dark text @click="refresh">Update</v-btn>
+      <v-btn color="primary lighten-2" dark text @click="refresh">
+        Update
+      </v-btn>
     </v-snackbar>
   </div>
 </template>

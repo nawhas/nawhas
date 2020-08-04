@@ -120,7 +120,7 @@ spec:
               path: /alive
               port: http
             initialDelaySeconds: 5
-            timeoutSeconds: 1
+            timeoutSeconds: 5
           volumeMounts:
             - name: nginx-config
               mountPath: /etc/nginx/conf.d

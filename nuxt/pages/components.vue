@@ -21,10 +21,16 @@
         <track-card v-bind="track" />
       </div>
 
+      <h3>Auth</h3>
+      <auth-dialog />
+      <login-form />
+      <register-form />
+
       <h3>Misc.</h3>
       <app-changelog />
       <labeled-divider />
       <bug-report-form />
+      <toaster />
 
       <h3>Loaders</h3>
       <album-skeleton />
@@ -41,7 +47,7 @@
 import HeroBanner from '@/components/HeroBanner';
 import HeroQuote from '@/components/HeroQuote';
 import ReciterCard from '@/components/ReciterCard';
-import TrackCard from '@/components/TrackCard';
+import TrackCard from '@/components/tracks/TrackCard';
 import AlbumSkeleton from '@/components/loaders/AlbumSkeleton';
 import LyricsSkeleton from '@/components/loaders/LyricsSkeleton';
 import MoreTracksSkeleton from '@/components/loaders/MoreTracksSkeleton';
@@ -51,6 +57,10 @@ import TrackCardSkeleton from '@/components/loaders/TrackCardSkeleton';
 import AppChangelog from '@/components/notifications/AppChangelog';
 import LabeledDivider from '@/components/ui/LabeledDivider';
 import BugReportForm from '@/components/BugReportForm';
+import Toaster from '@/components/utils/Toaster';
+import AuthDialog from '@/components/auth/AuthDialog';
+import LoginForm from '@/components/auth/LoginForm';
+import RegisterForm from '@/components/auth/RegisterForm';
 
 export default {
   components: {
@@ -67,6 +77,10 @@ export default {
     AppChangelog,
     LabeledDivider,
     BugReportForm,
+    AuthDialog,
+    LoginForm,
+    RegisterForm,
+    Toaster,
   },
 
   async fetch() {
@@ -104,7 +118,6 @@ export default {
         avatar: null,
       },
     },
-    props: ['title', 'slug', 'album', 'reciter', 'showReciter', 'colored'],
   }),
 
   head() {

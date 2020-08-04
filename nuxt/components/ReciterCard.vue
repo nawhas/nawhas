@@ -107,7 +107,7 @@ export default class ReciterCard extends Vue {
 </script>
 
 <style lang="scss" scoped>
-@import '../assets/theme';
+@import '~assets/theme';
 
 .reciter-card {
   padding: 16px;

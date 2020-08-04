@@ -14,18 +14,6 @@ export interface FeaturesState {
 
 type Context = ActionContext<FeaturesState, any>;
 
-export enum Mutations {
-  Initialize = '[Features] Initialize features state',
-}
-
-export enum Actions {
-  Fetch = 'features.fetch',
-}
-
-export enum Getters {
-  Enabled = 'features.enabled',
-}
-
 interface FeaturesPayload {
   features: Features;
 }
@@ -34,31 +22,31 @@ interface FeaturesPayload {
 | Store State, Mutations, Actions, & Getters
 |--------------------------------------------------------------------------
 */
-const state: FeaturesState = {
+const state = (): FeaturesState => ({
   features: {},
   initialized: false,
-};
+});
 
 const getters = {
-  [Getters.Enabled]: (state: FeaturesState) => (feature: string) => !!state.features[feature],
+  enabled: (state: FeaturesState) => (feature: string) => !!state.features[feature],
 };
 
 const mutations = {
-  [Mutations.Initialize](state: FeaturesState, { features }: FeaturesPayload) {
+  INITIALIZE(state: FeaturesState, { features }: FeaturesPayload) {
     state.features = features;
     state.initialized = true;
   },
 };
 
 const actions = {
-  async [Actions.Fetch]({ commit }: Context) {
+  async fetch({ commit }: Context) {
     const response = await client.get('/v1/features');
 
     const payload: FeaturesPayload = {
       features: response.data.data,
     };
 
-    commit(Mutations.Initialize, payload);
+    commit('INITIALIZE', payload);
   },
 };
 

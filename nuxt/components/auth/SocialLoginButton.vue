@@ -1,14 +1,14 @@
 <template>
   <v-btn
-      :outlined="!$vuetify.theme.dark"
-      :color="definition.colors.background"
-      :light="definition.colors.lightText"
-      :dark="!definition.colors.lightText"
-      block
-      class="social-button"
-      @click="onClick"
+    :outlined="!$vuetify.theme.dark"
+    :color="definition.colors.background"
+    :light="definition.colors.lightText"
+    :dark="!definition.colors.lightText"
+    block
+    class="social-button"
+    @click="onClick"
   >
-    <component class="icon" :is="definition.icon"></component>
+    <component :is="definition.icon" class="icon" />
     <span class="text">{{ definition.text }}</span>
   </v-btn>
 </template>
@@ -20,7 +20,7 @@ import { API_DOMAIN } from '@/config';
 const providers = (provider, type, dark = false) => (({
   google: {
     text: type === 'login' ? 'Sign in with Google' : 'Sign up with Google',
-    icon: () => import('@/assets/social/google.svgx'),
+    icon: () => require('@/assets/svg/social/google.svg?inline'),
     colors: {
       background: dark ? 'white' : 'secondary',
       lightText: true,
@@ -29,8 +29,8 @@ const providers = (provider, type, dark = false) => (({
   facebook: {
     text: type === 'login' ? 'Login with Facebook' : 'Continue with Facebook',
     icon: dark
-      ? () => import('@/assets/social/facebook-white.svgx')
-      : () => import('@/assets/social/facebook.svgx'),
+      ? () => require('@/assets/svg/social/facebook-white.svg?inline')
+      : () => require('@/assets/svg/social/facebook.svg?inline'),
     colors: {
       background: dark ? '#1877F2' : 'secondary',
       lightText: !dark,

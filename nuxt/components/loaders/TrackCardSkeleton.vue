@@ -18,7 +18,7 @@
 </template>
 
 <style lang="scss">
-@import "../../assets/theme";
+@import '~assets/theme';
 
 .track-skeleton {
   padding: 0;

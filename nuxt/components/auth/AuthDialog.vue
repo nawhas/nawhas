@@ -6,21 +6,23 @@
           <logo-icon class="auth-dialog__icon" />
         </div>
         <h2 class="auth-dialog__title">
-          <slot name="title">Authenticate</slot>
+          <slot name="title">
+            Authenticate
+          </slot>
         </h2>
       </div>
       <div class="auth-dialog__message">
-        <slot name="message"></slot>
+        <slot name="message" />
       </div>
       <v-form @submit.prevent="$emit('submit')">
-        <v-alert type="error" v-if="error" outlined class="mb-6">
+        <v-alert v-if="error" type="error" outlined class="mb-6">
           {{ error }}
         </v-alert>
-        <slot></slot>
+        <slot />
       </v-form>
-      <div class="auth-dialog__social" v-show="socialAuthEnabled">
+      <div v-show="socialAuthEnabled" class="auth-dialog__social">
         <labeled-divider label="or" />
-        <slot name="social"></slot>
+        <slot name="social" />
       </div>
     </div>
   </v-card>
@@ -28,10 +30,10 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
-import LogoIcon from '@/assets/icon.svgx';
 import LabeledDivider from '@/components/ui/LabeledDivider.vue';
-import { Getters as FeatureGetters } from '@/store/modules/features';
 import { SOCIAL_AUTHENTICATION } from '@/entities/features';
+
+const LogoIcon = require('@/assets/svg/icon.svg?inline');
 
 @Component({
   components: {
@@ -43,9 +45,8 @@ export default class AuthDialog extends Vue {
   @Prop({ type: Boolean }) private readonly loading !: boolean;
   @Prop({ type: String }) private readonly error !: string;
 
-
   get socialAuthEnabled() {
-    return this.$store.getters[FeatureGetters.Enabled](SOCIAL_AUTHENTICATION);
+    return this.$store.getters['features/enabled'](SOCIAL_AUTHENTICATION);
   }
 }
 </script>

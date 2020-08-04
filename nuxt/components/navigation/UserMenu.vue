@@ -1,15 +1,19 @@
 <template>
   <div>
-    <v-menu :close-on-content-click="false" v-model="open" left>
+    <v-menu v-model="open" :close-on-content-click="false" left>
       <template #activator="{ on }">
         <v-avatar
-            icon
-            class="user-menu__avatar"
-            v-on="on" v-ripple size="36"
-            :color="$vuetify.theme.dark ? 'grey darken-3' : 'grey lighten-2'"
+          v-ripple
+          icon
+          class="user-menu__avatar"
+          size="36"
+          :color="$vuetify.theme.dark ? 'grey darken-3' : 'grey lighten-2'"
+          v-on="on"
         >
           <img v-if="authenticated" crossorigin :src="user.avatar" :alt="user.name">
-          <v-icon v-else>person</v-icon>
+          <v-icon v-else>
+            person
+          </v-icon>
         </v-avatar>
       </template>
       <v-card width="400px">
@@ -18,14 +22,21 @@
             <v-list-item>
               <v-list-item-avatar color="grey lighten-2">
                 <img v-if="authenticated" crossorigin :src="user.avatar" :alt="user.name">
-                <v-icon v-else light>person</v-icon>
+                <v-icon v-else light>
+                  person
+                </v-icon>
               </v-list-item-avatar>
 
               <v-list-item-content v-if="authenticated">
                 <v-list-item-title class="d-flex align-center">
                   <div>{{ user.name }}</div>
-                  <v-icon title="Moderator" class="ml-2"
-                          v-if="user.role === Role.Moderator" color="primary" small>
+                  <v-icon
+                    v-if="user.role === Role.Moderator"
+                    title="Moderator"
+                    class="ml-2"
+                    color="primary"
+                    small
+                  >
                     security
                   </v-icon>
                 </v-list-item-title>
@@ -36,29 +47,37 @@
                 <v-list-item-subtitle>Not logged in</v-list-item-subtitle>
               </v-list-item-content>
               <v-list-item-action>
-                <v-btn v-if="authenticated" color="primary" text @click="logout">Log Out</v-btn>
+                <v-btn v-if="authenticated" color="primary" text @click="logout">
+                  Log Out
+                </v-btn>
                 <template v-else>
                   <div>
-                    <v-btn v-if="canRegister" color="accent" text @click="register">Sign Up</v-btn>
-                    <v-btn color="accent" text @click="login">Log In</v-btn>
+                    <v-btn v-if="canRegister" color="accent" text @click="register">
+                      Sign Up
+                    </v-btn>
+                    <v-btn color="accent" text @click="login">
+                      Log In
+                    </v-btn>
                   </div>
                 </template>
               </v-list-item-action>
             </v-list-item>
           </v-list>
 
-          <v-divider></v-divider>
+          <v-divider />
 
           <div class="user-menu__section">
             <v-list>
-              <v-subheader class="section__heading">Preferences</v-subheader>
+              <v-subheader class="section__heading">
+                Preferences
+              </v-subheader>
               <v-list-item-group>
                 <v-list-item :ripple="false" inactive>
                   <v-list-item-content>
                     <v-list-item-title>Theme</v-list-item-title>
                   </v-list-item-content>
                   <v-list-item-action>
-                    <v-btn-toggle mandatory dense v-model="theme">
+                    <v-btn-toggle v-model="theme" mandatory dense>
                       <v-btn value="light">
                         <v-icon>wb_sunny</v-icon>
                       </v-btn>
@@ -75,21 +94,25 @@
             </v-list>
           </div>
 
-          <v-divider></v-divider>
+          <v-divider />
 
           <div class="user-menu__section">
             <v-list>
               <v-list-item @click="showWhatsNew">
                 <v-list-item-content>
                   <v-list-item-title class="user-menu__action">
-                    <v-icon>fiber_new</v-icon> <div class="user-menu__action__text">What's new?</div>
+                    <v-icon>fiber_new</v-icon> <div class="user-menu__action__text">
+                      What's new?
+                    </div>
                   </v-list-item-title>
                 </v-list-item-content>
               </v-list-item>
               <v-list-item @click="showBugReport">
                 <v-list-item-content>
                   <v-list-item-title class="user-menu__action">
-                    <v-icon>report</v-icon> <div class="user-menu__action__text">Report an issue</div>
+                    <v-icon>report</v-icon> <div class="user-menu__action__text">
+                      Report an issue
+                    </div>
                   </v-list-item-title>
                 </v-list-item-content>
               </v-list-item>
@@ -97,41 +120,41 @@
           </div>
         </template>
 
-        <div class="loader" v-else>
+        <div v-else class="loader">
           <v-progress-circular indeterminate color="primary" size="36" />
         </div>
       </v-card>
     </v-menu>
     <v-dialog
-        v-model="showLoginDialog"
-        width="500"
-        :fullscreen="$vuetify.breakpoint.smAndDown"
-        transition="slide-y-reverse-transition"
+      v-model="showLoginDialog"
+      width="500"
+      :fullscreen="$vuetify.breakpoint.smAndDown"
+      transition="slide-y-reverse-transition"
     >
       <login-form @close="showLoginDialog = false" />
     </v-dialog>
     <v-dialog
-        width="500"
-        transition="slide-y-reverse-transition"
-        :fullscreen="$vuetify.breakpoint.smAndDown"
-        v-model="showRegisterDialog"
+      v-model="showRegisterDialog"
+      width="500"
+      transition="slide-y-reverse-transition"
+      :fullscreen="$vuetify.breakpoint.smAndDown"
     >
       <register-form @close="showRegisterDialog = false" />
     </v-dialog>
     <v-dialog
-        width="500"
-        v-model="showWhatsNewDialog"
-        transition="slide-y-reverse-transition"
-        :fullscreen="$vuetify.breakpoint.smAndDown"
+      v-model="showWhatsNewDialog"
+      width="500"
+      transition="slide-y-reverse-transition"
+      :fullscreen="$vuetify.breakpoint.smAndDown"
     >
       <app-changelog @close="showWhatsNewDialog = false" />
     </v-dialog>
     <v-dialog
-        persistent
-        width="500"
-        v-model="showBugReportDialog"
-        transition="slide-y-reverse-transition"
-        :fullscreen="$vuetify.breakpoint.smAndDown"
+      v-model="showBugReportDialog"
+      persistent
+      width="500"
+      transition="slide-y-reverse-transition"
+      :fullscreen="$vuetify.breakpoint.smAndDown"
     >
       <bug-report-form @close="showBugReportDialog = false" />
     </v-dialog>
@@ -140,14 +163,14 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import LoginForm from '@/components/auth/LoginForm.vue';
-import RegisterForm from '@/components/auth/RegisterForm.vue';
+// import LoginForm from '@/components/auth/LoginForm.vue';
+// import RegisterForm from '@/components/auth/RegisterForm.vue';
 import AppChangelog from '@/components/notifications/AppChangelog.vue';
 import BugReportForm from '@/components/BugReportForm.vue';
 import { User, Role } from '@/entities/user';
-import { Getters as AuthGetters, Actions as AuthActions } from '@/store/modules/auth';
-import { Getters as FeatureGetters } from '@/store/modules/features';
 import { PUBLIC_USER_REGISTRATION } from '@/entities/features';
+import LoginForm from '@/components/auth/LoginForm.vue';
+import RegisterForm from '@/components/auth/RegisterForm.vue';
 
 @Component({
   components: {
@@ -166,11 +189,11 @@ export default class UserMenu extends Vue {
   private showBugReportDialog = false;
 
   get user(): User|null {
-    return this.$store.getters[AuthGetters.User];
+    return this.$store.getters['auth/user'];
   }
 
   get authenticated(): boolean {
-    return this.$store.getters[AuthGetters.Authenticated];
+    return this.$store.getters['auth/authenticated'];
   }
 
   get initialized(): boolean {
@@ -186,7 +209,7 @@ export default class UserMenu extends Vue {
   }
 
   get canRegister() {
-    return this.$store.getters[FeatureGetters.Enabled](PUBLIC_USER_REGISTRATION);
+    return this.$store.getters['features/enabled'](PUBLIC_USER_REGISTRATION);
   }
 
   login() {
@@ -195,7 +218,7 @@ export default class UserMenu extends Vue {
   }
 
   async logout() {
-    await this.$store.dispatch(AuthActions.Logout);
+    await this.$store.dispatch('auth/logout');
     this.open = false;
   }
 
@@ -217,7 +240,7 @@ export default class UserMenu extends Vue {
 </script>
 
 <style lang="scss" scoped>
-@import "../../styles/theme";
+@import '~assets/theme';
 
 .loader {
   padding: 24px;

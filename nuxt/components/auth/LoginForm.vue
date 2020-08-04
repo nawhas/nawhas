@@ -1,37 +1,45 @@
 <template>
-  <auth-dialog :loading="loading" @submit="submit" :error="error">
-    <template slot="title">Log In</template>
+  <auth-dialog :loading="loading" :error="error" @submit="submit">
+    <template slot="title">
+      Log In
+    </template>
     <template slot="message">
-      <p class="message-line"><strong>Welcome back!</strong> To continue, log into your account.<br></p>
-      <p class="message-line" v-if="false">Don't have an account yet? <a class="link" href="#">Sign up.</a></p>
+      <p class="message-line">
+        <strong>Welcome back!</strong> To continue, log into your account.<br>
+      </p>
+      <p v-if="false" class="message-line">
+        Don't have an account yet? <a class="link" href="#">Sign up.</a>
+      </p>
     </template>
     <v-text-field
-        outlined
-        autofocus
-        label="Email"
-        type="email"
-        v-model="form.email"
-        :error-messages="invalid.email"
+      v-model="form.email"
+      outlined
+      autofocus
+      label="Email"
+      type="email"
+      :error-messages="invalid.email"
     />
     <v-text-field
-        outlined
-        label="Password"
-        type="password"
-        v-model="form.password"
-        :error-messages="invalid.password"
+      v-model="form.password"
+      outlined
+      label="Password"
+      type="password"
+      :error-messages="invalid.password"
     />
     <div class="actions">
-      <div class="forgot-password" v-if="false">
+      <div v-if="false" class="forgot-password">
         <a class="link body-2" href="#">Forgot password?</a>
       </div>
-      <v-spacer></v-spacer>
-      <v-btn @click="close" text>Cancel</v-btn>
+      <v-spacer />
+      <v-btn text @click="close">
+        Cancel
+      </v-btn>
       <v-btn
-          type="submit"
-          elevation="0"
-          color="primary"
-          :loading="loading"
-          :disabled="disabled"
+        type="submit"
+        elevation="0"
+        color="primary"
+        :loading="loading"
+        :disabled="disabled"
       >
         Log In
       </v-btn>
@@ -46,7 +54,6 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import AuthDialog from '@/components/auth/AuthDialog.vue';
-import { Actions as AuthActions } from '@/store/modules/auth';
 import SocialLoginButton from '@/components/auth/SocialLoginButton.vue';
 
 interface LoginFormData {
@@ -80,7 +87,7 @@ export default class LoginForm extends Vue {
     this.loading = true;
 
     try {
-      await this.$store.dispatch(AuthActions.Login, this.form);
+      await this.$store.dispatch('auth/login', this.form);
       this.close();
     } catch (e) {
       if (!e.response) {

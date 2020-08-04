@@ -1,5 +1,3 @@
-import colors from 'vuetify/es5/util/colors';
-
 const TITLE_SUFFIX = 'Nawhas.com';
 const DEFAULT_DESCRIPTION = 'Welcome to Nawhas.com, the most advanced library of nawhas online.';
 
@@ -28,7 +26,6 @@ export default {
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
-      { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css?family=Bellefair|Roboto+Condensed:300,300i,400,400i,700,700i|Roboto+Slab:100,300,400,700|Roboto+Mono:100,300,400,700|Material+Icons|Material+Icons+Outlined' },
     ],
   },
   /*
@@ -46,6 +43,7 @@ export default {
   ** Global CSS
   */
   css: [
+    { src: '@/assets/app.scss', lang: 'scss' },
   ],
   /*
   ** Plugins to load before mounting the App
@@ -66,6 +64,9 @@ export default {
   buildModules: [
     '@nuxt/typescript-build',
     '@nuxtjs/vuetify',
+    '@nuxtjs/google-fonts',
+    '@nuxtjs/svg',
+    '@nuxtjs/dotenv',
   ],
   /*
   ** Nuxt.js modules
@@ -85,31 +86,21 @@ export default {
   ** https://github.com/nuxt-community/vuetify-module
   */
   vuetify: {
-    theme: {
-      dark: false,
-      themes: {
-        light: {
-          primary: colors.red.base,
-          secondary: colors.grey.darken2,
-          accent: colors.orange.accent3,
-          error: colors.red.accent4,
-          info: colors.blue.lighten1,
-          success: colors.green.lighten2,
-          warning: colors.amber.darken2,
-        },
-        dark: {
-          primary: colors.red.base,
-          secondary: colors.grey.darken2,
-          accent: colors.orange.accent3,
-          error: colors.red.accent4,
-          info: colors.blue.lighten1,
-          success: colors.green.lighten2,
-          warning: colors.amber.darken2,
-        },
-      },
-    },
-    defaultAssets: {
-      icons: 'md',
+    optionsPath: './vuetify.options.js',
+    defaultAssets: false,
+  },
+  /*
+  ** Google Fonts
+  ** See https://github.com/nuxt-community/google-fonts-module
+  */
+  googleFonts: {
+    families: {
+      'Bellefair': true,
+      'Roboto': [100, 200, 300, 400, 700],
+      'Roboto Slab': [100, 300, 400, 700],
+      'Roboto Mono': [100, 300, 400, 700],
+      'Material Icons': true,
+      'Material Icons Outlined': true,
     },
   },
   /*

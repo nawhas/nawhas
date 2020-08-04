@@ -127,7 +127,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "../assets/theme";
+@import '~assets/theme';
+
 .track-card {
   padding: 0;
   display: flex;

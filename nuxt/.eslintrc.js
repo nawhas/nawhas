@@ -14,7 +14,9 @@ module.exports = {
   rules: {
     'space-before-function-paren': 'off',
     'comma-dangle': ['warn', 'always-multiline'],
-    semi: ['error', 'always'],
+    'semi': ['error', 'always'],
     'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'warn',
+    'quote-props': ['error', 'consistent-as-needed'],
+    'no-useless-constructor': 'off',
   },
 };

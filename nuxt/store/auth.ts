@@ -30,61 +30,39 @@ export interface UserPayload {
 
 type Context = ActionContext<AuthState, any>;
 
-export enum Mutations {
-  Initialize = '[Auth] Initialize auth state',
-  Login = '[Auth] User logged in',
-  Logout = '[Auth] User logged out',
-  Register = '[Auth] User registered',
-}
-
-export enum Actions {
-  Login = 'auth.login',
-  Logout = 'auth.logout',
-  Check = 'auth.check',
-  Register = 'auth.register',
-}
-
-export enum Getters {
-  User = 'auth.user',
-  Authenticated = 'auth.authenticated',
-  Role = 'auth.role',
-  IsModerator = 'auth.isModerator',
-}
-
 /*
 |--------------------------------------------------------------------------
 | Store State, Mutations, Actions, & Getters
 |--------------------------------------------------------------------------
 */
-const state: AuthState = {
+const state = () : AuthState => ({
   user: null,
   initialized: false,
-};
+});
 
 const mutations = {
-  [Mutations.Initialize](state: AuthState, { user }: UserPayload) {
+  INITIALIZE(state: AuthState, { user }: UserPayload) {
     state.user = user;
     state.initialized = true;
   },
-  [Mutations.Login](state: AuthState, { user }: UserPayload) {
+  LOGIN(state: AuthState, { user }: UserPayload) {
     state.user = user;
   },
-  [Mutations.Logout](state: AuthState) {
+  LOGOUT(state: AuthState) {
     state.user = null;
   },
-  [Mutations.Register](state: AuthState, { user }: UserPayload) {
+  REGISTER(state: AuthState, { user }: UserPayload) {
     state.user = user;
   },
 };
 
-
 const actions = {
-  async [Actions.Login]({ commit }: Context, { email, password }: LoginActionPayload) {
+  async login({ commit }: Context, { email, password }: LoginActionPayload) {
     const response = await client.post('/v1/auth/login', { email, password });
 
-    commit(Mutations.Login, { user: response.data });
+    commit('LOGIN', { user: response.data });
   },
-  async [Actions.Register]({ commit }: Context, {
+  async register({ commit }: Context, {
     name,
     email,
     password,
@@ -97,35 +75,35 @@ const actions = {
       nickname,
     });
 
-    commit(Mutations.Register, { user: response.data });
+    commit('REGISTER', { user: response.data });
   },
-  async [Actions.Logout]({ commit }: Context) {
-    commit(Mutations.Logout);
-    client.post('/v1/auth/logout');
+  async logout({ commit }: Context) {
+    commit('LOGOUT');
+    await client.post('/v1/auth/logout');
   },
-  async [Actions.Check]({ commit }: Context) {
+  async check({ commit }: Context) {
     await client.get('/sanctum/csrf-cookie');
     try {
       const response = await client.get('/v1/auth/user');
-      commit(Mutations.Initialize, { user: response.data });
+      commit('INITIALIZE', { user: response.data });
     } catch (e) {
       // User not logged in.
-      commit(Mutations.Initialize, { user: null });
+      commit('INITIALIZE', { user: null });
     }
   },
 };
 
 const getters = {
-  [Getters.User](state: AuthState): User | null {
+  user(state: AuthState): User | null {
     return state.user ? new User(state.user) : null;
   },
-  [Getters.Authenticated](state: AuthState): boolean {
+  authenticated(state: AuthState): boolean {
     return state.user !== null;
   },
-  [Getters.Role](state: AuthState): Role {
+  role(state: AuthState): Role {
     return state.user ? state.user.role : Role.Guest;
   },
-  [Getters.IsModerator](state: AuthState): boolean {
+  isModerator(state: AuthState): boolean {
     return !!(state.user && state.user.role === Role.Moderator);
   },
 };

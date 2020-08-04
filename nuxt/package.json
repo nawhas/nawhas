@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "nuxt-ts",
+    "dev": "export NODE_TLS_REJECT_UNAUTHORIZED=0 && nuxt-ts --env.NODE_TLS_REJECT_UNAUTHORIZED=0",
+    "serve": "yarn dev",
     "build": "nuxt-ts build",
     "start": "nuxt-ts start",
     "generate": "nuxt-ts generate",
@@ -28,9 +29,12 @@
   "devDependencies": {
     "@nuxt/types": "^2.14.0",
     "@nuxt/typescript-build": "^2.0.2",
+    "@nuxtjs/dotenv": "^1.4.1",
     "@nuxtjs/eslint-config": "^3.1.0",
     "@nuxtjs/eslint-config-typescript": "^3.0.0",
     "@nuxtjs/eslint-module": "^2.0.0",
+    "@nuxtjs/google-fonts": "^1.0.0",
+    "@nuxtjs/svg": "^0.1.11",
     "@nuxtjs/vuetify": "^1.11.2",
     "@types/howler": "^2.1.2",
     "@types/jest": "^24.0.19",
@@ -52,12 +56,14 @@
     "moment": "^2.24.0",
     "node-vibrant": "^3.1.5",
     "nosleep.js": "^0.9.0",
+    "nuxt-class-component": "^1.3.0",
     "query-string": "^6.10.1",
     "ts-jest": "^26.1.3",
     "vue-class-component": "^7.2.5",
     "vue-instantsearch": "^2.7.0",
     "vue-jest": "^3.0.4",
     "vue-progressbar": "^0.7.5",
-    "vue-property-decorator": "^9.0.0"
+    "vue-property-decorator": "^9.0.0",
+    "vuex-class": "^0.3.2"
   }
 }
