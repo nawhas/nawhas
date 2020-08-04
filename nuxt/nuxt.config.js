@@ -2,6 +2,7 @@ const TITLE_SUFFIX = 'Nawhas.com';
 const DEFAULT_DESCRIPTION = 'Welcome to Nawhas.com, the most advanced library of nawhas online.';
 
 export default {
+  debug: true,
   /*
   ** Nuxt rendering mode
   ** See https://nuxtjs.org/api/configuration-mode
