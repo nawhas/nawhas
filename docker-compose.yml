@@ -78,7 +78,15 @@ services:
       - ./docker/nginx/ingress.conf:/etc/nginx/conf.d/default.conf:ro
     depends_on:
       - nginx
-      - init
+      - web
+    networks:
+      - nawhas
+  # This container just exists to keep make the ingress continue to work.
+  web:
+    image: szainmehdi/node:13
+    container_name: nawhas_web
+    command: npx http-server -p 3000
+    restart: unless-stopped
     networks:
       - nawhas
   db:
