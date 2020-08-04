@@ -30,6 +30,7 @@
       <app-changelog />
       <labeled-divider />
       <bug-report-form />
+      <toaster />
 
       <h3>Loaders</h3>
       <album-skeleton />
@@ -56,6 +57,7 @@ import TrackCardSkeleton from '@/components/loaders/TrackCardSkeleton';
 import AppChangelog from '@/components/notifications/AppChangelog';
 import LabeledDivider from '@/components/ui/LabeledDivider';
 import BugReportForm from '@/components/BugReportForm';
+import Toaster from '@/components/utils/Toaster';
 import AuthDialog from '@/components/auth/AuthDialog';
 import LoginForm from '@/components/auth/LoginForm';
 import RegisterForm from '@/components/auth/RegisterForm';
@@ -78,6 +80,7 @@ export default {
     AuthDialog,
     LoginForm,
     RegisterForm,
+    Toaster,
   },
 
   async fetch() {
@@ -115,7 +118,6 @@ export default {
         avatar: null,
       },
     },
-    props: ['title', 'slug', 'album', 'reciter', 'showReciter', 'colored'],
   }),
 
   head() {
