@@ -21,6 +21,8 @@ return [
 
     'allowed_origins' => [
         'https://localhost:8080',
+        'https://localhost:3000',
+        'http://localhost:3000',
         'https://' . env('APP_DOMAIN'),
         'https://*.' . env('APP_DOMAIN'),
         'https://' . env('APP_DOMAIN') . ':8080',

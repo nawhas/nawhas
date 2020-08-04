@@ -67,6 +67,7 @@ export default {
     '@nuxtjs/vuetify',
     '@nuxtjs/google-fonts',
     '@nuxtjs/svg',
+    '@nuxtjs/dotenv',
   ],
   /*
   ** Nuxt.js modules
