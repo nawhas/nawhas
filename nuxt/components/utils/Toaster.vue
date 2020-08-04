@@ -14,7 +14,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Vue } from 'nuxt-property-decorator';
 import { EventBus } from '@/events';
 import { TOAST_SHOW, ToastOptions } from '@/events/toaster';
 

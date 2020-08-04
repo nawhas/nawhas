@@ -24,7 +24,9 @@
     "@nuxt/typescript-runtime": "^1.0.0",
     "@nuxtjs/axios": "^5.12.0",
     "@nuxtjs/pwa": "^3.0.0-beta.20",
-    "nuxt": "^2.14.0"
+    "@nuxtjs/vuetify": "^1.11.2",
+    "nuxt": "^2.14.0",
+    "nuxt-property-decorator": "^2.7.2"
   },
   "devDependencies": {
     "@nuxt/types": "^2.14.0",
@@ -35,7 +37,6 @@
     "@nuxtjs/eslint-module": "^2.0.0",
     "@nuxtjs/google-fonts": "^1.0.0",
     "@nuxtjs/svg": "^0.1.11",
-    "@nuxtjs/vuetify": "^1.11.2",
     "@types/howler": "^2.1.2",
     "@types/jest": "^24.0.19",
     "@vue/composition-api": "^1.0.0-beta.6",

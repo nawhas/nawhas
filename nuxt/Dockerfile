@@ -25,13 +25,6 @@ RUN yarn install \
 
 RUN yarn build
 
-RUN rm -rf node_modules && \
-  NODE_ENV=production yarn install \
-  --prefer-offline \
-  --pure-lockfile \
-  --non-interactive \
-  --production=true
-
 # ---------------------------------------------------------------------------
 # Production Image
 # ---------------------------------------------------------------------------

@@ -52,7 +52,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Vue } from 'nuxt-property-decorator';
 import AuthDialog from '@/components/auth/AuthDialog.vue';
 import SocialLoginButton from '@/components/auth/SocialLoginButton.vue';
 

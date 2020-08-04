@@ -50,7 +50,6 @@ export default {
   ** https://nuxtjs.org/guide/plugins
   */
   plugins: [
-    '@/plugins/composition-api',
     '@/plugins/filters',
   ],
   /*
@@ -86,8 +85,9 @@ export default {
   ** https://github.com/nuxt-community/vuetify-module
   */
   vuetify: {
-    optionsPath: './vuetify.options.js',
+    optionsPath: '@/vuetify.options.js',
     defaultAssets: false,
+    customVariables: ['@/assets/variables.scss'],
   },
   /*
   ** Google Fonts

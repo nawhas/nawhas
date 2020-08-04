@@ -162,7 +162,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Vue } from 'nuxt-property-decorator';
 // import LoginForm from '@/components/auth/LoginForm.vue';
 // import RegisterForm from '@/components/auth/RegisterForm.vue';
 import AppChangelog from '@/components/notifications/AppChangelog.vue';

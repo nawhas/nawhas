@@ -39,7 +39,7 @@
     <v-container class="app__section">
       <div class="section__title section__title--with-actions">
         <div>Top Reciters</div>
-        <v-btn text :to="{ name: 'reciters.index' }">
+        <v-btn text to="/reciters">
           View All
         </v-btn>
       </div>

@@ -27,7 +27,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator';
+import { Component, Prop, Vue } from 'nuxt-property-decorator';
 import * as Format from '@/constants/lyrics/format';
 import LyricsRenderer from '@/components/lyrics/LyricsRenderer';
 import LyricsSkeleton from '@/components/loaders/LyricsSkeleton';

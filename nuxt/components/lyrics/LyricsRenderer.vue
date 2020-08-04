@@ -36,7 +36,7 @@
 <script lang="ts">
 import {
   Component, Prop, Watch, Vue,
-} from 'vue-property-decorator';
+} from 'nuxt-property-decorator';
 import * as Format from '@/constants/lyrics/format';
 import * as GroupType from '@/constants/lyrics/group-type';
 import LyricsHighlighter from '@/utils/LyricsHighlighter';

@@ -57,7 +57,8 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
+import Vue from 'vue';
+import { Component } from 'nuxt-property-decorator';
 import client from '@/services/client';
 import { showToast } from '@/events/toaster';
 

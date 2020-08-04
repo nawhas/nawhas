@@ -20,7 +20,7 @@
 
 <script lang="ts">
 /* eslint-disable dot-notation */
-import { Component, Vue, Prop } from 'vue-property-decorator';
+import { Component, Vue, Prop } from 'nuxt-property-decorator';
 import Vibrant from 'node-vibrant';
 
 @Component

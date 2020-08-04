@@ -18,17 +18,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@vue/composition-api';
+import { Component, Prop, Vue } from 'nuxt-property-decorator';
 
-export default defineComponent({
-  name: 'HeroQuote',
-  props: {
-    author: {
-      type: String,
-      required: true,
-    },
-  },
-});
+@Component
+export default class HeroQuote extends Vue {
+  @Prop({ type: String, required: true }) private readonly author !: string;
+}
 </script>
 
 <style lang="scss" scoped>

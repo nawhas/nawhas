@@ -1,9 +1,9 @@
 <template>
   <button
-      class="button"
-      type="button"
-      :style="styles"
-      v-on="$listeners"
+    class="button"
+    type="button"
+    :style="styles"
+    v-on="$listeners"
   >
     <span class="button__content">
       <google-icon class="button__icon" /> Continue with Google
@@ -12,7 +12,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator';
+import { Component, Prop, Vue } from 'nuxt-property-decorator';
 import GoogleIcon from '@/assets/social/google.svgx';
 
 @Component({

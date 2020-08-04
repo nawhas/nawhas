@@ -73,7 +73,7 @@
 <script lang="ts">
 import {
   Component, Prop, Vue,
-} from 'vue-property-decorator';
+} from 'nuxt-property-decorator';
 import { hasAudioFile, hasLyrics } from '@/utils/tracks';
 
 @Component
