@@ -45,6 +45,7 @@ export default {
   ** Global CSS
   */
   css: [
+    { src: '@/assets/app.scss', lang: 'scss' },
   ],
   /*
   ** Plugins to load before mounting the App
@@ -119,7 +120,7 @@ export default {
   googleFonts: {
     families: {
       'Bellefair': true,
-      'Roboto': true,
+      'Roboto': [100, 200, 300, 400, 700],
       'Roboto Slab': [100, 300, 400, 700],
       'Roboto Mono': [100, 300, 400, 700],
       'Material Icons': true,

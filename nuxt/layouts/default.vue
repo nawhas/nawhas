@@ -136,7 +136,7 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" scoped>
-@import "../assets/theme";
+@import '~assets/theme';
 
 .main-container {
   padding: 0;

@@ -44,7 +44,7 @@ export default class AlbumSkeleton extends Vue {
 </script>
 
 <style lang="scss">
-@import '../../assets/theme';
+@import '~assets/theme';
 
 .album-skeleton {
   margin-top: 90px;

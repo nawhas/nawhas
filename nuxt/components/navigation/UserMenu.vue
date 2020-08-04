@@ -240,7 +240,7 @@ export default class UserMenu extends Vue {
 </script>
 
 <style lang="scss" scoped>
-@import "../../assets/theme";
+@import '~assets/theme';
 
 .loader {
   padding: 24px;
