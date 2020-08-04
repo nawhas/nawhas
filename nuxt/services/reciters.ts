@@ -1,4 +1,9 @@
+import { IncludeResourcesOptions, PaginatedIndexOptions } from '@/services/common';
 import client from './client';
+
+interface GetRecitersOptions extends PaginatedIndexOptions, IncludeResourcesOptions {}
+
+interface GetReciterOptions extends IncludeResourcesOptions {}
 
 /**
  * Get Reciters
@@ -8,7 +13,7 @@ import client from './client';
  *
  * @returns {Promise}
  */
-export function getReciters(options = {}) {
+export function getReciters(options: GetRecitersOptions = {}) {
   return client.get('/v1/reciters', options);
 }
 
@@ -19,7 +24,7 @@ export function getReciters(options = {}) {
  *
  * @returns {Promise}
  */
-export function getReciter(reciter, options = {}) {
+export function getReciter(reciter, options: GetReciterOptions = {}) {
   return client.get(`/v1/reciters/${reciter}`, options);
 }
 

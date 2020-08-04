@@ -1,7 +1,7 @@
-import { IncludeApiResources, PaginatedGetRequestOptions } from '@/services/common';
+import { IncludeResourcesOptions, PaginatedIndexOptions } from '@/services/common';
 import client from './client';
 
-interface RequestOptions extends PaginatedGetRequestOptions, IncludeApiResources {}
+interface RequestOptions extends PaginatedIndexOptions, IncludeResourcesOptions {}
 
 /**
  * Get popular reciters
