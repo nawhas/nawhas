@@ -35,11 +35,11 @@ RUN rm -rf node_modules && \
 # ---------------------------------------------------------------------------
 # Production Image
 # ---------------------------------------------------------------------------
-FROM node:alpine
+FROM node:13-alpine
 
 WORKDIR /opt
 
-COPY --from=builder /opt  .
+COPY --from=build /opt  .
 
 ENV HOST 0.0.0.0
 EXPOSE 3000

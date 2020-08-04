@@ -54,7 +54,6 @@ export default {
   plugins: [
     '@/plugins/composition-api',
     '@/plugins/filters',
-    '@/plugins/axios',
   ],
   /*
   ** Auto import components
