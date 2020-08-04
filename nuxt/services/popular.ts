@@ -1,4 +1,7 @@
+import { IncludeApiResources, PaginatedGetRequestOptions } from '@/services/common';
 import client from './client';
+
+interface RequestOptions extends PaginatedGetRequestOptions, IncludeApiResources {}
 
 /**
  * Get popular reciters
@@ -7,7 +10,7 @@ import client from './client';
  *
  * @returns {Promise}
  */
-export function getPopularReciters(options = {}) {
+export function getPopularReciters(options : RequestOptions = {}) {
   return client.get('/v1/popular/reciters', options);
 }
 
@@ -19,7 +22,7 @@ export function getPopularReciters(options = {}) {
  *
  * @returns {Promise}
  */
-export function getPopularAlbums(options = {}) {
+export function getPopularAlbums(options: RequestOptions = {}) {
   return client.get('/v1/popular/albums', options);
 }
 
@@ -32,7 +35,7 @@ export function getPopularAlbums(options = {}) {
  *
  * @returns {Promise}
  */
-export function getPopularTracks(options = {}) {
+export function getPopularTracks(options: RequestOptions = {}) {
   return client.get('/v1/popular/tracks', options);
 }
 

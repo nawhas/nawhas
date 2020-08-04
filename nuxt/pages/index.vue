@@ -67,7 +67,8 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
+import Vue from 'vue';
+import Component from 'nuxt-class-component';
 import HeroBanner from '@/components/HeroBanner.vue';
 import HeroQuote from '@/components/HeroQuote.vue';
 import ReciterCard from '@/components/ReciterCard.vue';
@@ -102,13 +103,14 @@ export default class HomeView extends Vue {
     return this.tracks ? this.tracks.slice(0, POPULAR_ENTITIES_LIMIT) : null;
   }
 
-  mounted() {
-    getPopularReciters({ per_page: 20, include: 'related' }).then((response) => {
-      this.reciters = response.data.data;
-    });
-    getPopularTracks({ per_page: 20, include: 'reciter,lyrics,album.tracks,media,related' }).then((response) => {
-      this.tracks = response.data.data;
-    });
+  async fetch() {
+    const [reciters, tracks] = await Promise.all([
+      getPopularReciters({ per_page: 20, include: 'related' }),
+      getPopularTracks({ per_page: 20, include: 'reciter,lyrics,album.tracks,media,related' }),
+    ]);
+
+    this.reciters = reciters.data.data;
+    this.tracks = tracks.data.data;
   }
 }
 </script>
