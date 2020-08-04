@@ -61,6 +61,9 @@ import { EventBus, Search } from '@/events';
     ReciterCard,
     SkeletonCardGrid,
   },
+  head: {
+    title: 'Reciters',
+  },
 })
 export default class RecitersPage extends Vue {
   private page = 1;
