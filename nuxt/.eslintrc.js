@@ -18,5 +18,6 @@ module.exports = {
     'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'warn',
     'quote-props': ['error', 'consistent-as-needed'],
     'no-useless-constructor': 'off',
+    'arrow-parens': ['error', 'always'],
   },
 };

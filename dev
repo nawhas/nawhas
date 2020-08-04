@@ -9,6 +9,11 @@ function start {
   set -x && $COMPOSE run --rm "$@"
 }
 
+if [ "$1" == "prod" ]; then
+  COMPOSE="$COMPOSE -f docker-compose.prod.yml"
+  shift 1
+fi
+
 # If we pass any arguments...
 if [ $# -gt 0 ];then
     # If "art" is used, pass-thru to "artisan"
