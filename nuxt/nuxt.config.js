@@ -1,5 +1,3 @@
-import colors from 'vuetify/es5/util/colors';
-
 const TITLE_SUFFIX = 'Nawhas.com';
 const DEFAULT_DESCRIPTION = 'Welcome to Nawhas.com, the most advanced library of nawhas online.';
 
@@ -88,29 +86,7 @@ export default {
   ** https://github.com/nuxt-community/vuetify-module
   */
   vuetify: {
-    theme: {
-      dark: false,
-      themes: {
-        light: {
-          primary: colors.red.base,
-          secondary: colors.grey.darken2,
-          accent: colors.orange.accent3,
-          error: colors.red.accent4,
-          info: colors.blue.lighten1,
-          success: colors.green.lighten2,
-          warning: colors.amber.darken2,
-        },
-        dark: {
-          primary: colors.red.base,
-          secondary: colors.grey.darken2,
-          accent: colors.orange.accent3,
-          error: colors.red.accent4,
-          info: colors.blue.lighten1,
-          success: colors.green.lighten2,
-          warning: colors.amber.darken2,
-        },
-      },
-    },
+    optionsPath: './vuetify.options.js',
     defaultAssets: false,
   },
   /*
