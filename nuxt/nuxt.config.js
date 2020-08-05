@@ -19,6 +19,8 @@ export default {
   },
 
   privateRuntimeConfig: {
+    ignoreSslErrors: process.env.APP_ENV === 'development',
+
     axios: {
       baseURL: process.env.SERVER_API_BASE_URL || process.env.API_BASE_URL,
     },

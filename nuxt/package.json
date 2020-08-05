@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "export NODE_TLS_REJECT_UNAUTHORIZED=0 && nuxt-ts --env.NODE_TLS_REJECT_UNAUTHORIZED=0",
+    "dev": "nuxt-ts",
     "serve": "yarn dev",
     "build": "nuxt-ts build",
     "start": "nuxt-ts start",
