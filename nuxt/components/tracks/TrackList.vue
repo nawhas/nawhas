@@ -90,7 +90,7 @@ export default class TrackList extends Vue {
       return [];
     }
 
-    return this.tracks.filter(track => hasAudioFile(track));
+    return this.tracks.filter((track) => hasAudioFile(track));
   }
 
   get isDark() {

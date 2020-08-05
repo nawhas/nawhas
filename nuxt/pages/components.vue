@@ -86,7 +86,7 @@ export default {
   async fetch() {
     const mountains = await fetch(
       'https://api.nuxtjs.dev/mountains',
-    ).then(res => res.json());
+    ).then((res) => res.json());
 
     this.title = mountains[0].title;
   },
