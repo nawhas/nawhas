@@ -1,9 +1,8 @@
 import axios from 'axios';
-import { API_DOMAIN } from '@/config';
 
 class Client {
   constructor() {
-    this.base = API_DOMAIN;
+    this.base = null;
   }
 
   get(path, params = {}) {
