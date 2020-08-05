@@ -27,7 +27,9 @@
     "@nuxtjs/vuetify": "^1.11.2",
     "dotenv": "^8.2.0",
     "nuxt": "^2.14.0",
-    "nuxt-property-decorator": "^2.7.2"
+    "nuxt-property-decorator": "^2.7.2",
+    "vuetify": "^2",
+    "vue": "^2"
   },
   "devDependencies": {
     "@nuxt/types": "^2.14.0",
