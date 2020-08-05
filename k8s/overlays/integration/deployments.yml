@@ -10,8 +10,6 @@ spec:
           envFrom:
             - secretRef:
                 name: api.integration.env
-      nodeSelector:
-        doks.digitalocean.com/node-pool: pool-nawhas-dev
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -25,8 +23,6 @@ spec:
           envFrom:
             - secretRef:
                 name: api.integration.env
-      nodeSelector:
-        doks.digitalocean.com/node-pool: pool-nawhas-dev
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -40,5 +36,3 @@ spec:
           envFrom:
             - secretRef:
                 name: web.integration.env
-      nodeSelector:
-        doks.digitalocean.com/node-pool: pool-nawhas-dev

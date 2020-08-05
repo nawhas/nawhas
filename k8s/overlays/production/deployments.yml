@@ -14,8 +14,6 @@ spec:
             - name: secrets
               mountPath: "/var/www/api/storage/secrets"
               readOnly: true
-      nodeSelector:
-        doks.digitalocean.com/node-pool: pool-nawhas-bravo
       volumes:
         - name: secrets
           secret:
@@ -41,8 +39,6 @@ spec:
         - name: secrets
           secret:
             secretName: api-secrets
-      nodeSelector:
-        doks.digitalocean.com/node-pool: pool-nawhas-bravo
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -56,5 +52,3 @@ spec:
           envFrom:
             - secretRef:
                 name: web.env
-      nodeSelector:
-        doks.digitalocean.com/node-pool: pool-nawhas-bravo
