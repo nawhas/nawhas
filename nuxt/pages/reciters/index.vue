@@ -41,6 +41,7 @@
           circle
           next-icon="navigate_next"
           prev-icon="navigate_before"
+          @input="onPageChanged"
         />
       </div>
     </v-container>
@@ -49,56 +50,75 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import Component from 'nuxt-class-component';
 import ReciterCard from '@/components/ReciterCard.vue';
 import SkeletonCardGrid from '@/components/loaders/SkeletonCardGrid.vue';
-import { getReciters } from '@/services/reciters';
-import { getPopularReciters } from '@/services/popular';
 import { EventBus, Search } from '@/events';
+import { ReciterIncludes, RecitersIndexResponse } from '@/api/reciters';
+import '@/plugins/api';
 
-@Component({
+interface Data {
+  page: number;
+  reciters: Array<any> | null;
+  popularReciters: Array<any> | null;
+  length: number;
+}
+
+export default Vue.extend({
   components: {
     ReciterCard,
     SkeletonCardGrid,
   },
-  head: {
-    title: 'Reciters',
-  },
-})
-export default class RecitersPage extends Vue {
-  private page = 1;
-  private reciters: Array<any>|null = null;
-  private length = 1;
-  private popularReciters: Array<any>|null = null;
 
   async fetch() {
     const [reciters, popular] = await Promise.all([
-      getReciters({ per_page: 30, include: 'related' }),
-      getPopularReciters({ per_page: 6, include: 'related' }),
+      this.$api.reciters.index({
+        include: [ReciterIncludes.related],
+        pagination: { limit: 30, page: this.page },
+      }),
+      this.$api.reciters.popular({
+        include: [ReciterIncludes.related],
+        pagination: { limit: 6 },
+      }),
     ]);
 
     this.setReciters(reciters);
-    this.popularReciters = popular.data.data;
-  }
+    this.popularReciters = popular.data;
+  },
 
-  setReciters(data) {
-    this.reciters = data.data.data;
-    this.length = data.data.meta.pagination.total_pages;
-  }
+  data (): Data {
+    const page = this.$route.query.page || 1;
 
-  // async goToPage(number) {
-  //   this.$Progress.start();
-  //   goTo(0);
-  //   getReciters({ per_page: 30, include: 'related', page: number }).then((response) => {
-  //     this.setReciters(response);
-  //     this.$Progress.finish();
-  //   });
-  // }
+    return {
+      page: Number(page),
+      length: 1,
+      reciters: null,
+      popularReciters: null,
+    };
+  },
 
-  focusSearch() {
-    this.$nextTick(() => EventBus.$emit(Search.TRIGGER));
-  }
-}
+  watch: {
+    '$route.query': '$fetch',
+  },
+
+  methods: {
+    setReciters(data: RecitersIndexResponse) {
+      this.reciters = data.data;
+      this.length = data.meta.pagination.total_pages;
+    },
+
+    focusSearch() {
+      this.$nextTick(() => EventBus.$emit(Search.TRIGGER));
+    },
+
+    onPageChanged(page) {
+      this.$router.push({ query: { page: String(page) } });
+    },
+  },
+
+  head: {
+    title: 'Reciters',
+  },
+});
 </script>
 
 <style lang="scss" scoped>

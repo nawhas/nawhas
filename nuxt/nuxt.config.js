@@ -1,8 +1,30 @@
+require('dotenv').config();
+
 const TITLE_SUFFIX = 'Nawhas.com';
 const DEFAULT_DESCRIPTION = 'Welcome to Nawhas.com, the most advanced library of nawhas online.';
 
 export default {
   debug: true,
+  /*
+  ** Nuxt runtime config
+  ** See https://nuxtjs.org/api/configuration-runtime-config
+  ** See https://axios.nuxtjs.org/options.html#runtime-config
+  */
+  publicRuntimeConfig: {
+    apiUrl: process.env.API_BASE_URL || 'https://api.nawhas.test/',
+
+    axios: {
+      browserBaseURL: process.env.API_BASE_URL || 'https://api.nawhas.test/',
+    },
+  },
+
+  privateRuntimeConfig: {
+    ignoreSslErrors: process.env.APP_ENV === 'development',
+
+    axios: {
+      baseURL: process.env.SERVER_API_BASE_URL || process.env.API_BASE_URL,
+    },
+  },
   /*
   ** Nuxt rendering mode
   ** See https://nuxtjs.org/api/configuration-mode
@@ -51,7 +73,9 @@ export default {
   ** https://nuxtjs.org/guide/plugins
   */
   plugins: [
+    '@/plugins/axios',
     '@/plugins/filters',
+    '@/plugins/api',
   ],
   /*
   ** Auto import components
@@ -66,7 +90,6 @@ export default {
     '@nuxtjs/vuetify',
     '@nuxtjs/google-fonts',
     '@nuxtjs/svg',
-    '@nuxtjs/dotenv',
   ],
   /*
   ** Nuxt.js modules
@@ -82,6 +105,24 @@ export default {
   */
   axios: {
     debug: true,
+    credentials: true,
+    headers: {
+      common: {
+        Accept: 'application/json',
+      },
+      delete: {},
+      get: {},
+      head: {},
+      post: {
+        'Content-Type': 'application/json',
+      },
+      put: {
+        'Content-Type': 'application/json',
+      },
+      patch: {
+        'Content-Type': 'application/json',
+      },
+    },
   },
   /*
   ** vuetify module configuration
@@ -111,5 +152,13 @@ export default {
   ** See https://nuxtjs.org/api/configuration-build/
   */
   build: {
+  },
+  /*
+  ** Loading Bar Configuration
+  ** See https://nuxtjs.org/api/configuration-loading/
+  */
+  loading: {
+    color: 'orangered',
+    height: '3px',
   },
 };

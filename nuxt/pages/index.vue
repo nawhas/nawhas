@@ -67,8 +67,7 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import Component from 'nuxt-class-component';
+import { Component, Vue } from 'nuxt-property-decorator';
 import HeroBanner from '@/components/HeroBanner.vue';
 import HeroQuote from '@/components/HeroQuote.vue';
 import ReciterCard from '@/components/ReciterCard.vue';
@@ -76,7 +75,6 @@ import TrackCard from '@/components/tracks/TrackCard.vue';
 import SkeletonCardGrid from '@/components/loaders/SkeletonCardGrid.vue';
 import TrackCardSkeleton from '@/components/loaders/TrackCardSkeleton.vue';
 import TrackList from '@/components/tracks/TrackList.vue';
-import { getPopularReciters, getPopularTracks } from '@/services/popular';
 
 const POPULAR_ENTITIES_LIMIT = 6;
 
@@ -105,12 +103,12 @@ export default class HomeView extends Vue {
 
   async fetch() {
     const [reciters, tracks] = await Promise.all([
-      getPopularReciters({ per_page: 20, include: 'related' }),
-      getPopularTracks({ per_page: 20, include: 'reciter,lyrics,album.tracks,media,related' }),
+      this.$axios.$get('v1/popular/reciters?per_page=20&include=related'),
+      this.$axios.$get('v1/popular/tracks?per_page=20&include=reciter,lyrics,album.tracks,media,related'),
     ]);
 
-    this.reciters = reciters.data.data;
-    this.tracks = tracks.data.data;
+    this.reciters = reciters.data;
+    this.tracks = tracks.data;
   }
 }
 </script>

@@ -49,8 +49,11 @@ services:
       context: nuxt
       dockerfile: Dockerfile
       args:
-        API_DOMAIN: https://api.nawhas.test
+        API_DOMAIN: https://api.nawhas.test/
+        SERVER_API_DOMAIN: http://nawhas_api_nginx:80/
         APP_DOMAIN: https://nawhas.test
+    env_file:
+      - nuxt/.env.production
     container_name: nawhas_web
     networks:
       - nawhas

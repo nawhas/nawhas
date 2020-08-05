@@ -29,7 +29,8 @@
       "@types/node",
       "@nuxt/vue-app",
       "@nuxtjs/vuetify",
-      "@nuxt/types"
+      "@nuxt/types",
+      "@nuxtjs/axios"
     ]
   },
   "exclude": [

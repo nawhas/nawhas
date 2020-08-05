@@ -15,7 +15,6 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'nuxt-property-decorator';
-import { API_DOMAIN } from '@/config';
 
 const providers = (provider, type, dark = false) => (({
   google: {
@@ -48,7 +47,7 @@ export default class SocialLoginButton extends Vue {
   }
 
   onClick() {
-    let domain = API_DOMAIN;
+    let domain = this.$config.apiDomain;
     if (domain !== undefined && !domain.startsWith('http')) {
       domain = window.location.origin + domain;
     }
