@@ -34,14 +34,14 @@
         <skeleton-card-grid :limit="15" />
       </template>
       <div class="pagination">
-        <nuxt-pagination
+        <v-pagination
           v-model="page"
           color="deep-orange"
           :length="length"
           circle
           next-icon="navigate_next"
           prev-icon="navigate_before"
-          :to-generator="generatePageLink"
+          @input="onPageChanged"
         />
       </div>
     </v-container>
@@ -52,7 +52,6 @@
 import Vue from 'vue';
 import ReciterCard from '@/components/ReciterCard.vue';
 import SkeletonCardGrid from '@/components/loaders/SkeletonCardGrid.vue';
-import NuxtPagination from '@/components/nuxt/NuxtPagination.vue';
 import { EventBus, Search } from '@/events';
 import { ReciterIncludes, RecitersIndexResponse } from '@/api/reciters';
 import '@/plugins/api';
@@ -68,7 +67,6 @@ export default Vue.extend({
   components: {
     ReciterCard,
     SkeletonCardGrid,
-    NuxtPagination,
   },
 
   async fetch() {
@@ -108,12 +106,12 @@ export default Vue.extend({
       this.length = data.meta.pagination.total_pages;
     },
 
-    generatePageLink(number) {
-      return { query: { page: number } };
-    },
-
     focusSearch() {
       this.$nextTick(() => EventBus.$emit(Search.TRIGGER));
+    },
+
+    onPageChanged(page) {
+      this.$router.push({ query: { page: String(page) } });
     },
   },
 
