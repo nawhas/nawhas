@@ -14,7 +14,8 @@ import { Reciter } from '@/api/reciters';
  * Entity Definitions
  */
 export interface Album extends PersistedEntity, TimestampedEntity {
-  reciter: Reciter;
+  reciter?: Reciter;
+  reciterId: string;
   title: string;
   year: string;
   artwork: string;
