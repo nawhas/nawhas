@@ -47,3 +47,5 @@ spec:
         - name: postgres-data
           persistentVolumeClaim:
             claimName: postgres-volume
+      nodeSelector:
+        doks.digitalocean.com/node-pool: pool-nawhas-dev
