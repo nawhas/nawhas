@@ -107,6 +107,7 @@ import AlbumSkeleton from '@/components/loaders/AlbumSkeleton.vue';
 import TrackCardSkeleton from '@/components/loaders/TrackCardSkeleton.vue';
 import HeroBanner from '@/components/HeroBanner.vue';
 import { Reciter } from '@/api/reciters';
+import { MetaInfo } from 'vue-meta';
 import '@/plugins/api';
 // import EditReciterDialog from '@/components/edit/EditReciterDialog.vue';
 // import EditAlbumDialog from '@/components/edit/EditAlbumDialog.vue';
@@ -182,14 +183,13 @@ export default Vue.extend({
     },
   },
 
-  // TODO - typescript doesn't work if i use a function here.
-  // head() {
-  //   const title = this.reciter.name || 'Reciter';
-  //
-  //   return {
-  //     title,
-  //   };
-  // },
+  head(): MetaInfo {
+    const title = this.reciter?.name || 'Reciter';
+
+    return {
+      title,
+    };
+  },
 });
 </script>
 
