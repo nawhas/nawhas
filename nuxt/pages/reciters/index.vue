@@ -85,11 +85,11 @@ export default Vue.extend({
     this.popularReciters = popular.data;
   },
 
-  data (): Data {
-    const page = this.$route.query.page || 1;
+  data(): Data {
+    const page = Number(this.$route.query.page || 1);
 
     return {
-      page: Number(page),
+      page,
       length: 1,
       reciters: null,
       popularReciters: null,
