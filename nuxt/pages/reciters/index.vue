@@ -48,10 +48,20 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, useContext, useFetch, useMeta, watch } from 'nuxt-composition-api';
+import {
+  defineComponent,
+  reactive,
+  toRef,
+  toRefs,
+  useContext,
+  useFetch,
+  useMeta,
+  watch,
+} from 'nuxt-composition-api';
 import ReciterCard from '@/components/ReciterCard.vue';
 import SkeletonCardGrid from '@/components/loaders/SkeletonCardGrid.vue';
 import { Reciter, ReciterIncludes } from '@/api/reciters';
+import useRouter from '~/use/router';
 
 export default defineComponent({
   head: {},
@@ -61,15 +71,17 @@ export default defineComponent({
     SkeletonCardGrid,
   },
 
-  setup(_, { root }) {
-    const { $router } = root;
+  setup() {
+    const { router } = useRouter();
     const { $api, query } = useContext();
     useMeta({ title: 'Reciters' });
 
-    const reciters = ref<Array<Reciter> | null>(null);
-    const popularReciters = ref<Array<Reciter> | null>(null);
-    const page = ref<number>(Number(query.value.page || 1));
-    const length = ref<number>(1);
+    const data = reactive({
+      reciters: null as Array<Reciter> | null,
+      popularReciters: null as Array<Reciter> | null,
+      page: Number(query.value.page || 1),
+      length: 1,
+    });
 
     const { fetch } = useFetch(async () => {
       const promises: Array<Promise<any>> = [];
@@ -77,20 +89,20 @@ export default defineComponent({
       promises.push(
         $api.reciters.index({
           include: [ReciterIncludes.related],
-          pagination: { limit: 30, page: page.value },
+          pagination: { limit: 30, page: data.page },
         }).then((response) => {
-          reciters.value = response.data;
-          length.value = response.meta.pagination.total_pages;
+          data.reciters = response.data;
+          data.length = response.meta.pagination.total_pages;
         }),
       );
 
-      if (popularReciters.value === null) {
+      if (data.popularReciters === null) {
         promises.push(
           $api.reciters.popular({
             include: [ReciterIncludes.related],
             pagination: { limit: 6 },
           }).then((response) => {
-            popularReciters.value = response.data;
+            data.popularReciters = response.data;
           }),
         );
       }
@@ -98,18 +110,12 @@ export default defineComponent({
       await Promise.all(promises);
     });
 
-    watch(page, () => {
-      $router.push({ query: { page: String(page.value) } });
+    watch(toRef(data, 'page'), (value) => {
+      router.push({ query: { page: String(value) } });
     });
     watch(query, fetch);
 
-    return {
-      // Data
-      reciters,
-      popularReciters,
-      page,
-      length,
-    };
+    return { ...toRefs(data) };
   },
 });
 </script>

@@ -67,7 +67,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, ref, useContext, useFetch } from 'nuxt-composition-api';
+import { computed, defineComponent, reactive, toRefs, useContext, useFetch } from 'nuxt-composition-api';
 import HeroBanner from '@/components/HeroBanner.vue';
 import HeroQuote from '@/components/HeroQuote.vue';
 import ReciterCard from '@/components/ReciterCard.vue';
@@ -78,6 +78,11 @@ import TrackList from '@/components/tracks/TrackList.vue';
 import { Reciter, ReciterIncludes } from '@/api/reciters';
 
 const POPULAR_ENTITIES_LIMIT = 6;
+
+interface ComponentData {
+  reciters: Array<Reciter> | null;
+  tracks: Array<any> | null;
+}
 
 export default defineComponent({
   components: {
@@ -91,13 +96,18 @@ export default defineComponent({
   },
 
   setup() {
-    const reciters = ref<Array<Reciter> | null>(null);
-    const tracks = ref<Array<any> | null>(null);
-
     const { $axios, $api } = useContext();
 
+    const data = reactive<ComponentData>({
+      reciters: null,
+      tracks: null,
+    });
+
+    const popularReciters = computed(() => data.reciters?.slice(0, POPULAR_ENTITIES_LIMIT));
+    const popularTracks = computed(() => data.tracks?.slice(0, POPULAR_ENTITIES_LIMIT));
+
     useFetch(async () => {
-      const [recitersResponse, tracksResponse] = await Promise.all([
+      const [reciters, tracks] = await Promise.all([
         $api.reciters.popular({
           pagination: { limit: 20 },
           include: [ReciterIncludes.related],
@@ -106,16 +116,12 @@ export default defineComponent({
         $axios.$get('v1/popular/tracks?per_page=20&include=reciter,lyrics,album.tracks,media,related'),
       ]);
 
-      reciters.value = recitersResponse.data;
-      tracks.value = tracksResponse.data;
+      data.reciters = reciters.data;
+      data.tracks = tracks.data;
     });
 
-    const popularReciters = computed(() => reciters.value?.slice(0, POPULAR_ENTITIES_LIMIT));
-    const popularTracks = computed(() => tracks.value?.slice(0, POPULAR_ENTITIES_LIMIT));
-
     return {
-      reciters,
-      tracks,
+      ...toRefs(data),
       popularReciters,
       popularTracks,
     };
