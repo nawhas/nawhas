@@ -19,7 +19,7 @@
     <v-container class="app__section">
       <div class="section__title section__title--with-actions">
         <div>All Reciters</div>
-        <v-btn icon @click="focusSearch">
+        <v-btn icon>
           <v-icon>search</v-icon>
         </v-btn>
       </div>
@@ -41,7 +41,6 @@
           circle
           next-icon="navigate_next"
           prev-icon="navigate_before"
-          @input="onPageChanged"
         />
       </div>
     </v-container>
@@ -49,74 +48,68 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent, ref, useContext, useFetch, useMeta, watch } from 'nuxt-composition-api';
 import ReciterCard from '@/components/ReciterCard.vue';
 import SkeletonCardGrid from '@/components/loaders/SkeletonCardGrid.vue';
-import { EventBus, Search } from '@/events';
-import { ReciterIncludes, RecitersIndexResponse } from '@/api/reciters';
-import '@/plugins/api';
+import { Reciter, ReciterIncludes } from '@/api/reciters';
 
-interface Data {
-  page: number;
-  reciters: Array<any> | null;
-  popularReciters: Array<any> | null;
-  length: number;
-}
+export default defineComponent({
+  head: {},
 
-export default Vue.extend({
   components: {
     ReciterCard,
     SkeletonCardGrid,
   },
 
-  async fetch() {
-    const [reciters, popular] = await Promise.all([
-      this.$api.reciters.index({
-        include: [ReciterIncludes.related],
-        pagination: { limit: 30, page: this.page },
-      }),
-      this.$api.reciters.popular({
-        include: [ReciterIncludes.related],
-        pagination: { limit: 6 },
-      }),
-    ]);
+  setup(_, { root }) {
+    const { $router } = root;
+    const { $api, query } = useContext();
+    useMeta({ title: 'Reciters' });
 
-    this.setReciters(reciters);
-    this.popularReciters = popular.data;
-  },
+    const reciters = ref<Array<Reciter> | null>(null);
+    const popularReciters = ref<Array<Reciter> | null>(null);
+    const page = ref<number>(Number(query.value.page || 1));
+    const length = ref<number>(1);
 
-  data (): Data {
-    const page = this.$route.query.page || 1;
+    const { fetch } = useFetch(async () => {
+      const promises: Array<Promise<any>> = [];
+
+      promises.push(
+        $api.reciters.index({
+          include: [ReciterIncludes.related],
+          pagination: { limit: 30, page: page.value },
+        }).then((response) => {
+          reciters.value = response.data;
+          length.value = response.meta.pagination.total_pages;
+        }),
+      );
+
+      if (popularReciters.value === null) {
+        promises.push(
+          $api.reciters.popular({
+            include: [ReciterIncludes.related],
+            pagination: { limit: 6 },
+          }).then((response) => {
+            popularReciters.value = response.data;
+          }),
+        );
+      }
+
+      await Promise.all(promises);
+    });
+
+    watch(page, () => {
+      $router.push({ query: { page: String(page.value) } });
+    });
+    watch(query, fetch);
 
     return {
-      page: Number(page),
-      length: 1,
-      reciters: null,
-      popularReciters: null,
+      // Data
+      reciters,
+      popularReciters,
+      page,
+      length,
     };
-  },
-
-  watch: {
-    '$route.query': '$fetch',
-  },
-
-  methods: {
-    setReciters(data: RecitersIndexResponse) {
-      this.reciters = data.data;
-      this.length = data.meta.pagination.total_pages;
-    },
-
-    focusSearch() {
-      this.$nextTick(() => EventBus.$emit(Search.TRIGGER));
-    },
-
-    onPageChanged(page) {
-      this.$router.push({ query: { page: String(page) } });
-    },
-  },
-
-  head: {
-    title: 'Reciters',
   },
 });
 </script>

@@ -67,7 +67,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'nuxt-property-decorator';
+import { computed, defineComponent, ref, useContext, useFetch } from 'nuxt-composition-api';
 import HeroBanner from '@/components/HeroBanner.vue';
 import HeroQuote from '@/components/HeroQuote.vue';
 import ReciterCard from '@/components/ReciterCard.vue';
@@ -75,10 +75,11 @@ import TrackCard from '@/components/tracks/TrackCard.vue';
 import SkeletonCardGrid from '@/components/loaders/SkeletonCardGrid.vue';
 import TrackCardSkeleton from '@/components/loaders/TrackCardSkeleton.vue';
 import TrackList from '@/components/tracks/TrackList.vue';
+import { Reciter, ReciterIncludes } from '@/api/reciters';
 
 const POPULAR_ENTITIES_LIMIT = 6;
 
-@Component({
+export default defineComponent({
   components: {
     TrackList,
     HeroBanner,
@@ -88,29 +89,38 @@ const POPULAR_ENTITIES_LIMIT = 6;
     SkeletonCardGrid,
     TrackCardSkeleton,
   },
-})
-export default class HomeView extends Vue {
-  private reciters: any = null;
-  private tracks: any = null;
 
-  get popularReciters() {
-    return this.reciters ? this.reciters.slice(0, POPULAR_ENTITIES_LIMIT) : null;
-  }
+  setup() {
+    const reciters = ref<Array<Reciter> | null>(null);
+    const tracks = ref<Array<any> | null>(null);
 
-  get popularTracks() {
-    return this.tracks ? this.tracks.slice(0, POPULAR_ENTITIES_LIMIT) : null;
-  }
+    const { $axios, $api } = useContext();
 
-  async fetch() {
-    const [reciters, tracks] = await Promise.all([
-      this.$axios.$get('v1/popular/reciters?per_page=20&include=related'),
-      this.$axios.$get('v1/popular/tracks?per_page=20&include=reciter,lyrics,album.tracks,media,related'),
-    ]);
+    useFetch(async () => {
+      const [recitersResponse, tracksResponse] = await Promise.all([
+        $api.reciters.popular({
+          pagination: { limit: 20 },
+          include: [ReciterIncludes.related],
+        }),
+        // TODO - replace with API usage
+        $axios.$get('v1/popular/tracks?per_page=20&include=reciter,lyrics,album.tracks,media,related'),
+      ]);
 
-    this.reciters = reciters.data;
-    this.tracks = tracks.data;
-  }
-}
+      reciters.value = recitersResponse.data;
+      tracks.value = tracksResponse.data;
+    });
+
+    const popularReciters = computed(() => reciters.value?.slice(0, POPULAR_ENTITIES_LIMIT));
+    const popularTracks = computed(() => tracks.value?.slice(0, POPULAR_ENTITIES_LIMIT));
+
+    return {
+      reciters,
+      tracks,
+      popularReciters,
+      popularTracks,
+    };
+  },
+});
 </script>
 
 <style lang="scss" scoped>
