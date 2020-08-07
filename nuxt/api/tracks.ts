@@ -4,6 +4,9 @@ import {
   TimestampedEntity,
   createParams,
   useIncludes,
+  PaginatedResponse,
+  usePagination,
+  PaginationOptions,
 } from '@/api/common';
 import { Reciter } from '@/api/reciters';
 import { Album } from '@/api/albums';
@@ -39,12 +42,13 @@ interface GetRequestOptions {
 }
 interface IndexRequestOptions {
   include?: Array<TrackIncludes>;
+  pagination?: PaginationOptions;
 }
 
 /*
  * Response Definitions
  */
-export interface TracksIndexResponse {}
+export interface TracksIndexResponse extends PaginatedResponse<Track> {}
 
 export class TracksApi {
   constructor(
@@ -61,6 +65,7 @@ export class TracksApi {
 
   async index(reciterId: string, albumId: string, options: IndexRequestOptions): Promise<TracksIndexResponse> {
     const params = createParams();
+    usePagination(params, options.pagination);
     useIncludes(params, options.include);
 
     return await this.axios.$get<TracksIndexResponse>(
