@@ -1,20 +1,27 @@
 <template>
   <v-sheet :class="classes">
     <div class="editor__header">
-      <div class="header__icon"><v-icon>speaker_notes</v-icon></div>
-      <div class="header__title">Write-Up</div>
+      <div class="header__icon">
+        <v-icon>speaker_notes</v-icon>
+      </div>
+      <div class="header__title">
+        Write-Up
+      </div>
       <div class="header__actions">
         <v-tooltip
-            v-for="action in actions" :key="action.icon"
-            :attach="true" top
-            open-delay="500"
+          v-for="action in actions"
+          :key="action.icon"
+          :attach="true"
+          top
+          open-delay="500"
         >
           <template #activator="{ on }">
             <v-btn
-                icon class="ml-1"
-                :disabled="!action.enabled"
-                v-on="on"
-                @click="action.handler"
+              icon
+              class="ml-1"
+              :disabled="!action.enabled"
+              v-on="on"
+              @click="action.handler"
             >
               <v-icon>{{ action.icon }}</v-icon>
             </v-btn>
@@ -23,41 +30,49 @@
         </v-tooltip>
       </div>
     </div>
-    <div class="editor__content px-4" v-if="jsonEditor">
+    <div v-if="jsonEditor" class="editor__content px-4">
       <v-textarea
-          auto-grow
-          v-model="json"
-          filled outlined
+        v-model="json"
+        auto-grow
+        filled
+        outlined
       />
     </div>
-    <div class="editor__content" v-else>
+    <div v-else class="editor__content">
       <div
-          :class="{ group: true, 'group--highlighted': playingGroup === groupId }"
-          v-for="(group, groupId) in lyrics.data"
-          :key="groupId"
+        v-for="(group, groupId) in lyrics.data"
+        :key="groupId"
+        :class="{ group: true, 'group--highlighted': playingGroup === groupId }"
       >
-        <div class="group__timestamp" v-if="lyrics.meta.timestamps">
+        <div v-if="lyrics.meta.timestamps" class="group__timestamp">
           <v-chip
-              small label outlined
-              v-if="group.type === GroupType.SPACER"
-          ><v-icon small>height</v-icon></v-chip>
-          <timestamp v-model="group.timestamp" @change="change" v-else />
+            v-if="group.type === GroupType.SPACER"
+            small
+            label
+            outlined
+          >
+            <v-icon small>
+              height
+            </v-icon>
+          </v-chip>
+          <timestamp v-else v-model="group.timestamp" @change="change" />
         </div>
         <div class="group__lines">
-          <div class="line" v-for="(line, lineId) in group.lines" :key="lineId">
-            <editable-text class="line__text"
-                           v-model="line.text"
-                           autocapitalize="off"
-                           autocomplete="off"
-                           aria-autocomplete="none"
-                           spellcheck="false"
-                           :ref="`group-${groupId}-line-${lineId}`"
-                           @keydown="onKeyDown($event, group, line, { group: groupId, line: lineId })"
-                           @focus="onFocus($event, group, line, { group: groupId, line: lineId })"
-                           @blur="onBlur($event, group, line, { group: groupId, line: lineId })"
-                           @input="change"
+          <div v-for="(line, lineId) in group.lines" :key="lineId" class="line">
+            <editable-text
+              :ref="`group-${groupId}-line-${lineId}`"
+              v-model="line.text"
+              class="line__text"
+              autocapitalize="off"
+              autocomplete="off"
+              aria-autocomplete="none"
+              spellcheck="false"
+              @keydown="onKeyDown($event, group, line, { group: groupId, line: lineId })"
+              @focus="onFocus($event, group, line, { group: groupId, line: lineId })"
+              @blur="onBlur($event, group, line, { group: groupId, line: lineId })"
+              @input="change"
             />
-            <div class="line__actions" v-if="group.type !== GroupType.SPACER">
+            <div v-if="group.type !== GroupType.SPACER" class="line__actions">
               <repeat-line v-model="line.repeat" @change="onRepeatChange" />
             </div>
           </div>
@@ -170,7 +185,7 @@ export default class TimestampedEditor extends Vue {
 
   get classes() {
     return {
-      editor: true,
+      'editor': true,
       'editor--dark': this.$vuetify.theme.dark,
       'editor--focused': this.focused,
       'editor--timestamped': this.lyrics.meta.timestamps,
@@ -332,7 +347,6 @@ export default class TimestampedEditor extends Vue {
     }
   }
 
-
   /**
    * When the user presses enter
    * Either add a new line
@@ -410,7 +424,7 @@ export default class TimestampedEditor extends Vue {
       return;
     }
 
-    if (e) e.preventDefault();
+    if (e) { e.preventDefault(); }
 
     // If the cursor is at the start of the line,
     // merge this line with the previous line.
@@ -592,7 +606,7 @@ export default class TimestampedEditor extends Vue {
         const input = this.getLineInput(coordinates);
         input.focus();
         if (typeof cursor !== 'undefined') {
-          const cursorPosition = (input.innerText.length < cursor) ? input.innerText.length : cursor;
+          const cursorPosition = (input.textContent.length < cursor) ? input.textContent.length : cursor;
           position(input, cursorPosition);
         }
       } catch (e) {
@@ -656,7 +670,6 @@ export default class TimestampedEditor extends Vue {
     border: 1px solid $primary !important;
   }
 }
-
 
 .editor--dark {
   border-color: #545454;

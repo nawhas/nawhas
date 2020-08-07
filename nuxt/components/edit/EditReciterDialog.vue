@@ -1,7 +1,9 @@
 <template>
   <v-dialog v-model="dialog" persistent max-width="600px">
     <template v-slot:activator="{ on }">
-      <v-btn dark text v-on="on">Edit</v-btn>
+      <v-btn dark text v-on="on">
+        Edit
+      </v-btn>
     </template>
     <v-card :loading="loading">
       <v-card-title>
@@ -9,29 +11,32 @@
       </v-card-title>
       <v-card-text class="py-4">
         <v-text-field
-          outlined
           v-model="form.name"
+          outlined
           label="Name"
           required
-        ></v-text-field>
+        />
         <v-textarea
+          v-model="form.description"
           outlined
           label="Description"
-          v-model="form.description"
-        ></v-textarea>
-        <v-file-input v-model="form.avatar"
-                      label="Avatar"
-                      placeholder="Upload an Avatar"
-                      prepend-icon="mdi-camera"
-                      outlined
-                      accept="image/*"
-                      :show-size="1000"
+        />
+        <v-file-input
+          v-model="form.avatar"
+          label="Avatar"
+          placeholder="Upload an Avatar"
+          prepend-icon="mdi-camera"
+          outlined
+          accept="image/*"
+          :show-size="1000"
         >
           <template v-slot:selection="{ index, text }">
             <v-chip
               v-if="index < 2"
               color="deep-orange accent-4"
-              dark label small
+              dark
+              label
+              small
             >
               {{ text }}
             </v-chip>
@@ -39,9 +44,13 @@
         </v-file-input>
       </v-card-text>
       <v-card-actions>
-        <v-spacer></v-spacer>
-        <v-btn text @click="close">Cancel</v-btn>
-        <v-btn color="primary" text @click="submit" :loading="loading">Save</v-btn>
+        <v-spacer />
+        <v-btn text @click="close">
+          Cancel
+        </v-btn>
+        <v-btn color="primary" text :loading="loading" @click="submit">
+          Save
+        </v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -75,6 +84,7 @@ export default class EditReciterDialog extends Vue {
       this.resetForm();
     }
   }
+
   resetForm() {
     const { name, description } = this.reciter;
     this.form = {
@@ -83,6 +93,7 @@ export default class EditReciterDialog extends Vue {
       description,
     };
   }
+
   async submit() {
     this.loading = true;
     const data: any = {};
@@ -108,6 +119,7 @@ export default class EditReciterDialog extends Vue {
     this.close();
     this.loading = false;
   }
+
   close() {
     this.dialog = false;
   }
