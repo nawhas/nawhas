@@ -1,6 +1,6 @@
 <template>
   <div class="about">
-    <hero-banner :background="require('../../assets/shrine.jpg')" class="mb-4">
+    <hero-banner :background="require('../static/about/shrine.jpg')" class="mb-4">
       <hero-quote author="Imam Al-Ridha (a.s.)">
         I desire that you recite for me poetry, for surely,
         these days are the days of grief and sorrow,
@@ -9,7 +9,9 @@
     </hero-banner>
 
     <v-container class="app__section">
-      <h5 class="section__title text-center mt-4 mb-8 display-1">The Journey</h5>
+      <h5 class="section__title text-center mt-4 mb-8 display-1">
+        The Journey
+      </h5>
       <v-timeline class="timeline" :dense="$vuetify.breakpoint.mdAndDown">
         <v-timeline-item
           v-for="({date, headline, text}, i) in timeline"
@@ -18,27 +20,35 @@
           small
         >
           <template v-slot:opposite>
-            <span class="headline font-weight-bold" v-text="date"></span>
+            <span class="headline font-weight-bold" v-text="date" />
           </template>
           <div class="py-4">
-            <span v-if="$vuetify.breakpoint.mdAndDown"
-                  class="headline font-weight-bold"
-                  v-text="date"></span>
-            <h2 class="headline font-weight-light mb-4">{{ headline }}</h2>
-            <div v-html="text"></div>
+            <span
+              v-if="$vuetify.breakpoint.mdAndDown"
+              class="headline font-weight-bold"
+              v-text="date"
+            />
+            <h2 class="headline font-weight-light mb-4">
+              {{ headline }}
+            </h2>
+            <div v-html="text" />
           </div>
         </v-timeline-item>
       </v-timeline>
     </v-container>
     <v-container class="app__section">
-      <h5 class="section__title text-center mt-4 mb-8 display-1">Credits</h5>
+      <h5 class="section__title text-center mt-4 mb-8 display-1">
+        Credits
+      </h5>
       <v-row>
-        <v-col cols="12" lg="4" v-for="(contributor, index) in contributors" :key="index">
+        <v-col v-for="(contributor, index) in contributors" :key="index" cols="12" lg="4">
           <v-card class="credit__card" outlined>
             <v-list-item>
               <v-list-item-avatar color="grey">
-                <img v-if="contributor.avatar" :src="contributor.avatar" :alt="contributor.name" />
-                <v-icon v-else color="white">person</v-icon>
+                <img v-if="contributor.avatar" :src="contributor.avatar" :alt="contributor.name">
+                <v-icon v-else color="white">
+                  person
+                </v-icon>
               </v-list-item-avatar>
               <v-list-item-content>
                 <v-list-item-title class="subtitle-1 font-weight-regular">
@@ -49,28 +59,33 @@
             </v-list-item>
             <v-card-text class="credit__card__text">
               <ul>
-                <li v-for="(item, index) in contributor.contributions" :key="index">
+                <li v-for="(item, contributorIndex) in contributor.contributions" :key="contributorIndex">
                   {{ item }}
                 </li>
               </ul>
             </v-card-text>
             <v-card-actions>
-              <v-btn v-for="(link, index) in contributor.links"
-                     text
-                     :href="link.href"
-                     target="_blank"
-                     :key="index"
+              <v-btn
+                v-for="(link, contributorLinksIndex) in contributor.links"
+                :key="contributorLinksIndex"
+                text
+                :href="link.href"
+                target="_blank"
               >
-                <v-icon left>{{ link.icon }}</v-icon> {{ link.text }}
+                <v-icon left>
+                  {{ link.icon }}
+                </v-icon> {{ link.text }}
               </v-btn>
             </v-card-actions>
           </v-card>
         </v-col>
       </v-row>
     </v-container>
-    <hero-banner :background="require('../../assets/azadari-sunset.jpg')" :opacity="0.76">
+    <hero-banner :background="require('../static/about/azadari-sunset.jpg')" :opacity="0.76">
       <v-container class="app__section app__section--dark app__section--padded">
-        <h5 class="section__title text-center mt-4 mb-8 display-1">Contribute</h5>
+        <h5 class="section__title text-center mt-4 mb-8 display-1">
+          Contribute
+        </h5>
         <div class="section__text">
           <p class="title text-center mb-8">
             We're hard at work on the next stages on Nawhas.com.
@@ -88,7 +103,9 @@
           </p>
           <div class="text-center mt-8">
             <v-btn large href="https://github.com/nawhas/nawhas" target="_blank">
-              <v-icon left>mdi-github</v-icon> Github
+              <v-icon left>
+                mdi-github
+              </v-icon> Github
             </v-btn>
           </div>
         </div>
@@ -98,7 +115,6 @@
 </template>
 
 <script lang="ts">
-/* eslint-disable global-require */
 import { Component, Vue } from 'vue-property-decorator';
 import HeroBanner from '@/components/HeroBanner.vue';
 import HeroQuote from '@/components/HeroQuote.vue';
@@ -164,7 +180,7 @@ export default class About extends Vue {
     return [
       {
         name: 'Shabbir & Abbas Tejani',
-        avatar: require('../../assets/credits/tejani-brothers.jpg'),
+        avatar: require('../static/about/credits/tejani-brothers.jpg'),
         caption: 'Creators of Nawhas.com',
         contributions: [
           'Created & maintained Nawhas.com for over 17 years',
@@ -176,7 +192,7 @@ export default class About extends Vue {
       },
       {
         name: 'Syed Zain Mehdi',
-        avatar: require('../../assets/credits/zain.jpg'),
+        avatar: require('../static/about/credits/zain.jpg'),
         caption: 'Software Engineer',
         contributions: [
           'Project lead for the new Nawhas.com',
@@ -189,7 +205,7 @@ export default class About extends Vue {
       },
       {
         name: 'Asif Ali',
-        avatar: require('../../assets/credits/asif.jpg'),
+        avatar: require('../static/about/credits/asif.jpg'),
         caption: 'Software Engineer',
         contributions: [
           'Devoted hundreds of hours of engineering work on the new Nawhas.com',
@@ -205,7 +221,7 @@ export default class About extends Vue {
 </script>
 
 <style lang="scss">
-@import "../../styles/theme";
+@import "../assets/theme";
 
 .about {
   blockquote.timeline__quote {
