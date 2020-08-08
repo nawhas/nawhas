@@ -59,7 +59,7 @@
             </v-list-item>
             <v-card-text class="credit__card__text">
               <ul>
-                <li v-for="(item, contributorIndex) in contributor.contributions" :key="contributorIndex">
+                <li v-for="(item, j) in contributor.contributions" :key="j">
                   {{ item }}
                 </li>
               </ul>
