@@ -104,7 +104,7 @@ export default {
   ** See https://axios.nuxtjs.org/options
   */
   axios: {
-    debug: true,
+    debug: false,
     credentials: true,
     headers: {
       common: {
@@ -160,5 +160,11 @@ export default {
   loading: {
     color: 'orangered',
     height: '3px',
+  },
+
+  router: {
+    middleware: [
+      'initialize',
+    ],
   },
 };
