@@ -20,7 +20,7 @@
       </div>
 
       <div class="album__edit">
-        <!--        <edit-album-dialog v-if="album && isModerator" :album="album" />-->
+        <edit-album-dialog v-if="album && isModerator" :album="album" />
       </div>
 
       <div class="album__actions">
@@ -115,7 +115,7 @@
       </template>
     </v-data-table>
     <v-card-actions v-if="album && isModerator" class="d-flex justify-end album__actions">
-      <!--      <edit-track-dialog :album="album" />-->
+      <edit-track-dialog :album="album" />
     </v-card-actions>
   </v-card>
 </template>
@@ -128,13 +128,13 @@ import { Reciter } from '@/api/reciters';
 import { Track } from '@/api/tracks';
 import { RawLocation } from 'vue-router';
 import { DataTableHeader } from 'vuetify';
-// import EditAlbumDialog from '@/components/edit/EditAlbumDialog.vue';
-// import EditTrackDialog from '@/components/edit/EditTrackDialog.vue';
+import EditTrackDialog from '@/components/edit/EditTrackDialog.vue';
+import EditAlbumDialog from '@/components/edit/EditAlbumDialog.vue';
 
 @Component({
   components: {
-    // EditAlbumDialog,
-    // EditTrackDialog,
+    EditAlbumDialog,
+    EditTrackDialog,
   },
 })
 export default class AlbumComponent extends Vue {

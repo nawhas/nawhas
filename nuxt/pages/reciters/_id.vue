@@ -38,7 +38,7 @@
             </v-btn>
           </div>
           <div class="bar__actions bar__actions--overflow">
-            <!--            <edit-reciter-dialog v-if="reciter && isModerator" :reciter="reciter" />-->
+            <edit-reciter-dialog v-if="reciter && isModerator" :reciter="reciter" />
             <v-btn dark icon>
               <v-icon>more_vert</v-icon>
             </v-btn>
@@ -67,7 +67,7 @@
     <v-container class="app__section">
       <h5 class="section__title section__title--with-actions">
         <span class="d-block">Albums</span>
-        <!--        <edit-album-dialog v-if="reciter && isModerator" :reciter="reciter" />-->
+        <edit-album-dialog v-if="reciter && isModerator" :reciter="reciter" />
       </h5>
       <template v-if="albums">
         <template v-if="albums.length > 0">
@@ -108,8 +108,8 @@ import { Reciter } from '@/api/reciters';
 import { MetaInfo } from 'vue-meta';
 import Album from '@/components/albums/Album.vue';
 import { TrackIncludes } from '@/api/tracks';
-// import EditReciterDialog from '@/components/edit/EditReciterDialog.vue';
-// import EditAlbumDialog from '@/components/edit/EditAlbumDialog.vue';
+import EditReciterDialog from '@/components/edit/EditReciterDialog.vue';
+import EditAlbumDialog from '@/components/edit/EditAlbumDialog.vue';
 
 interface Data {
   page: number;
@@ -127,8 +127,8 @@ export default Vue.extend({
     SkeletonCardGrid,
     TrackCardSkeleton,
     AlbumSkeleton,
-    // EditReciterDialog,
-    // EditAlbumDialog,
+    EditReciterDialog,
+    EditAlbumDialog,
   },
 
   async fetch() {

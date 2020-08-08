@@ -1,7 +1,9 @@
 <template>
   <v-dialog v-model="dialog" persistent max-width="600px">
     <template v-slot:activator="{ on }">
-      <v-btn dark text v-on="on">Edit</v-btn>
+      <v-btn text dark v-on="on">
+        Edit
+      </v-btn>
     </template>
     <v-card :loading="loading">
       <v-card-title>
@@ -9,29 +11,32 @@
       </v-card-title>
       <v-card-text class="py-4">
         <v-text-field
-          outlined
           v-model="form.name"
+          outlined
           label="Name"
           required
-        ></v-text-field>
+        />
         <v-textarea
+          v-model="form.description"
           outlined
           label="Description"
-          v-model="form.description"
-        ></v-textarea>
-        <v-file-input v-model="form.avatar"
-                      label="Avatar"
-                      placeholder="Upload an Avatar"
-                      prepend-icon="mdi-camera"
-                      outlined
-                      accept="image/*"
-                      :show-size="1000"
+        />
+        <v-file-input
+          v-model="form.avatar"
+          label="Avatar"
+          placeholder="Upload an Avatar"
+          prepend-icon="mdi-camera"
+          outlined
+          accept="image/*"
+          :show-size="1000"
         >
           <template v-slot:selection="{ index, text }">
             <v-chip
               v-if="index < 2"
               color="deep-orange accent-4"
-              dark label small
+              dark
+              label
+              small
             >
               {{ text }}
             </v-chip>
@@ -39,24 +44,27 @@
         </v-file-input>
       </v-card-text>
       <v-card-actions>
-        <v-spacer></v-spacer>
-        <v-btn text @click="close">Cancel</v-btn>
-        <v-btn color="primary" text @click="submit" :loading="loading">Save</v-btn>
+        <v-spacer />
+        <v-btn text @click="close">
+          Cancel
+        </v-btn>
+        <v-btn color="primary" text :loading="loading" @click="submit">
+          Save
+        </v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
 </template>
 
 <script lang="ts">
-import Client from '@/services/client';
 import {
   Component, Prop, Watch, Vue,
-} from 'vue-property-decorator';
+} from 'nuxt-property-decorator';
 
 interface Form {
   name: string|null;
   description: string|null;
-  avatar: string|Blob|null;
+  avatar: File|null;
 }
 const defaults: Form = {
   name: null,
@@ -75,6 +83,7 @@ export default class EditReciterDialog extends Vue {
       this.resetForm();
     }
   }
+
   resetForm() {
     const { name, description } = this.reciter;
     this.form = {
@@ -83,6 +92,7 @@ export default class EditReciterDialog extends Vue {
       description,
     };
   }
+
   async submit() {
     this.loading = true;
     const data: any = {};
@@ -92,22 +102,17 @@ export default class EditReciterDialog extends Vue {
     if (this.reciter.description !== this.form.description && this.form.description) {
       data.description = this.form.description;
     }
-    const response = await Client.patch(`/v1/reciters/${this.reciter.id}`, data);
-    const { slug } = response.data;
+    const response = await this.$api.reciters.update(this.reciter.id, data);
+    const { slug } = response;
     if (this.form.avatar) {
-      const imageFormData = new FormData();
-      imageFormData.append('avatar', this.form.avatar);
-      await Client.post(
-        `/v1/reciters/${this.reciter.id}/avatar`,
-        imageFormData,
-        { headers: { 'Content-Type': 'multipart/form-data' } },
-      );
+      await this.$api.reciters.changeAvatar(slug, this.form.avatar);
     }
     this.$router.replace({ name: 'reciters.show', params: { reciter: slug } })
       .catch(() => window.location.reload());
     this.close();
     this.loading = false;
   }
+
   close() {
     this.dialog = false;
   }

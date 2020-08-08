@@ -10,6 +10,18 @@
         </hero-quote>
       </hero-banner>
 
+      <div style="background-color: black">
+        <edit-reciter-dialog :reciter="reciter" />
+      </div>
+
+      <div style="background-color: red">
+        <edit-album-dialog :album="albums[0]" :reciter="reciter" />
+      </div>
+
+      <div style="background-color: black">
+        <edit-track-dialog :track="track" :album="albums[0]" />
+      </div>
+
       <h3>Entity Cards</h3>
       <v-row>
         <v-col cols="4">
@@ -63,6 +75,9 @@
 <script>
 import HeroBanner from '@/components/HeroBanner';
 import HeroQuote from '@/components/HeroQuote';
+import EditReciterDialog from '@/components/edit/EditReciterDialog';
+import EditAlbumDialog from '@/components/edit/EditAlbumDialog';
+import EditTrackDialog from '@/components/edit/EditTrackDialog';
 import ReciterCard from '@/components/ReciterCard';
 import TrackCard from '@/components/tracks/TrackCard';
 import AlbumSkeleton from '@/components/loaders/AlbumSkeleton';
@@ -77,11 +92,15 @@ import BugReportForm from '@/components/BugReportForm';
 import Toaster from '@/components/utils/Toaster';
 import LoginForm from '@/components/auth/LoginForm';
 import RegisterForm from '@/components/auth/RegisterForm';
+import { AlbumIncludes } from '@/api/albums';
 
 export default {
   components: {
     HeroBanner,
     HeroQuote,
+    EditReciterDialog,
+    EditAlbumDialog,
+    EditTrackDialog,
     ReciterCard,
     TrackCard,
     AlbumSkeleton,
@@ -99,11 +118,19 @@ export default {
   },
 
   async fetch() {
-    const mountains = await fetch(
-      'https://api.nuxtjs.dev/mountains',
-    ).then((res) => res.json());
-
-    this.title = mountains[0].title;
+    const reciter = await this.$api.reciters.get('4105f6a8-5407-11ea-922c-6eb465563d0f', {});
+    const [albums] = await Promise.all([
+      this.$api.albums.index(reciter.id, {
+        include: [
+          AlbumIncludes.Reciter,
+          AlbumIncludes.Related,
+          AlbumIncludes.Tracks,
+        ],
+      }),
+    ]);
+    this.title = reciter.name;
+    this.reciter = reciter;
+    this.albums = albums.data;
   },
 
   data: () => ({
@@ -117,6 +144,7 @@ export default {
         albums: 2,
       },
     },
+    albums: [],
     track: {
       title: 'Testing Track',
       slug: 'testing-track',

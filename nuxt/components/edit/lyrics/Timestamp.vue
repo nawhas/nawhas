@@ -1,28 +1,32 @@
 <template>
   <div>
     <v-menu
-        :close-on-content-click="false"
-        :attach="true"
-        v-model="menu"
-        transition="slide-x-transition"
-        nudge-left="12"
-        nudge-top="12"
+      v-model="menu"
+      :close-on-content-click="false"
+      :attach="true"
+      transition="slide-x-transition"
+      nudge-left="12"
+      nudge-top="12"
     >
       <template v-slot:activator="{ on }">
-        <div class="timestamp" v-on="on">{{ format(model) }}</div>
+        <div class="timestamp" v-on="on">
+          {{ format(model) }}
+        </div>
       </template>
       <v-sheet class="popup">
         <input
-            :class="{ 'popup__text': true, 'popup__text--invalid': invalid }"
-            :style="{ width: `${timestamp.length}ch` }"
-            type="tel"
-            autofocus="autofocus"
-            placeholder="0:00"
-            autocomplete="off"
-            @keyup.enter="save"
-            v-model="timestamp"
-        />
-        <v-btn @click="setTimeFromPlayer" icon><v-icon>update</v-icon></v-btn>
+          v-model="timestamp"
+          :class="{ 'popup__text': true, 'popup__text--invalid': invalid }"
+          :style="{ width: `${timestamp.length}ch` }"
+          type="tel"
+          autofocus="autofocus"
+          placeholder="0:00"
+          autocomplete="off"
+          @keyup.enter="save"
+        >
+        <v-btn icon @click="setTimeFromPlayer">
+          <v-icon>update</v-icon>
+        </v-btn>
       </v-sheet>
     </v-menu>
   </div>
@@ -32,7 +36,7 @@
 import {
   Component, Model, Watch, Vue,
 } from 'vue-property-decorator';
-import * as moment from 'moment';
+import moment from 'moment';
 
 const rule = /^\d:\d\d$/;
 
