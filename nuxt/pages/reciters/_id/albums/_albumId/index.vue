@@ -18,7 +18,7 @@
             <template v-if="reciter && album">
               <router-link
                 class="meta__line"
-                :to="{ name: 'reciters.show', params: { reciter: reciter.slug } }"
+                :to="`/reciters/${reciter.slug}`"
                 exact
               >
                 <span class="meta__line__text">
