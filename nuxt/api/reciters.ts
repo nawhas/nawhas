@@ -91,7 +91,7 @@ export class RecitersApi {
     return await this.axios.$patch<Reciter>(`v1/reciters/${id}`, payload);
   }
 
-  async changeAvatar(id: string, avatar: File): Promise<Reciter> {
+  async changeAvatar(id: string, avatar: string|Blob): Promise<Reciter> {
     const formData = new FormData();
     formData.append('avatar', avatar);
 

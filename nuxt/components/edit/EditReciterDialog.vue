@@ -57,10 +57,9 @@
 </template>
 
 <script lang="ts">
-import Client from '@/services/client';
 import {
   Component, Prop, Watch, Vue,
-} from 'vue-property-decorator';
+} from 'nuxt-property-decorator';
 
 interface Form {
   name: string|null;
@@ -103,20 +102,17 @@ export default class EditReciterDialog extends Vue {
     if (this.reciter.description !== this.form.description && this.form.description) {
       data.description = this.form.description;
     }
-    const response = await Client.patch(`/v1/reciters/${this.reciter.id}`, data);
-    const { slug } = response.data;
-    console.log(slug);
-    // if (this.form.avatar) {
-    //   const imageFormData = new FormData();
-    //   imageFormData.append('avatar', this.form.avatar);
-    //   await Client.post(
-    //     `/v1/reciters/${this.reciter.id}/avatar`,
-    //     imageFormData,
-    //     { headers: { 'Content-Type': 'multipart/form-data' } },
-    //   );
-    // }
-    // this.$router.replace({ name: 'reciters.show', params: { reciter: slug } })
-    //   .catch(() => window.location.reload());
+    const [response] = await Promise.all([
+      this.$api.reciters.update(this.reciter.id, data),
+    ]);
+    const { slug } = response;
+    if (this.form.avatar) {
+      await Promise.all([
+        this.$api.reciters.changeAvatar(slug, this.form.avatar),
+      ]);
+    }
+    this.$router.replace({ name: 'reciters.show', params: { reciter: slug } })
+      .catch(() => window.location.reload());
     this.close();
     this.loading = false;
   }
