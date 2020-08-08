@@ -60,6 +60,20 @@ export interface Track extends PersistedEntity, TimestampedEntity {
 }
 
 /*
+ * Request Payloads
+ */
+export interface StoreTrackPayload {
+  title: string;
+  lyrics: string;
+  format?: LyricsDocumentFormat;
+}
+export interface UpdateTrackPayload {
+  title?: string;
+  lyrics?: string;
+  format?: LyricsDocumentFormat;
+}
+
+/*
  * These are the available options for 'include'.
  */
 export enum TrackIncludes {
@@ -74,10 +88,10 @@ export enum TrackIncludes {
  * Request Options
  */
 interface GetRequestOptions {
-  include?: Array<TrackIncludes>;
+  include?: Array<TrackIncludes|string>;
 }
 interface IndexRequestOptions {
-  include?: Array<TrackIncludes>;
+  include?: Array<TrackIncludes|string>;
   pagination?: PaginationOptions;
 }
 
@@ -90,16 +104,6 @@ export class TracksApi {
   constructor(
     private axios: NuxtAxiosInstance,
   ) {}
-
-  async get(reciterId: string, albumId: string, trackId: string, options: GetRequestOptions = {}): Promise<Track> {
-    const params = createParams();
-    useIncludes(params, options.include);
-
-    return await this.axios.$get<Track>(
-      `v1/reciters/${reciterId}/albums/${albumId}/tracks/${trackId}`,
-      { params },
-    );
-  }
 
   async index(reciterId: string, albumId: string, options: IndexRequestOptions = {}): Promise<TracksIndexResponse> {
     const params = createParams();
@@ -121,4 +125,77 @@ export class TracksApi {
       { params },
     );
   }
+
+  async get(reciterId: string, albumId: string, trackId: string, options: GetRequestOptions = {}): Promise<Track> {
+    const params = createParams();
+    useIncludes(params, options.include);
+
+    return await this.axios.$get<Track>(
+      `v1/reciters/${reciterId}/albums/${albumId}/tracks/${trackId}`,
+      { params },
+    );
+  }
+
+  async store(reciterId: string, albumId: string, payload: StoreTrackPayload): Promise<Track> {
+    return await this.axios.$post<Track>(`v1/reciters/${reciterId}/albums/${albumId}/tracks`, payload);
+  }
+
+  async update(reciterId: string, albumId: string, trackId: string, payload: UpdateTrackPayload): Promise<Track> {
+    return await this.axios.$patch<Track>(
+      `v1/reciters/${reciterId}/albums/${albumId}/tracks/${trackId}`,
+      payload,
+    );
+  }
+
+  async changeAudio(reciterId: string, albumId: string, trackId: string, audio: File): Promise<Track> {
+    const formData = new FormData();
+    formData.append('audio', audio);
+
+    return await this.axios.$post<Track>(
+      `v1/reciters/${reciterId}/albums/${albumId}/tracks/${trackId}/media/audio`,
+      formData,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      },
+    );
+  }
+
+  async delete(reciterId: string, albumId: string, trackId: string): Promise<void> {
+    await this.axios.delete(`v1/reciters/${reciterId}/albums/${albumId}/tracks/${trackId}`);
+  }
 }
+
+/* TODO - model includes better
+const includes: TrackIncludes = {
+  reciter: {
+    related: true,
+  },
+  album: {
+    related: true,
+    tracks: {
+      lyrics: true,
+      media: true,
+    },
+  },
+};
+
+interface ReciterIncludes {
+  related?: boolean;
+}
+
+interface AlbumIncludes {
+  related?: boolean;
+  reciter?: ReciterIncludes;
+  tracks?: boolean | TrackIncludes;
+}
+
+interface TrackIncludes {
+  lyrics?: boolean;
+  media?: boolean;
+  reciter?: boolean | ReciterIncludes;
+  album?: boolean | AlbumIncludes;
+  related?: boolean;
+}
+*/

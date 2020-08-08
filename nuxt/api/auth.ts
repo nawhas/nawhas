@@ -39,14 +39,14 @@ export class AuthApi {
   }
 
   async register(payload: RegisterPayload): Promise<User> {
-    return await this.axios.$post<User>('/v1/auth/register', payload);
+    return await this.axios.$post<User>('v1/auth/register', payload);
   }
 
   async user(): Promise<User> {
-    return await this.axios.$get<User>('/v1/auth/user');
+    return await this.axios.$get<User>('v1/auth/user');
   };
 
   async logout(): Promise<void> {
-    await this.axios.$post('/v1/auth/logout');
+    await this.axios.$post('v1/auth/logout');
   }
 }
