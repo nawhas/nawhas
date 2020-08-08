@@ -10,7 +10,9 @@
         </hero-quote>
       </hero-banner>
 
-      <edit-reciter-dialog :reciter="reciter" />
+      <div style="background-color: black">
+        <edit-reciter-dialog :reciter="reciter" />
+      </div>
 
       <h3>Entity Cards</h3>
       <v-row>
@@ -103,11 +105,9 @@ export default {
   },
 
   async fetch() {
-    const mountains = await fetch(
-      'https://api.nuxtjs.dev/mountains',
-    ).then((res) => res.json());
-
-    this.title = mountains[0].title;
+    const reciter = await this.$api.reciters.get('4105f6a8-5407-11ea-922c-6eb465563d0f');
+    this.title = reciter.name;
+    this.reciter = reciter;
   },
 
   data: () => ({
