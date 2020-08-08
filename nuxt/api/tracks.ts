@@ -150,7 +150,7 @@ export class TracksApi {
     return await this.axios.$patch<Track>(
       `v1/reciters/${reciterId}/albums/${albumId}/tracks/${trackId}`,
       payload,
-      { params }
+      { params },
     );
   }
 
@@ -168,7 +168,7 @@ export class TracksApi {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
-        params
+        params,
       },
     );
   }

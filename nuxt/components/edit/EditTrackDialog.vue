@@ -226,9 +226,9 @@ export default class EditTrackDialog extends Vue {
             TrackIncludes.Reciter,
             TrackIncludes.Lyrics,
             TrackIncludes.Media,
-            'album.tracks'
+            'album.tracks',
           ],
-        }
+        },
       ),
     ]);
     response = await this.uploadAudio(reciterId, albumId, response.id) || response;
@@ -258,36 +258,39 @@ export default class EditTrackDialog extends Vue {
             TrackIncludes.Reciter,
             TrackIncludes.Lyrics,
             TrackIncludes.Media,
-            'album.tracks'
+            'album.tracks',
           ],
-        }
+        },
       ),
     ]);
-    response = await this.uploadAudio(reciterId, albumId, id) || response;
+    if (this.form.audio) {
+      response = await this.uploadAudio(reciterId, albumId, id) || response;
+    }
     this.redirect(response);
   }
 
   async uploadAudio(reciterId, albumId, trackId) {
-    if (this.form.audio) {
-      const [response] = await Promise.all([
-        this.$api.tracks.changeAudio(
-          reciterId,
-          albumId,
-          trackId,
-          this.form.audio,
-          {
-            include: [
-              TrackIncludes.Reciter,
-              TrackIncludes.Lyrics,
-              TrackIncludes.Media,
-              'album.tracks'
-            ],
-          }
-        ),
-      ]);
-      return response;
+    if (!this.form.audio) {
+      return false;
     }
-    return null;
+
+    const [response] = await Promise.all([
+      this.$api.tracks.changeAudio(
+        reciterId,
+        albumId,
+        trackId,
+        this.form.audio,
+        {
+          include: [
+            TrackIncludes.Reciter,
+            TrackIncludes.Lyrics,
+            TrackIncludes.Media,
+            'album.tracks',
+          ],
+        },
+      ),
+    ]);
+    return response;
   }
 
   redirect(response) {

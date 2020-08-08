@@ -657,7 +657,7 @@ export default class TimestampedEditor extends Vue {
 </script>
 
 <style lang="scss" scoped>
-@import "../../../styles/theme";
+@import "@/assets/theme";
 
 .editor {
   border: 1px solid rgba(0,0,0,0.3);

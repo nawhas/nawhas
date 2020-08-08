@@ -144,7 +144,7 @@ export default class EditAlbumDialog extends Vue {
     const data: any = {};
     data.title = this.form.title;
     data.year = this.form.year;
-    const response = await Promise.all([
+    const [response] = await Promise.all([
       this.$api.albums.store(this.reciter.id, data),
     ]);
     await this.uploadArtwork(this.reciter.id, response.id);

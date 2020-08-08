@@ -14,6 +14,14 @@
         <edit-reciter-dialog :reciter="reciter" />
       </div>
 
+      <div style="background-color: black">
+        <edit-album-dialog :reciter="reciter" />
+      </div>
+
+      <div style="background-color: black">
+        <edit-track-dialog :reciter="reciter" />
+      </div>
+
       <h3>Entity Cards</h3>
       <v-row>
         <v-col cols="4">
@@ -68,6 +76,8 @@
 import HeroBanner from '@/components/HeroBanner';
 import HeroQuote from '@/components/HeroQuote';
 import EditReciterDialog from '@/components/edit/EditReciterDialog';
+import EditAlbumDialog from '@/components/edit/EditAlbumDialog';
+import EditTrackDialog from '@/components/edit/EditTrackDialog';
 import ReciterCard from '@/components/ReciterCard';
 import TrackCard from '@/components/tracks/TrackCard';
 import AlbumSkeleton from '@/components/loaders/AlbumSkeleton';
@@ -88,6 +98,8 @@ export default {
     HeroBanner,
     HeroQuote,
     EditReciterDialog,
+    EditAlbumDialog,
+    EditTrackDialog,
     ReciterCard,
     TrackCard,
     AlbumSkeleton,
