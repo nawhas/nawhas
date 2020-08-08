@@ -108,7 +108,7 @@ import TrackCardSkeleton from '@/components/loaders/TrackCardSkeleton.vue';
 import HeroBanner from '@/components/HeroBanner.vue';
 import { Reciter } from '@/api/reciters';
 import { MetaInfo } from 'vue-meta';
-import '@/plugins/api';
+import { TrackIncludes } from '~/api/tracks';
 // import EditReciterDialog from '@/components/edit/EditReciterDialog.vue';
 // import EditAlbumDialog from '@/components/edit/EditAlbumDialog.vue';
 // import Album from '@/components/Album.vue';
@@ -137,9 +137,15 @@ export default Vue.extend({
     const { id } = this.$route.params;
     const [reciter, tracks, albums] = await Promise.all([
       this.$api.reciters.get(id),
-      // TODO - convert to API requests
-      this.$axios.$get(`v1/popular/tracks?per_page=6&reciterId=${id}&include=album,reciter`),
-      this.$axios.$get(`v1/reciters/${id}/albums?page=${this.page}&include=tracks.media,tracks.reciter,tracks.album,tracks.related`),
+      this.$api.tracks.popular({
+        pagination: { limit: 6 },
+        reciterId: id,
+        include: [TrackIncludes.Album, TrackIncludes.Reciter],
+      }),
+      this.$api.albums.index(id, {
+        pagination: { page: this.page },
+        include: ['tracks.media', 'tracks.reciter', 'tracks.album', 'tracks.related'],
+      }),
     ]);
 
     this.reciter = reciter;
