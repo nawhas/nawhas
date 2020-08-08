@@ -94,6 +94,9 @@ interface IndexRequestOptions {
   include?: Array<TrackIncludes|string>;
   pagination?: PaginationOptions;
 }
+interface PopularRequestOptions extends IndexRequestOptions {
+  reciterId?: string;
+}
 
 /*
  * Response Definitions
@@ -116,9 +119,10 @@ export class TracksApi {
     );
   }
 
-  async popular(options: IndexRequestOptions = {}): Promise<TracksIndexResponse> {
+  async popular(options: PopularRequestOptions = {}): Promise<TracksIndexResponse> {
     const params = createParams();
     useIncludes(params, options.include);
+    usePagination(params, options.pagination);
 
     return await this.axios.$get<TracksIndexResponse>(
       'v1/popular/tracks',

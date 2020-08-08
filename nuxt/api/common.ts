@@ -8,7 +8,7 @@ export interface PersistedEntity {
 }
 
 export interface PaginationOptions {
-  limit: number;
+  limit?: number;
   page?: number;
 }
 
