@@ -66,8 +66,8 @@
             </v-card-text>
             <v-card-actions>
               <v-btn
-                v-for="(link, contributorLinksIndex) in contributor.links"
-                :key="contributorLinksIndex"
+                v-for="(link, k) in contributor.links"
+                :key="k"
                 text
                 :href="link.href"
                 target="_blank"
