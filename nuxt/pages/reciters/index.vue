@@ -61,7 +61,7 @@ import {
 import ReciterCard from '@/components/ReciterCard.vue';
 import SkeletonCardGrid from '@/components/loaders/SkeletonCardGrid.vue';
 import { Reciter, ReciterIncludes } from '@/api/reciters';
-import useRouter from '~/use/router';
+import useRouter from '@/use/router';
 
 export default defineComponent({
   head: {},

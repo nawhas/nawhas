@@ -1,4 +1,4 @@
-import { InjectedApiPlugin } from '~/plugins/api';
+import { InjectedApiPlugin } from '@/plugins/api';
 
 declare module 'vue/types/vue' {
   interface Vue {
