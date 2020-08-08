@@ -88,7 +88,7 @@ export default defineComponent({
 
       promises.push(
         $api.reciters.index({
-          include: [ReciterIncludes.related],
+          include: [ReciterIncludes.Related],
           pagination: { limit: 30, page: data.page },
         }).then((response) => {
           data.reciters = response.data;
@@ -99,7 +99,7 @@ export default defineComponent({
       if (data.popularReciters === null) {
         promises.push(
           $api.reciters.popular({
-            include: [ReciterIncludes.related],
+            include: [ReciterIncludes.Related],
             pagination: { limit: 6 },
           }).then((response) => {
             data.popularReciters = response.data;
