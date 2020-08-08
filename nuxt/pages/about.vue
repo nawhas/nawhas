@@ -81,7 +81,7 @@
         </v-col>
       </v-row>
     </v-container>
-    <hero-banner :background="require('../static/about/azadari-sunset.jpg')" :opacity="0.76">
+    <hero-banner background="/backgrounds/azadari-sunset.jpg" :opacity="0.76">
       <v-container class="app__section app__section--dark app__section--padded">
         <h5 class="section__title text-center mt-4 mb-8 display-1">
           Contribute
