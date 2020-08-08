@@ -87,14 +87,13 @@ export enum TrackIncludes {
 /*
  * Request Options
  */
-interface RequestOptions {
+export interface RequestOptions {
   include?: Array<TrackIncludes|string>;
 }
-interface IndexRequestOptions {
-  include?: Array<TrackIncludes|string>;
+export interface IndexRequestOptions extends RequestOptions {
   pagination?: PaginationOptions;
 }
-interface PopularRequestOptions extends IndexRequestOptions {
+export interface PopularRequestOptions extends IndexRequestOptions {
   reciterId?: string;
 }
 
