@@ -19,6 +19,7 @@ export interface Track extends PersistedEntity, TimestampedEntity {
   albumId: string;
   title: string;
   slug: string;
+  year: string;
   reciter?: Reciter;
   album?: Album;
   audio?: string;
