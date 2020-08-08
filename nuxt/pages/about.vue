@@ -221,7 +221,7 @@ export default class About extends Vue {
 </script>
 
 <style lang="scss">
-@import "~assets/theme";
+@import "~/assets/theme";
 
 .about {
   blockquote.timeline__quote {
