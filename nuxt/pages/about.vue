@@ -41,7 +41,7 @@
         Credits
       </h5>
       <v-row>
-        <v-col v-for="(contributor, index) in contributors" :key="index" cols="12" lg="4">
+        <v-col v-for="(contributor, i) in contributors" :key="i" cols="12" lg="4">
           <v-card class="credit__card" outlined>
             <v-list-item>
               <v-list-item-avatar color="grey">
