@@ -192,7 +192,7 @@ export default class About extends Vue {
       },
       {
         name: 'Syed Zain Mehdi',
-        avatar: require('../static/about/credits/zain.jpg'),
+        avatar: '/about/credits/zain.jpg',
         caption: 'Software Engineer',
         contributions: [
           'Project lead for the new Nawhas.com',
