@@ -72,13 +72,11 @@
       <template v-if="albums">
         <template v-if="albums.length > 0">
           <template v-for="album in albums">
-            <div :key="album.id">
-              {{ album.title }} - {{ album.year }}
-            </div>
-            <!--            <album :key="album.id" :album="album" :reciter="reciter" :show-reciter="false" />-->
+            <album :key="album.id" :album="album" :reciter="reciter" :show-reciter="false" />
           </template>
           <v-pagination
             v-model="page"
+            class="album__pagination"
             color="deep-orange"
             :length="length"
             circle
@@ -108,10 +106,10 @@ import TrackCardSkeleton from '@/components/loaders/TrackCardSkeleton.vue';
 import HeroBanner from '@/components/HeroBanner.vue';
 import { Reciter } from '@/api/reciters';
 import { MetaInfo } from 'vue-meta';
-import { TrackIncludes } from '~/api/tracks';
+import Album from '@/components/albums/Album.vue';
+import { TrackIncludes } from '@/api/tracks';
 // import EditReciterDialog from '@/components/edit/EditReciterDialog.vue';
 // import EditAlbumDialog from '@/components/edit/EditAlbumDialog.vue';
-// import Album from '@/components/Album.vue';
 
 interface Data {
   page: number;
@@ -125,7 +123,7 @@ export default Vue.extend({
   components: {
     HeroBanner,
     TrackCard,
-    // Album,
+    Album,
     SkeletonCardGrid,
     TrackCardSkeleton,
     AlbumSkeleton,
@@ -261,6 +259,10 @@ export default Vue.extend({
       justify-content: space-between;
     }
   }
+}
+
+.album__pagination {
+  margin-top: 36px;
 }
 
 @media #{map-get($display-breakpoints, 'md-and-down')} {

@@ -18,7 +18,7 @@ import { Track } from '@/api/tracks';
 export interface Album extends PersistedEntity, TimestampedEntity {
   title: string;
   year: string;
-  artwork: string;
+  artwork: string | null;
   reciterId: string;
   reciter?: Reciter;
   tracks?: EntityCollection<Track>;
