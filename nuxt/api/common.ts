@@ -1,5 +1,3 @@
-import { Reciter } from '~/api/reciters';
-
 export interface TimestampedEntity {
   createdAt: string;
   updatedAt: string;
@@ -35,8 +33,11 @@ export interface ResponseMetadata {
   pagination: PaginationMetadata;
 }
 
-export interface PaginatedResponse<T> {
-  data: Array<T>
+export interface EntityCollection<T> {
+  data: Array<T>;
+}
+
+export interface PaginatedResponse<T> extends EntityCollection<T> {
   meta: ResponseMetadata;
 }
 

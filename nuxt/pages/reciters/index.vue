@@ -53,12 +53,12 @@ import Vue from 'vue';
 import ReciterCard from '@/components/ReciterCard.vue';
 import SkeletonCardGrid from '@/components/loaders/SkeletonCardGrid.vue';
 import { EventBus, Search } from '@/events';
-import { ReciterIncludes, RecitersIndexResponse } from '@/api/reciters';
+import { Reciter, ReciterIncludes, RecitersIndexResponse } from '@/api/reciters';
 import '@/plugins/api';
 
 interface Data {
   page: number;
-  reciters: Array<any> | null;
+  reciters: Array<Reciter> | null;
   popularReciters: Array<any> | null;
   length: number;
 }
@@ -72,11 +72,11 @@ export default Vue.extend({
   async fetch() {
     const [reciters, popular] = await Promise.all([
       this.$api.reciters.index({
-        include: [ReciterIncludes.related],
+        include: [ReciterIncludes.Related],
         pagination: { limit: 30, page: this.page },
       }),
       this.$api.reciters.popular({
-        include: [ReciterIncludes.related],
+        include: [ReciterIncludes.Related],
         pagination: { limit: 6 },
       }),
     ]);
