@@ -16,22 +16,24 @@ import { Album } from '@/api/albums';
  */
 export interface Track extends PersistedEntity, TimestampedEntity {
   reciterId: string;
-  reciter?: Reciter;
   albumId: string;
-  album?: Album;
   title: string;
   slug: string;
-  audio: string;
-  lyrics: string;
+  reciter?: Reciter;
+  album?: Album;
+  audio?: string;
+  lyrics?: string;
 }
 
 /*
  * These are the available options for 'include'.
  */
 export enum TrackIncludes {
-  related = 'related',
   reciter = 'reciter',
   album = 'album',
+  lyrics = 'lyrics',
+  media = 'media',
+  related = 'related',
 }
 
 /*

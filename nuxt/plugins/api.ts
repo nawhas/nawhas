@@ -1,7 +1,7 @@
 import { Plugin } from '@nuxt/types';
 import { RecitersApi } from '@/api/reciters';
-import {AlbumsApi} from "~/api/albums";
-import {TracksApi} from "~/api/tracks";
+import { AlbumsApi } from "@/api/albums";
+import { TracksApi } from "@/api/tracks";
 
 declare module 'vue/types/vue' {
   interface Vue {

@@ -7,18 +7,21 @@ import {
   createParams,
   usePagination,
   useIncludes,
+  EntityCollection,
 } from '@/api/common';
 import { Reciter } from '@/api/reciters';
+import { Track } from "@/api/tracks";
 
 /*
  * Entity Definitions
  */
 export interface Album extends PersistedEntity, TimestampedEntity {
-  reciter?: Reciter;
   reciterId: string;
   title: string;
   year: string;
   artwork: string;
+  reciter?: Reciter;
+  tracks: EntityCollection<Track>;
 }
 
 /*
@@ -27,7 +30,7 @@ export interface Album extends PersistedEntity, TimestampedEntity {
 export enum AlbumIncludes {
   related = 'related',
   reciter = 'reciter',
-  track = 'track',
+  tracks = 'tracks',
 }
 
 /*

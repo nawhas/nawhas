@@ -61,3 +61,7 @@ export function useIncludes(params: RequestParams, includes: Array<string> | und
     params.set('include', includes.join(','));
   }
 }
+
+export interface EntityCollection<T> {
+  data: Array<T>;
+}
