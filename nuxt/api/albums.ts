@@ -50,10 +50,10 @@ export enum AlbumIncludes {
  * Request Options
  */
 interface GetRequestOptions {
-  include?: Array<AlbumIncludes>;
+  include?: Array<AlbumIncludes | string>;
 }
 interface IndexRequestOptions {
-  include?: Array<AlbumIncludes>;
+  include?: Array<AlbumIncludes | string>;
   pagination?: PaginationOptions;
 }
 
