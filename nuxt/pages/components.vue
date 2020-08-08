@@ -10,6 +10,8 @@
         </hero-quote>
       </hero-banner>
 
+      <edit-reciter-dialog :reciter="reciter" />
+
       <h3>Entity Cards</h3>
       <div style="max-width:300px;">
         <reciter-card v-bind="reciter" />
@@ -46,6 +48,7 @@
 <script>
 import HeroBanner from '@/components/HeroBanner';
 import HeroQuote from '@/components/HeroQuote';
+import EditReciterDialog from '@/components/edit/EditReciterDialog';
 import ReciterCard from '@/components/ReciterCard';
 import TrackCard from '@/components/tracks/TrackCard';
 import AlbumSkeleton from '@/components/loaders/AlbumSkeleton';
@@ -66,6 +69,7 @@ export default {
   components: {
     HeroBanner,
     HeroQuote,
+    EditReciterDialog,
     ReciterCard,
     TrackCard,
     AlbumSkeleton,

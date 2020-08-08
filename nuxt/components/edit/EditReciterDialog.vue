@@ -1,7 +1,7 @@
 <template>
   <v-dialog v-model="dialog" persistent max-width="600px">
     <template v-slot:activator="{ on }">
-      <v-btn dark text v-on="on">
+      <v-btn text v-on="on">
         Edit
       </v-btn>
     </template>
@@ -105,17 +105,18 @@ export default class EditReciterDialog extends Vue {
     }
     const response = await Client.patch(`/v1/reciters/${this.reciter.id}`, data);
     const { slug } = response.data;
-    if (this.form.avatar) {
-      const imageFormData = new FormData();
-      imageFormData.append('avatar', this.form.avatar);
-      await Client.post(
-        `/v1/reciters/${this.reciter.id}/avatar`,
-        imageFormData,
-        { headers: { 'Content-Type': 'multipart/form-data' } },
-      );
-    }
-    this.$router.replace({ name: 'reciters.show', params: { reciter: slug } })
-      .catch(() => window.location.reload());
+    console.log(slug);
+    // if (this.form.avatar) {
+    //   const imageFormData = new FormData();
+    //   imageFormData.append('avatar', this.form.avatar);
+    //   await Client.post(
+    //     `/v1/reciters/${this.reciter.id}/avatar`,
+    //     imageFormData,
+    //     { headers: { 'Content-Type': 'multipart/form-data' } },
+    //   );
+    // }
+    // this.$router.replace({ name: 'reciters.show', params: { reciter: slug } })
+    //   .catch(() => window.location.reload());
     this.close();
     this.loading = false;
   }
