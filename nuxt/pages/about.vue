@@ -180,7 +180,7 @@ export default class About extends Vue {
     return [
       {
         name: 'Shabbir & Abbas Tejani',
-        avatar: require('../static/about/credits/tejani-brothers.jpg'),
+        avatar: '/about/credits/tejani-brothers.jpg',
         caption: 'Creators of Nawhas.com',
         contributions: [
           'Created & maintained Nawhas.com for over 17 years',
