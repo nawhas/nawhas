@@ -97,15 +97,15 @@
 </template>
 
 <script lang="ts">
-import Client from '@/services/client';
 import {
   Component, Prop, Watch, Vue,
-} from 'vue-property-decorator';
+} from 'nuxt-property-decorator';
 import { clone } from '@/utils/clone';
 import * as Format from '@/constants/lyrics/format';
 import TimestampedEditor from '@/components/edit/lyrics/TimestampedEditor.vue';
 import { Lyrics } from '@/types/lyrics';
 import * as GroupType from '@/constants/lyrics/group-type';
+import { TrackIncludes } from '@/api/tracks';
 
 interface Form {
   title: string|null;
@@ -216,11 +216,22 @@ export default class EditTrackDialog extends Vue {
     }
     const { reciterId } = this.album;
     const albumId = this.album.id;
-    let response = await Client.post(
-      `/v1/reciters/${reciterId}/albums/${albumId}/tracks?include=${this.includes}`,
-      data,
-    );
-    response = await this.uploadAudio(reciterId, albumId, response.data.id) || response;
+    let [response] = await Promise.all([
+      this.$api.tracks.store(
+        reciterId,
+        albumId,
+        data,
+        {
+          include: [
+            TrackIncludes.Reciter,
+            TrackIncludes.Lyrics,
+            TrackIncludes.Media,
+            'album.tracks'
+          ],
+        }
+      ),
+    ]);
+    response = await this.uploadAudio(reciterId, albumId, response.id) || response;
     this.redirect(response);
   }
 
@@ -236,24 +247,45 @@ export default class EditTrackDialog extends Vue {
     // TODO - make dynamic
     data.format = Format.JSON_V1;
     const { id, reciterId, albumId } = this.track;
-    let response = await Client.patch(
-      `/v1/reciters/${reciterId}/albums/${albumId}/tracks/${id}?include=${this.includes}`,
-      data,
-    );
+    let response = await Promise.all([
+      this.$api.tracks.update(
+        reciterId,
+        albumId,
+        id,
+        data,
+        {
+          include: [
+            TrackIncludes.Reciter,
+            TrackIncludes.Lyrics,
+            TrackIncludes.Media,
+            'album.tracks'
+          ],
+        }
+      ),
+    ]);
     response = await this.uploadAudio(reciterId, albumId, id) || response;
     this.redirect(response);
   }
 
   async uploadAudio(reciterId, albumId, trackId) {
     if (this.form.audio) {
-      const upload = new FormData();
-      upload.append('audio', this.form.audio);
-      return Client.post(
-        `/v1/reciters/${reciterId}/albums/${albumId}/tracks/${trackId}/media/audio` +
-        `?include=${this.includes}`,
-        upload,
-        { headers: { 'Content-Type': 'multipart/form-data' } },
-      );
+      const [response] = await Promise.all([
+        this.$api.tracks.changeAudio(
+          reciterId,
+          albumId,
+          trackId,
+          this.form.audio,
+          {
+            include: [
+              TrackIncludes.Reciter,
+              TrackIncludes.Lyrics,
+              TrackIncludes.Media,
+              'album.tracks'
+            ],
+          }
+        ),
+      ]);
+      return response;
     }
     return null;
   }
@@ -274,9 +306,9 @@ export default class EditTrackDialog extends Vue {
     // eslint-disable-next-line no-alert
     if (window.confirm(`Are you sure you want to delete '${this.track.title}'?`)) {
       const { id, reciterId, albumId } = this.track;
-      await Client.delete(
-        `/v1/reciters/${reciterId}/albums/${albumId}/tracks/${id}`,
-      );
+      await Promise.all([
+        this.$api.tracks.delete(reciterId, albumId, id),
+      ]);
       this.$router.push({ name: 'reciters.show', params: { reciter: this.track.reciter.slug } });
     }
   }
