@@ -110,7 +110,7 @@ export default defineComponent({
       const [reciters, tracks] = await Promise.all([
         $api.reciters.popular({
           pagination: { limit: 20 },
-          include: [ReciterIncludes.related],
+          include: [ReciterIncludes.Related],
         }),
         // TODO - replace with API usage
         $axios.$get('v1/popular/tracks?per_page=20&include=reciter,lyrics,album.tracks,media,related'),
