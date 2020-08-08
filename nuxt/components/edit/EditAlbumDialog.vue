@@ -1,8 +1,12 @@
 <template>
   <v-dialog v-model="dialog" persistent max-width="600px">
     <template v-slot:activator="{ on }">
-      <v-btn dark text v-on="on" v-if="album">Edit</v-btn>
-      <v-btn text v-on="on" v-else>Add Album</v-btn>
+      <v-btn v-if="album" dark text v-on="on">
+        Edit
+      </v-btn>
+      <v-btn v-else text v-on="on">
+        Add Album
+      </v-btn>
     </template>
     <v-card :loading="loading">
       <v-card-title>
@@ -10,30 +14,33 @@
       </v-card-title>
       <v-card-text class="py-4">
         <v-text-field
-          outlined
           v-model="form.title"
+          outlined
           label="Name"
           required
-        ></v-text-field>
+        />
         <v-text-field
+          v-model="form.year"
           outlined
           label="Release Year"
-          v-model="form.year"
           required
-        ></v-text-field>
-        <v-file-input v-model="form.artwork"
-                      label="Artwork"
-                      placeholder="Upload Album Artwork"
-                      prepend-icon="mdi-camera"
-                      outlined
-                      accept="image/*"
-                      :show-size="1000"
+        />
+        <v-file-input
+          v-model="form.artwork"
+          label="Artwork"
+          placeholder="Upload Album Artwork"
+          prepend-icon="mdi-camera"
+          outlined
+          accept="image/*"
+          :show-size="1000"
         >
           <template v-slot:selection="{ index, text }">
             <v-chip
               v-if="index < 2"
               color="deep-orange accent-4"
-              dark label small
+              dark
+              label
+              small
             >
               {{ text }}
             </v-chip>
@@ -45,31 +52,38 @@
           <ul>
             <li v-if="form.artwork">
               {{ form.artwork.name }} ({{ form.artwork.size }})
-              <button @click="removeFile" title="Remove">X</button>
+              <button title="Remove" @click="removeFile">
+                X
+              </button>
             </li>
           </ul>
         </div>
       </v-card-text>
       <v-card-actions>
-        <v-btn v-if="album" color="error" text @click="confirmDelete">Delete</v-btn>
-        <v-spacer></v-spacer>
-        <v-btn text @click="close">Cancel</v-btn>
-        <v-btn color="primary" text @click="submit" :loading="loading">Save</v-btn>
+        <v-btn v-if="album" color="error" text @click="confirmDelete">
+          Delete
+        </v-btn>
+        <v-spacer />
+        <v-btn text @click="close">
+          Cancel
+        </v-btn>
+        <v-btn color="primary" text :loading="loading" @click="submit">
+          Save
+        </v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
 </template>
 
 <script lang="ts">
-import Client from '@/services/client';
 import {
   Component, Prop, Watch, Vue,
-} from 'vue-property-decorator';
+} from 'nuxt-property-decorator';
 
 interface Form {
   title: string|null;
   year: string|null;
-  artwork: string|Blob|null;
+  artwork: File|null;
 }
 const defaults: Form = {
   title: null,
@@ -90,6 +104,7 @@ export default class EditAlbumDialog extends Vue {
       this.resetForm();
     }
   }
+
   addFile(e) {
     const file = e.dataTransfer.files[0];
     if (file.type.match(/image.*/)) {
@@ -97,9 +112,11 @@ export default class EditAlbumDialog extends Vue {
       this.form.artwork = file;
     }
   }
+
   removeFile() {
     this.form.artwork = null;
   }
+
   resetForm() {
     this.form = { ...defaults };
     if (this.album) {
@@ -111,6 +128,7 @@ export default class EditAlbumDialog extends Vue {
       };
     }
   }
+
   async submit() {
     this.loading = true;
     if (this.album) {
@@ -121,16 +139,15 @@ export default class EditAlbumDialog extends Vue {
     this.close();
     window.location.reload();
   }
+
   async create() {
     const data: any = {};
     data.title = this.form.title;
     data.year = this.form.year;
-    const response = await Client.post(
-      `/v1/reciters/${this.reciter.id}/albums`,
-      data,
-    );
-    await this.uploadArtwork(this.reciter.id, response.data.id);
+    const response = await this.$api.albums.store(this.reciter.id, data);
+    await this.uploadArtwork(this.reciter.id, response.id);
   }
+
   async update() {
     const data: any = {};
     if (this.album.title !== this.form.title && this.form.title) {
@@ -139,33 +156,25 @@ export default class EditAlbumDialog extends Vue {
     if (this.album.year !== this.form.year && this.form.year) {
       data.year = this.form.year;
     }
-    await Client.patch(
-      `/v1/reciters/${this.album.reciterId}/albums/${this.album.id}`,
-      data,
-    );
+    await this.$api.albums.update(this.album.reciterId, this.album.id, data);
     await this.uploadArtwork(this.album.reciterId, this.album.id);
   }
+
   async uploadArtwork(reciterId, albumId) {
     if (this.form.artwork) {
-      const upload = new FormData();
-      upload.append('artwork', this.form.artwork);
-      await Client.post(
-        `/v1/reciters/${reciterId}/albums/${albumId}/artwork`,
-        upload,
-        { headers: { 'Content-Type': 'multipart/form-data' } },
-      );
+      await this.$api.albums.changeArtwork(reciterId, albumId, this.form.artwork);
     }
   }
+
   async confirmDelete() {
     // eslint-disable-next-line no-alert
     if (window.confirm(`Are you sure you want to delete '${this.album.title} - ${this.album.year}'?`)) {
       const { id, reciterId } = this.album;
-      await Client.delete(
-        `/v1/reciters/${reciterId}/albums/${id}`,
-      );
+      await this.$api.albums.delete(reciterId, id);
       window.location.reload();
     }
   }
+
   close() {
     this.dialog = false;
     this.loading = false;

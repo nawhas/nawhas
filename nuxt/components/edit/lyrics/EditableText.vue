@@ -1,5 +1,5 @@
 <template>
-  <div contenteditable="true" ref="editable" v-on="listeners"></div>
+  <div ref="editable" contenteditable="true" v-on="listeners" />
 </template>
 
 <script lang="ts">
@@ -23,13 +23,13 @@ export default class EditableText extends Vue {
   }
 
   mounted() {
-    this.field.innerText = this.content;
+    this.field.textContent = this.content;
   }
 
   @Watch('content')
   renderChange(value) {
-    if (value !== this.field.innerText) {
-      this.field.innerText = value;
+    if (value !== this.field.textContent) {
+      this.field.textContent = value;
     }
   }
 
@@ -57,7 +57,7 @@ export default class EditableText extends Vue {
   }
 
   update() {
-    this.$emit('input', this.field.innerText);
+    this.$emit('input', this.field.textContent);
   }
 
   forward(e: Event) {

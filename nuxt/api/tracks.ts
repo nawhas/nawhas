@@ -87,12 +87,14 @@ export enum TrackIncludes {
 /*
  * Request Options
  */
-interface GetRequestOptions {
+export interface RequestOptions {
   include?: Array<TrackIncludes|string>;
 }
-interface IndexRequestOptions {
-  include?: Array<TrackIncludes|string>;
+export interface IndexRequestOptions extends RequestOptions {
   pagination?: PaginationOptions;
+}
+export interface PopularRequestOptions extends IndexRequestOptions {
+  reciterId?: string;
 }
 
 /*
@@ -116,9 +118,10 @@ export class TracksApi {
     );
   }
 
-  async popular(options: IndexRequestOptions = {}): Promise<TracksIndexResponse> {
+  async popular(options: PopularRequestOptions = {}): Promise<TracksIndexResponse> {
     const params = createParams();
     useIncludes(params, options.include);
+    usePagination(params, options.pagination);
 
     return await this.axios.$get<TracksIndexResponse>(
       'v1/popular/tracks',
@@ -126,7 +129,7 @@ export class TracksApi {
     );
   }
 
-  async get(reciterId: string, albumId: string, trackId: string, options: GetRequestOptions = {}): Promise<Track> {
+  async get(reciterId: string, albumId: string, trackId: string, options: RequestOptions = {}): Promise<Track> {
     const params = createParams();
     useIncludes(params, options.include);
 
@@ -136,18 +139,49 @@ export class TracksApi {
     );
   }
 
-  async store(reciterId: string, albumId: string, payload: StoreTrackPayload): Promise<Track> {
-    return await this.axios.$post<Track>(`v1/reciters/${reciterId}/albums/${albumId}/tracks`, payload);
-  }
+  async store(
+    reciterId: string,
+    albumId: string,
+    payload: StoreTrackPayload,
+    options: RequestOptions = {},
+  ): Promise<Track> {
+    const params = createParams();
+    useIncludes(params, options.include);
 
-  async update(reciterId: string, albumId: string, trackId: string, payload: UpdateTrackPayload): Promise<Track> {
-    return await this.axios.$patch<Track>(
-      `v1/reciters/${reciterId}/albums/${albumId}/tracks/${trackId}`,
+    return await this.axios.$post<Track>(
+      `v1/reciters/${reciterId}/albums/${albumId}/tracks`,
       payload,
+      { params },
     );
   }
 
-  async changeAudio(reciterId: string, albumId: string, trackId: string, audio: File): Promise<Track> {
+  async update(
+    reciterId: string,
+    albumId: string,
+    trackId: string,
+    payload: UpdateTrackPayload,
+    options: RequestOptions = {},
+  ): Promise<Track> {
+    const params = createParams();
+    useIncludes(params, options.include);
+
+    return await this.axios.$patch<Track>(
+      `v1/reciters/${reciterId}/albums/${albumId}/tracks/${trackId}`,
+      payload,
+      { params },
+    );
+  }
+
+  async changeAudio(
+    reciterId: string,
+    albumId: string,
+    trackId: string,
+    audio: File,
+    options: RequestOptions = {},
+  ): Promise<Track> {
+    const params = createParams();
+    useIncludes(params, options.include);
+
     const formData = new FormData();
     formData.append('audio', audio);
 
@@ -158,6 +192,7 @@ export class TracksApi {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
+        params,
       },
     );
   }
