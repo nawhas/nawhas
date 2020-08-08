@@ -184,7 +184,7 @@ export default Vue.extend({
   },
 
   head(): MetaInfo {
-    const title = this.reciter?.name || 'Reciter';
+    const title = this.reciter?.name ?? 'Reciter';
 
     return {
       title,
