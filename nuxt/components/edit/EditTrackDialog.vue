@@ -247,7 +247,7 @@ export default class EditTrackDialog extends Vue {
     // TODO - make dynamic
     data.format = Format.JSON_V1;
     const { id, reciterId, albumId } = this.track;
-    let response = await Promise.all([
+    let [response] = await Promise.all([
       this.$api.tracks.update(
         reciterId,
         albumId,
