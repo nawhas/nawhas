@@ -10,6 +10,10 @@ declare module '@nuxt/types' {
   interface NuxtAppOptions {
     $api: InjectedApiPlugin;
   }
+
+  interface Context {
+    $api: InjectedApiPlugin;
+  }
 }
 
 declare module 'vuex/types/index' {
