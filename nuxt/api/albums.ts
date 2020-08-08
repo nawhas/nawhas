@@ -10,18 +10,19 @@ import {
   EntityCollection,
 } from '@/api/common';
 import { Reciter } from '@/api/reciters';
-import { Track } from "@/api/tracks";
+import { Track } from '@/api/tracks';
 
 /*
  * Entity Definitions
  */
 export interface Album extends PersistedEntity, TimestampedEntity {
-  reciterId: string;
   title: string;
   year: string;
   artwork: string;
+  reciterId: string;
   reciter?: Reciter;
-  tracks: EntityCollection<Track>;
+  tracks?: EntityCollection<Track>;
+  related?: { tracks: number };
 }
 
 /*
@@ -54,15 +55,17 @@ export class AlbumsApi {
     private axios: NuxtAxiosInstance,
   ) {}
 
-  async get(reciterId: string, albumId: string, options: GetRequestOptions): Promise<Album> {
+  async get(reciterId: string, albumId: string, options: GetRequestOptions = {}): Promise<Album> {
     const params = createParams();
     useIncludes(params, options.include);
 
-    return await this.axios
-      .$get<Album>(`v1/reciters/${reciterId}/albums/${albumId}`, { params });
+    return await this.axios.$get<Album>(
+      `v1/reciters/${reciterId}/albums/${albumId}`,
+      { params },
+    );
   }
 
-  async index(reciterId: string, options: IndexRequestOptions): Promise<AlbumsIndexResponse> {
+  async index(reciterId: string, options: IndexRequestOptions = {}): Promise<AlbumsIndexResponse> {
     const params = createParams();
     usePagination(params, options.pagination);
     useIncludes(params, options.include);

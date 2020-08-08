@@ -16,7 +16,8 @@ export interface Reciter extends PersistedEntity, TimestampedEntity {
   name: string;
   description: string | null;
   slug: string;
-  avatar: string;
+  avatar: string | null;
+  related?: { albums: number };
 }
 
 /*
@@ -47,15 +48,17 @@ export class RecitersApi {
     private axios: NuxtAxiosInstance,
   ) {}
 
-  async get(id: string, options: GetRequestOptions): Promise<Reciter> {
+  async get(id: string, options: GetRequestOptions = {}): Promise<Reciter> {
     const params = createParams();
     useIncludes(params, options.include);
 
-    return await this.axios
-      .$get<Reciter>(`v1/reciters/${id}`, { params });
+    return await this.axios.$get<Reciter>(
+      `v1/reciters/${id}`,
+      { params },
+    );
   }
 
-  async index(options: IndexRequestOptions): Promise<RecitersIndexResponse> {
+  async index(options: IndexRequestOptions = {}): Promise<RecitersIndexResponse> {
     const params = createParams();
     usePagination(params, options.pagination);
     useIncludes(params, options.include);
@@ -66,7 +69,7 @@ export class RecitersApi {
     );
   }
 
-  async popular(options: IndexRequestOptions): Promise<RecitersIndexResponse> {
+  async popular(options: IndexRequestOptions = {}): Promise<RecitersIndexResponse> {
     const params = createParams();
     usePagination(params, options.pagination);
     useIncludes(params, options.include);
