@@ -191,6 +191,10 @@ export default Vue.extend({
     },
   },
 
+  watch: {
+    $route: 'onRouteChanged',
+  },
+
   methods: {
     setBackgroundFromImage() {
       if (!this.album) {
@@ -220,14 +224,7 @@ export default Vue.extend({
       if (!this.reciter || !this.album) {
         return;
       }
-      return {
-        name: 'tracks.show',
-        params: {
-          reciter: this.reciter.slug,
-          album: this.album.year,
-          track: track.slug,
-        },
-      };
+      return `/reciters/${this.reciter.slug}/albums/${this.album.year}/tracks/${track.slug}`;
     },
     hasAudioFile(track): boolean {
       return track.related ? track.related.audio : false;
@@ -244,6 +241,10 @@ export default Vue.extend({
     addToQueue() {
       this.$store.commit('player/ADD_ALBUM_TO_QUEUE', { tracks: this.playable });
       this.addedToQueueSnackbar = true;
+    },
+    onRouteChanged() {
+      this.$vuetify.goTo(0);
+      this.$fetch();
     },
   },
 
