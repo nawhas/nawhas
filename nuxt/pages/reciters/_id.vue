@@ -178,10 +178,14 @@ export default Vue.extend({
   },
 
   watch: {
-    $route: '$fetch',
+    $route: 'onRouteChanged',
   },
 
   methods: {
+    onRouteChanged() {
+      this.$vuetify.goTo(0);
+      this.$fetch();
+    },
     onPageChanged(page) {
       this.$router.push({ query: { page: String(page) } });
     },
