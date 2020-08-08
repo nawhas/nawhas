@@ -76,10 +76,9 @@
 </template>
 
 <script lang="ts">
-import Client from '@/services/client';
 import {
   Component, Prop, Watch, Vue,
-} from 'vue-property-decorator';
+} from 'nuxt-property-decorator';
 
 interface Form {
   title: string|null;
@@ -145,11 +144,10 @@ export default class EditAlbumDialog extends Vue {
     const data: any = {};
     data.title = this.form.title;
     data.year = this.form.year;
-    const response = await Client.post(
-      `/v1/reciters/${this.reciter.id}/albums`,
-      data,
-    );
-    await this.uploadArtwork(this.reciter.id, response.data.id);
+    const response = await Promise.all([
+      this.$api.albums.store(this.reciter.id, data),
+    ]);
+    await this.uploadArtwork(this.reciter.id, response.id);
   }
 
   async update() {
@@ -160,22 +158,17 @@ export default class EditAlbumDialog extends Vue {
     if (this.album.year !== this.form.year && this.form.year) {
       data.year = this.form.year;
     }
-    await Client.patch(
-      `/v1/reciters/${this.album.reciterId}/albums/${this.album.id}`,
-      data,
-    );
+    await Promise.all([
+      this.$api.albums.update(this.album.reciterId, this.album.id, data),
+    ]);
     await this.uploadArtwork(this.album.reciterId, this.album.id);
   }
 
   async uploadArtwork(reciterId, albumId) {
     if (this.form.artwork) {
-      const upload = new FormData();
-      upload.append('artwork', this.form.artwork);
-      await Client.post(
-        `/v1/reciters/${reciterId}/albums/${albumId}/artwork`,
-        upload,
-        { headers: { 'Content-Type': 'multipart/form-data' } },
-      );
+      await Promise.all([
+        this.$api.albums.changeArtwork(reciterId, albumId, this.form.artwork),
+      ]);
     }
   }
 
@@ -183,9 +176,9 @@ export default class EditAlbumDialog extends Vue {
     // eslint-disable-next-line no-alert
     if (window.confirm(`Are you sure you want to delete '${this.album.title} - ${this.album.year}'?`)) {
       const { id, reciterId } = this.album;
-      await Client.delete(
-        `/v1/reciters/${reciterId}/albums/${id}`,
-      );
+      await Promise.all([
+        this.$api.albums.delete(reciterId, id),
+      ]);
       window.location.reload();
     }
   }
