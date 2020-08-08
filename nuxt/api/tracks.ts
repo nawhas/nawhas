@@ -12,8 +12,8 @@ import { Reciter } from '@/api/reciters';
 import { Album } from '@/api/albums';
 
 export enum LyricsDocumentFormat {
-  PLAIN_TEXT = 1,
-  JSON_V1 = 2,
+  PlainText = 1,
+  JsonV1 = 2,
 }
 
 /*
@@ -63,11 +63,11 @@ export interface Track extends PersistedEntity, TimestampedEntity {
  * These are the available options for 'include'.
  */
 export enum TrackIncludes {
-  reciter = 'reciter',
-  album = 'album',
-  lyrics = 'lyrics',
-  media = 'media',
-  related = 'related',
+  Reciter = 'reciter',
+  Album = 'album',
+  Lyrics = 'lyrics',
+  Media = 'media',
+  Related = 'related',
 }
 
 /*

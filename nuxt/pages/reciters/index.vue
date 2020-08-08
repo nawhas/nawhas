@@ -72,11 +72,11 @@ export default Vue.extend({
   async fetch() {
     const [reciters, popular] = await Promise.all([
       this.$api.reciters.index({
-        include: [ReciterIncludes.related],
+        include: [ReciterIncludes.Related],
         pagination: { limit: 30, page: this.page },
       }),
       this.$api.reciters.popular({
-        include: [ReciterIncludes.related],
+        include: [ReciterIncludes.Related],
         pagination: { limit: 6 },
       }),
     ]);

@@ -29,9 +29,9 @@ export interface Album extends PersistedEntity, TimestampedEntity {
  * These are the available options for 'include'.
  */
 export enum AlbumIncludes {
-  related = 'related',
-  reciter = 'reciter',
-  tracks = 'tracks',
+  Related = 'related',
+  Reciter = 'reciter',
+  Tracks = 'tracks',
 }
 
 /*

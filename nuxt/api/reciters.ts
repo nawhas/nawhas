@@ -24,7 +24,7 @@ export interface Reciter extends PersistedEntity, TimestampedEntity {
  * These are the available options for 'include'.
  */
 export enum ReciterIncludes {
-  related = 'related'
+  Related = 'related'
 }
 
 /*
