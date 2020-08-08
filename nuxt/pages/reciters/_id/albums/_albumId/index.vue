@@ -249,7 +249,7 @@ export default Vue.extend({
   },
 
   head(): MetaInfo {
-    const title = 'Album Page';
+    const title = `${this.album?.reciter?.name} - ${this.album?.year} Album - ${this.album?.title}` ?? 'Album';
 
     return {
       title,
