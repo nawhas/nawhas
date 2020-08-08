@@ -125,7 +125,7 @@ export default {
           AlbumIncludes.Reciter,
           AlbumIncludes.Related,
           AlbumIncludes.Tracks,
-        ]
+        ],
       }),
     ]);
     this.title = reciter.name;

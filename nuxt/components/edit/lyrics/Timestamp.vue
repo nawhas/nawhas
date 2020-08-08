@@ -36,7 +36,7 @@
 import {
   Component, Model, Watch, Vue,
 } from 'vue-property-decorator';
-import * as moment from 'moment';
+import moment from 'moment';
 
 const rule = /^\d:\d\d$/;
 
