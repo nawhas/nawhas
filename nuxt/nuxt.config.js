@@ -81,7 +81,7 @@ export default {
   ** Auto import components
   ** See https://nuxtjs.org/api/configuration-components
   */
-  components: false,
+  components: true,
   /*
   ** Nuxt.js dev-modules
   */
@@ -90,7 +90,6 @@ export default {
     '@nuxtjs/vuetify',
     '@nuxtjs/google-fonts',
     '@nuxtjs/svg',
-    'nuxt-composition-api',
   ],
   /*
   ** Nuxt.js modules
@@ -105,7 +104,7 @@ export default {
   ** See https://axios.nuxtjs.org/options
   */
   axios: {
-    debug: false,
+    debug: true,
     credentials: true,
     headers: {
       common: {
