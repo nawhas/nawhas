@@ -105,12 +105,12 @@ import * as Format from '@/constants/lyrics/format';
 import TimestampedEditor from '@/components/edit/lyrics/TimestampedEditor.vue';
 import { Lyrics } from '@/types/lyrics';
 import * as GroupType from '@/constants/lyrics/group-type';
-import { TrackIncludes } from '@/api/tracks';
+import { RequestOptions, TrackIncludes } from '@/api/tracks';
 
 interface Form {
   title: string|null;
   lyrics: Lyrics|null;
-  audio: string|Blob|null;
+  audio: File|null;
 }
 const defaults: Form = {
   title: null,
@@ -128,8 +128,15 @@ export default class EditTrackDialog extends Vue {
   private form: Form = { ...defaults };
   private loading = false;
 
-  get includes() {
-    return 'reciter,lyrics,album.tracks,media';
+  getRequestOptions(): RequestOptions {
+    return {
+      include: [
+        TrackIncludes.Reciter,
+        TrackIncludes.Lyrics,
+        TrackIncludes.Media,
+        'album.tracks',
+      ],
+    };
   }
 
   @Watch('dialog')
@@ -221,14 +228,7 @@ export default class EditTrackDialog extends Vue {
         reciterId,
         albumId,
         data,
-        {
-          include: [
-            TrackIncludes.Reciter,
-            TrackIncludes.Lyrics,
-            TrackIncludes.Media,
-            'album.tracks',
-          ],
-        },
+        this.getRequestOptions(),
       ),
     ]);
     response = await this.uploadAudio(reciterId, albumId, response.id) || response;
@@ -253,14 +253,7 @@ export default class EditTrackDialog extends Vue {
         albumId,
         id,
         data,
-        {
-          include: [
-            TrackIncludes.Reciter,
-            TrackIncludes.Lyrics,
-            TrackIncludes.Media,
-            'album.tracks',
-          ],
-        },
+        this.getRequestOptions(),
       ),
     ]);
     if (this.form.audio) {
@@ -280,14 +273,7 @@ export default class EditTrackDialog extends Vue {
         albumId,
         trackId,
         this.form.audio,
-        {
-          include: [
-            TrackIncludes.Reciter,
-            TrackIncludes.Lyrics,
-            TrackIncludes.Media,
-            'album.tracks',
-          ],
-        },
+        this.getRequestOptions(),
       ),
     ]);
     return response;

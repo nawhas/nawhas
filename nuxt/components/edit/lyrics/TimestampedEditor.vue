@@ -83,9 +83,7 @@
 </template>
 
 <script lang="ts">
-import {
-  Component, Model, Prop, Vue, Watch,
-} from 'vue-property-decorator';
+import { Component, Model, Prop, Vue, Watch } from 'vue-property-decorator';
 import { position } from 'caret-pos';
 import RepeatLine from '@/components/edit/lyrics/RepeatLine.vue';
 import EditableText from '@/components/edit/lyrics/EditableText.vue';
@@ -238,8 +236,7 @@ export default class TimestampedEditor extends Vue {
       this.json = JSON.stringify(this.lyrics, null, 2);
     } else {
       try {
-        const parsed = JSON.parse(this.json);
-        this.lyrics = parsed;
+        this.lyrics = JSON.parse(this.json);
         this.highlighter = new LyricsHighlighter(this.$store.state.player, this.lyrics);
         this.change();
       } catch {
@@ -278,7 +275,7 @@ export default class TimestampedEditor extends Vue {
    * Adds a new group to lyrics
    */
   addNewGroup(at, lines: Array<Line>|null = null) {
-    let timestamp: number|null = 0;
+    let timestamp: number|null;
     if (this.$store.state.player.current !== null) {
       timestamp = this.$store.state.player.seek;
     } else {
@@ -453,7 +450,7 @@ export default class TimestampedEditor extends Vue {
     this.goToPreviousLine(coordinates, cursor);
   }
 
-  onDelete(group: LineGroup, line: Line, coordinates: LineCoordinates, e: KeyboardEvent) {
+  onDelete(_, line: Line, coordinates: LineCoordinates, e: KeyboardEvent) {
     const cursor = this.getCursorPosition(coordinates);
 
     // If the cursor is not at the end of the line,
@@ -589,13 +586,12 @@ export default class TimestampedEditor extends Vue {
     this.change();
   }
 
-  onFocus(e: FocusEvent, group: LineGroup, line: Line, coordinates: LineCoordinates) {
+  onFocus(_, __, ___, coordinates: LineCoordinates) {
     this.focused = true;
     this.selected = coordinates;
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  onBlur(e: FocusEvent, group: LineGroup, line: Line, coordinates: LineCoordinates) {
+  onBlur() {
     this.focused = false;
     this.selected = null;
   }
@@ -606,7 +602,8 @@ export default class TimestampedEditor extends Vue {
         const input = this.getLineInput(coordinates);
         input.focus();
         if (typeof cursor !== 'undefined') {
-          const cursorPosition = (input.textContent.length < cursor) ? input.textContent.length : cursor;
+          const length = input.textContent?.length ?? 0;
+          const cursorPosition = (length < cursor) ? length : cursor;
           position(input, cursorPosition);
         }
       } catch (e) {
@@ -657,7 +654,7 @@ export default class TimestampedEditor extends Vue {
 </script>
 
 <style lang="scss" scoped>
-@import "@/assets/theme";
+@import "~assets/theme";
 
 .editor {
   border: 1px solid rgba(0,0,0,0.3);

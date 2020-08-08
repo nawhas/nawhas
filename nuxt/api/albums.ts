@@ -18,7 +18,7 @@ import { Track } from '@/api/tracks';
 export interface Album extends PersistedEntity, TimestampedEntity {
   title: string;
   year: string;
-  artwork: string;
+  artwork: string | null;
   reciterId: string;
   reciter?: Reciter;
   tracks?: EntityCollection<Track>;
@@ -50,10 +50,10 @@ export enum AlbumIncludes {
  * Request Options
  */
 interface GetRequestOptions {
-  include?: Array<AlbumIncludes>;
+  include?: Array<AlbumIncludes | string>;
 }
 interface IndexRequestOptions {
-  include?: Array<AlbumIncludes>;
+  include?: Array<AlbumIncludes | string>;
   pagination?: PaginationOptions;
 }
 
@@ -96,7 +96,7 @@ export class AlbumsApi {
     return await this.axios.$patch<Album>(`v1/reciters/${reciterId}/albums/${albumId}`, payload);
   }
 
-  async changeArtwork(reciterId: string, albumId: string, artwork: string|Blob): Promise<Album> {
+  async changeArtwork(reciterId: string, albumId: string, artwork: File): Promise<Album> {
     const formData = new FormData();
     formData.append('artwork', artwork);
 
