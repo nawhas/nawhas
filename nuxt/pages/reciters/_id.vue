@@ -109,7 +109,7 @@ import { MetaInfo } from 'vue-meta';
 import Album from '@/components/albums/Album.vue';
 import { TrackIncludes } from '@/api/tracks';
 import EditReciterDialog from '@/components/edit/EditReciterDialog.vue';
-// import EditAlbumDialog from '@/components/edit/EditAlbumDialog.vue';
+import EditAlbumDialog from '@/components/edit/EditAlbumDialog.vue';
 
 interface Data {
   page: number;
@@ -128,7 +128,7 @@ export default Vue.extend({
     TrackCardSkeleton,
     AlbumSkeleton,
     EditReciterDialog,
-    // EditAlbumDialog,
+    EditAlbumDialog,
   },
 
   async fetch() {
