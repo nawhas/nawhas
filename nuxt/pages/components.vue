@@ -14,12 +14,12 @@
         <edit-reciter-dialog :reciter="reciter" />
       </div>
 
-      <div style="background-color: black">
-        <edit-album-dialog :reciter="reciter" />
+      <div style="background-color: red">
+        <edit-album-dialog :album="albums[0]" :reciter="reciter" />
       </div>
 
       <div style="background-color: black">
-        <edit-track-dialog :reciter="reciter" />
+        <edit-track-dialog :track="track" :album="albums[0]" />
       </div>
 
       <h3>Entity Cards</h3>
@@ -92,6 +92,7 @@ import BugReportForm from '@/components/BugReportForm';
 import Toaster from '@/components/utils/Toaster';
 import LoginForm from '@/components/auth/LoginForm';
 import RegisterForm from '@/components/auth/RegisterForm';
+import { AlbumIncludes } from '@/api/albums';
 
 export default {
   components: {
@@ -117,9 +118,19 @@ export default {
   },
 
   async fetch() {
-    const reciter = await this.$api.reciters.get('4105f6a8-5407-11ea-922c-6eb465563d0f');
+    const reciter = await this.$api.reciters.get('4105f6a8-5407-11ea-922c-6eb465563d0f', {});
+    const [albums] = await Promise.all([
+      this.$api.albums.index(reciter.id, {
+        include: [
+          AlbumIncludes.Reciter,
+          AlbumIncludes.Related,
+          AlbumIncludes.Tracks,
+        ]
+      }),
+    ]);
     this.title = reciter.name;
     this.reciter = reciter;
+    this.albums = albums.data;
   },
 
   data: () => ({
@@ -133,6 +144,7 @@ export default {
         albums: 2,
       },
     },
+    albums: [],
     track: {
       title: 'Testing Track',
       slug: 'testing-track',
