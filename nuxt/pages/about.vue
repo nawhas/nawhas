@@ -1,6 +1,6 @@
 <template>
   <div class="about">
-    <hero-banner :background="require('../static/about/shrine.jpg')" class="mb-4">
+    <hero-banner background="/backgrounds/shrine.jpg" class="mb-4">
       <hero-quote author="Imam Al-Ridha (a.s.)">
         I desire that you recite for me poetry, for surely,
         these days are the days of grief and sorrow,
