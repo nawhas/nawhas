@@ -102,14 +102,10 @@ export default class EditReciterDialog extends Vue {
     if (this.reciter.description !== this.form.description && this.form.description) {
       data.description = this.form.description;
     }
-    const [response] = await Promise.all([
-      this.$api.reciters.update(this.reciter.id, data),
-    ]);
+    const response = await this.$api.reciters.update(this.reciter.id, data);
     const { slug } = response;
     if (this.form.avatar) {
-      await Promise.all([
-        this.$api.reciters.changeAvatar(slug, this.form.avatar),
-      ]);
+      await this.$api.reciters.changeAvatar(slug, this.form.avatar);
     }
     this.$router.replace({ name: 'reciters.show', params: { reciter: slug } })
       .catch(() => window.location.reload());

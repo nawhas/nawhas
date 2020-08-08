@@ -223,14 +223,12 @@ export default class EditTrackDialog extends Vue {
     }
     const { reciterId } = this.album;
     const albumId = this.album.id;
-    let [response] = await Promise.all([
-      this.$api.tracks.store(
-        reciterId,
-        albumId,
-        data,
-        this.getRequestOptions(),
-      ),
-    ]);
+    let response = await this.$api.tracks.store(
+      reciterId,
+      albumId,
+      data,
+      this.getRequestOptions(),
+    );
     response = await this.uploadAudio(reciterId, albumId, response.id) || response;
     this.redirect(response);
   }
@@ -247,15 +245,13 @@ export default class EditTrackDialog extends Vue {
     // TODO - make dynamic
     data.format = Format.JSON_V1;
     const { id, reciterId, albumId } = this.track;
-    let [response] = await Promise.all([
-      this.$api.tracks.update(
-        reciterId,
-        albumId,
-        id,
-        data,
-        this.getRequestOptions(),
-      ),
-    ]);
+    let response = await this.$api.tracks.update(
+      reciterId,
+      albumId,
+      id,
+      data,
+      this.getRequestOptions(),
+    );
     if (this.form.audio) {
       response = await this.uploadAudio(reciterId, albumId, id) || response;
     }
@@ -267,15 +263,13 @@ export default class EditTrackDialog extends Vue {
       return false;
     }
 
-    const [response] = await Promise.all([
-      this.$api.tracks.changeAudio(
-        reciterId,
-        albumId,
-        trackId,
-        this.form.audio,
-        this.getRequestOptions(),
-      ),
-    ]);
+    const response = await this.$api.tracks.changeAudio(
+      reciterId,
+      albumId,
+      trackId,
+      this.form.audio,
+      this.getRequestOptions(),
+    );
     return response;
   }
 
@@ -295,9 +289,7 @@ export default class EditTrackDialog extends Vue {
     // eslint-disable-next-line no-alert
     if (window.confirm(`Are you sure you want to delete '${this.track.title}'?`)) {
       const { id, reciterId, albumId } = this.track;
-      await Promise.all([
-        this.$api.tracks.delete(reciterId, albumId, id),
-      ]);
+      await this.$api.tracks.delete(reciterId, albumId, id);
       this.$router.push({ name: 'reciters.show', params: { reciter: this.track.reciter.slug } });
     }
   }

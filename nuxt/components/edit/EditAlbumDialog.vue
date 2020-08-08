@@ -144,9 +144,7 @@ export default class EditAlbumDialog extends Vue {
     const data: any = {};
     data.title = this.form.title;
     data.year = this.form.year;
-    const [response] = await Promise.all([
-      this.$api.albums.store(this.reciter.id, data),
-    ]);
+    const response = await this.$api.albums.store(this.reciter.id, data);
     await this.uploadArtwork(this.reciter.id, response.id);
   }
 
@@ -158,17 +156,13 @@ export default class EditAlbumDialog extends Vue {
     if (this.album.year !== this.form.year && this.form.year) {
       data.year = this.form.year;
     }
-    await Promise.all([
-      this.$api.albums.update(this.album.reciterId, this.album.id, data),
-    ]);
+    await this.$api.albums.update(this.album.reciterId, this.album.id, data);
     await this.uploadArtwork(this.album.reciterId, this.album.id);
   }
 
   async uploadArtwork(reciterId, albumId) {
     if (this.form.artwork) {
-      await Promise.all([
-        this.$api.albums.changeArtwork(reciterId, albumId, this.form.artwork),
-      ]);
+      await this.$api.albums.changeArtwork(reciterId, albumId, this.form.artwork);
     }
   }
 
@@ -176,9 +170,7 @@ export default class EditAlbumDialog extends Vue {
     // eslint-disable-next-line no-alert
     if (window.confirm(`Are you sure you want to delete '${this.album.title} - ${this.album.year}'?`)) {
       const { id, reciterId } = this.album;
-      await Promise.all([
-        this.$api.albums.delete(reciterId, id),
-      ]);
+      await this.$api.albums.delete(reciterId, id);
       window.location.reload();
     }
   }
