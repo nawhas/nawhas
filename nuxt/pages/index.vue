@@ -67,7 +67,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, reactive, toRefs, useContext, useFetch } from 'nuxt-composition-api';
+import { Component, Vue } from 'nuxt-property-decorator';
 import HeroBanner from '@/components/HeroBanner.vue';
 import HeroQuote from '@/components/HeroQuote.vue';
 import ReciterCard from '@/components/ReciterCard.vue';
@@ -75,16 +75,10 @@ import TrackCard from '@/components/tracks/TrackCard.vue';
 import SkeletonCardGrid from '@/components/loaders/SkeletonCardGrid.vue';
 import TrackCardSkeleton from '@/components/loaders/TrackCardSkeleton.vue';
 import TrackList from '@/components/tracks/TrackList.vue';
-import { Reciter, ReciterIncludes } from '@/api/reciters';
 
 const POPULAR_ENTITIES_LIMIT = 6;
 
-interface ComponentData {
-  reciters: Array<Reciter> | null;
-  tracks: Array<any> | null;
-}
-
-export default defineComponent({
+@Component({
   components: {
     TrackList,
     HeroBanner,
@@ -94,39 +88,29 @@ export default defineComponent({
     SkeletonCardGrid,
     TrackCardSkeleton,
   },
+})
+export default class HomeView extends Vue {
+  private reciters: any = null;
+  private tracks: any = null;
 
-  setup() {
-    const { $axios, $api } = useContext();
+  get popularReciters() {
+    return this.reciters ? this.reciters.slice(0, POPULAR_ENTITIES_LIMIT) : null;
+  }
 
-    const data = reactive<ComponentData>({
-      reciters: null,
-      tracks: null,
-    });
+  get popularTracks() {
+    return this.tracks ? this.tracks.slice(0, POPULAR_ENTITIES_LIMIT) : null;
+  }
 
-    const popularReciters = computed(() => data.reciters?.slice(0, POPULAR_ENTITIES_LIMIT));
-    const popularTracks = computed(() => data.tracks?.slice(0, POPULAR_ENTITIES_LIMIT));
+  async fetch() {
+    const [reciters, tracks] = await Promise.all([
+      this.$axios.$get('v1/popular/reciters?per_page=20&include=related'),
+      this.$axios.$get('v1/popular/tracks?per_page=20&include=reciter,lyrics,album.tracks,media,related'),
+    ]);
 
-    useFetch(async () => {
-      const [reciters, tracks] = await Promise.all([
-        $api.reciters.popular({
-          pagination: { limit: 20 },
-          include: [ReciterIncludes.Related],
-        }),
-        // TODO - replace with API usage
-        $axios.$get('v1/popular/tracks?per_page=20&include=reciter,lyrics,album.tracks,media,related'),
-      ]);
-
-      data.reciters = reciters.data;
-      data.tracks = tracks.data;
-    });
-
-    return {
-      ...toRefs(data),
-      popularReciters,
-      popularTracks,
-    };
-  },
-});
+    this.reciters = reciters.data;
+    this.tracks = tracks.data;
+  }
+}
 </script>
 
 <style lang="scss" scoped>
