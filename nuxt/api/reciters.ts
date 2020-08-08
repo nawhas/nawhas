@@ -73,7 +73,7 @@ export class RecitersApi {
     usePagination(params, options.pagination);
     useIncludes(params, options.include);
 
-    return await this.axios.$get<RecitersIndexResponse>('v1/popular/reciters',{ params });
+    return await this.axios.$get<RecitersIndexResponse>('v1/popular/reciters', { params });
   }
 
   async get(id: string, options: GetRequestOptions = {}): Promise<Reciter> {
