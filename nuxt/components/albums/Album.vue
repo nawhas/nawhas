@@ -1,31 +1,47 @@
 <template>
   <v-card class="album">
     <div class="album__header" :style="{ 'background-color': background }">
-      <v-avatar tile :size="artworkSize"
-                :class="{ 'album__artwork': true, 'album__artwork--dark': isDark }"
-                @click="$router.push(link)">
-        <img crossorigin :src="image" :alt="album.title" ref="artwork" />
+      <v-avatar
+        tile
+        :size="artworkSize"
+        :class="{ 'album__artwork': true, 'album__artwork--dark': isDark }"
+        @click="$router.push(link)"
+      >
+        <img ref="artwork" crossorigin :src="image" :alt="album.title">
       </v-avatar>
       <div class="album__details" :style="{ color: textColor }">
-        <router-link tag="h5" :to="link" class="album__title">{{ album.title }}</router-link>
+        <nuxt-link :to="link" class="album__title">
+          <h5>{{ album.title }}</h5>
+        </nuxt-link>
         <h6 class="album__release-date">
           <strong>{{ year }}</strong>
-          &bull; {{ tracks.data.length }} tracks
+          &bull; {{ tracks.length }} tracks
         </h6>
       </div>
 
       <div class="album__edit">
-        <edit-album-dialog v-if="album && isModerator" :album="album"></edit-album-dialog>
+        <!--        <edit-album-dialog v-if="album && isModerator" :album="album" />-->
       </div>
 
       <div class="album__actions">
-        <v-speed-dial v-if="showSpeedPlay" class="album__action__fab" absolute
-                      v-model="fab" :open-on-hover="$vuetify.breakpoint.mdAndUp"
-                      right bottom direction="left">
+        <v-speed-dial
+          v-if="showSpeedPlay"
+          v-model="fab"
+          class="album__action__fab"
+          absolute
+          :open-on-hover="$vuetify.breakpoint.mdAndUp"
+          right
+          bottom
+          direction="left"
+        >
           <template v-slot:activator>
-            <v-btn :small="$vuetify.breakpoint.smAndDown" v-model="fab" fab :color="fabColor">
-              <v-icon v-if="fab" color="black">close</v-icon>
-              <v-icon v-else color="black">play_arrow</v-icon>
+            <v-btn v-model="fab" :small="$vuetify.breakpoint.smAndDown" fab :color="fabColor">
+              <v-icon v-if="fab" color="black">
+                close
+              </v-icon>
+              <v-icon v-else color="black">
+                play_arrow
+              </v-icon>
             </v-btn>
           </template>
           <v-tooltip top>
@@ -49,7 +65,7 @@
     </div>
     <v-data-table
       :headers="headers"
-      :items="tracks.data"
+      :items="tracks"
       :disable-sort="true"
       :hide-default-header="true"
       :disable-pagination="true"
@@ -57,33 +73,49 @@
       :class="{'album__tracks': true, 'album__tracks--dark': isDark}"
     >
       <template v-slot:item="props">
-        <tr @click="goToTrack(props.item)" class="album__track">
-          <td>{{ props.item.title }}</td>
+        <tr class="album__track" @click="goToTrack(props.item)">
+          <td>
+            <nuxt-link class="track__link" :to="getTrackLink(props.item)">
+              {{ props.item.title }}
+            </nuxt-link>
+          </td>
           <td class="track__features" align="right">
-            <v-icon :class="{
-              'material-icons-outlined': true,
-              track__feature: true,
-              'track__feature--disabled': !hasLyrics(props.item) && !isDark,
-              'track__feature--disabled--dark': !hasLyrics(props.item) && isDark
-            }">
-              <template v-if="hasLyrics(props.item)">speaker_notes</template>
-              <template v-else>speaker_notes_off</template>
+            <v-icon
+              :class="{
+                'material-icons-outlined': true,
+                track__feature: true,
+                'track__feature--disabled': !hasLyrics(props.item) && !isDark,
+                'track__feature--disabled--dark': !hasLyrics(props.item) && isDark
+              }"
+            >
+              <template v-if="hasLyrics(props.item)">
+                speaker_notes
+              </template>
+              <template v-else>
+                speaker_notes_off
+              </template>
             </v-icon>
-            <v-icon :class="{
-              'material-icons-outlined': true,
-              track__feature: true,
-              'track__feature--disabled': !hasAudioFile(props.item) && !isDark,
-              'track__feature--disabled--dark': !hasAudioFile(props.item) && isDark
-            }">
-              <template v-if="hasAudioFile(props.item)">volume_up</template>
-              <template v-else>volume_off</template>
+            <v-icon
+              :class="{
+                'material-icons-outlined': true,
+                track__feature: true,
+                'track__feature--disabled': !hasAudioFile(props.item) && !isDark,
+                'track__feature--disabled--dark': !hasAudioFile(props.item) && isDark
+              }"
+            >
+              <template v-if="hasAudioFile(props.item)">
+                volume_up
+              </template>
+              <template v-else>
+                volume_off
+              </template>
             </v-icon>
           </td>
         </tr>
       </template>
     </v-data-table>
     <v-card-actions v-if="album && isModerator" class="d-flex justify-end album__actions">
-      <edit-track-dialog :album="album" />
+      <!--      <edit-track-dialog :album="album" />-->
     </v-card-actions>
   </v-card>
 </template>
@@ -91,76 +123,74 @@
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import Vibrant from 'node-vibrant';
-import EditAlbumDialog from '@/components/edit/EditAlbumDialog.vue';
-import EditTrackDialog from '@/components/edit/EditTrackDialog.vue';
-import { Getters as AuthGetters } from '@/store/modules/auth';
+import { Album } from '@/api/albums';
+import { Reciter } from '@/api/reciters';
+import { Track } from '@/api/tracks';
+import { RawLocation } from 'vue-router';
+import { DataTableHeader } from 'vuetify';
+// import EditAlbumDialog from '@/components/edit/EditAlbumDialog.vue';
+// import EditTrackDialog from '@/components/edit/EditTrackDialog.vue';
 
 @Component({
   components: {
-    EditAlbumDialog,
-    EditTrackDialog,
+    // EditAlbumDialog,
+    // EditTrackDialog,
   },
 })
-export default class Album extends Vue {
+export default class AlbumComponent extends Vue {
   private background = '#444444';
   private textColor = 'white';
   private fabColor = 'white';
   private fab = false;
 
   // TODO - Replace `any` with a proper interface.
-  @Prop({ type: Object, required: true }) private album: any;
-  @Prop({ type: Object, required: true }) private reciter: any;
+  @Prop({ type: Object, required: true }) private album!: Album;
+  @Prop({ type: Object, required: true }) private reciter!: Reciter;
   @Prop({ type: Boolean, default: true }) private showReciter!: boolean;
 
-  get headers() {
+  get headers(): Array<DataTableHeader> {
     return [
       {
         text: 'Name',
-        align: 'left',
+        align: 'start',
         value: 'name',
       },
       {
         text: '',
-        align: 'right',
-        value: null,
+        align: 'end',
+        value: '',
       },
     ];
   }
 
-  get year() {
+  get year(): string {
     return this.album.year;
   }
 
-  get tracks() {
-    return this.album.tracks;
+  get tracks(): Array<Track> {
+    return this.album.tracks?.data || [];
   }
 
-  get reciterYear() {
+  get reciterYear(): string {
     if (this.showReciter) {
       return `${this.reciter.name} • ${this.year}`;
     }
     return this.year;
   }
 
-  get isDark() {
+  get isDark(): boolean {
     return this.$vuetify.theme.dark;
   }
 
-  get link() {
+  get link(): RawLocation {
     if (!this.reciter || !this.album) {
       return '';
     }
 
-    return {
-      name: 'albums.show',
-      params: {
-        reciter: this.reciter.slug,
-        album: this.album.year,
-      },
-    };
+    return `reciters/${this.reciter.slug}/albums/${this.album.year}`;
   }
 
-  get gradient() {
+  get gradient(): string | null {
     const rgb = Vibrant.Util.hexToRgb(this.background);
 
     if (!rgb) {
@@ -172,28 +202,28 @@ export default class Album extends Vue {
     )}, 1), rgba(${rgb.join(', ')}, 0)`;
   }
 
-  get artworkBackground() {
+  get artworkBackground(): string {
     return `url(${this.image})`;
   }
 
-  get image() {
+  get image(): string {
     return this.album.artwork || '/img/default-album-image.png';
   }
 
-  get artworkSize() {
+  get artworkSize(): number {
     if (this.$vuetify.breakpoint.smAndDown) {
       return 48;
     }
     return 128;
   }
 
-  get isModerator() {
-    return this.$store.getters[AuthGetters.IsModerator];
+  get isModerator(): boolean {
+    return this.$store.getters['auth/isModerator'];
   }
 
   get showSpeedPlay(): boolean {
     let hasAudio = false;
-    this.tracks.data.map((track) => {
+    this.tracks.map((track) => {
       if (this.hasAudioFile(track)) {
         hasAudio = true;
       }
@@ -202,11 +232,11 @@ export default class Album extends Vue {
     return hasAudio;
   }
 
-  mounted() {
+  mounted(): void {
     this.setBackgroundFromImage();
   }
 
-  setBackgroundFromImage() {
+  setBackgroundFromImage(): void {
     Vibrant.from(this.image)
       .getPalette()
       .then((palette) => {
@@ -224,32 +254,38 @@ export default class Album extends Vue {
       });
   }
 
-  hasLyrics(track) {
-    return track.related ? track.related.lyrics === true : false;
+  hasLyrics(track: Track): boolean {
+    return track.related?.lyrics ?? false;
   }
 
-  hasAudioFile(track) {
-    return track.related ? track.related.audio === true : false;
+  hasAudioFile(track: Track): boolean {
+    return track.related?.audio ?? false;
   }
 
-  goToTrack(track) {
-    this.$router.push(
-      `/reciters/${this.reciter.slug}/albums/${this.album.year}/tracks/${track.slug}`,
-    );
+  getTrackLink(track: Track): RawLocation {
+    if (this.link === '') {
+      return '';
+    }
+
+    return `${this.link}/tracks/${track.slug}`;
   }
 
-  playAlbum() {
-    this.$store.commit('player/PLAY_ALBUM', { tracks: this.album.tracks.data });
+  goToTrack(track: Track): void {
+    this.$router.push(this.getTrackLink(track));
   }
 
-  addAlbumToQueue() {
-    this.$store.commit('player/ADD_ALBUM_TO_QUEUE', { tracks: this.album.tracks.data });
+  playAlbum(): void {
+    this.$store.commit('player/PLAY_ALBUM', { tracks: this.album.tracks?.data });
+  }
+
+  addAlbumToQueue(): void {
+    this.$store.commit('player/ADD_ALBUM_TO_QUEUE', { tracks: this.album.tracks?.data });
   }
 }
 </script>
 
 <style lang="scss" scoped>
-@import '../styles/theme';
+@import '~assets/theme';
 
 .album {
   margin-top: 90px;
@@ -285,8 +321,9 @@ export default class Album extends Vue {
   flex-grow: 1;
 }
 
-.album__title {
-  cursor: pointer;
+.album__title, .album__title h5 {
+  text-decoration: none;
+  color: white;
   margin: 0 0 8px 0;
   padding: 0;
   font-weight: 700;
@@ -327,6 +364,11 @@ export default class Album extends Vue {
   right: 80px;
   bottom: -24px;
   z-index: 1;
+}
+
+.track__link {
+  text-decoration: none;
+  color: inherit;
 }
 
 .track__features {

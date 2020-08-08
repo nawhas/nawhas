@@ -30,7 +30,8 @@
       "@nuxt/vue-app",
       "@nuxtjs/vuetify",
       "@nuxt/types",
-      "@nuxtjs/axios"
+      "@nuxtjs/axios",
+      "nawhas"
     ]
   },
   "exclude": [

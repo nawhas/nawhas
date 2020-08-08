@@ -1,21 +1,19 @@
 <template>
-  <div @click="goToReciter()">
-    <v-card :class="classObject" :style="{ 'background-color': background }">
-      <div class="reciter-card__avatar">
-        <v-avatar size="40" class="avatar">
-          <img ref="avatarElement" crossorigin :src="image" :alt="name">
-        </v-avatar>
+  <v-card :to="link" :class="classObject" :style="{ 'background-color': background }">
+    <div class="reciter-card__avatar">
+      <v-avatar size="40" class="avatar">
+        <img ref="avatarElement" crossorigin :src="image" :alt="name">
+      </v-avatar>
+    </div>
+    <div class="reciter-card__text" :style="{ 'color': textColor }">
+      <div class="reciter-card__name body-2" :title="name">
+        {{ name }}
       </div>
-      <div class="reciter-card__text" :style="{ 'color': textColor }">
-        <div class="reciter-card__name body-2" :title="name">
-          {{ name }}
-        </div>
-        <div v-if="related" class="reciter-card__name caption">
-          {{ related.albums | pluralize('album', 'albums') }}
-        </div>
+      <div v-if="related" class="reciter-card__name caption">
+        {{ related.albums | pluralize('album', 'albums') }}
       </div>
-    </v-card>
-  </div>
+    </div>
+  </v-card>
 </template>
 
 <script lang="ts">
@@ -39,6 +37,10 @@ export default class ReciterCard extends Vue {
 
   get image() {
     return this.avatar || '/defaults/default-reciter-avatar.png';
+  }
+
+  get link(): string {
+    return `reciters/${this.slug}`;
   }
 
   get classObject() {
@@ -82,13 +84,6 @@ export default class ReciterCard extends Vue {
     if (this.featured !== undefined) {
       this.setBackgroundFromImage();
     }
-  }
-
-  goToReciter() {
-    this.$router.push({
-      name: 'reciters.show',
-      params: { reciter: this.slug },
-    });
   }
 
   setBackgroundFromImage() {
