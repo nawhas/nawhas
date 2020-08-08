@@ -1,6 +1,6 @@
 <template>
   <v-layout>
-    <v-container fluid>
+    <v-container>
       <h1>Components Playground</h1>
 
       <h3>Hero Banner & Hero Quote</h3>
@@ -13,26 +13,40 @@
       <edit-reciter-dialog :reciter="reciter" />
 
       <h3>Entity Cards</h3>
-      <div style="max-width:300px;">
-        <reciter-card v-bind="reciter" />
-      </div>
-      <div style="max-width:300px;">
-        <reciter-card v-bind="reciter" featured />
-      </div>
-      <div style="max-width:300px;">
-        <track-card v-bind="track" />
-      </div>
+      <v-row>
+        <v-col cols="4">
+          <reciter-card v-bind="reciter" />
+        </v-col>
+        <v-col cols="4">
+          <reciter-card v-bind="reciter" featured />
+        </v-col>
+        <v-col cols="4">
+          <track-card v-bind="track" />
+        </v-col>
+      </v-row>
 
       <h3>Auth</h3>
-      <auth-dialog />
-      <login-form />
-      <register-form />
+      <v-row>
+        <v-col cols="6">
+          <login-form />
+        </v-col>
+        <v-col cols="6">
+          <register-form />
+        </v-col>
+      </v-row>
 
-      <h3>Misc.</h3>
-      <app-changelog />
+      <h3>Misc. Dialogs</h3>
+      <v-row>
+        <v-col cols="6">
+          <app-changelog />
+        </v-col>
+        <v-col cols="6">
+          <bug-report-form />
+        </v-col>
+      </v-row>
+
+      <h3>Layout</h3>
       <labeled-divider />
-      <bug-report-form />
-      <toaster />
 
       <h3>Loaders</h3>
       <album-skeleton />
@@ -41,6 +55,9 @@
       <reciter-hero-skeleton />
       <skeleton-card-grid />
       <track-card-skeleton />
+
+      <!-- Util -->
+      <toaster />
     </v-container>
   </v-layout>
 </template>
@@ -61,7 +78,6 @@ import AppChangelog from '@/components/notifications/AppChangelog';
 import LabeledDivider from '@/components/ui/LabeledDivider';
 import BugReportForm from '@/components/BugReportForm';
 import Toaster from '@/components/utils/Toaster';
-import AuthDialog from '@/components/auth/AuthDialog';
 import LoginForm from '@/components/auth/LoginForm';
 import RegisterForm from '@/components/auth/RegisterForm';
 
@@ -81,7 +97,6 @@ export default {
     AppChangelog,
     LabeledDivider,
     BugReportForm,
-    AuthDialog,
     LoginForm,
     RegisterForm,
     Toaster,

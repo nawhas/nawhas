@@ -8,7 +8,7 @@
     "build": "nuxt-ts build",
     "start": "nuxt-ts start",
     "generate": "nuxt-ts generate",
-    "lint:js": "eslint --ext .js,.vue --ignore-path .gitignore .",
+    "lint:js": "eslint --ext .js,.vue,.ts --ignore-path .gitignore .",
     "lint": "yarn lint:js",
     "test": "jest"
   },
@@ -27,9 +27,10 @@
     "@nuxtjs/vuetify": "^1.11.2",
     "dotenv": "^8.2.0",
     "nuxt": "^2.14.0",
+    "nuxt-composition-api": "0.11.0-beta.0",
     "nuxt-property-decorator": "^2.7.2",
-    "vuetify": "^2",
-    "vue": "^2"
+    "vue": "^2",
+    "vuetify": "^2"
   },
   "devDependencies": {
     "@nuxt/types": "^2.14.0",
