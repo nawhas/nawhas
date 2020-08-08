@@ -2391,7 +2391,7 @@
   optionalDependencies:
     prettier "^1.18.2"
 
-"@vue/composition-api@^1.0.0-beta.6":
+"@vue/composition-api@^1.0.0-beta.4", "@vue/composition-api@^1.0.0-beta.6":
   version "1.0.0-beta.6"
   resolved "https://registry.yarnpkg.com/@vue/composition-api/-/composition-api-1.0.0-beta.6.tgz#d526b31f09acdffd0e9424c53cd9f8ffaef10408"
   integrity sha512-Gz7w4bALSPkM37AbQDZubXjbRs850GwKeZr5bUFXrhW2MuyvS6r9euKWMAu/jwJmNaVc4ZLYaGLjNDQrGcHGGw==
@@ -8439,6 +8439,15 @@ nuxt-class-component@^1.3.0:
   dependencies:
     vue-class-component "^7.0.1"
     vuex-class "^0.3.1"
+
+nuxt-composition-api@0.11.0-beta.0:
+  version "0.11.0-beta.0"
+  resolved "https://registry.yarnpkg.com/nuxt-composition-api/-/nuxt-composition-api-0.11.0-beta.0.tgz#ebb512a5f3e4a457dcbd3412d3579ba12ad684d5"
+  integrity sha512-jxEXyY4YDfqsIdSQL30p1oSADvhCHF0rOJjRNGvb3S90IaH5sTmpY85lkMiLufGHvi1QnSVc6gw6nRAygCCENw==
+  dependencies:
+    "@vue/composition-api" "^1.0.0-beta.4"
+    defu "^2.0.4"
+    normalize-path "^3.0.0"
 
 nuxt-property-decorator@^2.7.2:
   version "2.7.2"
