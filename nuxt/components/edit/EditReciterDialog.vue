@@ -64,7 +64,7 @@ import {
 interface Form {
   name: string|null;
   description: string|null;
-  avatar: string|Blob|null;
+  avatar: File|null;
 }
 const defaults: Form = {
   name: null,

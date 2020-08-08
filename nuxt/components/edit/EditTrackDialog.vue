@@ -110,7 +110,7 @@ import { TrackIncludes } from '@/api/tracks';
 interface Form {
   title: string|null;
   lyrics: Lyrics|null;
-  audio: string|Blob|null;
+  audio: File|null;
 }
 const defaults: Form = {
   title: null,

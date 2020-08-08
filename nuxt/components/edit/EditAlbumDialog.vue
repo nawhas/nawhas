@@ -83,7 +83,7 @@ import {
 interface Form {
   title: string|null;
   year: string|null;
-  artwork: string|Blob|null;
+  artwork: File|null;
 }
 const defaults: Form = {
   title: null,

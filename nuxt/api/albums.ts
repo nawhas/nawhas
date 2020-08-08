@@ -96,7 +96,7 @@ export class AlbumsApi {
     return await this.axios.$patch<Album>(`v1/reciters/${reciterId}/albums/${albumId}`, payload);
   }
 
-  async changeArtwork(reciterId: string, albumId: string, artwork: string|Blob): Promise<Album> {
+  async changeArtwork(reciterId: string, albumId: string, artwork: File): Promise<Album> {
     const formData = new FormData();
     formData.append('artwork', artwork);
 
