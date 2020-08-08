@@ -35,7 +35,7 @@ const routes = [
         path: 'reciters/:reciter/albums/:album',
         name: 'albums.show',
         props: true,
-        component: () => import(/* webpackChunkName: "albums" */'@/views/public/albums/AlbumView.vue'),
+        component: () => import(/* webpackChunkName: "albums" */'../../../nuxt/pages/reciters/_id/albums/_albumId/index.vue'),
       },
       {
         path: 'reciters/:reciter/albums/:album/tracks',
