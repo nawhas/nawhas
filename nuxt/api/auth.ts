@@ -5,15 +5,17 @@ import { PersistedEntity, TimestampedEntity } from '@/api/common';
  * Entity Definitions
  */
 export enum Role {
-    Contributor = 'contributor',
-    Moderator = 'moderator',
+  Contributor = 'contributor',
+  Moderator = 'moderator',
+  Guest = 'guest',
 }
+
 export interface User extends PersistedEntity, TimestampedEntity {
-    name: string;
-    avatar: string;
-    email: string;
-    role: Role;
-    nickname: string | null;
+  name: string;
+  avatar: string;
+  email: string;
+  role: Role;
+  nickname: string | null;
 }
 
 /*
@@ -23,6 +25,7 @@ export interface LoginPayload {
   email: string;
   password: string;
 }
+
 export interface RegisterPayload {
   email: string;
   password: string;
@@ -31,10 +34,11 @@ export interface RegisterPayload {
 
 export class AuthApi {
   constructor(
-      private axios: NuxtAxiosInstance,
+    private axios: NuxtAxiosInstance,
   ) {}
 
   async login(payload: LoginPayload): Promise<User> {
+    await this.axios.get('/sanctum/csrf-cookie');
     return await this.axios.$post<User>('v1/auth/login', payload);
   }
 

@@ -36,7 +36,9 @@
           <v-app-bar-nav-icon
             v-if="$vuetify.breakpoint.mdAndDown"
             @click.native="drawer = !drawer"
-          />
+          >
+            <v-icon>menu</v-icon>
+          </v-app-bar-nav-icon>
           <v-toolbar-title class="nav__title">
             <nuxt-link to="/" tag="div" class="masthead__logo">
               <logo-icon class="masthead__logo__icon" />
@@ -107,6 +109,7 @@ const links = [
 ];
 
 export default Vue.extend({
+  name: 'DefaultLayout',
   components: {
     LogoWordmark,
     LogoIcon,

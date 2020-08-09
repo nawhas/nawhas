@@ -1,7 +1,14 @@
+import fs from 'fs';
+import path from 'path';
 require('dotenv').config();
 
 const TITLE_SUFFIX = 'Nawhas.com';
 const DEFAULT_DESCRIPTION = 'Welcome to Nawhas.com, the most advanced library of nawhas online.';
+
+const https = process.env.APP_ENV === 'development' ? {
+  key: fs.readFileSync(path.resolve(__dirname, '../docker/nginx/certs/nawhas.test.key')),
+  cert: fs.readFileSync(path.resolve(__dirname, '../docker/nginx/certs/nawhas.test.crt')),
+} : false;
 
 export default {
   debug: true,
@@ -160,5 +167,15 @@ export default {
   loading: {
     color: 'orangered',
     height: '3px',
+  },
+
+  router: {
+    middleware: [
+      'initialize',
+    ],
+  },
+
+  server: {
+    https,
   },
 };

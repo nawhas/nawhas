@@ -1,7 +1,7 @@
 <?php
 
 $local = env('APP_ENV') === 'local' ? [
-    env('APP_DOMAIN') . ':8080',
+    env('APP_DOMAIN') . ':3000',
     'localhost',
     '127.0.0.1',
     '127.0.0.1:8000',

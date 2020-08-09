@@ -59,7 +59,6 @@
 <script lang="ts">
 import Vue from 'vue';
 import { Component } from 'nuxt-property-decorator';
-import client from '@/services/client';
 import { showToast } from '@/events/toaster';
 
 type IssueType = 'bug' | 'feature' | 'general';
@@ -91,7 +90,7 @@ export default class BugReportForm extends Vue {
     this.error = null;
     this.loading = true;
     try {
-      await client.post('/v1/app/feedback', {
+      await this.$axios.post('/v1/app/feedback', {
         summary: this.summary,
         type: this.type,
         details: this.details,

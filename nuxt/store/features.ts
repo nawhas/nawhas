@@ -1,22 +1,17 @@
-import client from '@/services/client';
-import { Features } from '@/entities/features';
-import { ActionContext } from 'vuex';
+import { ActionContext, ActionTree, MutationTree, GetterTree } from 'vuex';
+import { Feature, FeatureMap } from '@/api/features';
+import { RootState } from '~/store/index';
 
 /*
 |--------------------------------------------------------------------------
 | Interfaces & Types
 |--------------------------------------------------------------------------
 */
-export interface FeaturesState {
-  features: Features;
+interface FeaturesState {
+  features: FeatureMap;
   initialized: boolean;
 }
-
 type Context = ActionContext<FeaturesState, any>;
-
-interface FeaturesPayload {
-  features: Features;
-}
 /*
 |--------------------------------------------------------------------------
 | Store State, Mutations, Actions, & Getters
@@ -27,26 +22,21 @@ const state = (): FeaturesState => ({
   initialized: false,
 });
 
-const getters = {
-  enabled: (state: FeaturesState) => (feature: string) => !!state.features[feature],
+const getters: GetterTree<FeaturesState, RootState> = {
+  enabled: (state) => (feature: Feature) => state.features[feature] ?? false,
 };
 
-const mutations = {
-  INITIALIZE(state: FeaturesState, { features }: FeaturesPayload) {
+const mutations: MutationTree<FeaturesState> = {
+  INITIALIZE(state, features: FeatureMap) {
     state.features = features;
     state.initialized = true;
   },
 };
 
-const actions = {
+const actions: ActionTree<FeaturesState, RootState> = {
   async fetch({ commit }: Context) {
-    const response = await client.get('/v1/features');
-
-    const payload: FeaturesPayload = {
-      features: response.data.data,
-    };
-
-    commit('INITIALIZE', payload);
+    const features = await this.$api.features.index();
+    commit('INITIALIZE', features);
   },
 };
 
