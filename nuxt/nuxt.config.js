@@ -47,7 +47,7 @@ export default {
   ** See https://nuxtjs.org/api/configuration-head
   */
   head: {
-    titleTemplate: '%s - ' + TITLE_SUFFIX,
+    titleTemplate: '%s | ' + TITLE_SUFFIX,
     title: 'Home',
     meta: [
       { charset: 'utf-8' },

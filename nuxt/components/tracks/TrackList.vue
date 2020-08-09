@@ -102,14 +102,7 @@ export default class TrackList extends Vue {
   }
 
   getTrackLink(track) {
-    return {
-      name: 'tracks.show',
-      params: {
-        reciter: track.reciter.slug,
-        album: track.album.year,
-        track: track.slug,
-      },
-    };
+    return `/reciters/${track.reciter.slug}/albums/${track.album.year}/tracks/${track.slug}`;
   }
 }
 </script>
