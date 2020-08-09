@@ -18,7 +18,7 @@
             <template v-if="reciter && album">
               <router-link
                 class="meta__line"
-                :to="`/reciters/${reciter.slug}`"
+                :to="getReciterUri(reciter)"
                 exact
               >
                 <span class="meta__line__text">
@@ -116,9 +116,12 @@ import { mapGetters } from 'vuex';
 import { MetaInfo } from 'vue-meta';
 import { AlbumIncludes } from '@/api/albums';
 import { TrackIncludes } from '@/api/tracks';
-import { Album } from '@/entities/album';
-import { Track } from '@/entities/track';
-import { Reciter } from '@/entities/reciter';
+import { Album, getAlbumArtwork } from '@/entities/album';
+import { Track, getTrackUri } from '@/entities/track';
+import { Reciter, getReciterUri } from '@/entities/reciter';
+import TrackList from '@/components/tracks/TrackList.vue';
+import EditTrackDialog from '@/components/edit/EditTrackDialog.vue';
+import EditAlbumDialog from '@/components/edit/EditAlbumDialog.vue';
 
 interface Data {
   album: Album | null;
@@ -130,6 +133,11 @@ interface Data {
 }
 
 export default Vue.extend({
+  components: {
+    TrackList,
+    EditTrackDialog,
+    EditAlbumDialog,
+  },
   async fetch() {
     const { id, albumId } = this.$route.params;
     this.album = await this.$api.albums.get(id, albumId, {
@@ -168,7 +176,7 @@ export default Vue.extend({
       return this.album?.reciter ?? null;
     },
     image(): string {
-      return this.album?.artwork ?? '/defaults/default-album-image.png';
+      return getAlbumArtwork(this.album);
     },
     playable(): Array<any> {
       if (!this.tracks) {
@@ -199,6 +207,8 @@ export default Vue.extend({
   },
 
   methods: {
+    getReciterUri,
+    getTrackUri,
     setBackgroundFromImage() {
       if (!this.album) {
         return;
@@ -222,12 +232,6 @@ export default Vue.extend({
         this.track.reciter.slug === reciter &&
         this.track.album.year === album
       );
-    },
-    getTrackLink(track): string | null {
-      if (!this.reciter || !this.album) {
-        return null;
-      }
-      return `/reciters/${this.reciter.slug}/albums/${this.album.year}/tracks/${track.slug}`;
     },
     hasAudioFile(track): boolean {
       return track.related?.audio ?? false;
