@@ -7,3 +7,11 @@ export interface Reciter extends PersistedEntity, TimestampedEntity {
   avatar: string | null;
   related?: { albums: number };
 }
+
+export function getReciterUri(reciter: Reciter) {
+  return `/reciters/${reciter.slug}`;
+}
+
+export function getReciterAvatar(reciter?: Reciter|null) {
+  return reciter?.avatar ?? '/defaults/default-reciter-avatar.png';
+}
