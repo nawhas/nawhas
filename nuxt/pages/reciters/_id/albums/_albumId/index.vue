@@ -52,7 +52,8 @@
               >
                 <v-icon left>
                   play_circle_filled
-                </v-icon> Play Album
+                </v-icon>
+                Play Album
               </v-btn>
               <v-btn
                 v-if="!addedToQueueSnackbar && tracks"
@@ -62,7 +63,8 @@
               >
                 <v-icon left>
                   playlist_add
-                </v-icon> Add to Queue
+                </v-icon>
+                Add to Queue
               </v-btn>
               <v-btn
                 v-if="addedToQueueSnackbar"
@@ -71,7 +73,8 @@
               >
                 <v-icon color="green" left>
                   done
-                </v-icon> Added to Queue
+                </v-icon>
+                Added to Queue
               </v-btn>
             </template>
             <template v-else>
@@ -97,7 +100,8 @@
     <v-snackbar v-model="addedToQueueSnackbar" right>
       <v-icon color="white">
         playlist_add_check
-      </v-icon> Added to Queue
+      </v-icon>
+      Added to Queue
       <v-btn color="primary" text @click="addedToQueueSnackbar = false">
         Close
       </v-btn>
@@ -114,14 +118,14 @@ import Vibrant from 'node-vibrant';
 import { Track, TrackIncludes } from '@/api/tracks';
 import { Reciter } from '@/api/reciters';
 
-interface Data {
-  album: Album | null;
-  background: string | null;
-  textColor: string | null;
-  track: Track | null;
-  tracks: Array<Track> | null;
-  addedToQueueSnackbar: boolean;
-}
+  interface Data {
+    album: Album | null;
+    background: string | null;
+    textColor: string | null;
+    track: Track | null;
+    tracks: Array<Track> | null;
+    addedToQueueSnackbar: boolean;
+  }
 
 export default Vue.extend({
   async fetch() {
@@ -158,7 +162,7 @@ export default Vue.extend({
 
   computed: {
     ...mapGetters('auth', ['isModerator']),
-    reciter(): Reciter|null|undefined {
+    reciter(): Reciter | null | undefined {
       return this.album && this.album.reciter;
     },
     image(): string {
@@ -217,7 +221,7 @@ export default Vue.extend({
       }
       return (
         this.track.reciter.slug === reciter &&
-        this.track.album.year === album
+          this.track.album.year === album
       );
     },
     getTrackLink(track) {
@@ -249,106 +253,111 @@ export default Vue.extend({
   },
 
   head(): MetaInfo {
-    const title = `${this.album?.reciter?.name} - ${this.album?.year} Album - ${this.album?.title}` ?? 'Album';
+    let title = `${this.$route.params.albumId} Album`;
 
-    return {
-      title,
-    };
+    if (this.album) {
+      title = `${this.album?.reciter?.name} - ${this.album?.year} Album - ${this.album?.title}`;
+    }
+
+    return { title };
   },
 });
 </script>
+
 <style lang="scss" scoped>
-  @import "@/assets/theme";
+@import "~assets/theme";
 
-  .hero {
-    width: 100%;
-    position: relative;
-    padding-bottom: 60px;
+.hero {
+  width: 100%;
+  position: relative;
+  padding-bottom: 60px;
+}
+
+.hero__artwork {
+  border: 4px solid white;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-right: 48px;
+  box-sizing: content-box;
+  background-color: white;
+}
+
+.hero__title {
+  font-family: 'Roboto Slab', sans-serif;
+  font-weight: bold;
+  font-size: 2.4rem;
+}
+
+.hero__meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+
+  .meta__line {
+    font-weight: 400;
+    padding: 4px 0;
+    text-decoration: none;
+    color: inherit;
+    display: block;
   }
 
-  .hero__artwork {
-    border: 4px solid white;
-    border-radius: 4px;
-    overflow: hidden;
-    margin-right: 48px;
-    box-sizing: content-box;
-    background-color: white;
-  }
-
-  .hero__title {
-    font-family: 'Roboto Slab', sans-serif;
-    font-weight: bold;
-    font-size: 2.4rem;
-  }
-
-  .hero__meta {
+  .meta__line__text {
     display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-
-    .meta__line {
-      font-weight: 400;
-      padding: 4px 0;
-      text-decoration: none;
-      color: inherit;
-      display: block;
-    }
-    .meta__line__text {
-      display: flex;
-      align-items: center;
-      justify-content: flex-start;
-    }
-    .meta__line__icon {
-      margin-right: 8px;
-    }
-  }
-
-  .hero__content {
-    display: flex;
-    flex-direction: row;
     align-items: center;
     justify-content: flex-start;
-    padding-top: 36px;
-    padding-bottom: 36px;
   }
 
-  .hero__bar {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    text-align: center;
-    padding: 12px 24px;
-    background: rgba(0, 0, 0, 0.2);
-
-    .bar__content {
-      padding: 0;
-      display: flex;
-      justify-content: space-between;
-    }
+  .meta__line__icon {
+    margin-right: 8px;
   }
+}
 
-  @media #{map-get($display-breakpoints, 'sm-and-down')} {
-    .hero__content {
-      padding: 32px;
-    }
-    .hero__title {
-      font-size: 1.9rem;
-    }
-    .hero__artwork {
-      margin-right: 24px;
-    }
-    .hero__meta .meta__line {
-      padding: 3px 0;
-    }
-  }
+.hero__content {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  padding-top: 36px;
+  padding-bottom: 36px;
+}
 
-  @media #{map-get($display-breakpoints, 'xs-only')} {
-    .hero__title {
-      font-size: 1.4rem;
-    }
-    .hero__meta .meta__line {
-      padding: 2px 0;
-    }
+.hero__bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  padding: 12px 24px;
+  background: rgba(0, 0, 0, 0.2);
+
+  .bar__content {
+    padding: 0;
+    display: flex;
+    justify-content: space-between;
   }
+}
+
+@media #{map-get($display-breakpoints, 'sm-and-down')} {
+  .hero__content {
+    padding: 32px;
+  }
+  .hero__title {
+    font-size: 1.9rem;
+  }
+  .hero__artwork {
+    margin-right: 24px;
+  }
+  .hero__meta .meta__line {
+    padding: 3px 0;
+  }
+}
+
+@media #{map-get($display-breakpoints, 'xs-only')} {
+  .hero__title {
+    font-size: 1.4rem;
+  }
+  .hero__meta .meta__line {
+    padding: 2px 0;
+  }
+}
 </style>
