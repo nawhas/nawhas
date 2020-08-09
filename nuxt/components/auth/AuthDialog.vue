@@ -31,7 +31,7 @@
 <script lang="ts">
 import { Component, Prop, Vue } from 'nuxt-property-decorator';
 import LabeledDivider from '@/components/ui/LabeledDivider.vue';
-import { SOCIAL_AUTHENTICATION } from '@/entities/features';
+import { Feature } from '@/api/features';
 
 const LogoIcon = require('@/assets/svg/icon.svg?inline');
 
@@ -46,7 +46,7 @@ export default class AuthDialog extends Vue {
   @Prop({ type: String }) private readonly error !: string;
 
   get socialAuthEnabled() {
-    return this.$store.getters['features/enabled'](SOCIAL_AUTHENTICATION);
+    return this.$store.getters['features/enabled'](Feature.SocialAuthentication);
   }
 }
 </script>

@@ -163,14 +163,12 @@
 
 <script lang="ts">
 import { Component, Vue } from 'nuxt-property-decorator';
-// import LoginForm from '@/components/auth/LoginForm.vue';
-// import RegisterForm from '@/components/auth/RegisterForm.vue';
 import AppChangelog from '@/components/notifications/AppChangelog.vue';
 import BugReportForm from '@/components/BugReportForm.vue';
 import { User, Role } from '@/entities/user';
-import { PUBLIC_USER_REGISTRATION } from '@/entities/features';
 import LoginForm from '@/components/auth/LoginForm.vue';
 import RegisterForm from '@/components/auth/RegisterForm.vue';
+import { Feature } from '@/api/features';
 
 @Component({
   components: {
@@ -210,7 +208,7 @@ export default class UserMenu extends Vue {
   }
 
   get canRegister() {
-    return this.$store.getters['features/enabled'](PUBLIC_USER_REGISTRATION);
+    return this.$store.getters['features/enabled'](Feature.PublicUserRegistration);
   }
 
   login() {

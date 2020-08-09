@@ -1,7 +1,10 @@
 import { Middleware } from '@nuxt/types';
 
-const initialize: Middleware = ({ store }) => {
-  return store.dispatch('auth/check');
+const initialize: Middleware = async ({ store }) => {
+  await Promise.all([
+    store.dispatch('auth/check'),
+    store.dispatch('features/fetch'),
+  ]);
 };
 
 export default initialize;
