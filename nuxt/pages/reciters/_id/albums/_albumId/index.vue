@@ -253,7 +253,7 @@ export default Vue.extend({
     let title = `${this.$route.params.albumId} Album`;
 
     if (this.album) {
-      title = `${this.album?.reciter?.name} - ${this.album?.year} Album - ${this.album?.title}`;
+      title = `${this.album.title} (${this.album.year}) - Album by ${this.album.reciter?.name}`;
     }
 
     return { title };
