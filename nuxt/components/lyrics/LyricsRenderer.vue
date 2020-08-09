@@ -37,8 +37,8 @@
 import {
   Component, Prop, Watch, Vue,
 } from 'nuxt-property-decorator';
-import { Track } from '@/api/tracks';
-import { Lyrics, Format, Documents } from '@/api/lyrics';
+import { Track } from '@/entities/track';
+import { Lyrics, Format, Documents } from '@/entities/lyrics';
 import LyricsHighlighter from '@/utils/LyricsHighlighter';
 import JsonV1Document = Documents.JsonV1.Document;
 

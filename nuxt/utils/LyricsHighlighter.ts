@@ -1,5 +1,5 @@
 import { PlayerState } from '@/store/player';
-import { Documents } from '@/api/lyrics';
+import { Documents } from '@/entities/lyrics';
 import Lyrics = Documents.JsonV1.Document;
 
 export default class LyricsHighlighter {

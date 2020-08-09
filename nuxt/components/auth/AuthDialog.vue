@@ -31,7 +31,7 @@
 <script lang="ts">
 import { Component, Prop, Vue } from 'nuxt-property-decorator';
 import LabeledDivider from '@/components/ui/LabeledDivider.vue';
-import { Feature } from '@/api/features';
+import { Feature } from '@/entities/feature';
 
 const LogoIcon = require('@/assets/svg/icon.svg?inline');
 

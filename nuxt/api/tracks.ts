@@ -1,45 +1,13 @@
 import { NuxtAxiosInstance } from '@nuxtjs/axios';
 import {
-  PersistedEntity,
-  TimestampedEntity,
   createParams,
   useIncludes,
   PaginatedResponse,
   usePagination,
-  PaginationOptions, EntityCollection,
+  PaginationOptions,
 } from '@/api/common';
-import { Reciter } from '@/api/reciters';
-import { Album } from '@/api/albums';
-import { Lyrics, Format as LyricsDocumentFormat } from '@/api/lyrics';
-
-/*
- * Entity Definitions
- */
-export interface Media {
-  uri: string;
-  type: 'audio';
-  provider: 'file';
-
-  /** @deprecated */
-  id: string;
-  /** @deprecated */
-  createdAt: string;
-  /** @deprecated */
-  updatedAt: string;
-}
-
-export interface Track extends PersistedEntity, TimestampedEntity {
-  title: string;
-  slug: string;
-  year: string;
-  reciterId: string;
-  albumId: string;
-  reciter?: Reciter;
-  album?: Album;
-  media?: EntityCollection<Media>;
-  lyrics?: Lyrics | null;
-  related?: { lyrics: boolean, audio: boolean };
-}
+import { Format as LyricsDocumentFormat } from '@/entities/lyrics';
+import { Track } from '@/entities/track';
 
 /*
  * Request Payloads

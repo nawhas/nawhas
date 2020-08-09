@@ -103,7 +103,7 @@ import {
 import { clone } from '@/utils/clone';
 import { RequestOptions, TrackIncludes } from '@/api/tracks';
 import TimestampedEditor from '@/components/edit/lyrics/TimestampedEditor.vue';
-import { Documents, Format } from '@/api/lyrics';
+import { Documents, Format } from '@/entities/lyrics';
 import JsonV1Document = Documents.JsonV1.Document;
 import GroupType = Documents.JsonV1.LineGroupType;
 import LyricsData = Documents.JsonV1.LyricsData;

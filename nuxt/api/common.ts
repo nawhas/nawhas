@@ -1,12 +1,3 @@
-export interface TimestampedEntity {
-  createdAt: string;
-  updatedAt: string;
-}
-
-export interface PersistedEntity {
-  id: string;
-}
-
 export interface PaginationOptions {
   limit?: number;
   page?: number;
@@ -33,11 +24,8 @@ export interface ResponseMetadata {
   pagination: PaginationMetadata;
 }
 
-export interface EntityCollection<T> {
+export interface PaginatedResponse<T> {
   data: Array<T>;
-}
-
-export interface PaginatedResponse<T> extends EntityCollection<T> {
   meta: ResponseMetadata;
 }
 

@@ -89,7 +89,7 @@ import RepeatLine from '@/components/edit/lyrics/RepeatLine.vue';
 import EditableText from '@/components/edit/lyrics/EditableText.vue';
 import Timestamp from '@/components/edit/lyrics/Timestamp.vue';
 import StateHistory from '@/utils/StateHistory';
-import { Documents } from '@/api/lyrics';
+import { Documents } from '@/entities/lyrics';
 import { clone } from '@/utils/clone';
 import LyricsHighlighter from '@/utils/LyricsHighlighter';
 import Line = Documents.JsonV1.Line;

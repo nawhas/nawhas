@@ -1,13 +1,5 @@
 import { NuxtAxiosInstance } from '@nuxtjs/axios';
-
-export type FeatureMap = {
-  [name in Feature]?: boolean;
-};
-
-export enum Feature {
-  PublicUserRegistration = 'registration.public',
-  SocialAuthentication = 'auth.social',
-}
+import { FeatureMap } from '@/entities/feature';
 
 export interface FeaturesIndexResponse {
   data: FeatureMap;
