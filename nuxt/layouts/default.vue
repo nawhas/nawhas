@@ -109,6 +109,7 @@ const links = [
 ];
 
 export default Vue.extend({
+  name: 'DefaultLayout',
   components: {
     LogoWordmark,
     LogoIcon,

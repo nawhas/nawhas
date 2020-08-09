@@ -1,5 +1,5 @@
-import { ActionContext, ActionTree, MutationTree } from 'vuex';
-import { LoginPayload, RegisterPayload, User } from '@/api/auth';
+import { ActionContext, ActionTree, MutationTree, GetterTree } from 'vuex';
+import { LoginPayload, RegisterPayload, Role, User } from '@/api/auth';
 
 import { RootState } from '@/store';
 
@@ -55,8 +55,16 @@ const actions: ActionTree<AuthState, RootState> = {
   },
 };
 
+const getters: GetterTree<AuthState, RootState> = {
+  user: (state) => state.user,
+  authenticated: (state) => state.user !== null,
+  isModerator: (state) => state.user?.role === Role.Moderator,
+  role: (state) => state.user?.role ?? Role.Guest,
+};
+
 export default {
   state,
   actions,
   mutations,
+  getters,
 };
