@@ -165,7 +165,7 @@
 import { Component, Vue } from 'nuxt-property-decorator';
 import AppChangelog from '@/components/notifications/AppChangelog.vue';
 import BugReportForm from '@/components/BugReportForm.vue';
-import { User, Role } from '@/entities/user';
+import { User, Role } from '@/api/auth';
 import LoginForm from '@/components/auth/LoginForm.vue';
 import RegisterForm from '@/components/auth/RegisterForm.vue';
 import { Feature } from '@/api/features';
