@@ -173,6 +173,16 @@ export default {
     middleware: [
       'initialize',
     ],
+    extendRoutes(routes) {
+      routes.push({
+        path: '/reciters/:id/albums',
+        redirect: { path: '/reciters/:id' },
+      });
+      routes.push({
+        path: '/reciters/:id/albums/:albumId/tracks',
+        redirect: { path: '/reciters/:id/albums/:albumId' },
+      });
+    },
   },
 
   server: {
