@@ -105,7 +105,7 @@ import SkeletonCardGrid from '@/components/loaders/SkeletonCardGrid.vue';
 import AlbumSkeleton from '@/components/loaders/AlbumSkeleton.vue';
 import TrackCardSkeleton from '@/components/loaders/TrackCardSkeleton.vue';
 import HeroBanner from '@/components/HeroBanner.vue';
-import { Reciter } from '@/api/reciters';
+import { Reciter } from '@/entities/reciter';
 import Album from '@/components/albums/Album.vue';
 import { TrackIncludes } from '@/api/tracks';
 import EditReciterDialog from '@/components/edit/EditReciterDialog.vue';

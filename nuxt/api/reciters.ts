@@ -1,24 +1,12 @@
 import { NuxtAxiosInstance } from '@nuxtjs/axios';
 import {
   PaginationOptions,
-  PersistedEntity,
-  TimestampedEntity,
   PaginatedResponse,
   createParams,
   usePagination,
   useIncludes,
 } from '@/api/common';
-
-/*
- * Entity Definitions
- */
-export interface Reciter extends PersistedEntity, TimestampedEntity {
-  name: string;
-  description: string | null;
-  slug: string;
-  avatar: string | null;
-  related?: { albums: number };
-}
+import { Reciter } from '@/entities/reciter';
 
 /*
  * Request Payloads

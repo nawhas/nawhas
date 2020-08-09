@@ -53,7 +53,8 @@ import Vue from 'vue';
 import ReciterCard from '@/components/ReciterCard.vue';
 import SkeletonCardGrid from '@/components/loaders/SkeletonCardGrid.vue';
 import { EventBus, Search } from '@/events';
-import { Reciter, ReciterIncludes, RecitersIndexResponse } from '@/api/reciters';
+import { ReciterIncludes, RecitersIndexResponse } from '@/api/reciters';
+import { Reciter } from '@/entities/reciter';
 
 interface Data {
   page: number;

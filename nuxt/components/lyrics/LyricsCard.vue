@@ -28,10 +28,10 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'nuxt-property-decorator';
-import * as Format from '@/constants/lyrics/format';
 import LyricsRenderer from '@/components/lyrics/LyricsRenderer';
 import LyricsSkeleton from '@/components/loaders/LyricsSkeleton';
-import { Lyrics, LyricsModel } from '@/types/lyrics';
+import { Documents, Lyrics, Format } from '@/entities/lyrics';
+import JsonV1Document = Documents.JsonV1.Document;
 
 @Component({
   components: {
@@ -47,13 +47,13 @@ export default class LyricsCard extends Vue {
       return false;
     }
 
-    const model: LyricsModel = this.track.lyrics;
+    const model: Lyrics = this.track.lyrics;
 
-    if (model.format !== Format.JSON_V1) {
+    if (model.format !== Format.JsonV1) {
       return false;
     }
 
-    const lyrics: Lyrics = JSON.parse(model.content);
+    const lyrics: JsonV1Document = JSON.parse(model.content);
 
     return lyrics.meta.timestamps;
   }
@@ -61,8 +61,8 @@ export default class LyricsCard extends Vue {
 </script>
 
 <style lang="scss" scoped>
-@import '../../styles/theme';
-@import '../../styles/tracks/cards';
+@import '~assets/theme';
+// @import '~assets/tracks/cards';
 
 .lyrics {
   padding: 0;
