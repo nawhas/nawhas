@@ -45,8 +45,6 @@ const actions: ActionTree<AuthState, RootState> = {
     await this.$api.auth.logout();
   },
   async check({ commit }: Context) {
-    await this.$axios.get('/sanctum/csrf-cookie');
-
     try {
       const user = await this.$api.auth.user();
       commit('INITIALIZE', user);

@@ -35,6 +35,7 @@ export class AuthApi {
   ) {}
 
   async login(payload: LoginPayload): Promise<User> {
+    await this.axios.get('/sanctum/csrf-cookie');
     return await this.axios.$post<User>('v1/auth/login', payload);
   }
 
