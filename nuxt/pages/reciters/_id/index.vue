@@ -99,13 +99,13 @@
 <script lang="ts">
 import Vue from 'vue';
 import { mapGetters } from 'vuex';
+import { MetaInfo } from 'vue-meta';
 import TrackCard from '@/components/tracks/TrackCard.vue';
 import SkeletonCardGrid from '@/components/loaders/SkeletonCardGrid.vue';
 import AlbumSkeleton from '@/components/loaders/AlbumSkeleton.vue';
 import TrackCardSkeleton from '@/components/loaders/TrackCardSkeleton.vue';
 import HeroBanner from '@/components/HeroBanner.vue';
 import { Reciter } from '@/entities/reciter';
-import { MetaInfo } from 'vue-meta';
 import Album from '@/components/albums/Album.vue';
 import { TrackIncludes } from '@/api/tracks';
 import EditReciterDialog from '@/components/edit/EditReciterDialog.vue';
