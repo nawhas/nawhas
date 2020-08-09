@@ -162,14 +162,11 @@ export default Vue.extend({
 
   computed: {
     ...mapGetters('auth', ['isModerator']),
-    reciter(): Reciter | null | undefined {
-      return this.album && this.album.reciter;
+    reciter(): Reciter | null {
+      return this.album?.reciter ?? null;
     },
     image(): string {
-      if (this.album) {
-        return this.album.artwork || '/defaults/default-album-image.png';
-      }
-      return '/defaults/default-album-image.png';
+      return this.album?.artwork ?? '/defaults/default-album-image.png';
     },
     playable(): Array<any> {
       if (!this.tracks) {
@@ -221,20 +218,20 @@ export default Vue.extend({
       }
       return (
         this.track.reciter.slug === reciter &&
-          this.track.album.year === album
+        this.track.album.year === album
       );
     },
-    getTrackLink(track) {
+    getTrackLink(track): string | null {
       if (!this.reciter || !this.album) {
-        return;
+        return null;
       }
       return `/reciters/${this.reciter.slug}/albums/${this.album.year}/tracks/${track.slug}`;
     },
     hasAudioFile(track): boolean {
-      return track.related ? track.related.audio : false;
+      return track.related?.audio ?? false;
     },
     hasLyrics(track): boolean {
-      return track.related ? track.related.lyrics : false;
+      return track.related?.lyrics ?? false;
     },
     playAlbum() {
       this.$store.commit('player/PLAY_ALBUM', { tracks: this.playable, start: this.playable[0] });
