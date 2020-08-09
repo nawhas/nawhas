@@ -201,11 +201,12 @@ export default class UserMenu extends Vue {
   }
 
   get theme() {
-    return this.$store.state.preferences.theme;
+    return 'auto';
+    // return this.$store.state.preferences.theme;
   }
 
   set theme(value) {
-    this.$store.commit('preferences/SET_THEME', value);
+    // this.$store.commit('preferences/SET_THEME', value);
   }
 
   get canRegister() {
