@@ -16,7 +16,7 @@
         :key="groupId"
         :class="{ 'lyrics__group': true, 'lyrics__group--highlighted': highlighter && highlighter.current === groupId }"
       >
-        <div v-if="group.type === GroupType.SPACER" class="lyrics__spacer" />
+        <div v-if="group.type === GroupType.Spacer" class="lyrics__spacer" />
         <div class="lyrics__group__lines">
           <div v-for="(line, lineId) in group.lines" :key="lineId" class="lyrics__group__lines__line">
             <div class="lyrics__text">
@@ -37,30 +37,30 @@
 import {
   Component, Prop, Watch, Vue,
 } from 'nuxt-property-decorator';
-import * as Format from '@/constants/lyrics/format';
-import * as GroupType from '@/constants/lyrics/group-type';
+import { Track } from '@/api/tracks';
+import { Lyrics, Format, Documents } from '@/api/lyrics';
 import LyricsHighlighter from '@/utils/LyricsHighlighter';
-import { Lyrics, LyricsModel } from '@/types/lyrics';
+import JsonV1Document = Documents.JsonV1.Document;
 
 @Component({
-  data: () => ({ GroupType }),
+  data: () => ({ GroupType: Documents.JsonV1.LineGroupType }),
 })
 export default class LyricsRenderer extends Vue {
-  @Prop({ type: Object, required: true }) private readonly track!: any;
+  @Prop({ type: Object, required: true }) private readonly track!: Track;
   private highlighter: LyricsHighlighter|null = null;
 
-  get model(): LyricsModel|null {
-    return (this.track.lyrics as LyricsModel|null);
+  get model(): Lyrics|null {
+    return this.track.lyrics ?? null;
   }
 
   get unsupported(): boolean {
     if (!this.track) {
       return false;
     }
-    return this.track.lyrics && this.track.lyrics.format > Format.JSON_V1;
+    return this.track.lyrics ? this.track.lyrics.format > Format.JsonV1 : false;
   }
 
-  get lyrics(): Lyrics|string {
+  get lyrics(): JsonV1Document|string {
     if (this.model === null) {
       return '';
     }
@@ -73,7 +73,7 @@ export default class LyricsRenderer extends Vue {
   }
 
   get isJson() {
-    return this.model && this.model.format === Format.JSON_V1;
+    return this.model && this.model.format === Format.JsonV1;
   }
 
   get isCurrentlyPlaying() {
@@ -117,11 +117,11 @@ export default class LyricsRenderer extends Vue {
       return false;
     }
 
-    if (this.model.format === Format.PLAIN_TEXT) {
+    if (this.model.format === Format.PlainText) {
       return false;
     }
 
-    return (this.lyrics as Lyrics).meta.timestamps;
+    return (this.lyrics as JsonV1Document).meta.timestamps;
   }
 }
 </script>

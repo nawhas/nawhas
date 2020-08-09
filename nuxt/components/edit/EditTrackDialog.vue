@@ -101,15 +101,16 @@ import {
   Component, Prop, Watch, Vue,
 } from 'nuxt-property-decorator';
 import { clone } from '@/utils/clone';
-import * as Format from '@/constants/lyrics/format';
-import TimestampedEditor from '@/components/edit/lyrics/TimestampedEditor.vue';
-import { Lyrics } from '@/types/lyrics';
-import * as GroupType from '@/constants/lyrics/group-type';
 import { RequestOptions, TrackIncludes } from '@/api/tracks';
+import TimestampedEditor from '@/components/edit/lyrics/TimestampedEditor.vue';
+import { Documents, Format } from '@/api/lyrics';
+import JsonV1Document = Documents.JsonV1.Document;
+import GroupType = Documents.JsonV1.LineGroupType;
+import LyricsData = Documents.JsonV1.LyricsData;
 
 interface Form {
   title: string|null;
-  lyrics: Lyrics|null;
+  lyrics: JsonV1Document|null;
   audio: File|null;
 }
 const defaults: Form = {
@@ -146,22 +147,22 @@ export default class EditTrackDialog extends Vue {
     }
   }
 
-  get lyrics(): Lyrics|null {
+  get lyrics(): JsonV1Document|null {
     if (!this.track.lyrics) {
       return null;
     }
 
     const { content, format } = this.track.lyrics;
-    if (format === Format.JSON_V1) {
+    if (format === Format.JsonV1) {
       return JSON.parse(content);
     }
 
-    const data = content.trim().split(/\n/gi).map((text, index) => {
+    const data: LyricsData = content.trim().split(/\n/gi).map((text, index) => {
       if (text.trim().length === 0) {
         return {
           timestamp: null,
           lines: [{ text: '', repeat: 0 }],
-          type: GroupType.SPACER,
+          type: GroupType.Spacer,
         };
       }
 
@@ -243,7 +244,7 @@ export default class EditTrackDialog extends Vue {
       data.lyrics = lyricsString;
     }
     // TODO - make dynamic
-    data.format = Format.JSON_V1;
+    data.format = Format.JsonV1;
     const { id, reciterId, albumId } = this.track;
     let response = await this.$api.tracks.update(
       reciterId,

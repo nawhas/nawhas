@@ -10,29 +10,11 @@ import {
 } from '@/api/common';
 import { Reciter } from '@/api/reciters';
 import { Album } from '@/api/albums';
-
-export enum LyricsDocumentFormat {
-  PlainText = 1,
-  JsonV1 = 2,
-}
+import { Lyrics, Format as LyricsDocumentFormat } from '@/api/lyrics';
 
 /*
  * Entity Definitions
  */
-export interface Lyrics {
-  content: string;
-  format: LyricsDocumentFormat;
-
-  /** @deprecated */
-  id: string;
-  /** @deprecated */
-  trackId: string;
-  /** @deprecated */
-  createdAt: string;
-  /** @deprecated */
-  updatedAt: string;
-}
-
 export interface Media {
   uri: string;
   type: 'audio';

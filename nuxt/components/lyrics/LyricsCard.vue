@@ -28,7 +28,7 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'nuxt-property-decorator';
-import * as Format from '@/constants/lyrics/format';
+import { LyricsDocumentFormat as Format } from '@/api/tracks';
 import LyricsRenderer from '@/components/lyrics/LyricsRenderer';
 import LyricsSkeleton from '@/components/loaders/LyricsSkeleton';
 import { Lyrics, LyricsModel } from '@/types/lyrics';
@@ -49,7 +49,7 @@ export default class LyricsCard extends Vue {
 
     const model: LyricsModel = this.track.lyrics;
 
-    if (model.format !== Format.JSON_V1) {
+    if (model.format !== Format.JsonV1) {
       return false;
     }
 
