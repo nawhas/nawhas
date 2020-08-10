@@ -101,7 +101,7 @@ export default {
     '@/plugins/filters',
     '@/plugins/api',
     '@/plugins/theme.client',
-    '@/plugins/sw.client',
+    '@/plugins/service-worker.client',
   ],
   /*
   ** Auto import components
