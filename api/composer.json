@@ -5,7 +5,6 @@
     "license": "MIT",
     "require": {
         "php": "7.4.*",
-        "algolia/scout-extended": "^1.9",
         "fideloper/proxy": "^4.0",
         "fruitcake/laravel-cors": "^2.0",
         "graham-campbell/github": "^9.1",
