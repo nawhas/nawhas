@@ -2,9 +2,8 @@
 
 namespace App\Console\Commands;
 
-use App\Database\Doctrine\EntityManager;
-use App\Entities\User;
-use App\Enum\Role;
+use App\Modules\Authentication\Enum\Role;
+use App\Modules\Authentication\Models\User;
 use Illuminate\Console\Command;
 use Illuminate\Support\Str;
 
@@ -15,7 +14,7 @@ class CreateUserCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'user:create {--name=} {--email=} {--moderator}';
+    protected $signature = 'user:create {name} {email} {--moderator}';
 
     /**
      * The console command description.
@@ -24,11 +23,11 @@ class CreateUserCommand extends Command
      */
     protected $description = 'Provision a user account.';
 
-    public function handle(EntityManager $em): int
+    public function handle(): int
     {
         // Get variables from input scrypt
-        $name = $this->option('name');
-        $email = $this->option('email');
+        $name = $this->argument('name');
+        $email = $this->argument('email');
         $role = $this->option('moderator') ? Role::MODERATOR() : Role::CONTRIBUTOR();
 
         $password = $this->ask('What is the password? Press [Enter] if you would like to generate a random password');
@@ -47,11 +46,10 @@ class CreateUserCommand extends Command
         if (!$confirmed) {
             return 1;
         }
-        $password = bcrypt($password);
+
         // Create a new user with the information supplied
-        $user = new User($role, $name, $email, $password);
-        $em->persist($user);
-        $em->flush();
+        User::create($role, $name, $email, $password);
+
         return 0;
     }
 }

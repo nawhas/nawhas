@@ -21,19 +21,32 @@ class EventSerializer implements SpatieEventSerializer
     public function serialize(ShouldBeStored $event): string
     {
         if ($event instanceof SerializableEvent) {
-            return json_encode($event->toPayload());
+            $payload = json_encode($event->toPayload());
+        } else {
+            $payload = $this->serializer->serialize($event);
         }
 
-        return $this->serializer->serialize($event);
+        if ($event instanceof UserAwareEvent) {
+            $data = json_decode($payload, true);
+            $data['userId'] = $event->getUserId();
+            $payload = json_encode($data);
+        }
+
+        return $payload;
     }
 
     public function deserialize(string $eventClass, string $json, string $metadata = null): ShouldBeStored
     {
         if (is_subclass_of($eventClass, SerializableEvent::class)) {
-            $event = $eventClass::fromPayload(json_decode($json, true));
+            $payload = json_decode($json, true);
+            $event = $eventClass::fromPayload($payload);
 
             if (!($event instanceof ShouldBeStored)) {
                 throw new \RuntimeException('Event must be a subclass of ' . ShouldBeStored::class . '.');
+            }
+
+            if ($event instanceof UserAwareEvent) {
+                $event->setUserId($payload['userId']);
             }
 
             return $event;

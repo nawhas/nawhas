@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Modules\Library\Events\Albums;
 
-use Spatie\EventSourcing\StoredEvents\ShouldBeStored;
+use App\Modules\Library\Events\UserAction;
 
-class AlbumDeleted extends ShouldBeStored
+class AlbumDeleted extends UserAction
 {
     public string $id;
 

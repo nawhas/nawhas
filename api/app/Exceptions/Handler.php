@@ -32,10 +32,6 @@ class Handler extends ExceptionHandler
     {
         $e = parent::prepareException($e);
 
-        if ($e instanceof EntityNotFoundException) {
-            return new NotFoundHttpException($e->getMessage(), $e);
-        }
-
         if (app()->environment('production', 'staging')) {
             if ($e instanceof FeatureNotEnabledException) {
                 return new NotFoundHttpException($e->getMessage(), $e);

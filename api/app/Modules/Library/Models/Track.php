@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Library\Models;
 
-use App\Entities\Contracts\TimestampedEntity;
+use App\Modules\Core\Contracts\TimestampedEntity;
 use App\Modules\Core\Models\HasTimestamps;
 use App\Modules\Core\Models\HasUuid;
 use App\Modules\Core\Models\UsesDataConnection;

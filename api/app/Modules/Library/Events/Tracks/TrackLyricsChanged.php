@@ -8,9 +8,9 @@ use App\Modules\Core\Events\SerializableEvent;
 use App\Modules\Lyrics\Documents\Document;
 use App\Modules\Lyrics\Documents\Factory;
 use App\Modules\Lyrics\Documents\Format;
-use Spatie\EventSourcing\StoredEvents\ShouldBeStored;
+use App\Modules\Library\Events\UserAction;
 
-class TrackLyricsChanged extends ShouldBeStored implements SerializableEvent
+class TrackLyricsChanged extends UserAction implements SerializableEvent
 {
     public string $id;
     public ?Document $document;

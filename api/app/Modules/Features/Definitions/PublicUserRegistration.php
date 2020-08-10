@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Features\Definitions;
 
-use App\Entities\User;
+use App\Modules\Authentication\Models\User;
 
 class PublicUserRegistration implements Feature
 {

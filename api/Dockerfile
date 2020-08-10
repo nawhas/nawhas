@@ -9,7 +9,8 @@ ENV COMPOSER_ALLOW_SUPERUSER 1
 
 COPY . .
 
-RUN composer install
+ENV TELESCOPE_ENABLED=false
+RUN composer install --no-scripts
 RUN composer run post-root-package-install && php artisan key:generate
 RUN ./docker/scripts/psalm.sh
 RUN composer test
@@ -23,7 +24,10 @@ WORKDIR /var/www/api
 ENV APP_ENV production
 
 COPY . .
+COPY --from=test /var/www/api/vendor /var/www/api/vendor
+COPY --from=test /tmp/.composer /tmp/.composer
 
+ENV TELESCOPE_ENABLED=false
 RUN composer install -n --no-dev --prefer-dist --no-scripts --no-autoloader \
     && composer dump-autoload -n -o --no-dev \
     && composer check-platform-reqs

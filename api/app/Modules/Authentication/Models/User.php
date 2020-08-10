@@ -4,20 +4,18 @@ declare(strict_types=1);
 
 namespace App\Modules\Authentication\Models;
 
-use App\Entities\Contracts\TimestampedEntity;
 use App\Modules\Authentication\Enum\Role;
-use App\Modules\Authentication\Events\{
-    UserEmailChanged,
+use App\Modules\Authentication\Events\{UserEmailChanged,
     UserNameChanged,
     UserNicknameChanged,
     UserPasswordChanged,
     UserRegistered,
     UserRememberTokenChanged,
-    UserRoleChanged
-};
+    UserRoleChanged};
+use App\Modules\Core\Contracts\TimestampedEntity;
 use App\Modules\Core\Models\{HasTimestamps, HasUuid, UsesDataConnection};
-use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Ramsey\Uuid\Uuid;
 
 /**
@@ -51,11 +49,11 @@ class User extends Authenticatable implements TimestampedEntity
         $id = Uuid::uuid1()->toString();
 
         event(new UserRegistered($id, [
-            'role' => $role,
+            'role' => $role->getValue(),
             'name' => $name,
             'email' => $email,
             'password' => bcrypt($password),
-            'rememberToken' => $rememberToken,
+            'remember_token' => $rememberToken,
             'nickname' => $nickname,
         ]));
 

@@ -4,16 +4,11 @@ declare(strict_types=1);
 
 namespace App\Modules\Library\Models;
 
-use App\Entities\Contracts\TimestampedEntity;
-use App\Modules\Library\Events\Albums\{
-    AlbumArtworkChanged,
-    AlbumCreated,
-    AlbumTitleChanged,
-    AlbumYearChanged
-};
+use App\Modules\Core\Contracts\TimestampedEntity;
 use App\Modules\Core\Models\HasTimestamps;
 use App\Modules\Core\Models\HasUuid;
 use App\Modules\Core\Models\UsesDataConnection;
+use App\Modules\Library\Events\Albums\{AlbumArtworkChanged, AlbumCreated, AlbumTitleChanged, AlbumYearChanged};
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -125,6 +120,15 @@ class Album extends Model implements TimestampedEntity
         }
 
         throw new ModelNotFoundException('Invalid UUID.');
+    }
+
+    public function resolveChildRouteBinding($childType, $value, $field)
+    {
+        if ($childType === 'track' && Uuid::isValid($value)) {
+            return $this->tracks()->find($value);
+        }
+
+        return parent::resolveChildRouteBinding($childType, $value, $field);
     }
 
     public function toSearchableArray()
