@@ -1,3 +1,8 @@
+<router>
+  path: /about
+  name: "about"
+</router>
+
 <template>
   <div class="about">
     <hero-banner background="/backgrounds/shrine.jpg" class="mb-4">

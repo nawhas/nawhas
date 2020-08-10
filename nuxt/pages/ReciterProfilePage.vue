@@ -1,3 +1,8 @@
+<router>
+  path: /reciters/:reciterId
+  name: "reciters.show"
+</router>
+
 <template>
   <div class="reciter-profile">
     <hero-banner
@@ -132,15 +137,15 @@ export default Vue.extend({
   },
 
   async fetch() {
-    const { id } = this.$route.params;
+    const { reciterId } = this.$route.params;
     const [reciter, tracks, albums] = await Promise.all([
-      this.$api.reciters.get(id),
+      this.$api.reciters.get(reciterId),
       this.$api.tracks.popular({
+        reciterId,
         pagination: { limit: 6 },
-        reciterId: id,
         include: [TrackIncludes.Album, TrackIncludes.Reciter],
       }),
-      this.$api.albums.index(id, {
+      this.$api.albums.index(reciterId, {
         pagination: { page: this.page },
         include: ['tracks.media', 'tracks.reciter', 'tracks.album', 'tracks.related'],
       }),

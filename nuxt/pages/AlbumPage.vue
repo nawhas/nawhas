@@ -1,3 +1,8 @@
+<router>
+  path: /reciters/:reciterId/albums/:albumId
+  name: "albums.show"
+</router>
+
 <template>
   <div>
     <div class="hero" :style="{'background-color': background, color: textColor}">
@@ -139,12 +144,12 @@ export default Vue.extend({
     EditAlbumDialog,
   },
   async fetch() {
-    const { id, albumId } = this.$route.params;
-    this.album = await this.$api.albums.get(id, albumId, {
+    const { reciterId, albumId } = this.$route.params;
+    this.album = await this.$api.albums.get(reciterId, albumId, {
       include: [AlbumIncludes.Reciter, AlbumIncludes.Related],
     });
 
-    const response = await this.$api.tracks.index(id, albumId, {
+    const response = await this.$api.tracks.index(reciterId, albumId, {
       include: [
         TrackIncludes.Reciter,
         TrackIncludes.Lyrics,

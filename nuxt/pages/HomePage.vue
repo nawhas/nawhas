@@ -1,3 +1,8 @@
+<router>
+  path: /
+  name: "home"
+</router>
+
 <template>
   <div>
     <header :class="{ 'header': true, 'header--dark': $vuetify.theme.dark }">
