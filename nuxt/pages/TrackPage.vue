@@ -1,3 +1,8 @@
+<router>
+  path: /reciters/:reciterId/albums/:albumId/tracks/:trackId
+  name: "tracks.show"
+</router>
+
 <template>
   <div :class="{ 'track-page': true, 'track-page--dark': isDark }">
     <div class="hero" :style="{'background-color': background, color: textColor}">
@@ -181,10 +186,10 @@ export default Vue.extend({
   },
 
   async fetch() {
-    const { id, albumId, trackId } = this.$route.params;
+    const { reciterId, albumId, trackId } = this.$route.params;
 
     await Promise.all([
-      this.$api.tracks.get(id, albumId, trackId, {
+      this.$api.tracks.get(reciterId, albumId, trackId, {
         include: [
           TrackIncludes.Reciter,
           TrackIncludes.Lyrics,
@@ -194,7 +199,7 @@ export default Vue.extend({
       }).then((track) => {
         this.track = track;
       }),
-      this.$api.tracks.index(id, albumId, {
+      this.$api.tracks.index(reciterId, albumId, {
         include: [
           TrackIncludes.Reciter,
           TrackIncludes.Lyrics,

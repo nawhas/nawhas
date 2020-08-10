@@ -1,3 +1,8 @@
+<router>
+  path: /reciters
+  name: "reciters.index"
+</router>
+
 <template>
   <div class="view-wrapper">
     <v-container class="app__section">

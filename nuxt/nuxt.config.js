@@ -97,6 +97,7 @@ export default {
     '@nuxtjs/vuetify',
     '@nuxtjs/google-fonts',
     '@nuxtjs/svg',
+    '@nuxtjs/router-extras',
   ],
   /*
   ** Nuxt.js modules
@@ -174,14 +175,18 @@ export default {
       'initialize',
     ],
     extendRoutes(routes) {
-      routes.push({
-        path: '/reciters/:id/albums',
-        redirect: { path: '/reciters/:id' },
-      });
-      routes.push({
-        path: '/reciters/:id/albums/:albumId/tracks',
-        redirect: { path: '/reciters/:id/albums/:albumId' },
-      });
+      routes.push(...[
+        {
+          name: 'albums.index',
+          path: '/reciters/:id/albums',
+          redirect: { path: '/reciters/:id' },
+        },
+        {
+          name: 'tracks.index',
+          path: '/reciters/:reciterId/albums/:albumId/tracks',
+          redirect: { path: '/reciters/:id/albums/:albumId' },
+        },
+      ]);
     },
   },
 
