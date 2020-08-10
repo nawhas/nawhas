@@ -3,32 +3,34 @@
     <div class="hero" :style="{'background-color': background, color: textColor}">
       <v-container class="hero__content">
         <v-avatar :size="heroArtworkSize" class="hero__artwork" tile>
-          <img v-if="track && album" crossorigin :src="image" :alt="album.name" />
+          <img v-if="track && album" crossorigin :src="image" :alt="album.name">
         </v-avatar>
         <div class="hero__text">
           <h4 class="hero__title">
-            <template v-if="track">{{ track.title }}</template>
+            <template v-if="track">
+              {{ track.title }}
+            </template>
             <template v-else>
-              <v-skeleton-loader type="text" dark width="220px" class="py-md-8 py-2"></v-skeleton-loader>
+              <v-skeleton-loader type="text" dark width="220px" class="py-md-8 py-2" />
             </template>
           </h4>
           <div class="hero__meta">
             <template v-if="reciter && album">
               <router-link
                 class="meta__line"
-                :to="{ name: 'reciters.show', params: { reciter: reciter.slug } }"
+                :to="getReciterUri(reciter)"
                 exact
               >
                 <span class="meta__line__text">{{ reciter.name }}</span>
               </router-link>
-              <br />
-              <router-link class="meta__line" :to="albumLink" exact>
+              <br>
+              <router-link class="meta__line" :to="getAlbumUri(album, reciter)" exact>
                 <span class="meta__line__text">{{ album.year }} &bull; {{ album.title }}</span>
               </router-link>
             </template>
             <template v-else>
-              <v-skeleton-loader type="text" dark width="150px" class="my-2"></v-skeleton-loader>
-              <v-skeleton-loader type="text" dark width="100px" class="my-2"></v-skeleton-loader>
+              <v-skeleton-loader type="text" dark width="150px" class="my-2" />
+              <v-skeleton-loader type="text" dark width="100px" class="my-2" />
             </template>
           </div>
         </div>
@@ -38,45 +40,51 @@
           <div class="bar__actions bar__actions--visible">
             <template v-if="track && albumTracks">
               <v-btn
-                text
-                :color="this.textColor"
                 v-if="hasAudio && albumTracks && !isSameTrackPlaying"
+                text
+                :color="textColor"
                 @click="playAlbum"
               >
-                <v-icon left>play_circle_filled</v-icon>Play
+                <v-icon left>
+                  play_circle_filled
+                </v-icon>Play
               </v-btn>
               <v-btn
-                text
-                :color="this.textColor"
                 v-else-if="hasAudio && isSameTrackPlaying"
+                text
+                :color="textColor"
                 @click="stopPlaying"
               >
                 <v-icon>stop</v-icon>Stop
               </v-btn>
               <v-btn
-                text
-                :color="this.textColor"
                 v-if="hasAudio && !addedToQueueSnackbar && albumTracks"
+                text
+                :color="textColor"
                 @click="addToQueue"
               >
-                <v-icon left>playlist_add</v-icon>Add to Queue
+                <v-icon left>
+                  playlist_add
+                </v-icon>Add to Queue
               </v-btn>
-              <v-btn text :color="this.textColor" v-if="hasAudio && addedToQueueSnackbar">
-                <v-icon color="green" left>done</v-icon>Added to Queue
+              <v-btn v-if="hasAudio && addedToQueueSnackbar" text :color="textColor">
+                <v-icon color="green" left>
+                  done
+                </v-icon>Added to Queue
               </v-btn>
             </template>
             <template v-else>
-              <v-skeleton-loader type="text" dark width="100px" class="mt-3"></v-skeleton-loader>
+              <v-skeleton-loader type="text" dark width="100px" class="mt-3" />
             </template>
           </div>
           <div class="bar__actions bar__actions--overflow">
-            <v-btn icon :color="textColor" v-if="track && track.lyrics" @click="print">
+            <v-btn v-if="track && track.lyrics" icon :color="textColor" @click="print">
               <v-icon>print</v-icon>
             </v-btn>
             <template v-if="track && isModerator">
               <edit-track-dialog :track="track" />
             </template>
-            <v-btn dark icon v-if="false">
+            <v-btn v-if="false" dark icon>
               <v-icon>more_vert</v-icon>
             </v-btn>
           </div>
@@ -93,26 +101,30 @@
           <v-card class="card card--album">
             <v-card-title
               class="card__title subtitle-1 card__title--link"
-              @click="$router.push(albumLink)"
+              @click="$router.push(getAlbumUri(album, reciter))"
             >
-              <v-icon class="card__title__icon">format_list_bulleted</v-icon>
+              <v-icon class="card__title__icon">
+                format_list_bulleted
+              </v-icon>
               <div>More From This Album</div>
             </v-card-title>
-            <v-card-text class="pa-0" v-if="track && albumTracks">
-              <router-link
+            <v-card-text v-if="track && albumTracks" class="pa-0">
+              <nuxt-link
                 v-for="(albumTrack, index) in album.tracks.data"
                 :key="albumTrack.id"
                 class="album__track"
                 :exact="true"
                 active-class="album__track--active"
-                tag="div"
-                :to="`/reciters/${reciter.slug}/albums/${album.year}/tracks/${albumTrack.slug}`"
+                tag="a"
+                :to="getTrackUri(albumTrack, reciter)"
               >
                 <v-avatar class="album__track__avatar" size="28">
                   <span>{{ index+1 }}</span>
                 </v-avatar>
-                <div class="album__track__text">{{ albumTrack.title }}</div>
-              </router-link>
+                <div class="album__track__text">
+                  {{ albumTrack.title }}
+                </div>
+              </nuxt-link>
             </v-card-text>
             <v-card-text v-else>
               <more-tracks-skeleton />
@@ -126,218 +138,227 @@
     </v-container>
 
     <v-snackbar v-model="addedToQueueSnackbar" right>
-      <v-icon color="white">playlist_add_check</v-icon>Added to Queue
-      <v-btn color="deep-orange" text @click="undo">Undo</v-btn>
-      <v-btn color="green" text @click="addedToQueueSnackbar = false">Close</v-btn>
+      <v-icon color="white">
+        playlist_add_check
+      </v-icon>Added to Queue
+      <v-btn color="deep-orange" text @click="undo">
+        Undo
+      </v-btn>
+      <v-btn color="green" text @click="addedToQueueSnackbar = false">
+        Close
+      </v-btn>
     </v-snackbar>
   </div>
 </template>
 
 <script lang="ts">
 /* eslint-disable dot-notation */
-import {
-  Component, Watch, Prop, Vue,
-} from 'vue-property-decorator';
+import Vue from 'vue';
+import { mapGetters } from 'vuex';
 import Vibrant from 'node-vibrant';
-import ReciterHeroSkeleton from '@/components/loaders/ReciterHeroSkeleton.vue';
 import MoreTracksSkeleton from '@/components/loaders/MoreTracksSkeleton.vue';
 import EditTrackDialog from '@/components/edit/EditTrackDialog.vue';
-import { getTracks, getTrack } from '@/services/tracks';
 import LyricsCard from '@/components/lyrics/LyricsCard.vue';
-import { Getters as AuthGetters } from '@/store/modules/auth';
+import { Track, getTrackUri } from '@/entities/track';
+import { Reciter, getReciterUri } from '@/entities/reciter';
+import { Album, getAlbumArtwork, getAlbumUri } from '@/entities/album';
+import { TrackIncludes } from '@/api/tracks';
+import { MetaInfo } from 'vue-meta';
 
-@Component({
+interface Data {
+  track: Track | null;
+  albumTracks: Array<Track> | null;
+  background: string;
+  textColor: string;
+  addedToQueueSnackbar: boolean;
+}
+
+export default Vue.extend({
   components: {
-    ReciterHeroSkeleton,
     MoreTracksSkeleton,
     EditTrackDialog,
     LyricsCard,
   },
-})
-export default class TrackPage extends Vue {
-  @Prop({ type: Object }) private trackObject!: any;
-  private background = 'rgb(150, 37, 2)';
-  private textColor = '#fff';
-  private track: any = null;
-  private albumTracks: any = null;
-  private addedToQueueSnackbar = false;
 
-  get reciter() {
-    return this.track && this.track.reciter;
-  }
+  async fetch() {
+    const { id, albumId, trackId } = this.$route.params;
 
-  get album() {
-    return this.track && this.track.album;
-  }
+    await Promise.all([
+      this.$api.tracks.get(id, albumId, trackId, {
+        include: [
+          TrackIncludes.Reciter,
+          TrackIncludes.Lyrics,
+          TrackIncludes.Media,
+          'album.tracks',
+        ],
+      }).then((track) => {
+        this.track = track;
+      }),
+      this.$api.tracks.index(id, albumId, {
+        include: [
+          TrackIncludes.Reciter,
+          TrackIncludes.Lyrics,
+          TrackIncludes.Media,
+          TrackIncludes.Album,
+          TrackIncludes.Related,
+        ],
+      }).then((response) => {
+        this.albumTracks = response.data;
+      }),
+    ]);
 
-  get image() {
-    if (this.album) {
-      return this.album.artwork || '/img/default-album-image.png';
-    }
-    return '/img/default-album-image.png';
-  }
+    this.setBackgroundFromImage();
+  },
 
-  get heroArtworkSize() {
-    if (this.$vuetify.breakpoint.xsOnly) {
-      return 96;
-    }
-    if (this.$vuetify.breakpoint.smOnly) {
-      return 128;
-    }
-    return 192;
-  }
+  data: (): Data => ({
+    track: null,
+    albumTracks: null,
+    background: 'rgb(150, 37, 2)',
+    textColor: '#fff',
+    addedToQueueSnackbar: false,
+  }),
 
-  get albumLink() {
-    if (!this.album || !this.reciter) {
-      return '';
-    }
-    return {
-      name: 'albums.show',
-      params: { reciter: this.reciter.slug, album: this.album.year },
-    };
-  }
-
-  get hasAudio() {
-    return this.track && this.track.media.data.length > 0;
-  }
-
-  get isSameTrackPlaying() {
-    const currentTrack = this.$store.getters['player/track'];
-    if (currentTrack) {
-      if (this.track.id === currentTrack.track.id) {
-        return true;
+  computed: {
+    ...mapGetters('auth', ['isModerator']),
+    reciter(): Reciter|null {
+      return this.track?.reciter ?? null;
+    },
+    album(): Album|null {
+      return this.track?.album ?? null;
+    },
+    image(): string {
+      return getAlbumArtwork(this.track?.album);
+    },
+    heroArtworkSize(): number {
+      if (this.$vuetify.breakpoint.xsOnly) {
+        return 96;
       }
-    }
-    return false;
-  }
-
-  get isInQueue() {
-    const { player } = this.$store.state;
-    for (let index = 0; index < player.queue.length; index++) {
-      const element = player.queue[index];
-      if (element.track.id === this.track.id) {
-        return true;
+      if (this.$vuetify.breakpoint.smOnly) {
+        return 128;
       }
-    }
-    return false;
-  }
+      return 192;
+    },
+    hasAudio(): boolean {
+      if (this.track?.media === undefined) {
+        return false;
+      }
+      return this.track.media.data.length > 0;
+    },
+    isSameTrackPlaying(): boolean {
+      const current = this.$store.getters['player/track'];
+      if (!current || !this.track) {
+        return false;
+      }
+      return (this.track.id === current.track.id);
+    },
+    isInQueue(): boolean {
+      if (!this.track) {
+        return false;
+      }
 
-  get isModerator() {
-    return this.$store.getters[AuthGetters.IsModerator];
-  }
+      const { player } = this.$store.state;
+      for (let index = 0; index < player.queue.length; index++) {
+        const element = player.queue[index];
+        if (element.track.id === this.track.id) {
+          return true;
+        }
+      }
 
-  get isDark() {
-    return this.$vuetify.theme.dark;
-  }
+      return false;
+    },
+    isDark(): boolean {
+      return this.$vuetify.theme.dark;
+    },
+  },
+
+  watch: {
+    $route: '$fetch',
+  },
 
   mounted() {
-    this.fetchData();
     const handler = (e) => {
       e.preventDefault();
       this.print();
     };
     this.$el['__onPrintHandler__'] = handler;
     window.addEventListener('beforeprint', handler);
-  }
+  },
 
   beforeDestroy() {
     window.removeEventListener('beforeprint', this.$el['__onPrintHandler__']);
     delete this.$el['__onPrintHandler__'];
-  }
+  },
 
-  @Watch('$route')
-  onRouteUpdate() {
-    this.fetchData();
-  }
+  methods: {
+    getReciterUri,
+    getAlbumUri,
+    getTrackUri,
+    setBackgroundFromImage() {
+      if (!this.track) {
+        return;
+      }
+      Vibrant.from(this.image)
+        .getPalette()
+        .then((palette) => {
+          const swatch = palette.DarkMuted;
+          if (!swatch) {
+            return;
+          }
+          this.background = swatch.getHex();
+          this.textColor = swatch.getBodyTextColor();
+        });
+    },
 
-  async fetchData() {
-    this.$Progress.start();
-    const { reciter, album, track } = this.$route.params;
+    print() {
+      // this.$router.replace({
+      //   name: 'print.lyrics',
+      //   params: {
+      //     track: this.track.slug,
+      //     reciter: this.reciter.slug,
+      //     album: this.album.year,
+      //     trackObject: this.track,
+      //   },
+      // });
+    },
 
-    if (this.trackObject) {
-      this.track = this.trackObject;
-    }
-
-    if (!this.track || !this.isSameTrack(this.$route.params as any)) {
-      await getTrack(reciter, album, track, {
-        include: 'reciter,lyrics,album.tracks,media',
-      }).then((r) => {
-        this.track = r.data;
+    playAlbum() {
+      this.$store.commit('player/PLAY_ALBUM', {
+        tracks: this.albumTracks,
+        start: this.track,
       });
+    },
+
+    stopPlaying() {
+      this.$store.commit('player/STOP');
+    },
+
+    addToQueue() {
+      this.$store.commit('player/ADD_TO_QUEUE', { track: this.track });
+      this.addedToQueueSnackbar = true;
+    },
+
+    undo() {
+      const { id } = this.$store.state.player.queue.slice(-1)[0];
+      this.$store.commit('player/REMOVE_TRACK', { id });
+      this.addedToQueueSnackbar = false;
+    },
+  },
+
+  head(): MetaInfo {
+    let title = 'Loading...';
+
+    if (this.track) {
+      title = `${this.track.title} (${this.track.year}) - Nawha by ${this.track.reciter?.name}`;
     }
-    await getTracks(reciter, album, {
-      include: 'reciter,lyrics,album,media,related',
-    }).then((r) => {
-      this.albumTracks = r.data.data;
-    });
 
-    this.setBackgroundFromImage();
-    this.$Progress.finish();
-  }
-
-  setBackgroundFromImage() {
-    if (!this.track) {
-      return;
-    }
-    Vibrant.from(this.image)
-      .getPalette()
-      .then((palette) => {
-        const swatch = palette.DarkMuted;
-        if (!swatch) {
-          return;
-        }
-        this.background = swatch.getHex();
-        this.textColor = swatch.getBodyTextColor();
-      });
-  }
-
-  isSameTrack({ reciter, album, track }) {
-    return (
-      this.track.reciter.slug === reciter
-      && this.track.album.year === album
-      && this.track.slug === track
-    );
-  }
-
-  print() {
-    this.$router.replace({
-      name: 'print.lyrics',
-      params: {
-        track: this.track.slug,
-        reciter: this.reciter.slug,
-        album: this.album.year,
-        trackObject: this.track,
-      },
-    });
-  }
-
-  playAlbum() {
-    this.$store.commit('player/PLAY_ALBUM', {
-      tracks: this.albumTracks,
-      start: this.track,
-    });
-  }
-
-  stopPlaying() {
-    this.$store.commit('player/STOP');
-  }
-
-  addToQueue() {
-    this.$store.commit('player/ADD_TO_QUEUE', { track: this.track });
-    this.addedToQueueSnackbar = true;
-  }
-
-  undo() {
-    const { id } = this.$store.state.player.queue.slice(-1)[0];
-    this.$store.commit('player/REMOVE_TRACK', { id });
-    this.addedToQueueSnackbar = false;
-  }
-}
+    return { title };
+  },
+});
 </script>
 
 <style lang="scss" scoped>
-@import '../../../styles/theme';
-@import '../../../styles/tracks/cards';
+@import '~assets/theme';
+@import '~assets/tracks/cards';
 
 .hero {
   width: 100%;
@@ -403,6 +424,8 @@ export default class TrackPage extends Vue {
   margin-bottom: 12px;
 
   .album__track {
+    text-decoration: none;
+    color: inherit;
     padding: 8px 12px;
     cursor: pointer;
     display: flex;
@@ -446,7 +469,6 @@ export default class TrackPage extends Vue {
     background-color: rgba(0, 0, 0, 0.1);
   }
 }
-
 
 .track-page--dark {
   .hero__artwork {

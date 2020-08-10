@@ -41,9 +41,10 @@ import { Track } from '@/entities/track';
 import { Lyrics, Format, Documents } from '@/entities/lyrics';
 import LyricsHighlighter from '@/utils/LyricsHighlighter';
 import JsonV1Document = Documents.JsonV1.Document;
+import GroupType = Documents.JsonV1.LineGroupType;
 
 @Component({
-  data: () => ({ GroupType: Documents.JsonV1.LineGroupType }),
+  data: () => ({ GroupType }),
 })
 export default class LyricsRenderer extends Vue {
   @Prop({ type: Object, required: true }) private readonly track!: Track;
@@ -101,7 +102,7 @@ export default class LyricsRenderer extends Vue {
   @Watch('isCurrentlyPlaying')
   setUpHighlighter(playing: boolean) {
     if (playing && this.hasTimestamps()) {
-      this.highlighter = new LyricsHighlighter(this.$store.state.player, (this.lyrics as Lyrics));
+      this.highlighter = new LyricsHighlighter(this.$store.state.player, (this.lyrics as JsonV1Document));
     } else {
       this.highlighter = null;
     }
