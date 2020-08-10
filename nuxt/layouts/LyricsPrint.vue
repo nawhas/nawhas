@@ -1,69 +1,60 @@
 <template>
   <v-app>
-    <v-content
-      class="content"
-      v-if="track"
-    >
+    <v-content v-if="track" class="content">
       <div class="print__header">
         <div class="print__header__title">
           <div class="print__header__title--track--name">{{ track.title }}</div>
           <div class="print__header__title--track--meta">{{ track.reciter.name }} - {{ track.year }}</div>
         </div>
-        <v-spacer></v-spacer>
+        <v-spacer />
         <div class="print__header_logo">
-          <img
-            src="./../assets/logo.svg"
-            alt="Nawhas.com"
-          />
+          <img src="../../web/src/assets/logo.svg" alt="Nawhas.com" />
         </div>
       </div>
-      <lyrics-renderer
-        v-if="track.lyrics"
-        class="print__content"
-        :track="track"
-      ></lyrics-renderer>
-      <div class="print__content print__content--empty" v-else>
-        We don't have a write-up of this nawha yet.
-      </div>
+      <lyrics-renderer v-if="track.lyrics" class="print__content" :track="track" />
+      <div
+        v-else
+        class="print__content print__content--empty"
+      >We don't have a write-up of this nawha yet.</div>
     </v-content>
-    <v-content
-      class="content"
-      v-else
-    >Loading...</v-content>
+    <v-content v-else class="content">Loading...</v-content>
   </v-app>
 </template>
 
 <script>
 /* eslint-disable dot-notation */
-import { getTrack } from '@/services/tracks';
+import Vue from 'vue';
 import LyricsRenderer from '@/components/lyrics/LyricsRenderer.vue';
+import { TrackIncludes } from '@/api/tracks';
+import { getTrackUri } from '@/entities/track';
 
-export default {
-  props: ['trackObject'],
+export default Vue.extend({
+  name: 'LyricsPrintLayout',
+
+  components: {
+    LyricsRenderer,
+  },
+
+  async fetch() {
+    const { reciter, album, track } = await this.$route.params;
+    this.fetchedTrack = this.$api.tracks.get(reciter, album, track, {
+      include: [
+        TrackIncludes.Reciter,
+        TrackIncludes.Lyrics,
+        'album.tracks',
+      ],
+    });
+  },
 
   data: () => ({
     fetchedTrack: undefined,
     timeout: undefined,
   }),
 
-  components: {
-    LyricsRenderer,
-  },
-
   computed: {
     track() {
-      return this.trackObject || this.fetchedTrack;
+      return this.fetchedTrack;
     },
-  },
-
-  created() {
-    if (!this.track) {
-      const { reciter, album, track } = this.$route.params;
-      getTrack(reciter, album, track, { include: 'reciter,lyrics,album.tracks' })
-        .then((response) => {
-          this.fetchedTrack = response.data;
-        });
-    }
   },
 
   mounted() {
@@ -105,18 +96,12 @@ export default {
         return;
       }
 
-      this.$router.replace({
-        name: 'tracks.show',
-        params: {
-          reciter: this.track.reciter.slug,
-          album: this.track.year,
-          track: this.track.slug,
-          trackObject: this.track,
-        },
-      });
+      const url = getTrackUri(this.track, this.track.reciter);
+
+      this.$router.replace(url);
     },
   },
-};
+});
 </script>
 
 <style lang="scss">
@@ -124,7 +109,7 @@ export default {
   width: 100%;
   display: flex;
   border-bottom: rgba(0, 0, 0, 0.3) solid 1px;
-  font-family: 'Roboto Slab', sans-serif;
+  font-family: "Roboto Slab", sans-serif;
 
   &__title {
     &--track--name {
@@ -149,7 +134,6 @@ export default {
     height: 12px;
   }
 
-
   .lyrics__group__lines__line {
     display: flex;
     align-items: center;
@@ -157,13 +141,13 @@ export default {
     .lyrics__repeat {
       margin-left: 8px;
       padding: 4px 6px;
-      text-align: center;;
+      text-align: center;
       border-radius: 8px;
       font-size: 12px;
-      font-family: 'Roboto Mono', monospace;
+      font-family: "Roboto Mono", monospace;
       font-weight: 600;
       line-height: 12px;
-      border: 1px solid rgba(0,0,0,0.6);
+      border: 1px solid rgba(0, 0, 0, 0.6);
     }
   }
 }
