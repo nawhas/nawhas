@@ -28,3 +28,13 @@ export interface Track extends PersistedEntity, TimestampedEntity {
   lyrics?: Lyrics | null;
   related?: { lyrics: boolean, audio: boolean };
 }
+
+export function getTrackUri(track: Track, reciter?: Reciter) {
+  const reciterSlug = reciter?.slug ?? track.reciter?.slug;
+
+  if (reciterSlug === undefined) {
+    throw new Error('Unable to determine reciter.');
+  }
+
+  return `/reciters/${reciterSlug}/albums/${track.year}/tracks/${track.slug}`;
+}

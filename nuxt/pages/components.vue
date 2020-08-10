@@ -31,7 +31,7 @@
           <reciter-card v-bind="reciter" featured />
         </v-col>
         <v-col cols="4">
-          <track-card v-bind="track" />
+          <track-card :track="track" />
         </v-col>
       </v-row>
 

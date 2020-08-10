@@ -1,129 +1,126 @@
 <template>
-  <div @click="goToTrack()">
-    <v-card class="track-card" :style="{ 'background-color': background }">
-      <div class="track-card__text" :style="{ 'color': textColor }">
-        <div class="track-card__name body-2" :title="title">
-          {{ title }}
-        </div>
-        <div class="track-card__album caption" :title="album.title">
-          {{ album.title }}
-        </div>
-        <div class="track-card__reciter-year caption" :title="reciterYear">
-          {{ reciterYear }}
-        </div>
+  <v-card class="track-card" :style="{ 'background-color': background }" :to="uri">
+    <div class="track-card__text" :style="{ 'color': textColor }">
+      <div class="track-card__name body-2" :title="track.title">
+        {{ track.title }}
       </div>
-      <div class="track-card__album-art">
-        <div
-          v-if="colored && album.artwork"
-          class="track-card__album-art-gradient"
-          :style="{background: gradient}"
-        />
-        <img ref="artwork" crossorigin :src="artwork" :alt="title">
+      <div class="track-card__album caption" :title="album.title">
+        {{ album.title }}
       </div>
-    </v-card>
-  </div>
+      <div class="track-card__reciter-year caption" :title="reciterYear">
+        {{ reciterYear }}
+      </div>
+    </div>
+    <div class="track-card__album-art">
+      <div
+        v-if="colored && album.artwork"
+        class="track-card__album-art-gradient"
+        :style="{background: gradient}"
+      />
+      <img ref="artwork" crossorigin :src="artwork" :alt="track.title">
+    </div>
+  </v-card>
 </template>
 
-<script>
-import * as Vibrant from 'node-vibrant';
+<script lang="ts">
+import { Component, Prop, Vue } from 'nuxt-property-decorator';
+import Vibrant from 'node-vibrant';
+import { getTrackUri, Track } from '@/entities/track';
+import { Album, getAlbumArtwork } from '@/entities/album';
 
-export default {
-  name: 'TrackCard',
-  props: {
-    title: {
-      type: String,
-      required: true,
-    },
-    slug: {
-      type: String,
-      required: true,
-    },
-    album: {
-      type: Object,
-      required: true,
-    },
-    reciter: {
-      type: Object,
-      required: true,
-    },
-    colored: {
-      type: Boolean,
-      default: false,
-    },
-    showReciter: {
-      type: Boolean,
-      default: false,
-    },
-  },
-  data() {
-    return {
-      vibrantBackgroundColor: '#ffffff',
-      vibrantTextColor: null,
-    };
-  },
-  computed: {
-    background() {
-      if (this.vibrantBackgroundColor !== '#ffffff') {
-        return this.vibrantBackgroundColor;
-      }
-      if (this.isDark) {
-        return null;
-      }
-      return '#ffffff';
-    },
-    textColor() {
-      if (this.vibrantTextColor !== null) {
-        return this.vibrantTextColor;
-      }
-      if (this.isDark) {
-        return null;
-      }
-      return '#333';
-    },
-    isDark() {
-      return this.$vuetify.theme.dark;
-    },
-    artwork() {
-      return this.album.artwork || '/defaults/default-album-image.png';
-    },
-    reciterYear() {
-      if (this.showReciter) {
-        return `${this.reciter.name} • ${this.album.year}`;
-      }
-      return this.album.year;
-    },
-    gradient() {
-      const rgb = Vibrant.Util.hexToRgb(this.vibrantBackgroundColor);
-      return `linear-gradient(
-        to right,
-        rgba(${rgb.join(', ')}, 1),
-        rgba(${rgb.join(', ')}, 0.7),
-        rgba(${rgb.join(', ')}, 0)
-      `;
-    },
-  },
+@Component
+export default class TrackCard extends Vue {
+  @Prop({
+    type: Object,
+    required: true,
+    validator: (track: Track) => track.album !== undefined && track.reciter !== undefined,
+  })
+  private readonly track!: Track;
+
+  @Prop({ type: Boolean, default: false })
+  private readonly colored!: boolean;
+
+  @Prop({ type: Boolean, default: false })
+  private readonly showReciter!: boolean;
+
+  private vibrantBackgroundColor: string = '#ffffff';
+  private vibrantTextColor: string|null = null;
+
   mounted() {
     if (this.colored && this.album.artwork) {
       this.setBackgroundFromImage();
     }
-  },
-  methods: {
-    setBackgroundFromImage() {
-      Vibrant.from(this.artwork)
-        .getPalette().then((palette) => {
-          const swatch = palette.DarkMuted;
-          if (!swatch) {
-            return;
-          }
-          this.vibrantBackgroundColor = swatch.getHex();
-          this.vibrantTextColor = swatch.getBodyTextColor();
-        });
-    },
-    goToTrack() {
-      this.$router.push(`/reciters/${this.reciter.slug}/albums/${this.album.year}/tracks/${this.slug}`);
-    },
-  },
-};
+  }
+
+  get album(): Album {
+    if (this.track.album === undefined) {
+      throw new Error('Track has no album object');
+    }
+
+    return this.track.album;
+  }
+
+  get isDark() {
+    return this.$vuetify.theme.dark;
+  }
+
+  get textColor() {
+    if (this.vibrantTextColor !== null) {
+      return this.vibrantTextColor;
+    }
+    if (this.isDark) {
+      return null;
+    }
+    return '#333';
+  }
+
+  get background(): string|null {
+    if (this.vibrantBackgroundColor !== '#ffffff') {
+      return this.vibrantBackgroundColor;
+    }
+    if (this.isDark) {
+      return null;
+    }
+    return '#ffffff';
+  }
+
+  get artwork() {
+    return getAlbumArtwork(this.album);
+  }
+
+  get reciterYear() {
+    if (this.showReciter && this.track.reciter) {
+      return `${this.track.reciter.name} • ${this.album.year}`;
+    }
+    return this.track.year;
+  }
+
+  get gradient() {
+    const rgb = Vibrant.Util.hexToRgb(this.vibrantBackgroundColor);
+    return `linear-gradient(
+        to right,
+        rgba(${rgb?.join(', ')}, 1),
+        rgba(${rgb?.join(', ')}, 0.7),
+        rgba(${rgb?.join(', ')}, 0)
+      `;
+  }
+
+  get uri() {
+    return getTrackUri(this.track);
+  }
+
+  setBackgroundFromImage() {
+    Vibrant.from(this.artwork)
+      .getPalette().then((palette) => {
+        const swatch = palette.DarkMuted;
+        if (!swatch) {
+          return;
+        }
+        this.vibrantBackgroundColor = swatch.getHex();
+        this.vibrantTextColor = swatch.getBodyTextColor();
+      });
+  }
+}
 </script>
 
 <style lang="scss" scoped>

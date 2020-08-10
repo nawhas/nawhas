@@ -123,7 +123,7 @@
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import Vibrant from 'node-vibrant';
-import { Album } from '@/entities/album';
+import { Album, getAlbumArtwork, getAlbumUri } from '@/entities/album';
 import { Reciter } from '@/entities/reciter';
 import { Track } from '@/entities/track';
 import { RawLocation } from 'vue-router';
@@ -183,11 +183,7 @@ export default class AlbumComponent extends Vue {
   }
 
   get link(): RawLocation {
-    if (!this.reciter || !this.album) {
-      return '';
-    }
-
-    return `reciters/${this.reciter.slug}/albums/${this.album.year}`;
+    return getAlbumUri(this.album, this.reciter);
   }
 
   get gradient(): string | null {
@@ -207,7 +203,7 @@ export default class AlbumComponent extends Vue {
   }
 
   get image(): string {
-    return this.album.artwork || '/img/default-album-image.png';
+    return getAlbumArtwork(this.album);
   }
 
   get artworkSize(): number {

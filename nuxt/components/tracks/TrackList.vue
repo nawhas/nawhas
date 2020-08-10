@@ -4,7 +4,7 @@
       <v-list-item
         v-for="(track, index) in tracks"
         :key="index"
-        :to="getTrackLink(track)"
+        :to="getTrackUri(track)"
         :two-line="metadata"
       >
         <v-list-item-avatar>
@@ -74,16 +74,19 @@
 import {
   Component, Prop, Vue,
 } from 'nuxt-property-decorator';
+import { PropType } from 'vue';
 import { hasAudioFile, hasLyrics } from '@/utils/tracks';
+import { Track, getTrackUri } from '@/entities/track';
 
 @Component
 export default class TrackList extends Vue {
-  @Prop({ type: Array }) private readonly tracks;
+  @Prop({ type: Array as PropType<Array<Track>> }) private readonly tracks!: Array<Track>;
   @Prop({ type: Boolean, default: false }) private readonly metadata!: boolean;
   @Prop({ type: Number, default: 6 }) private readonly count!: number;
 
   private hasAudioFile = hasAudioFile;
   private hasLyrics = hasLyrics;
+  private getTrackUri = getTrackUri;
 
   get playable() {
     if (!this.tracks) {
@@ -99,10 +102,6 @@ export default class TrackList extends Vue {
 
   playTrack(track) {
     this.$store.commit('player/PLAY_ALBUM', { tracks: this.playable, start: track });
-  }
-
-  getTrackLink(track) {
-    return `/reciters/${track.reciter.slug}/albums/${track.album.year}/tracks/${track.slug}`;
   }
 }
 </script>

@@ -53,7 +53,7 @@
       <template v-if="popularTracks">
         <v-row :dense="$vuetify.breakpoint.smAndDown">
           <v-col v-for="track in popularTracks" :key="track.id" cols="12" sm="6" md="4">
-            <track-card v-bind="track" :colored="true" :show-reciter="false" />
+            <track-card :track="track" :colored="true" :show-reciter="false" />
           </v-col>
         </v-row>
       </template>
@@ -105,7 +105,7 @@ import SkeletonCardGrid from '@/components/loaders/SkeletonCardGrid.vue';
 import AlbumSkeleton from '@/components/loaders/AlbumSkeleton.vue';
 import TrackCardSkeleton from '@/components/loaders/TrackCardSkeleton.vue';
 import HeroBanner from '@/components/HeroBanner.vue';
-import { Reciter } from '@/entities/reciter';
+import { getReciterAvatar, Reciter } from '@/entities/reciter';
 import Album from '@/components/albums/Album.vue';
 import { TrackIncludes } from '@/api/tracks';
 import EditReciterDialog from '@/components/edit/EditReciterDialog.vue';
@@ -167,7 +167,7 @@ export default Vue.extend({
   computed: {
     ...mapGetters('auth', ['isModerator']),
     image(): string {
-      return this.reciter?.avatar ?? '/img/default-reciter-avatar.png';
+      return getReciterAvatar(this.reciter);
     },
     heroAvatarSize(): number {
       return (this.$vuetify.breakpoint.smAndDown) ? 88 : 128;
