@@ -31,6 +31,7 @@
       "@nuxtjs/vuetify",
       "@nuxt/types",
       "@nuxtjs/axios",
+      "@nuxtjs/universal-storage",
       "nawhas"
     ]
   },

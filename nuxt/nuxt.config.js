@@ -83,6 +83,7 @@ export default {
     '@/plugins/axios',
     '@/plugins/filters',
     '@/plugins/api',
+    '@/plugins/theme.client',
   ],
   /*
   ** Auto import components
@@ -104,6 +105,7 @@ export default {
   */
   modules: [
     // Doc: https://axios.nuxtjs.org/usage
+    '@nuxtjs/universal-storage',
     '@nuxtjs/axios',
     '@nuxtjs/pwa',
   ],
@@ -137,7 +139,7 @@ export default {
   ** https://github.com/nuxt-community/vuetify-module
   */
   vuetify: {
-    optionsPath: '@/vuetify.options.js',
+    optionsPath: '@/vuetify.options.ts',
     defaultAssets: false,
     customVariables: ['@/assets/variables.scss'],
   },
@@ -192,5 +194,16 @@ export default {
 
   server: {
     https,
+  },
+
+  /*
+  ** Google Fonts
+  ** See https://github.com/nuxt-community/universal-storage-module#usage
+  */
+  storage: {
+    initialState: {
+      'theme:preference': 'auto',
+      'theme:applied': 'light',
+    },
   },
 };
