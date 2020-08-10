@@ -315,15 +315,10 @@ export default Vue.extend({
     },
 
     print() {
-      // this.$router.replace({
-      //   name: 'print.lyrics',
-      //   params: {
-      //     track: this.track.slug,
-      //     reciter: this.reciter.slug,
-      //     album: this.album.year,
-      //     trackObject: this.track,
-      //   },
-      // });
+      if (this.reciter && this.album && this.track) {
+        const url = `/print/${this.reciter.slug}/${this.album.year}/${this.track.slug}`;
+        window.open(url, '_blank', 'location=yes,height=570,width=1024,scrollbars=yes,status=yes');
+      }
     },
 
     playAlbum() {
