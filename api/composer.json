@@ -23,6 +23,7 @@
         "lcobucci/jwt": "^3.3",
         "league/flysystem-aws-s3-v3": "^1.0",
         "league/fractal": "^0.19.2",
+        "meilisearch/meilisearch-laravel-scout": "^0.10.6",
         "myclabs/php-enum": "^1.7",
         "php-http/guzzle6-adapter": "^2.0",
         "ramsey/uuid-doctrine": "^1.6",
