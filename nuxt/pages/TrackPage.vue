@@ -168,6 +168,7 @@ import { Track, getTrackUri } from '@/entities/track';
 import { Reciter, getReciterUri } from '@/entities/reciter';
 import { Album, getAlbumArtwork, getAlbumUri } from '@/entities/album';
 import { TrackIncludes } from '@/api/tracks';
+import { MetaInfo } from 'vue-meta';
 
 interface Data {
   track: Track | null;
@@ -346,6 +347,16 @@ export default Vue.extend({
       this.$store.commit('player/REMOVE_TRACK', { id });
       this.addedToQueueSnackbar = false;
     },
+  },
+
+  head(): MetaInfo {
+    let title = 'Loading...';
+
+    if (this.track) {
+      title = `${this.track.title} (${this.track.year}) - Nawha by ${this.track.reciter?.name}`;
+    }
+
+    return { title };
   },
 });
 </script>
