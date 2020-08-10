@@ -28,8 +28,8 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'nuxt-property-decorator';
-import LyricsRenderer from '@/components/lyrics/LyricsRenderer';
-import LyricsSkeleton from '@/components/loaders/LyricsSkeleton';
+import LyricsRenderer from '@/components/lyrics/LyricsRenderer.vue';
+import LyricsSkeleton from '@/components/loaders/LyricsSkeleton.vue';
 import { Documents, Lyrics, Format } from '@/entities/lyrics';
 import JsonV1Document = Documents.JsonV1.Document;
 
@@ -62,7 +62,7 @@ export default class LyricsCard extends Vue {
 
 <style lang="scss" scoped>
 @import '~assets/theme';
-// @import '~assets/tracks/cards';
+@import '~assets/tracks/cards';
 
 .lyrics {
   padding: 0;
