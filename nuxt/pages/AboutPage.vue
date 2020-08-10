@@ -109,7 +109,7 @@
           <div class="text-center mt-8">
             <v-btn large href="https://github.com/nawhas/nawhas" target="_blank">
               <v-icon left>
-                mdi-github
+                {{ github }}
               </v-icon> Github
             </v-btn>
           </div>
@@ -120,32 +120,37 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'nuxt-property-decorator';
+import Vue from 'vue';
 import HeroBanner from '@/components/HeroBanner.vue';
 import HeroQuote from '@/components/HeroQuote.vue';
+import { mdiGithub } from '@mdi/js';
 
-@Component({
+export default Vue.extend({
   components: {
     HeroBanner,
     HeroQuote,
   },
-})
-export default class About extends Vue {
-  get timeline() {
-    return [
-      {
-        date: '1997',
-        headline: 'The Beginning',
-        text: `
+
+  data: () => ({
+    github: mdiGithub,
+  }),
+
+  computed: {
+    timeline() {
+      return [
+        {
+          date: '1997',
+          headline: 'The Beginning',
+          text: `
           Shabbir & Abbas Tejani, now better know as The Tejani Brothers, started a website at the
            ages of 10 and 11 on Geocitites.com posting write-ups from their mother's
            small book, which was getting old and torn.
         `,
-      },
-      {
-        date: '2003',
-        headline: 'Nawhas.com Launched',
-        text: `
+        },
+        {
+          date: '2003',
+          headline: 'Nawhas.com Launched',
+          text: `
           Their passion developed further, and they began adding more and more reciters onto
           the site, some due to requests by the nawhakwans themselves and some out of choice.
           <blockquote class="timeline__quote">
@@ -157,76 +162,80 @@ export default class About extends Vue {
             <cite>&mdash; Tejani Brothers</cite>
           </blockquote>
         `,
-      },
-      {
-        date: '2017',
-        headline: 'Work Begins on Rebuilding Nawhas.com',
-        text: `
+        },
+        {
+          date: '2017',
+          headline: 'Work Begins on Rebuilding Nawhas.com',
+          text: `
           A young software engineer and frequent user of Nawhas.com, Syed Zain Mehdi reached out
           from California to Shabbir & Abbas Tejani with an offer to voluntarily rebuild the
           Nawhas.com site for the modern web. Work begins on the new site. Soon after,
           Asif Ali from the U.K. joins the team, similarly eager to use his skills
           to contribute back to a site he's used for years.
         `,
-      },
-      {
-        date: '2020',
-        headline: 'A New Start',
-        text: `
+        },
+        {
+          date: '2020',
+          headline: 'A New Start',
+          text: `
           After hundreds of hours of work sprinkled in between their primary responsiblities,
           Syed Zain Mehdi and Asif Ali complete their combined efforts to rebuild and
           modernize the site. The new version of Nawhas.com launched in March, 2020.
         `,
-      },
-    ];
-  }
+        },
+      ];
+    },
+    contributors() {
+      return [
+        {
+          name: 'Shabbir & Abbas Tejani',
+          avatar: '/about/credits/tejani-brothers.jpg',
+          caption: 'Creators of Nawhas.com',
+          contributions: [
+            'Created & maintained Nawhas.com for over 17 years',
+            'Wrote write-ups for over 1400 nawhas',
+          ],
+          links: [
+            { icon: 'public', text: 'Website', href: 'http://www.tejanibrothers.com' },
+          ],
+        },
+        {
+          name: 'Syed Zain Mehdi',
+          avatar: '/about/credits/zain.jpg',
+          caption: 'Software Engineer',
+          contributions: [
+            'Project lead for the new Nawhas.com',
+            'Redesigned and rebuilt the site',
+            'Maintainer of the open source codebase',
+          ],
+          links: [
+            { icon: 'public', text: 'Website', href: 'https://szainmehdi.me' },
+          ],
+        },
+        {
+          name: 'Asif Ali',
+          avatar: '/about/credits/asif.jpg',
+          caption: 'Software Engineer',
+          contributions: [
+            'Devoted hundreds of hours of engineering work on the new Nawhas.com',
+            'Maintainer of the open source codebase',
+          ],
+          links: [
+            { icon: 'mdi-github', text: 'Github', href: 'https://github.com/shea786' },
+          ],
+        },
+      ];
+    },
+  },
 
-  get contributors() {
-    return [
-      {
-        name: 'Shabbir & Abbas Tejani',
-        avatar: '/about/credits/tejani-brothers.jpg',
-        caption: 'Creators of Nawhas.com',
-        contributions: [
-          'Created & maintained Nawhas.com for over 17 years',
-          'Wrote write-ups for over 1400 nawhas',
-        ],
-        links: [
-          { icon: 'public', text: 'Website', href: 'http://www.tejanibrothers.com' },
-        ],
-      },
-      {
-        name: 'Syed Zain Mehdi',
-        avatar: '/about/credits/zain.jpg',
-        caption: 'Software Engineer',
-        contributions: [
-          'Project lead for the new Nawhas.com',
-          'Redesigned and rebuilt the site',
-          'Maintainer of the open source codebase',
-        ],
-        links: [
-          { icon: 'public', text: 'Website', href: 'https://szainmehdi.me' },
-        ],
-      },
-      {
-        name: 'Asif Ali',
-        avatar: '/about/credits/asif.jpg',
-        caption: 'Software Engineer',
-        contributions: [
-          'Devoted hundreds of hours of engineering work on the new Nawhas.com',
-          'Maintainer of the open source codebase',
-        ],
-        links: [
-          { icon: 'mdi-github', text: 'Github', href: 'https://github.com/shea786' },
-        ],
-      },
-    ];
-  }
-}
+  head: {
+    title: 'About',
+  },
+});
 </script>
 
 <style lang="scss">
-@import "~/assets/theme";
+@import "~assets/theme";
 
 .about {
   blockquote.timeline__quote {
