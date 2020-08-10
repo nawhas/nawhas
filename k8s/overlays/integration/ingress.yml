@@ -21,3 +21,9 @@ spec:
           - backend:
               serviceName: web
               servicePort: 3000
+    - host: ING_SEARCH_HOST
+      http:
+        paths:
+          - backend:
+              serviceName: search
+              servicePort: 7700
