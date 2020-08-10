@@ -83,6 +83,7 @@ export default {
     '@/plugins/axios',
     '@/plugins/filters',
     '@/plugins/api',
+    '@/plugins/preferences.client',
   ],
   /*
   ** Auto import components
