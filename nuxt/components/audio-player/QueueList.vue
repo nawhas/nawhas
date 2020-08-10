@@ -3,12 +3,12 @@
     <v-list-item
       v-for="{ id, track } in queue"
       :key="id"
-      @click="skipToTrack(id)"
       :class="{
         'queue-item': true,
         'queue-item--active': isCurrentTrack(id),
         'queue-item--dark': isDark,
       }"
+      @click="skipToTrack(id)"
     >
       <v-list-item-avatar tile class="queue-item__album-art">
         <img crossorigin :src="getTrackArtwork(track)" :alt="track.title">
@@ -20,24 +20,25 @@
       </v-list-item-content>
 
       <v-list-item-action>
-        <v-btn icon v-if="!isCurrentTrack(id)" @click="removeTrackFromQueue(id)">
+        <v-btn v-if="!isCurrentTrack(id)" icon @click="removeTrackFromQueue(id)">
           <v-icon>remove_circle_outline</v-icon>
         </v-btn>
         <v-progress-circular
-          class="playback-progress"
           v-else
+          class="playback-progress"
           :size="20"
           :rotate="-90"
           :value="progress"
-          :color="isDark ? 'accent' : 'primary'" />
+          :color="isDark ? 'accent' : 'primary'"
+        />
       </v-list-item-action>
     </v-list-item>
   </v-list>
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator';
-import { TrackQueue, QueuedTrack } from '@/store/modules/player';
+import { Component, Prop, Vue } from 'nuxt-property-decorator';
+import { TrackQueue, QueuedTrack } from '@/store/player';
 
 @Component
 export default class QueueList extends Vue {
@@ -101,7 +102,7 @@ export default class QueueList extends Vue {
 </script>
 
 <style lang="scss" scoped>
-@import '@/styles/theme';
+@import '~assets/theme';
 
 .queue-item--active {
   background-color: rgba(0,0,0,0.1);

@@ -27,6 +27,7 @@
     },
     "types": [
       "@types/node",
+      "@types/wicg-mediasession",
       "@nuxt/vue-app",
       "@nuxtjs/vuetify",
       "@nuxt/types",

@@ -1,17 +1,17 @@
 <template>
   <lyrics-renderer
-      ref="lyrics"
-      class="renderer"
-      v-if="track.lyrics"
-      :track="track"
-      @highlight:changed="scrollToCurrentLyricsGroup"
+    v-if="track.lyrics"
+    ref="lyrics"
+    class="renderer"
+    :track="track"
+    @highlight:changed="scrollToCurrentLyricsGroup"
   />
 </template>
 
 <script lang="ts">
 import {
   Component, Prop, Ref, Vue, Watch,
-} from 'vue-property-decorator';
+} from 'nuxt-property-decorator';
 import * as NoSleep from 'nosleep.js/dist/NoSleep';
 import LyricsRenderer from '@/components/lyrics/LyricsRenderer.vue';
 
@@ -58,7 +58,7 @@ export default class LyricsOverlay extends Vue {
 </script>
 
 <style lang="scss" scoped>
-@import '../../styles/theme';
+@import '~assets/theme';
 
 $inactive-color: rgba(255, 255, 255, 0.3);
 $active-color: rgba(255, 255, 255, 1);
