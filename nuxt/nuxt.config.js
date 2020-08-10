@@ -60,11 +60,23 @@ export default {
   },
   /*
   ** PWA Module Configuration
+  ** See https://pwa.nuxtjs.org/
   */
   pwa: {
+    manifest: {
+      name: 'Nawhas',
+      short_name: 'Nawhas',
+      description: 'Browse the largest collection of Nawhas online',
+      theme_color: '#da0000',
+      background_color: '#ff7252',
+    },
     meta: {
-      ogSiteName: false,
-      ogType: false,
+      name: 'Nawhas',
+      author: 'Nawhas.com',
+      description: 'Browse the largest collection of Nawhas online',
+      theme_color: '#da0000',
+      ogHost: process.env.APP_DOMAIN,
+      ogType: 'website',
       ogTitle: false,
       ogDescription: false,
     },
