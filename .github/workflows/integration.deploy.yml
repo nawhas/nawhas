@@ -177,6 +177,7 @@ jobs:
         run: |
           gpg --quiet --batch --yes --decrypt --passphrase="$GPG_KEY" --output api.integration.env api.integration.env.gpg
           gpg --quiet --batch --yes --decrypt --passphrase="$GPG_KEY" --output web.integration.env web.integration.env.gpg
+          gpg --quiet --batch --yes --decrypt --passphrase="$GPG_KEY" --output search.integration.env search.integration.env.gpg
         env:
           GPG_KEY: ${{ secrets.GPG_KEY }}
 
