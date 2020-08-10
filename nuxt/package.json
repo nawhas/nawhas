@@ -21,6 +21,7 @@
     }
   },
   "dependencies": {
+    "@mdi/js": "^5.5.55",
     "@nuxt/typescript-runtime": "^1.0.0",
     "@nuxtjs/axios": "^5.12.0",
     "@nuxtjs/pwa": "^3.0.0-beta.20",
