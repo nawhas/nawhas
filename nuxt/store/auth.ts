@@ -1,5 +1,6 @@
 import { ActionContext, ActionTree, MutationTree, GetterTree } from 'vuex';
-import { LoginPayload, RegisterPayload, Role, User } from '@/api/auth';
+import { LoginPayload, RegisterPayload } from '@/api/auth';
+import { User, Role } from '@/entities/user';
 
 import { RootState } from '@/store';
 

@@ -1,22 +1,5 @@
 import { NuxtAxiosInstance } from '@nuxtjs/axios';
-import { PersistedEntity, TimestampedEntity } from '@/api/common';
-
-/*
- * Entity Definitions
- */
-export enum Role {
-  Contributor = 'contributor',
-  Moderator = 'moderator',
-  Guest = 'guest',
-}
-
-export interface User extends PersistedEntity, TimestampedEntity {
-  name: string;
-  avatar: string;
-  email: string;
-  role: Role;
-  nickname: string | null;
-}
+import { User } from '@/entities/user';
 
 /*
  * Request Payloads

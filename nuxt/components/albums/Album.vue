@@ -123,9 +123,9 @@
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import Vibrant from 'node-vibrant';
-import { Album } from '@/api/albums';
-import { Reciter } from '@/api/reciters';
-import { Track } from '@/api/tracks';
+import { Album } from '@/entities/album';
+import { Reciter } from '@/entities/reciter';
+import { Track } from '@/entities/track';
 import { RawLocation } from 'vue-router';
 import { DataTableHeader } from 'vuetify';
 import EditTrackDialog from '@/components/edit/EditTrackDialog.vue';

@@ -111,21 +111,23 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { MetaInfo } from 'vue-meta';
-import { Album, AlbumIncludes } from '@/api/albums';
-import { mapGetters } from 'vuex';
 import Vibrant from 'node-vibrant';
-import { Track, TrackIncludes } from '@/api/tracks';
-import { Reciter } from '@/api/reciters';
+import { mapGetters } from 'vuex';
+import { MetaInfo } from 'vue-meta';
+import { AlbumIncludes } from '@/api/albums';
+import { TrackIncludes } from '@/api/tracks';
+import { Album } from '@/entities/album';
+import { Track } from '@/entities/track';
+import { Reciter } from '@/entities/reciter';
 
-  interface Data {
-    album: Album | null;
-    background: string | null;
-    textColor: string | null;
-    track: Track | null;
-    tracks: Array<Track> | null;
-    addedToQueueSnackbar: boolean;
-  }
+interface Data {
+  album: Album | null;
+  background: string | null;
+  textColor: string | null;
+  track: Track | null;
+  tracks: Array<Track> | null;
+  addedToQueueSnackbar: boolean;
+}
 
 export default Vue.extend({
   async fetch() {

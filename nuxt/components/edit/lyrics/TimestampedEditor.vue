@@ -46,7 +46,7 @@
       >
         <div v-if="lyrics.meta.timestamps" class="group__timestamp">
           <v-chip
-            v-if="group.type === GroupType.SPACER"
+            v-if="group.type === GroupType.Spacer"
             small
             label
             outlined
@@ -72,7 +72,7 @@
               @blur="onBlur($event, group, line, { group: groupId, line: lineId })"
               @input="change"
             />
-            <div v-if="group.type !== GroupType.SPACER" class="line__actions">
+            <div v-if="group.type !== GroupType.Spacer" class="line__actions">
               <repeat-line v-model="line.repeat" @change="onRepeatChange" />
             </div>
           </div>
@@ -89,10 +89,14 @@ import RepeatLine from '@/components/edit/lyrics/RepeatLine.vue';
 import EditableText from '@/components/edit/lyrics/EditableText.vue';
 import Timestamp from '@/components/edit/lyrics/Timestamp.vue';
 import StateHistory from '@/utils/StateHistory';
-import { Line, LineGroup, Lyrics } from '@/types/lyrics';
+import { Documents } from '@/entities/lyrics';
 import { clone } from '@/utils/clone';
 import LyricsHighlighter from '@/utils/LyricsHighlighter';
-import * as GroupType from '@/constants/lyrics/group-type';
+import Line = Documents.JsonV1.Line;
+import GroupType = Documents.JsonV1.LineGroupType;
+import JsonV1Document = Documents.JsonV1.Document;
+import LineGroup = Documents.JsonV1.LineGroup;
+import LineGroupType = Documents.JsonV1.LineGroupType;
 
 interface LineCoordinates {
   group: number;
@@ -106,7 +110,7 @@ interface EditorAction {
   enabled: boolean;
 }
 
-const defaultLyrics = (): Lyrics => ({
+const defaultLyrics = (): JsonV1Document => ({
   meta: {
     timestamps: true,
   },
@@ -125,13 +129,13 @@ const defaultLyrics = (): Lyrics => ({
   data: () => ({ GroupType }),
 })
 export default class TimestampedEditor extends Vue {
-  @Model('change', { type: Object }) readonly model!: Lyrics;
+  @Model('change', { type: Object }) readonly model!: JsonV1Document;
   @Prop({ type: Object }) readonly track!: any;
 
-  private lyrics: Lyrics = defaultLyrics();
+  private lyrics: JsonV1Document = defaultLyrics();
   private focused = false;
   private selected: LineCoordinates|null = null;
-  private history: StateHistory<Lyrics> = new StateHistory(defaultLyrics());
+  private history: StateHistory<JsonV1Document> = new StateHistory(defaultLyrics());
   private highlighter: LyricsHighlighter|null = null;
   private json = '';
   private jsonEditor = false;
@@ -354,7 +358,7 @@ export default class TimestampedEditor extends Vue {
     // and the line is empty, convert this group into a
     // spacer and add a new group.
     if (group.lines.length === 1 && line.text.length === 0) {
-      group.type = GroupType.SPACER;
+      group.type = GroupType.Spacer;
       group.timestamp = null;
       this.change();
       if (coordinates.group < this.lyrics.data.length - 1) {
@@ -440,7 +444,7 @@ export default class TimestampedEditor extends Vue {
 
     // If this is the last group and the last line, don't delete it.
     if (this.lyrics.data.length === 1 && group.lines.length === 1) {
-      group.type = 'normal';
+      group.type = LineGroupType.Normal;
       group.timestamp = 0;
       return;
     }

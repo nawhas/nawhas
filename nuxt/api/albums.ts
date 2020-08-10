@@ -1,29 +1,12 @@
 import { NuxtAxiosInstance } from '@nuxtjs/axios';
 import {
   PaginationOptions,
-  PersistedEntity,
-  TimestampedEntity,
   PaginatedResponse,
   createParams,
   usePagination,
   useIncludes,
-  EntityCollection,
 } from '@/api/common';
-import { Reciter } from '@/api/reciters';
-import { Track } from '@/api/tracks';
-
-/*
- * Entity Definitions
- */
-export interface Album extends PersistedEntity, TimestampedEntity {
-  title: string;
-  year: string;
-  artwork: string | null;
-  reciterId: string;
-  reciter?: Reciter;
-  tracks?: EntityCollection<Track>;
-  related?: { tracks: number };
-}
+import { Album } from '@/entities/album';
 
 /*
  * Request Payloads
