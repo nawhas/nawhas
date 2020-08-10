@@ -50,15 +50,15 @@ export default Vue.extend({
 </script>
 
 <style lang="scss">
-  .content {
-    background: white !important;
-    color: black !important;
-    padding: 24px !important;
-  }
+.content {
+  background: white !important;
+  color: black !important;
+  padding: 24px !important;
+}
 
-  @media print {
-    .content {
-      padding: 0 !important;
-    }
+@media print {
+  .content {
+    padding: 0 !important;
   }
+}
 </style>
