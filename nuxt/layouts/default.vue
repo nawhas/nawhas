@@ -75,7 +75,7 @@
     <v-footer app absolute>
       <span>&copy; {{ new Date().getFullYear() }}</span>
     </v-footer>
-    <!--    <audio-player></audio-player>-->
+    <audio-player />
     <!--    <update-service-worker />-->
     <!--    <toaster />-->
   </v-app>
@@ -84,6 +84,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import UserMenu from '@/components/navigation/UserMenu.vue';
+import AudioPlayer from '@/components/audio-player/AudioPlayer.vue';
 const LogoIcon = require('@/assets/svg/icon.svg?inline');
 const LogoWordmark = require('@/assets/svg/wordmark.svg?inline');
 
@@ -114,6 +115,7 @@ export default Vue.extend({
     LogoWordmark,
     LogoIcon,
     UserMenu,
+    AudioPlayer,
   },
   data: () => ({
     drawer: false,
