@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4ddde71b68380d611411a149c5aff86b",
+    "content-hash": "311f01470d196c0cecfaf1b398e10129",
     "packages": [
         {
             "name": "algolia/algoliasearch-client-php",
@@ -3755,6 +3755,114 @@
                 "twitter"
             ],
             "time": "2016-08-17T00:36:58+00:00"
+        },
+        {
+            "name": "meilisearch/meilisearch-laravel-scout",
+            "version": "v0.10.7",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/meilisearch/meilisearch-laravel-scout.git",
+                "reference": "a0de7004b3a175944793e84ff6103b93110b0dbb"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/meilisearch/meilisearch-laravel-scout/zipball/a0de7004b3a175944793e84ff6103b93110b0dbb",
+                "reference": "a0de7004b3a175944793e84ff6103b93110b0dbb",
+                "shasum": ""
+            },
+            "require": {
+                "laravel/scout": "^8.0",
+                "meilisearch/meilisearch-php": "^0.13",
+                "php": "^7.2.5"
+            },
+            "require-dev": {
+                "mockery/mockery": "^1.0",
+                "orchestra/testbench": "^5.0",
+                "phpunit/phpunit": "^9.1"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Meilisearch\\Scout\\MeilisearchServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Meilisearch\\Scout\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jordan Massart",
+                    "email": "hello@jordan-massart.be"
+                }
+            ],
+            "description": "Laravel Scout custom engine for MeiliSearch",
+            "keywords": [
+                "laravel",
+                "meilisearch",
+                "scout",
+                "search"
+            ],
+            "time": "2020-08-04T12:25:02+00:00"
+        },
+        {
+            "name": "meilisearch/meilisearch-php",
+            "version": "v0.13.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/meilisearch/meilisearch-php.git",
+                "reference": "dc506d60be544b996558f64d20d7c70ca8278810"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/meilisearch/meilisearch-php/zipball/dc506d60be544b996558f64d20d7c70ca8278810",
+                "reference": "dc506d60be544b996558f64d20d7c70ca8278810",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "http-interop/http-factory-guzzle": "^1.0",
+                "php": "^7.2",
+                "php-http/discovery": "^1.7",
+                "php-http/guzzle6-adapter": "^2.0"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^2.16",
+                "phpunit/phpunit": "^8.5"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "MeiliSearch\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Clementine Urquizar",
+                    "email": "clementine@meilisearch.com"
+                }
+            ],
+            "description": "PHP wrapper for the MeiliSearch API",
+            "keywords": [
+                "api",
+                "client",
+                "instant",
+                "meilisearch",
+                "php",
+                "search"
+            ],
+            "time": "2020-08-03T14:33:57+00:00"
         },
         {
             "name": "monolog/monolog",

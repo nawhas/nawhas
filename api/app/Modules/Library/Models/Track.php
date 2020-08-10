@@ -143,29 +143,23 @@ class Track extends Model implements TimestampedEntity
 
     public function toSearchableArray()
     {
-        $lyrics = $this->lyrics ? $this->lyrics->render() : null;
-
-        if ($lyrics !== null) {
-            $lyrics = substr($lyrics, 0, 8000);
-        }
-
         return [
             'id' => $this->id,
             'title' => $this->title,
-            'slug' => $this->slug,
-            'reciter' => ['name' => $this->reciter->name],
-            'album' => [
-                'title' => $this->album->title,
-                'year' => $this->album->year,
+            'reciter' => $this->reciter->name,
+            'album' => $this->album->title,
+            'year' => $this->album->year,
+            'lyrics' => $this->lyrics ? $this->lyrics->render() : null,
+            'meta' => [
+                'slug' => $this->slug,
                 'artwork' => $this->album->getArtworkUrl(),
+                'url' => sprintf(
+                    '/reciters/%s/albums/%s/tracks/%s',
+                    $this->reciter->slug,
+                    $this->album->year,
+                    $this->slug
+                ),
             ],
-            'lyrics' => $lyrics,
-            'url' => sprintf(
-                '/reciters/%s/albums/%s/tracks/%s',
-                $this->reciter->slug,
-                $this->album->year,
-                $this->slug
-            ),
         ];
     }
 }
