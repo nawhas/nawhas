@@ -80,6 +80,11 @@ export default {
       ogTitle: false,
       ogDescription: false,
     },
+    workbox: {
+      config: { debug: process.env.APP_ENV === 'development' },
+      skipWaiting: false,
+      clientsClaim: false,
+    },
   },
   /*
   ** Global CSS
@@ -96,6 +101,7 @@ export default {
     '@/plugins/filters',
     '@/plugins/api',
     '@/plugins/theme.client',
+    '@/plugins/sw.client',
   ],
   /*
   ** Auto import components

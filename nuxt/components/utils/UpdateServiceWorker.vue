@@ -2,7 +2,7 @@
   <div>
     <v-snackbar
       v-model="show"
-      :timeout="0"
+      :timeout="-1"
       :top="$vuetify.breakpoint.mdAndUp"
       right
       multi-line
@@ -23,18 +23,11 @@ export default class UpdateServiceWorker extends Vue {
   private show = false;
   private registration: ServiceWorkerRegistration|null = null;
 
-  created() {
+  mounted() {
     // Register service worker listener.
     document.addEventListener('worker:updated', (e) => {
       this.showUpdateUi((e as CustomEvent<ServiceWorkerRegistration>).detail);
     }, { once: true });
-
-    navigator.serviceWorker.addEventListener(
-      'controllerchange',
-      () => {
-        window.location.reload();
-      },
-    );
   }
 
   showUpdateUi(registration: ServiceWorkerRegistration) {
