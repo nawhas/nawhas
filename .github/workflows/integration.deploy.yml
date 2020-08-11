@@ -119,11 +119,13 @@ jobs:
           NAMESPACE="intg-$PR_NUM"
           API_DOMAIN="api.pr-$PR_NUM.intg.k8s.nawhas.com"
           APP_DOMAIN="pr-$PR_NUM.intg.k8s.nawhas.com"
+          SEARCH_HOST="search.pr-$PR_NUM.intg.k8s.nawhas.com"
 
           echo "::set-env name=NAMESPACE::$NAMESPACE"
           echo "::set-env name=PR_NUM::$PR_NUM"
           echo "::set-env name=API_DOMAIN::$API_DOMAIN"
           echo "::set-env name=APP_DOMAIN::$APP_DOMAIN"
+          echo "::set-env name=SEARCH_HOST::$SEARCH_HOST"
 
       - name: Decrypt Web secrets
         working-directory: ./k8s/overlays/integration/secrets
@@ -144,6 +146,7 @@ jobs:
             --build-arg ALGOLIA_INDEX_PREFIX=intg_${PR_NUM}_ \
             --build-arg API_DOMAIN="https://$API_DOMAIN" \
             --build-arg APP_DOMAIN="https://$APP_DOMAIN" \
+            --build-arg SEARCH_HOST="https://$SEARCH_HOST" \
             ./nuxt
 
       - name: Publish Web
@@ -174,6 +177,7 @@ jobs:
         run: |
           gpg --quiet --batch --yes --decrypt --passphrase="$GPG_KEY" --output api.integration.env api.integration.env.gpg
           gpg --quiet --batch --yes --decrypt --passphrase="$GPG_KEY" --output web.integration.env web.integration.env.gpg
+          gpg --quiet --batch --yes --decrypt --passphrase="$GPG_KEY" --output search.integration.env search.integration.env.gpg
         env:
           GPG_KEY: ${{ secrets.GPG_KEY }}
 
@@ -183,11 +187,13 @@ jobs:
           NAMESPACE="intg-$PR_NUM"
           API_DOMAIN="api.pr-$PR_NUM.intg.k8s.nawhas.com"
           APP_DOMAIN="pr-$PR_NUM.intg.k8s.nawhas.com"
+          SEARCH_HOST="search.pr-$PR_NUM.intg.k8s.nawhas.com"
 
           echo "::set-env name=NAMESPACE::$NAMESPACE"
           echo "::set-env name=PR_NUM::$PR_NUM"
           echo "::set-env name=API_DOMAIN::$API_DOMAIN"
           echo "::set-env name=APP_DOMAIN::$APP_DOMAIN"
+          echo "::set-env name=SEARCH_HOST::$SEARCH_HOST"
 
       - name: Prepare Secrets
         working-directory: ./k8s/overlays/integration/secrets
@@ -224,6 +230,7 @@ jobs:
           ./kustomize build . \
             | sed "s/ING_APP_DOMAIN/$APP_DOMAIN/g" \
             | sed "s/ING_API_DOMAIN/$API_DOMAIN/g" \
+            | sed "s/ING_SEARCH_HOST/$SEARCH_HOST/g" \
             | kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig apply -f -
 
           kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig rollout status --timeout=2m deployment/api -n $NAMESPACE

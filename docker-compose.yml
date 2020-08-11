@@ -142,7 +142,7 @@ services:
     volumes:
       - redis:/data
   search:
-    image: getmeili/meilisearch:v0.12.0
+    image: getmeili/meilisearch:v0.13.0
     container_name: nawhas_search
     restart: unless-stopped
     tty: true

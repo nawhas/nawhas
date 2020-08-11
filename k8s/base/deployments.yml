@@ -158,6 +158,39 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  name: search
+  labels:
+    app: search
+    tier: backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: search
+      tier: backend
+  template:
+    metadata:
+      labels:
+        app: search
+        tier: backend
+    spec:
+      containers:
+        - name: search
+          image: getmeili/meilisearch:v0.13.0
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 7700
+          volumeMounts:
+              - mountPath: /var/lib/postgresql/data
+                name: search-data
+      volumes:
+        - name: search-data
+          persistentVolumeClaim:
+            claimName: search-volume
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
   name: cache
   labels:
     app: redis

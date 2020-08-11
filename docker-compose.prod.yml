@@ -52,6 +52,7 @@ services:
         API_DOMAIN: https://api.nawhas.test/
         SERVER_API_DOMAIN: http://nawhas_api_nginx:80/
         APP_DOMAIN: https://nawhas.test
+        SEARCH_HOST: https://search.nawhas.test
     env_file:
       - nuxt/.env.production
     container_name: nawhas_web
@@ -109,6 +110,19 @@ services:
       - nawhas
     volumes:
       - redis:/data
+  search:
+    image: getmeili/meilisearch:v0.13.0
+    container_name: nawhas_search
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "7700:7700"
+    environment:
+      - MEILI_MASTER_KEY=secret
+    volumes:
+      - search:/data.ms
+    networks:
+      - nawhas
 
 
 
