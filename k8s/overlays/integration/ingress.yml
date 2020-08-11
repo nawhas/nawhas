@@ -7,6 +7,7 @@ spec:
     - hosts:
       - ING_API_DOMAIN
       - ING_APP_DOMAIN
+      - ING_SEARCH_HOST
       secretName: nawhas-tls
   rules:
     - host: ING_API_DOMAIN
