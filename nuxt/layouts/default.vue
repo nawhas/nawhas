@@ -98,7 +98,7 @@ const links = [
   },
   {
     icon: 'pageview',
-    title: 'Reciters',
+    title: 'Browse',
     exact: false,
     to: '/reciters',
   },
