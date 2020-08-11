@@ -41,7 +41,7 @@ export default Vue.extend({
   methods: {
     triggerPrint() {
       window.clearTimeout(this.timeout);
-      window.timeout = window.setTimeout(() => {
+      this.timeout = window.setTimeout(() => {
         window.print();
       }, 500);
     },
