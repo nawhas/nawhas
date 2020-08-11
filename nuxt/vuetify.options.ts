@@ -10,6 +10,9 @@ export default function options({ req }: Context): Partial<UserVuetifyPreset> {
   const dark = storage[THEME_APPLIED_STORAGE_KEY] === 'dark';
 
   return {
+    icons: {
+      iconfont: 'md',
+    },
     theme: {
       dark,
       themes: {

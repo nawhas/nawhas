@@ -33,7 +33,8 @@
       "@nuxt/types",
       "@nuxtjs/axios",
       "@nuxtjs/universal-storage",
-      "nawhas"
+      "nawhas",
+      "meilisearch"
     ]
   },
   "exclude": [

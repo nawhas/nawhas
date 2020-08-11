@@ -1,55 +1,64 @@
 <template>
   <div v-click-outside="clickOutsideConfig">
-    <v-btn v-if="mobile" icon @click="activate"><v-icon>search</v-icon></v-btn>
-    <div v-show="!mobile || activated"
-         :class="{
-           search: true,
-           'search--focused': activated,
-           'search--dark': isDark,
-           'search--hero': hero,
-          }">
+    <v-btn v-if="mobile" icon @click="activate">
+      <v-icon>search</v-icon>
+    </v-btn>
+    <div
+      v-show="!mobile || activated"
+      :class="{
+        search: true,
+        'search--focused': activated,
+        'search--dark': isDark,
+        'search--hero': hero,
+      }"
+    >
       <div class="search__bar">
-        <v-btn v-if="mobile" icon @click="resetSearch"><v-icon>arrow_back</v-icon></v-btn>
-        <v-text-field solo flat single-line hide-details
-                      background-color="transparent"
-                      :prepend-inner-icon="mobile ? undefined : 'search'"
-                      ref="search"
-                      :dense="false"
-                      :full-width="mobile"
-                      :clearable="!!search"
-                      @focus="onFocus"
-                      @blur="onBlur"
-                      @keydown.esc="onEsc"
-                      placeholder="Search for nawhas, reciters, or lyrics..."
-                      v-model="search"
-                      :class="{'search__input': true, 'search__input--dark': isDark}"
-        ></v-text-field>
+        <v-btn v-if="mobile" icon @click="resetSearch">
+          <v-icon>arrow_back</v-icon>
+        </v-btn>
+        <v-text-field
+          ref="search"
+          v-model="search"
+          solo
+          flat
+          single-line
+          hide-details
+          background-color="transparent"
+          :prepend-inner-icon="mobile ? undefined : 'search'"
+          :dense="false"
+          :full-width="mobile"
+          :clearable="!!search"
+          placeholder="Search for nawhas, reciters, or lyrics..."
+          :class="{'search__input': true, 'search__input--dark': isDark}"
+          @focus="onFocus"
+          @blur="onBlur"
+          @keydown.esc="onEsc"
+        />
       </div>
       <v-expand-transition>
-        <div class="search__container"
-            :style="{
-              background: $vuetify.theme.currentTheme.background,
-            }"
-            v-show="activated">
-          <index-hits :client="client" :search="search" :index="indices.reciters" caption="Reciters">
+        <div
+          v-show="activated"
+          class="search__container"
+          :style="{
+            background: $vuetify.theme.currentTheme.background,
+          }"
+        >
+          <index-results :client="client" :search="search" collection="reciters" heading="Reciters">
             <reciter-result slot-scope="{ item }" :reciter="item" />
-          </index-hits>
-          <index-hits :client="client" :search="search" :index="indices.tracks" caption="Tracks">
+          </index-results>
+          <index-results :client="client" :search="search" collection="tracks" heading="Nawhas">
             <track-result slot-scope="{ item }" :track="item" />
-            <template v-slot:configure>
-              <ais-configure :query="search"
-                             :hits-per-page.camel="4"
-                             :attributesToSnippet="['lyrics']"
-                             :distinct="true"
-              />
-            </template>
-          </index-hits>
+          </index-results>
+          <index-results :client="client" :search="search" collection="albums" heading="Albums">
+            <album-result slot-scope="{ item }" :album="item" />
+          </index-results>
           <div class="search__footer" :class="{ 'white--text': isDark }">
-            <div class="search__footer-hint body-2" v-if="!search">
+            <div v-if="!search" class="search__footer-hint body-2">
               Start typing to see results...
             </div>
-            <div class="body-2" v-else></div>
-            <img src="../../assets/search-by-algolia.svg" alt="Search by Algolia"/>
+            <div v-else class="search__footer-hint body-2">
+              Showing results for &ldquo;{{ search }}&rdquo;
+            </div>
           </div>
         </div>
       </v-expand-transition>
@@ -58,44 +67,38 @@
 </template>
 
 <script lang="ts">
-import {
-  Component, Prop, Ref, Vue, Watch,
-} from 'vue-property-decorator';
-import algolia from 'algoliasearch/lite';
-import { ALGOLIA_APP_ID, ALGOLIA_SEARCH_KEY, ALGOLIA_INDEX_PREFIX } from '@/config';
-import IndexHits from '@/components/search/IndexHits.vue';
-import ReciterResult from '@/components/search/ReciterResult.vue';
-import AlbumResult from '@/components/search/AlbumResult.vue';
-import TrackResult from '@/components/search/TrackResult.vue';
+import { Component, Vue, Prop, Ref, Watch } from 'nuxt-property-decorator';
+import MeiliSearch from 'meilisearch';
 import ClickOutside, { ClickOutsideConfiguration } from '@/directives/click-outside';
-import { EventBus, Search } from '@/events';
+import IndexResults from '@/components/search/IndexResults.vue';
+import ReciterResult from '@/components/search/ReciterResult.vue';
+import TrackResult from '@/components/search/TrackResult.vue';
+import AlbumResult from '@/components/search/AlbumResult.vue';
+
+declare global {
+  interface Window {
+    search: MeiliSearch;
+  }
+}
 
 @Component({
   components: {
+    IndexResults,
     ReciterResult,
-    AlbumResult,
     TrackResult,
-    IndexHits,
+    AlbumResult,
   },
   directives: {
     ClickOutside,
   },
 })
 export default class GlobalSearch extends Vue {
-  private client = algolia(ALGOLIA_APP_ID, ALGOLIA_SEARCH_KEY)
+  private client?: MeiliSearch;
   private activated = false;
   private focused = false;
   private search = '';
-  private listener: Function|null = null;
   @Prop({ type: Boolean, default: false }) private readonly hero!: boolean
   @Ref('search') readonly input!: HTMLElement;
-
-  get indices() {
-    return {
-      reciters: `${ALGOLIA_INDEX_PREFIX}reciters`,
-      tracks: `${ALGOLIA_INDEX_PREFIX}tracks`,
-    };
-  }
 
   get mobile() {
     return this.$vuetify.breakpoint.smAndDown && !this.hero;
@@ -105,12 +108,11 @@ export default class GlobalSearch extends Vue {
     return this.$vuetify.theme.dark;
   }
 
-  mounted() {
-    this.listener = () => {
-      this.$nextTick(() => this.activate());
-    };
-
-    EventBus.$on(Search.TRIGGER, this.listener);
+  created() {
+    this.client = new MeiliSearch({
+      host: this.$config.searchHost,
+      apiKey: 'secret',
+    });
   }
 
   @Watch('$route')
@@ -143,7 +145,9 @@ export default class GlobalSearch extends Vue {
   get clickOutsideConfig(): ClickOutsideConfiguration {
     return {
       active: () => !!this.search && this.activated,
-      handler: () => this.activated = false,
+      handler: () => {
+        this.activated = false;
+      },
     };
   }
 
@@ -159,17 +163,11 @@ export default class GlobalSearch extends Vue {
       this.input.focus();
     });
   }
-
-  beforeDestroy() {
-    if (this.listener) {
-      EventBus.$off(Search.TRIGGER, this.listener);
-    }
-  }
 }
 </script>
 
 <style lang="scss" scoped>
-@import '../../styles/theme';
+@import '~assets/theme';
 
 $width: 400px;
 .search {

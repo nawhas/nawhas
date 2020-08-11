@@ -19,6 +19,7 @@ export default {
   */
   publicRuntimeConfig: {
     apiUrl: process.env.API_BASE_URL || 'https://api.nawhas.test/',
+    searchHost: process.env.SEARCH_HOST || 'https://search.nawhas.test',
 
     axios: {
       browserBaseURL: process.env.API_BASE_URL || 'https://api.nawhas.test/',
