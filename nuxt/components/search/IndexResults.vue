@@ -44,7 +44,6 @@ export default class IndexResults extends Vue {
       limit: this.limit,
     });
     this.results = response.hits;
-    console.log(this.results);
   }
 }
 </script>
