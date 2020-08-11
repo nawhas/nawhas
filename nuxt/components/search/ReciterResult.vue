@@ -1,33 +1,48 @@
 <template>
-  <router-link :to="reciter.url" class="link">
+  <nuxt-link :to="reciter.meta.url" class="link">
     <div class="reciter-result">
       <div class="reciter-result__avatar">
         <v-avatar size="36">
-          <img crossorigin ref="avatarElement" :src="image" :alt="reciter.name" />
+          <img ref="avatarElement" crossorigin :src="image" :alt="reciter.name">
         </v-avatar>
       </div>
       <div class="reciter-result__text">
-        <div :class="{ 'reciter-result__name--dark': isDark }"
-             class="reciter-result__name body-1" :title="reciter.name">
-          <ais-highlight :hit="reciter" attribute="name" />
+        <div
+          :class="{ 'reciter-result__name--dark': isDark }"
+          class="reciter-result__name body-1"
+          :title="reciter.name"
+        >
+          {{ reciter.name }}
         </div>
       </div>
     </div>
-  </router-link>
+  </nuxt-link>
 </template>
 
-<script>
-export default {
-  name: 'ReciterResult',
-  props: ['reciter'],
-  computed: {
-    image() {
-      return this.reciter.avatar || '/img/default-reciter-avatar.png';
-    },
-    isDark() {
-      return this.$vuetify.theme.dark;
-    },
-  },
+<script lang="ts">
+import { Vue, Component, Prop } from 'nuxt-property-decorator';
+
+interface ReciterSearchResult {
+  id: string;
+  name: string;
+  description: string|null;
+  meta: {
+    avatar: string|null;
+    url: string;
+  };
+}
+
+@Component
+export default class ReciterResult extends Vue {
+  @Prop({ type: Object }) private readonly reciter!: ReciterSearchResult;
+
+  get image() {
+    return this.reciter.meta.avatar ?? '/defaults/default-reciter-avatar.png';
+  }
+
+  get isDark() {
+    return this.$vuetify.theme.dark;
+  }
 };
 </script>
 
