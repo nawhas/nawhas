@@ -26,6 +26,8 @@ export default class IndexResults extends Vue {
   @Prop({ type: String, required: true }) private collection!: string;
   @Prop({ type: String, required: true }) private heading!: string;
   @Prop({ type: Number, required: false, default: 4 }) private limit!: number;
+  @Prop({ type: Array, required: false, default: () => [] }) private highlight!: Array<string>;
+  @Prop({ type: Array, required: false, default: () => [] }) private crop!: Array<string>;
   private index!: Index<any>;
   private results: Array<any> = [];
 
@@ -42,6 +44,8 @@ export default class IndexResults extends Vue {
 
     const response = await this.index.search(this.search, {
       limit: this.limit,
+      attributesToHighlight: this.highlight,
+      attributesToCrop: this.crop,
     });
     this.results = response.hits;
   }

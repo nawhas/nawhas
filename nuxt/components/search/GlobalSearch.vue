@@ -43,13 +43,32 @@
             background: $vuetify.theme.currentTheme.background,
           }"
         >
-          <index-results :client="$search" :search="search" collection="reciters" heading="Reciters">
+          <index-results
+            :client="$search"
+            :search="search"
+            :highlight="['name']"
+            collection="reciters"
+            heading="Reciters"
+          >
             <reciter-result slot-scope="{ item }" :reciter="item" />
           </index-results>
-          <index-results :client="$search" :search="search" collection="tracks" heading="Nawhas">
+          <index-results
+            :client="$search"
+            :search="search"
+            :highlight="['title', 'reciter', 'lyrics', 'year']"
+            :crop="['lyrics:20']"
+            collection="tracks"
+            heading="Nawhas"
+          >
             <track-result slot-scope="{ item }" :track="item" />
           </index-results>
-          <index-results :client="$search" :search="search" collection="albums" heading="Albums">
+          <index-results
+            :client="$search"
+            :search="search"
+            :highlight="['title', 'year', 'reciter']"
+            collection="albums"
+            heading="Albums"
+          >
             <album-result slot-scope="{ item }" :album="item" />
           </index-results>
           <div class="search__footer" :class="{ 'white--text': isDark }">
