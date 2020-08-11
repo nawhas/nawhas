@@ -15,9 +15,7 @@
         </div>
       </div>
       <v-spacer />
-      <div class="print__header_logo">
-        <img height="50px" src="/icon.png" />
-      </div>
+      <logo-icon class="print__header__logo" />
     </div>
     <lyrics-renderer v-if="track.lyrics" class="print__content" :track="track" />
     <div
@@ -35,6 +33,7 @@ import Vue from 'vue';
 import LyricsRenderer from '@/components/lyrics/LyricsRenderer.vue';
 import { TrackIncludes } from '@/api/tracks';
 import { Track } from '@/entities/track';
+const LogoIcon = require('@/assets/svg/icon.svg?inline');
 
 interface Data {
   track: Track | null;
@@ -47,6 +46,7 @@ export default Vue.extend({
 
   components: {
     LyricsRenderer,
+    LogoIcon,
   },
 
   async fetch() {
@@ -83,6 +83,10 @@ export default Vue.extend({
     &--track--meta {
       font-size: 14px;
     }
+  }
+
+  &__logo {
+    height: 50px;
   }
 }
 
