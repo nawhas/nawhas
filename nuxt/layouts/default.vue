@@ -134,6 +134,12 @@ export default Vue.extend({
     navigation: () => [
       ...links,
     ],
+    classes() {
+      return {
+        [`app--${this.$vuetify.breakpoint.name}`]: true,
+        'app--player-showing': this.$store.getters['player/track'] !== null,
+      };
+    },
   },
 });
 </script>
@@ -218,6 +224,7 @@ export default Vue.extend({
 .nav__drawer {
   z-index: 500;
 }
+
 @media #{map-get($display-breakpoints, 'md-and-down')} {
   .app-bar__left {
     flex: 0;

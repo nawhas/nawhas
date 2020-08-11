@@ -1,5 +1,0 @@
-@mixin breakpoint($name) {
-  @media #{map-get($display-breakpoints, $name)} {
-    @content;
-  }
-}
