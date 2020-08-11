@@ -16,7 +16,7 @@
       </div>
       <v-spacer />
       <div class="print__header_logo">
-        <img src="../../web/src/assets/logo.svg" alt="Nawhas.com">
+        <img height="50px" src="/icon.png" />
       </div>
     </div>
     <lyrics-renderer v-if="track.lyrics" class="print__content" :track="track" />
