@@ -43,13 +43,13 @@
             background: $vuetify.theme.currentTheme.background,
           }"
         >
-          <index-results :client="client" :search="search" collection="reciters" heading="Reciters">
+          <index-results :client="$search" :search="search" collection="reciters" heading="Reciters">
             <reciter-result slot-scope="{ item }" :reciter="item" />
           </index-results>
-          <index-results :client="client" :search="search" collection="tracks" heading="Nawhas">
+          <index-results :client="$search" :search="search" collection="tracks" heading="Nawhas">
             <track-result slot-scope="{ item }" :track="item" />
           </index-results>
-          <index-results :client="client" :search="search" collection="albums" heading="Albums">
+          <index-results :client="$search" :search="search" collection="albums" heading="Albums">
             <album-result slot-scope="{ item }" :album="item" />
           </index-results>
           <div class="search__footer" :class="{ 'white--text': isDark }">
@@ -68,18 +68,11 @@
 
 <script lang="ts">
 import { Component, Vue, Prop, Ref, Watch } from 'nuxt-property-decorator';
-import MeiliSearch from 'meilisearch';
 import ClickOutside, { ClickOutsideConfiguration } from '@/directives/click-outside';
 import IndexResults from '@/components/search/IndexResults.vue';
 import ReciterResult from '@/components/search/ReciterResult.vue';
 import TrackResult from '@/components/search/TrackResult.vue';
 import AlbumResult from '@/components/search/AlbumResult.vue';
-
-declare global {
-  interface Window {
-    search: MeiliSearch;
-  }
-}
 
 @Component({
   components: {
@@ -93,7 +86,6 @@ declare global {
   },
 })
 export default class GlobalSearch extends Vue {
-  private client?: MeiliSearch;
   private activated = false;
   private focused = false;
   private search = '';
@@ -106,13 +98,6 @@ export default class GlobalSearch extends Vue {
 
   get isDark() {
     return this.$vuetify.theme.dark;
-  }
-
-  created() {
-    this.client = new MeiliSearch({
-      host: this.$config.searchHost,
-      apiKey: 'secret',
-    });
   }
 
   @Watch('$route')

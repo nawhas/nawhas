@@ -101,6 +101,7 @@ export default {
     '@/plugins/axios',
     '@/plugins/filters',
     '@/plugins/api',
+    '@/plugins/search',
     '@/plugins/theme.client',
     '@/plugins/service-worker.client',
   ],
