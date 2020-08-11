@@ -76,7 +76,7 @@
       <span>&copy; {{ new Date().getFullYear() }}</span>
     </v-footer>
     <audio-player />
-    <!--    <update-service-worker />-->
+    <update-service-worker />
     <!--    <toaster />-->
   </v-app>
 </template>
@@ -85,6 +85,7 @@
 import Vue from 'vue';
 import UserMenu from '@/components/navigation/UserMenu.vue';
 import AudioPlayer from '@/components/audio-player/AudioPlayer.vue';
+import UpdateServiceWorker from '@/components/utils/UpdateServiceWorker.vue';
 const LogoIcon = require('@/assets/svg/icon.svg?inline');
 const LogoWordmark = require('@/assets/svg/wordmark.svg?inline');
 
@@ -116,6 +117,7 @@ export default Vue.extend({
     LogoIcon,
     UserMenu,
     AudioPlayer,
+    UpdateServiceWorker,
   },
   data: () => ({
     drawer: false,
@@ -129,12 +131,6 @@ export default Vue.extend({
     },
     navigation: () => [
       ...links,
-      {
-        icon: 'videogame_asset',
-        title: 'Components',
-        exact: true,
-        to: '/components',
-      },
     ],
   },
 });

@@ -266,6 +266,7 @@ import LyricsOverlay from '@/components/audio-player/LyricsOverlay.vue';
 import {
   PlayerState, QueuedTrack, TrackQueue, RepeatType,
 } from '@/store/player';
+import { getAlbumArtwork } from '@/entities/album';
 
 interface CachedTrackReference {
   queued: QueuedTrack|null;
@@ -390,10 +391,10 @@ export default class AudioPlayer extends Vue {
 
   get artwork(): string {
     if (!this.hasArtwork) {
-      return '/img/default-album-image.png';
+      return getAlbumArtwork(null);
     }
 
-    return this.track.album.artwork;
+    return getAlbumArtwork(this.track.album);
   }
 
   get uri(): string|null {
