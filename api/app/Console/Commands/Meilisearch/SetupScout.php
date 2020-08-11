@@ -11,7 +11,7 @@ class SetupScout extends Command
      *
      * @var string
      */
-    protected $signature = 'meilisearch:setup {--reset}';
+    protected $signature = 'meilisearch:setup {--reset} {--import}';
 
     /**
      * The console command description.
@@ -40,9 +40,12 @@ class SetupScout extends Command
             $this->call('scout:index', [
                'name' => $index
             ]);
-            $this->call('scout:import', [
-                'model' => $config['model'],
-            ]);
+
+            if ($this->option('import')) {
+                $this->call('scout:import', [
+                    'model' => $config['model'],
+                ]);
+            }
         }
 
         return 0;
