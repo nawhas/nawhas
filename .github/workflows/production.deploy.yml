@@ -113,6 +113,7 @@ jobs:
           --build-arg ALGOLIA_APP_ID=$VUE_APP_ALGOLIA_APP_ID \
           --build-arg ALGOLIA_SEARCH_KEY=$VUE_APP_ALGOLIA_SEARCH_KEY \
           --build-arg API_DOMAIN=$VUE_APP_API_DOMAIN \
+          --build-arg APP_DOMAIN=$VUE_APP_APP_DOMAIN \
           ./web
 
       - name: Publish Web
