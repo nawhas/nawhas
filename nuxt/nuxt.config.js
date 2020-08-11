@@ -226,4 +226,13 @@ export default {
       'theme:applied': 'light',
     },
   },
+
+  /*
+   ** Page Transition Settings
+   ** See https://nuxtjs.org/guides/features/transitions/#the-pagetransition-property
+   */
+  pageTransition: {
+    name: 'slide-x-transition',
+    mode: 'out-in',
+  },
 };
