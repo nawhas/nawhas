@@ -24,18 +24,7 @@ export default Vue.extend({
   },
 
   mounted() {
-    const handler = () => {
-      window.close();
-    };
-    this.$el['__onPrintCompleteHandler__'] = handler;
-    window.addEventListener('afterprint', handler);
-
     this.triggerPrint();
-  },
-
-  beforeDestroy() {
-    window.removeEventListener('afterprint', this.$el['__onPrintCompleteHandler__']);
-    delete this.$el['__onPrintCompleteHandler__'];
   },
 
   methods: {
