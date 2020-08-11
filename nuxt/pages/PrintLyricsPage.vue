@@ -15,7 +15,10 @@
         </div>
       </div>
       <v-spacer />
-      <logo-icon class="print__header__logo" />
+      <div class="masthead__logo">
+        <logo-icon class="masthead__logo__icon" />
+        <logo-wordmark class="masthead__logo__wordmark" />
+      </div>
     </div>
     <lyrics-renderer v-if="track.lyrics" class="print__content" :track="track" />
     <div
@@ -33,7 +36,9 @@ import Vue from 'vue';
 import LyricsRenderer from '@/components/lyrics/LyricsRenderer.vue';
 import { TrackIncludes } from '@/api/tracks';
 import { Track } from '@/entities/track';
+import { MetaInfo } from 'vue-meta';
 const LogoIcon = require('@/assets/svg/icon.svg?inline');
+const LogoWordmark = require('@/assets/svg/wordmark.svg?inline');
 
 interface Data {
   track: Track | null;
@@ -47,15 +52,15 @@ export default Vue.extend({
   components: {
     LyricsRenderer,
     LogoIcon,
+    LogoWordmark,
   },
 
   async fetch() {
-    const { reciterId, albumId, trackId } = await this.$route.params;
+    const { reciterId, albumId, trackId } = this.$route.params;
     this.track = await this.$api.tracks.get(reciterId, albumId, trackId, {
       include: [
         TrackIncludes.Reciter,
         TrackIncludes.Lyrics,
-        'album.tracks',
       ],
     });
   },
@@ -64,6 +69,16 @@ export default Vue.extend({
     return {
       track: null,
     };
+  },
+
+  head(): MetaInfo {
+    let title = 'Loading...';
+
+    if (this.track) {
+      title = `${this.track.title} (${this.track.year}) - Nawha by ${this.track.reciter?.name}`;
+    }
+
+    return { title };
   },
 });
 </script>
@@ -83,10 +98,6 @@ export default Vue.extend({
     &--track--meta {
       font-size: 14px;
     }
-  }
-
-  &__logo {
-    height: 50px;
   }
 }
 
@@ -126,5 +137,20 @@ export default Vue.extend({
   column-count: 1;
   padding: 20px;
   text-align: center;
+}
+
+.masthead__logo {
+  height: 38px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+
+  &__icon {
+    height: 38px;
+  }
+  &__wordmark {
+    height: 16px;
+    margin-left: 8px;
+  }
 }
 </style>
