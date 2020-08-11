@@ -8,6 +8,7 @@ volumes:
   pg_events:
   pg_data:
   redis:
+  search:
 
 services:
   api:
