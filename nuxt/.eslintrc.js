@@ -19,5 +19,6 @@ module.exports = {
     'quote-props': ['error', 'consistent-as-needed'],
     'no-useless-constructor': 'off',
     'arrow-parens': ['error', 'always'],
+    'vue/no-v-html': ['off'],
   },
 };

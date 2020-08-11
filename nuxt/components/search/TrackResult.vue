@@ -8,18 +8,13 @@
       </div>
       <div class="track-result__text" :class="{ 'track-result__text--dark': isDark }">
         <div class="track-result__name body-1" :title="track.title">
-          <div class="track-result__title">
-            {{ track.title }}
-          </div>
-          <div class="track-result__year body-2">
-            {{ track.year }}
-          </div>
+          <div class="track-result__title" v-html="highlighted.title" />
+          <div class="track-result__year body-2" v-html="highlighted.year" />
         </div>
-        <div class="track-result__reciter body-2">
-          {{ track.reciter }}
-        </div>
+        <div class="track-result__reciter body-2" v-html="highlighted.reciter" />
         <div class="track-result__lyrics body-2">
-          <span>No lyrics available</span>
+          <span v-if="highlighted.lyrics" v-html="highlighted.lyrics" />
+          <span v-else>No lyrics available</span>
         </div>
       </div>
     </div>
@@ -48,11 +43,18 @@ interface TrackSearchResult {
     artwork: string|null;
     url: string;
   };
+  _formatted?: Formatted;
 }
+
+type Formatted = Omit<TrackSearchResult, '_formatted'>;
 
 @Component
 export default class TrackResult extends Vue {
   @Prop({ type: Object, required: true }) private readonly track!: TrackSearchResult;
+
+  get highlighted(): Formatted {
+    return this.track._formatted ?? this.track;
+  }
 
   get image() {
     return this.track.meta.artwork ?? '/defaults/default-album-image.png';

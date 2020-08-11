@@ -11,9 +11,8 @@
           :class="{ 'reciter-result__name--dark': isDark }"
           class="reciter-result__name body-1"
           :title="reciter.name"
-        >
-          {{ reciter.name }}
-        </div>
+          v-html="highlighted.name"
+        />
       </div>
     </div>
   </nuxt-link>
@@ -30,11 +29,17 @@ interface ReciterSearchResult {
     avatar: string|null;
     url: string;
   };
+  _formatted?: Formatted;
 }
 
+type Formatted = Omit<ReciterSearchResult, '_formatted'>;
 @Component
 export default class ReciterResult extends Vue {
   @Prop({ type: Object }) private readonly reciter!: ReciterSearchResult;
+
+  get highlighted(): Formatted {
+    return this.reciter._formatted ?? this.reciter;
+  }
 
   get image() {
     return this.reciter.meta.avatar ?? '/defaults/default-reciter-avatar.png';

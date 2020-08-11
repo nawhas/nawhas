@@ -6,16 +6,10 @@
       </v-avatar>
       <div class="album-result__text">
         <div class="album-result__name body-1" :title="album.title">
-          <div class="album-result__title">
-            {{ album.title }}
-          </div>
-          <div class="album-result__year body-2">
-            {{ album.year }}
-          </div>
+          <div class="album-result__title" v-html="highlighted.title" />
+          <div class="album-result__year body-2" v-html="highlighted.year" />
         </div>
-        <div class="album-result__reciter body-2" :title="album.reciter">
-          {{ album.reciter }}
-        </div>
+        <div class="album-result__reciter body-2" :title="album.reciter" v-html="highlighted.reciter" />
       </div>
     </div>
   </nuxt-link>
@@ -38,11 +32,18 @@ interface AlbumSearchResult {
     artwork: string|null;
     url: string;
   };
+  _formatted?: Formatted;
 }
+
+type Formatted = Omit<AlbumSearchResult, '_formatted'>;
 
 @Component
 export default class AlbumResult extends Vue {
   @Prop({ type: Object, required: true }) private readonly album!: AlbumSearchResult;
+
+  get highlighted(): Formatted {
+    return this.album._formatted ?? this.album;
+  }
 
   get image() {
     return this.album.meta.artwork || '/defaults/default-album-image.png';
