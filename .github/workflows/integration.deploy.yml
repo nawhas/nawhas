@@ -143,6 +143,7 @@ jobs:
             --build-arg ALGOLIA_SEARCH_KEY=$VUE_APP_ALGOLIA_SEARCH_KEY \
             --build-arg ALGOLIA_INDEX_PREFIX=intg_${PR_NUM}_ \
             --build-arg API_DOMAIN="https://$API_DOMAIN" \
+            --build-arg APP_DOMAIN="https://$APP_DOMAIN" \
             ./nuxt
 
       - name: Publish Web
