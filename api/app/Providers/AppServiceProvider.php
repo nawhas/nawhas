@@ -2,14 +2,12 @@
 
 namespace App\Providers;
 
-use App\Console\Commands\ImportDataCommand;
-use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Sanctum\Sanctum;
 use League\Fractal\Manager as Fractal;
 use League\Fractal\Serializer\ArraySerializer;
+use MeiliSearch\Client as Search;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -34,6 +32,8 @@ class AppServiceProvider extends ServiceProvider
 
             return $fractal;
         });
+
+        $this->app->bind(Search::class, fn () => new Search(config('meilisearch.host'), config('meilisearch.key')));
     }
 
     /**
