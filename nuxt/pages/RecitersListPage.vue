@@ -116,6 +116,7 @@ export default Vue.extend({
     },
 
     onPageChanged(page) {
+      this.$vuetify.goTo(0);
       this.$router.push({ query: { page: String(page) } });
     },
   },
