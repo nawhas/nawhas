@@ -73,6 +73,10 @@ export class TracksApi {
     useIncludes(params, options.include);
     usePagination(params, options.pagination);
 
+    if (options.reciterId) {
+      params.set('reciterId', options.reciterId);
+    }
+
     return await this.axios.$get<TracksIndexResponse>(
       'v1/popular/tracks',
       { params },
