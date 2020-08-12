@@ -169,6 +169,7 @@ import { Reciter, getReciterUri } from '@/entities/reciter';
 import { Album, getAlbumArtwork, getAlbumUri } from '@/entities/album';
 import { TrackIncludes } from '@/api/tracks';
 import { MetaInfo } from 'vue-meta';
+import { generateMeta } from '@/utils/meta';
 
 interface Data {
   track: Track | null;
@@ -346,12 +347,19 @@ export default Vue.extend({
 
   head(): MetaInfo {
     let title = 'Loading...';
+    let description;
 
     if (this.track) {
       title = `${this.track.title} (${this.track.year}) - Nawha by ${this.track.reciter?.name}`;
+
+      description = `${this.track.title} is a nawha by ${this.track.reciter?.name}, released in ${this.track.year} ` +
+        `as part of their album titled ${this.track.album?.title}.`;
     }
 
-    return { title };
+    return generateMeta({
+      title,
+      description,
+    });
   },
 });
 </script>

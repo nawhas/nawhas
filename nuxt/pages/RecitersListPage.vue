@@ -60,6 +60,7 @@ import SkeletonCardGrid from '@/components/loaders/SkeletonCardGrid.vue';
 import { EventBus, Search } from '@/events';
 import { ReciterIncludes, RecitersIndexResponse } from '@/api/reciters';
 import { Reciter } from '@/entities/reciter';
+import { generateMeta } from '@/utils/meta';
 
 interface Data {
   page: number;
@@ -121,9 +122,12 @@ export default Vue.extend({
     },
   },
 
-  head: {
+  head: () => generateMeta({
     title: 'Reciters',
-  },
+    description: 'Browse, read, and listen to over 6000 nawhas by more than 100 different reciters, ' +
+       'including world-famous reciters like Nadeem Sarwar, Irfan Haider, Tejani Brothers, ' +
+       'Hassan Sadiq, Mir Hasan Mir, and more!',
+  }),
 });
 </script>
 

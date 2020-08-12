@@ -115,6 +115,8 @@ import Album from '@/components/albums/Album.vue';
 import { TrackIncludes } from '@/api/tracks';
 import EditReciterDialog from '@/components/edit/EditReciterDialog.vue';
 import EditAlbumDialog from '@/components/edit/EditAlbumDialog.vue';
+import { generateMeta } from '@/utils/meta';
+import { ReciterIncludes } from '@/api/reciters';
 
 interface Data {
   page: number;
@@ -139,7 +141,9 @@ export default Vue.extend({
   async fetch() {
     const { reciterId } = this.$route.params;
     const [reciter, tracks, albums] = await Promise.all([
-      this.$api.reciters.get(reciterId),
+      this.$api.reciters.get(reciterId, {
+        include: [ReciterIncludes.Related],
+      }),
       this.$api.tracks.popular({
         reciterId,
         pagination: { limit: 6 },
@@ -198,10 +202,17 @@ export default Vue.extend({
 
   head(): MetaInfo {
     const title = this.reciter?.name ?? 'Reciter';
+    let description = this.reciter?.description;
 
-    return {
+    if (!description) {
+      const albums = String(this.reciter?.related?.albums ?? 'many');
+      description = `Explore ${title}'s collection of nawhas from ${albums} albums.`;
+    }
+
+    return generateMeta({
       title,
-    };
+      description,
+    });
   },
 });
 </script>
