@@ -3,6 +3,7 @@ import path from 'path';
 require('dotenv').config();
 
 const TITLE_SUFFIX = 'Nawhas.com';
+const TITLE_TEMPLATE = '%s | ' + TITLE_SUFFIX;
 const DEFAULT_DESCRIPTION = 'Welcome to Nawhas.com, the most advanced library of nawhas online.';
 
 const https = process.env.APP_ENV === 'development' ? {
@@ -48,12 +49,14 @@ export default {
   ** See https://nuxtjs.org/api/configuration-head
   */
   head: {
-    titleTemplate: '%s | ' + TITLE_SUFFIX,
+    titleTemplate: TITLE_TEMPLATE,
     title: 'Home',
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
       { hid: 'description', name: 'description', content: DEFAULT_DESCRIPTION },
+      { hid: 'og:title', property: 'og:title', template: TITLE_TEMPLATE },
+      { hid: 'og:description', name: 'og:description', content: DEFAULT_DESCRIPTION },
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },

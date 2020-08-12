@@ -124,6 +124,7 @@ import Vue from 'vue';
 import HeroBanner from '@/components/HeroBanner.vue';
 import HeroQuote from '@/components/HeroQuote.vue';
 import { mdiGithub } from '@mdi/js';
+import { generateMeta } from '@/utils/meta';
 
 export default Vue.extend({
   components: {
@@ -228,9 +229,10 @@ export default Vue.extend({
     },
   },
 
-  head: {
+  head: () => generateMeta({
     title: 'About',
-  },
+    description: 'Learn about the history behind Nawhas.com, and our plans for the future.',
+  }),
 });
 </script>
 

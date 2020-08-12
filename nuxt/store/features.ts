@@ -1,6 +1,6 @@
 import { ActionContext, ActionTree, MutationTree, GetterTree } from 'vuex';
 import { Feature, FeatureMap } from '@/entities/feature';
-import { RootState } from '~/store/index';
+import { RootState } from '@/store/index';
 
 /*
 |--------------------------------------------------------------------------

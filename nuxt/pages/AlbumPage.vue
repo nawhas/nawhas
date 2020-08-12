@@ -127,6 +127,7 @@ import { Reciter, getReciterUri } from '@/entities/reciter';
 import TrackList from '@/components/tracks/TrackList.vue';
 import EditTrackDialog from '@/components/edit/EditTrackDialog.vue';
 import EditAlbumDialog from '@/components/edit/EditAlbumDialog.vue';
+import { generateMeta } from '@/utils/meta';
 
 interface Data {
   album: Album | null;
@@ -262,12 +263,21 @@ export default Vue.extend({
 
   head(): MetaInfo {
     let title = `${this.$route.params.albumId} Album`;
+    let description;
 
     if (this.album) {
       title = `${this.album.title} (${this.album.year}) - Album by ${this.album.reciter?.name}`;
+
+      const trackListPreview = this.tracks?.slice(0, 3).map((track) => track.title).join(', ');
+      description = `Released in ${this.album.year}, ${this.album.title} is an album by ` +
+        `${this.album.reciter?.name} with ${this.album.related?.tracks} nawhas, including ` +
+        `${trackListPreview}, and more.`;
     }
 
-    return { title };
+    return generateMeta({
+      title,
+      description,
+    });
   },
 });
 </script>
