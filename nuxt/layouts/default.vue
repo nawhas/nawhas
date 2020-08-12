@@ -77,7 +77,7 @@
     </v-footer>
     <audio-player />
     <update-service-worker />
-    <!--    <toaster />-->
+    <toaster />
   </v-app>
 </template>
 
@@ -86,6 +86,7 @@ import Vue from 'vue';
 import UserMenu from '@/components/navigation/UserMenu.vue';
 import AudioPlayer from '@/components/audio-player/AudioPlayer.vue';
 import GlobalSearch from '@/components/search/GlobalSearch.vue';
+import Toaster from '@/components/utils/Toaster.vue';
 import UpdateServiceWorker from '@/components/utils/UpdateServiceWorker.vue';
 const LogoIcon = require('@/assets/svg/icon.svg?inline');
 const LogoWordmark = require('@/assets/svg/wordmark.svg?inline');
@@ -116,6 +117,7 @@ export default Vue.extend({
   components: {
     LogoWordmark,
     LogoIcon,
+    Toaster,
     UserMenu,
     AudioPlayer,
     GlobalSearch,
