@@ -39,6 +39,7 @@
 <script lang="ts">
 import { Component, Prop, Vue } from 'nuxt-property-decorator';
 import { TrackQueue, QueuedTrack } from '@/store/player';
+import { getAlbumArtwork } from '~/entities/album';
 
 @Component
 export default class QueueList extends Vue {
@@ -69,11 +70,7 @@ export default class QueueList extends Vue {
   }
 
   getTrackArtwork(track): string {
-    if (track.album && track.album.artwork) {
-      return track.album.artwork;
-    }
-
-    return '/img/default-album-image.png';
+    return getAlbumArtwork(track.album);
   }
 
   /**
