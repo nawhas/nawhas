@@ -21,28 +21,27 @@ import { Component, Vue } from 'nuxt-property-decorator';
 @Component
 export default class UpdateServiceWorker extends Vue {
   private show = false;
-  private registration: ServiceWorkerRegistration|null = null;
+  private worker: ServiceWorker|null = null;
 
   mounted() {
     // Register service worker listener.
     document.addEventListener('worker:updated', (e) => {
-      this.showUpdateUi((e as CustomEvent<ServiceWorkerRegistration>).detail);
+      this.showUpdateUi((e as CustomEvent<ServiceWorker>).detail);
     }, { once: true });
   }
 
-  showUpdateUi(registration: ServiceWorkerRegistration) {
+  showUpdateUi(worker: ServiceWorker) {
     this.show = true;
-    this.registration = registration;
+    this.worker = worker;
   }
 
   refresh() {
     this.show = false;
-    if (this.registration === null) {
+    if (this.worker === null) {
       return;
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    this.registration.waiting!.postMessage({ type: 'SKIP_WAITING' });
+    this.worker.postMessage({ type: 'SKIP_WAITING' });
   }
 }
 </script>
