@@ -97,14 +97,13 @@
 </template>
 
 <script lang="ts">
-import {
-  Component, Prop, Watch, Vue,
-} from 'nuxt-property-decorator';
+import { Component, Prop, Vue, Watch } from 'nuxt-property-decorator';
 import { clone } from '@/utils/clone';
 import { RequestOptions, TrackIncludes } from '@/api/tracks';
 import TimestampedEditor from '@/components/edit/lyrics/TimestampedEditor.vue';
 import { Documents, Format } from '@/entities/lyrics';
-import JsonV1Document = Documents.JsonV1.Document;
+import { getTrackUri } from '~/entities/track';
+  import JsonV1Document = Documents.JsonV1.Document;
 import GroupType = Documents.JsonV1.LineGroupType;
 import LyricsData = Documents.JsonV1.LyricsData;
 
@@ -264,26 +263,17 @@ export default class EditTrackDialog extends Vue {
       return false;
     }
 
-    const response = await this.$api.tracks.changeAudio(
+    return await this.$api.tracks.changeAudio(
       reciterId,
       albumId,
       trackId,
       this.form.audio,
       this.getRequestOptions(),
     );
-    return response;
   }
 
   redirect(response) {
-    this.$router.push({
-      name: 'tracks.show',
-      params: {
-        reciter: response.data.reciter.slug,
-        album: response.data.year,
-        track: response.data.slug,
-        trackObject: response.data,
-      },
-    }).catch(() => window.location.reload());
+    this.$router.push(getTrackUri(response)).catch(() => window.location.reload());
   }
 
   async confirmDelete() {
