@@ -1,21 +1,10 @@
 /* eslint-disable no-console */
 import { Plugin } from '@nuxt/types';
-import { Theme, THEME_APPLIED_STORAGE_KEY, THEME_PREFERENCE_STORAGE_KEY } from '@/entities/theme';
+import {
+  shouldUseDarkMode, applyTheme, saveAppliedTheme, Theme, THEME_PREFERENCE_STORAGE_KEY,
+} from '@/services/theme';
 
-function shouldUseDarkMode(preference: Theme): boolean {
-  if (preference === 'dark') {
-    return true;
-  }
-
-  if (preference === 'auto' && window.matchMedia) {
-    // This will check to see if the user has Dark Mode on their OS
-    return window.matchMedia('(prefers-color-scheme: dark)').matches;
-  }
-
-  return false;
-}
-
-function installThemeEventListener(callback) {
+function installThemeEventListener(callback: () => void) {
   if (!window.matchMedia) {
     return;
   }
@@ -27,22 +16,6 @@ function installThemeEventListener(callback) {
 }
 
 const PreferencesPlugin: Plugin = ({ store, $vuetify, $storage }) => {
-  // Set up closures.
-  const saveAppliedTheme = () => {
-    const applied: Theme = $vuetify.theme.dark ? 'dark' : 'light';
-    console.log('Saving applied theme:', applied);
-    $storage.setUniversal(THEME_APPLIED_STORAGE_KEY, applied);
-  };
-
-  const applyTheme = () => {
-    // Set vuetify theme.
-    $vuetify.theme.dark = shouldUseDarkMode(store.state.preferences.theme);
-    console.log('Determined new theme:', $vuetify.theme.dark ? 'dark' : 'light');
-
-    // Set last applied theme in storage.
-    saveAppliedTheme();
-  };
-
   // 1. Set the preferences state using our universal storage.
   const preference: Theme = $storage.getUniversal(THEME_PREFERENCE_STORAGE_KEY);
   console.log('Found theme preference from storage:', preference);
@@ -60,17 +33,14 @@ const PreferencesPlugin: Plugin = ({ store, $vuetify, $storage }) => {
     console.log('Saved theme preference in storage:', value);
 
     // Set last applied theme in storage.
-    saveAppliedTheme();
+    saveAppliedTheme($vuetify, $storage);
   });
 
   // 3. Set up listener to respond to when system dark mode setting changes.
   installThemeEventListener(() => {
     console.log('Responding to system theme change listener');
-    applyTheme();
+    applyTheme(store.state.preferences.theme, $vuetify, $storage);
   });
-
-  // 4. Initialize theme:
-  applyTheme();
 };
 
 export default PreferencesPlugin;

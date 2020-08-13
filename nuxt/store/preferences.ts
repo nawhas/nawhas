@@ -1,5 +1,5 @@
 import { MutationTree } from 'vuex';
-import { Theme } from '@/entities/theme';
+import { Theme } from '@/services/theme';
 
 interface PreferencesState {
   theme: Theme;

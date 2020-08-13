@@ -88,6 +88,8 @@ import AudioPlayer from '@/components/audio-player/AudioPlayer.vue';
 import GlobalSearch from '@/components/search/GlobalSearch.vue';
 import Toaster from '@/components/utils/Toaster.vue';
 import UpdateServiceWorker from '@/components/utils/UpdateServiceWorker.vue';
+import { applyTheme } from '@/services/theme';
+
 const LogoIcon = require('@/assets/svg/icon.svg?inline');
 const LogoWordmark = require('@/assets/svg/wordmark.svg?inline');
 
@@ -142,6 +144,10 @@ export default Vue.extend({
         'app--player-showing': this.$store.getters['player/track'] !== null,
       };
     },
+  },
+
+  mounted() {
+    applyTheme(this.$store.state.preferences.theme, this.$vuetify, this.$storage);
   },
 });
 </script>
