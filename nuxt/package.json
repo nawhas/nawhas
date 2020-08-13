@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "nuxt-ts",
+    "dev:proxy": "cross-env PROXY_API=1 SERVER_API_BASE_URL=https://api.nawhas.test/ API_BASE_URL=/api/ nuxt-ts",
     "serve": "yarn dev",
     "build": "nuxt-ts build",
     "start": "nuxt-ts start",
@@ -24,6 +25,7 @@
     "@mdi/js": "^5.5.55",
     "@nuxt/typescript-runtime": "^1.0.0",
     "@nuxtjs/axios": "^5.12.0",
+    "@nuxtjs/proxy": "^2.0.1",
     "@nuxtjs/pwa": "^3.0.0-beta.20",
     "@nuxtjs/universal-storage": "^0.5.5",
     "@nuxtjs/vuetify": "^1.11.2",

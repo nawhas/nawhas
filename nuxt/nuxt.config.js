@@ -10,6 +10,15 @@ const https = process.env.APP_ENV === 'development' ? {
   cert: fs.readFileSync(path.resolve(__dirname, '../docker/nginx/certs/nawhas.test.crt')),
 } : false;
 
+const proxy = process.env.PROXY_API ? {
+  // For local dev only
+  '/api': {
+    target: 'https://api.nawhas.test/',
+    pathRewrite: { '^/api': '' },
+    secure: false,
+  },
+} : {};
+
 export default {
   debug: true,
   /*
@@ -126,6 +135,7 @@ export default {
   modules: [
     // Doc: https://axios.nuxtjs.org/usage
     '@nuxtjs/universal-storage',
+    '@nuxtjs/proxy',
     '@nuxtjs/axios',
     '@nuxtjs/pwa',
   ],
@@ -134,7 +144,6 @@ export default {
   ** See https://axios.nuxtjs.org/options
   */
   axios: {
-    debug: false,
     credentials: true,
     headers: {
       common: {
@@ -235,4 +244,10 @@ export default {
     name: 'slide-x-transition',
     mode: 'out-in',
   },
+
+  /*
+   ** Proxy Settings
+   ** See https://github.com/nuxt-community/proxy-module#proxy
+   */
+  proxy,
 };
