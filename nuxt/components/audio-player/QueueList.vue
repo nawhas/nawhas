@@ -39,7 +39,7 @@
 <script lang="ts">
 import { Component, Prop, Vue } from 'nuxt-property-decorator';
 import { TrackQueue, QueuedTrack } from '@/store/player';
-import { getAlbumArtwork } from '~/entities/album';
+import { getAlbumArtwork } from '@/entities/album';
 
 @Component
 export default class QueueList extends Vue {
