@@ -137,9 +137,11 @@ class Album extends Model implements TimestampedEntity
             'id' => $this->id,
             'title' => $this->title,
             'year' => $this->year,
-            'reciter' => ['name' => $this->reciter->name],
-            'artwork' => $this->getArtworkUrl(),
-            'url' => sprintf('/reciters/%s/albums/%s', $this->reciter->slug, $this->year),
+            'reciter' => $this->reciter->name,
+            'meta' => [
+                'artwork' => $this->getArtworkUrl(),
+                'url' => sprintf('/reciters/%s/albums/%s', $this->reciter->slug, $this->year),
+            ]
         ];
     }
 }

@@ -1,0 +1,7 @@
+yarn-error.log
+.nuxt
+node_modules
+assets/fonts
+assets/css
+.idea
+.env

@@ -8,6 +8,7 @@ volumes:
   pg_events:
   pg_data:
   redis:
+  search:
 
 services:
   api:
@@ -21,11 +22,26 @@ services:
       - XDEBUG_IDE_KEY=PHPSTORM
       - XDEBUG_REMOTE_HOST=host.docker.internal
     volumes:
-      - ./api:/var/www/api:cached
+      - ./api:/var/www/api:delegated
     ports:
       - "9000:9000"
     networks:
       - nawhas
+    depends_on:
+      - init
+  init:
+    image: szainmehdi/php:7.4-dev
+    container_name: nawhas_init
+    working_dir: /var/www/api
+    environment:
+      - APP_ENV=local
+    volumes:
+      - ./api:/var/www/api:delegated
+    networks:
+      - nawhas
+    restart: "no"
+    command: >
+      sh -c "composer install && php artisan boot"
     depends_on:
       - db
       - cache
@@ -35,19 +51,14 @@ services:
     working_dir: /var/www/api
     environment:
       - APP_ENV=local
-      - XDEBUG_ENABLE=true
-      - XDEBUG_REMOTE_PORT=9001
-      - XDEBUG_IDE_KEY=PHPSTORM
-      - XDEBUG_REMOTE_HOST=host.docker.internal
     volumes:
-      - ./api:/var/www/api:cached
+      - ./api:/var/www/api:delegated
     networks:
       - nawhas
-    restart: always
+    restart: unless-stopped
     command: php artisan horizon
     depends_on:
-      - db
-      - cache
+      - init
   nginx:
     image: nginx:stable-alpine
     container_name: nawhas_api_nginx
@@ -71,13 +82,12 @@ services:
       - web
     networks:
       - nawhas
+  # This container just exists to keep make the ingress continue to work.
   web:
-    image: nginx:stable-alpine
+    image: szainmehdi/node:13
     container_name: nawhas_web
-    working_dir: /var/www/web/public
-    volumes:
-      - ./web/dist:/var/www/web/public
-      - ./web/docker/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    command: npx http-server -p 3000
+    restart: unless-stopped
     networks:
       - nawhas
   db:
@@ -131,3 +141,16 @@ services:
       - nawhas
     volumes:
       - redis:/data
+  search:
+    image: getmeili/meilisearch:v0.13.0
+    container_name: nawhas_search
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "7700:7700"
+    environment:
+      - MEILI_MASTER_KEY=secret
+    volumes:
+      - search:/data.ms
+    networks:
+      - nawhas

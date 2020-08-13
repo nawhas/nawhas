@@ -5,7 +5,6 @@
     "license": "MIT",
     "require": {
         "php": "7.4.*",
-        "algolia/scout-extended": "^1.9",
         "fideloper/proxy": "^4.0",
         "fruitcake/laravel-cors": "^2.0",
         "graham-campbell/github": "^9.1",
@@ -20,6 +19,7 @@
         "lcobucci/jwt": "^3.3",
         "league/flysystem-aws-s3-v3": "^1.0",
         "league/fractal": "^0.19.2",
+        "meilisearch/meilisearch-laravel-scout": "^0.10.6",
         "myclabs/php-enum": "^1.7",
         "ocramius/proxy-manager": "^2.8",
         "php-http/guzzle6-adapter": "^2.0",

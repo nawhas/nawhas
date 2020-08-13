@@ -7,6 +7,7 @@ spec:
     - hosts:
       - ING_API_DOMAIN
       - ING_APP_DOMAIN
+      - ING_SEARCH_HOST
       secretName: nawhas-tls
   rules:
     - host: ING_API_DOMAIN
@@ -20,4 +21,10 @@ spec:
         paths:
           - backend:
               serviceName: web
-              servicePort: 80
+              servicePort: 3000
+    - host: ING_SEARCH_HOST
+      http:
+        paths:
+          - backend:
+              serviceName: search
+              servicePort: 7700

@@ -15,3 +15,6 @@ secretGenerator:
   - name: web.staging.env
     envs:
       - secrets/web.staging.env
+  - name: search.staging.env
+    envs:
+      - secrets/search.staging.env

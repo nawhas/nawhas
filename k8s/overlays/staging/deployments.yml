@@ -36,3 +36,16 @@ spec:
           envFrom:
             - secretRef:
                 name: web.staging.env
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: search
+spec:
+  template:
+    spec:
+      containers:
+        - name: search
+          envFrom:
+            - secretRef:
+                name: search.staging.env

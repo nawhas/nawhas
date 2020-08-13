@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\FeaturesController;
 use App\Http\Controllers\Api\FeedbackController;
 use App\Http\Controllers\Api\PopularEntitiesController;
+use App\Http\Controllers\Api\SearchController;
 use App\Modules\Features\Definitions\PublicUserRegistration;
 use App\Modules\Features\Http\Middleware\EnforceFeatureFlags;
 use Illuminate\Support\Facades\Route;
@@ -30,4 +31,6 @@ Route::prefix('v1')->group(function () {
         Route::get('secret', [FeaturesController::class, 'secret'])
             ->middleware(EnforceFeatureFlags::in([PublicUserRegistration::NAME]));
     });
+
+    Route::get('search/key', [SearchController::class, 'key']);
 });

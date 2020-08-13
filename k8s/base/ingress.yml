@@ -24,4 +24,4 @@ spec:
         paths:
           - backend:
               serviceName: web
-              servicePort: 80
+              servicePort: 3000

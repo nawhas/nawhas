@@ -8,6 +8,8 @@ use App\Modules\Core\Contracts\TimestampedEntity;
 use App\Modules\Core\Models\HasTimestamps;
 use App\Modules\Core\Models\HasUuid;
 use App\Modules\Core\Models\UsesDataConnection;
+use Illuminate\Support\Facades\Storage;
+use Laravel\Scout\Searchable;
 use App\Modules\Library\Events\Reciters\{ReciterAvatarChanged,
     ReciterCreated,
     ReciterDescriptionChanged,
@@ -16,8 +18,6 @@ use App\Modules\Library\Models\Traits\Visitable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Support\Facades\Storage;
-use Laravel\Scout\Searchable;
 use Ramsey\Uuid\Uuid;
 use Spatie\Sluggable\{HasSlug, SlugOptions};
 
@@ -153,8 +153,10 @@ class Reciter extends Model implements TimestampedEntity
             'id' => $this->id,
             'name' => $this->name,
             'description' => $this->description,
-            'avatar' => $this->getAvatarUrl(),
-            'url' => "/reciters/{$this->slug}",
+            'meta' => [
+                'avatar' => $this->getAvatarUrl(),
+                'url' => "/reciters/{$this->slug}",
+            ],
         ];
     }
 }

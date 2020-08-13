@@ -1,8 +1,0 @@
-.env
-.editorconfig
-.gitignore
-README.md
-node_modules
-dist
-.env.example
-.env.local

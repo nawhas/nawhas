@@ -5,7 +5,10 @@ networks:
 
 volumes:
   postgres:
+  pg_events:
+  pg_data:
   redis:
+  search:
 
 services:
   api:
@@ -19,6 +22,23 @@ services:
       - nawhas
     depends_on:
       - db
+      - events_db
+      - data_db
+      - cache
+      - search
+  queue:
+    build:
+      context: api
+      dockerfile: Dockerfile
+    container_name: nawhas_queue
+    env_file:
+      - api/.env.production
+    networks:
+      - nawhas
+    restart: unless-stopped
+    command: php artisan horizon
+    depends_on:
+      - api
   nginx:
     image: nginx:stable-alpine
     container_name: nawhas_api_nginx
@@ -44,11 +64,15 @@ services:
       - nawhas
   web:
     build:
-      context: web
+      context: nuxt
       dockerfile: Dockerfile
       args:
-        API_DOMAIN: https://api.nawhas.test
+        API_DOMAIN: https://api.nawhas.test/
+        SERVER_API_DOMAIN: http://nawhas_api_nginx:80/
         APP_DOMAIN: https://nawhas.test
+        SEARCH_HOST: https://search.nawhas.test
+    env_file:
+      - nuxt/.env.production
     container_name: nawhas_web
     networks:
       - nawhas
@@ -67,6 +91,36 @@ services:
       - postgres:/var/lib/postgresql/data
     networks:
       - nawhas
+  events_db:
+    image: postgres:11
+    container_name: nawhas_events_db
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "5433:5432"
+    environment:
+      - POSTGRES_DB=nawhas_events
+      - POSTGRES_USER=docker
+      - POSTGRES_PASSWORD=secret
+    volumes:
+      - pg_events:/var/lib/postgresql/data
+    networks:
+      - nawhas
+  data_db:
+    image: postgres:11
+    container_name: nawhas_data_db
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "5434:5432"
+    environment:
+      - POSTGRES_DB=nawhas_data
+      - POSTGRES_USER=docker
+      - POSTGRES_PASSWORD=secret
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    networks:
+      - nawhas
   cache:
     image: redis:5
     container_name: nawhas_cache
@@ -74,6 +128,19 @@ services:
       - nawhas
     volumes:
       - redis:/data
+  search:
+    image: getmeili/meilisearch:v0.13.0
+    container_name: nawhas_search
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "7700:7700"
+    environment:
+      - MEILI_MASTER_KEY=secret
+    volumes:
+      - search:/data.ms
+    networks:
+      - nawhas
 
 
 

@@ -7,6 +7,7 @@ spec:
     - hosts:
       - api.staging.nawhas.com
       - staging.nawhas.com
+      - search.staging.nawhas.com
       secretName: nawhas-tls
   rules:
     - host: api.staging.nawhas.com
@@ -20,4 +21,10 @@ spec:
         paths:
           - backend:
               serviceName: web
-              servicePort: 80
+              servicePort: 3000
+    - host: search.staging.nawhas.com
+      http:
+        paths:
+          - backend:
+              serviceName: search
+              servicePort: 7700

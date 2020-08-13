@@ -1,0 +1,55 @@
+@import 'theme';
+
+.app__section {
+  padding-bottom: 24px !important;
+
+  .section__title {
+    font-size: 1.4rem; // Overriding the font size.
+    font-weight: map-deep-get($headings, 'h5', 'weight');
+    line-height: map-deep-get($headings, 'h5', 'line-height');
+    letter-spacing: map-deep-get($headings, 'h5', 'letter-spacing') !important;
+    font-family: map-deep-get($headings, 'h5', 'font-family') !important;
+    margin-bottom: 12px;
+  }
+  .section__title--with-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+.app--xs, .app--sm {
+  .app__section {
+    padding: 24px;
+  }
+}
+
+.app--player-showing {
+  .main-container {
+    padding-bottom: 80px !important;
+  }
+}
+
+.vibrant-canvas {
+  position: fixed;
+  top: -10000px;
+  left: -10000px;
+  z-index: -1;
+}
+
+@media (prefers-color-scheme: dark) {
+  body, html {
+    background-color: map-deep-get($material-dark, 'background');
+  }
+}
+
+.slide-fade-enter-active {
+  transition: all .2s ease;
+}
+.slide-fade-leave-active {
+  transition: all .2s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+}
+.slide-fade-enter, .slide-fade-leave-to {
+  transform: translateX(-40px);
+  opacity: 0;
+}
