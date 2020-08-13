@@ -31,7 +31,7 @@ class BootApplication extends Command
             ]),
             'wait:database',
             'migrate:all',
-            'meilisearch:setup',
+            ['meilisearch:setup', ['--import' => true]],
             $this->mergeWhen($app->environment('integration'), [
                 'db:seed',
             ]),

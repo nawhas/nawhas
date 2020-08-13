@@ -148,8 +148,8 @@ jobs:
           ./kustomize edit set image IMAGE:TAG=$API_IMAGE:dev-${GITHUB_SHA::8}
           ./kustomize edit set image WEB:TAG=$WEB_IMAGE:dev-${GITHUB_SHA::8}
           ./kustomize build . | kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig apply -f -
-          kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig rollout status --timeout=2m deployment/api -n stg
-          kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig rollout status --timeout=2m deployment/web -n stg
+          kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig rollout status --timeout=3m deployment/api -n stg
+          kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig rollout status --timeout=3m deployment/web -n stg
           kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig get services -o wide -n stg
   ################################################################
   # Notify Build Status
