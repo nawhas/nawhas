@@ -200,6 +200,7 @@ jobs:
         run: |
           printf "\nAPP_DOMAIN=$APP_DOMAIN" >> api.integration.env
           printf "\nALGOLIA_PREFIX=intg_${PR_NUM}_" >> api.integration.env
+          printf "\nSESSION_COOKIE_PREFIX=intg_${PR_NUM}_" >> api.integration.env
 
       # Set up kustomize
       - name: Set up Kustomize
