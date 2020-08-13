@@ -2242,6 +2242,11 @@
   resolved "https://registry.yarnpkg.com/@types/wicg-mediasession/-/wicg-mediasession-1.0.4.tgz#edea7b3741c1100eee8bf60560bb92d81a12581f"
   integrity sha512-ldlnQ/r5Uoza45wcQF5bNV/wQ2twaTplZujwFDlgP36vahPVcs3fYuCVF5FS+WfqsOlFs1jvJfPgtabMQ3/BtA==
 
+"@types/workbox-window@^4.3.3":
+  version "4.3.3"
+  resolved "https://registry.yarnpkg.com/@types/workbox-window/-/workbox-window-4.3.3.tgz#47f91df7ce7eea5c151a6beb3e8398c7db8ee538"
+  integrity sha512-iIq2obSq3gvzhwFxg+/02v4VqfHjRg9hpEjoM68TKYcmCAe9QGlFsJ5qPZkJKUuZDVW7cUoR3iiA2jIALFU6Ag==
+
 "@types/yargs-parser@*":
   version "15.0.0"
   resolved "https://registry.yarnpkg.com/@types/yargs-parser/-/yargs-parser-15.0.0.tgz#cb3f9f741869e20cce330ffbeb9271590483882d"
