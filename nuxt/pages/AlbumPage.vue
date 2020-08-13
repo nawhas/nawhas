@@ -264,6 +264,7 @@ export default Vue.extend({
   head(): MetaInfo {
     let title = `${this.$route.params.albumId} Album`;
     let description;
+    const image = getAlbumArtwork(this.album);
 
     if (this.album) {
       title = `${this.album.title} (${this.album.year}) - Album by ${this.album.reciter?.name}`;
@@ -277,6 +278,7 @@ export default Vue.extend({
     return generateMeta({
       title,
       description,
+      image,
     });
   },
 });

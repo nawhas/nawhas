@@ -348,6 +348,7 @@ export default Vue.extend({
   head(): MetaInfo {
     let title = 'Loading...';
     let description;
+    const image = getAlbumArtwork(this.track?.album);
 
     if (this.track) {
       title = `${this.track.title} (${this.track.year}) - Nawha by ${this.track.reciter?.name}`;
@@ -359,6 +360,7 @@ export default Vue.extend({
     return generateMeta({
       title,
       description,
+      image,
     });
   },
 });
