@@ -65,7 +65,7 @@ export default {
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
       { hid: 'description', name: 'description', content: DEFAULT_DESCRIPTION },
-      { hid: 'og:title', property: 'og:title', template: TITLE_TEMPLATE },
+      { hid: 'og:title', property: 'og:title', content: 'Home', template: TITLE_TEMPLATE },
       { hid: 'og:description', name: 'og:description', content: DEFAULT_DESCRIPTION },
     ],
     link: [
