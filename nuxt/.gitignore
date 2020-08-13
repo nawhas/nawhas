@@ -83,7 +83,7 @@ dist
 .idea
 
 # Service worker
-sw.*
+static/service-worker.js
 
 # macOS
 .DS_Store

@@ -97,8 +97,10 @@ export default {
     workbox: {
       config: { debug: process.env.APP_ENV === 'development' },
       importScripts: [
-        'service-worker/skip-waiting.js',
+        'sw-extensions/skip-waiting.js',
       ],
+      swDest: path.resolve(__dirname, 'static', 'service-worker.js'),
+      swURL: 'service-worker.js',
       skipWaiting: false,
       clientsClaim: false,
     },
