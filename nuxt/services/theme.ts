@@ -21,14 +21,12 @@ export function shouldUseDarkMode(preference: Theme): boolean {
 
 export function saveAppliedTheme($vuetify: Framework, $storage: NuxtStorage) {
   const applied: Theme = $vuetify.theme.dark ? 'dark' : 'light';
-  console.log('Saving applied theme:', applied);
   $storage.setUniversal(THEME_APPLIED_STORAGE_KEY, applied);
 }
 
 export function applyTheme(theme: Theme, $vuetify: Framework, $storage: NuxtStorage) {
   // Set vuetify theme.
   $vuetify.theme.dark = shouldUseDarkMode(theme);
-  console.log('Determined new theme:', $vuetify.theme.dark ? 'dark' : 'light');
 
   // Set last applied theme in storage.
   saveAppliedTheme($vuetify, $storage);
