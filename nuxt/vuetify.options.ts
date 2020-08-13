@@ -2,7 +2,7 @@ import { Context } from '@nuxt/types';
 import colors from 'vuetify/es5/util/colors';
 import { UserVuetifyPreset } from 'vuetify';
 import { parse as parseCookie } from 'cookie';
-import { THEME_APPLIED_STORAGE_KEY } from '@/entities/theme';
+import { THEME_APPLIED_STORAGE_KEY } from '@/services/theme';
 
 export default function options({ req }: Context): Partial<UserVuetifyPreset> {
   const cookie = process.client ? document.cookie : req.headers.cookie || '';
