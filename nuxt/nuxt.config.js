@@ -4,7 +4,8 @@ require('dotenv').config();
 
 const TITLE_SUFFIX = 'Nawhas.com';
 const TITLE_TEMPLATE = '%s | ' + TITLE_SUFFIX;
-const DEFAULT_DESCRIPTION = 'Welcome to Nawhas.com, the most advanced library of nawhas online.';
+const DEFAULT_DESCRIPTION = 'Welcome to Nawhas.com, the most advanced library of nawhas online. ' +
+  'Browse thousands of nawhas from hundreds of reciters, including thousands of nawha write-ups (lyrics).';
 
 const https = process.env.APP_ENV === 'development' ? {
   key: fs.readFileSync(path.resolve(__dirname, '../docker/nginx/certs/nawhas.test.key')),
