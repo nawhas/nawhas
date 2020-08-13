@@ -203,6 +203,7 @@ export default Vue.extend({
   head(): MetaInfo {
     const title = this.reciter?.name ?? 'Reciter';
     let description = this.reciter?.description;
+    const image = getReciterAvatar(this.reciter);
 
     if (!description) {
       const albums = String(this.reciter?.related?.albums ?? 'many');
@@ -212,6 +213,7 @@ export default Vue.extend({
     return generateMeta({
       title,
       description,
+      image,
     });
   },
 });

@@ -3,9 +3,10 @@ import { MetaInfo, MetaPropertyProperty, MetaPropertyName } from 'vue-meta';
 interface MetaOptions {
   title: string;
   description?: string;
+  image?: string;
 }
 
-export function generateMeta({ title, description } : MetaOptions): MetaInfo {
+export function generateMeta({ title, description, image } : MetaOptions): MetaInfo {
   const meta: (MetaPropertyProperty|MetaPropertyName)[] = [
     {
       hid: 'og:title',
@@ -25,6 +26,16 @@ export function generateMeta({ title, description } : MetaOptions): MetaInfo {
         hid: 'og:description',
         property: 'og:description',
         content: description,
+      },
+    );
+  }
+
+  if (image) {
+    meta.push(
+      {
+        hid: 'og:image',
+        property: 'og:image',
+        content: image,
       },
     );
   }
