@@ -97,10 +97,9 @@ jobs:
           docker build --file ./nuxt/Dockerfile \
             -t $WEB_IMAGE:dev-${GITHUB_SHA::8} \
             -t $WEB_IMAGE:develop \
-            --build-arg ALGOLIA_APP_ID=$VUE_APP_ALGOLIA_APP_ID \
-            --build-arg ALGOLIA_SEARCH_KEY=$VUE_APP_ALGOLIA_SEARCH_KEY \
-            --build-arg API_DOMAIN=$VUE_APP_API_DOMAIN \
-            --build-arg APP_DOMAIN=$VUE_APP_APP_DOMAIN \
+            --build-arg API_DOMAIN=$API_DOMAIN \
+            --build-arg APP_DOMAIN=$APP_DOMAIN \
+            --build-arg SEARCH_HOST=$SEARCH_HOST \
             ./nuxt
 
       - name: Publish Web
