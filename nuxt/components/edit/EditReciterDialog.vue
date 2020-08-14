@@ -60,6 +60,7 @@
 import {
   Component, Prop, Watch, Vue,
 } from 'nuxt-property-decorator';
+import { getReciterUri } from '@/entities/reciter';
 
 interface Form {
   name: string|null;
@@ -102,12 +103,11 @@ export default class EditReciterDialog extends Vue {
     if (this.reciter.description !== this.form.description && this.form.description) {
       data.description = this.form.description;
     }
-    const response = await this.$api.reciters.update(this.reciter.id, data);
-    const { slug } = response;
+    const reciter = await this.$api.reciters.update(this.reciter.slug, data);
     if (this.form.avatar) {
-      await this.$api.reciters.changeAvatar(slug, this.form.avatar);
+      await this.$api.reciters.changeAvatar(reciter.slug, this.form.avatar);
     }
-    this.$router.replace({ name: 'reciters.show', params: { reciter: slug } })
+    this.$router.replace(getReciterUri(reciter))
       .catch(() => window.location.reload());
     this.close();
     this.loading = false;

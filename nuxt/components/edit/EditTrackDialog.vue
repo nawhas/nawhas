@@ -103,6 +103,7 @@ import { RequestOptions, TrackIncludes } from '@/api/tracks';
 import TimestampedEditor from '@/components/edit/lyrics/TimestampedEditor.vue';
 import { Documents, Format } from '@/entities/lyrics';
 import { getTrackUri } from '@/entities/track';
+import { getReciterUri } from '~/entities/reciter';
 import JsonV1Document = Documents.JsonV1.Document;
 import GroupType = Documents.JsonV1.LineGroupType;
 import LyricsData = Documents.JsonV1.LyricsData;
@@ -281,7 +282,7 @@ export default class EditTrackDialog extends Vue {
     if (window.confirm(`Are you sure you want to delete '${this.track.title}'?`)) {
       const { id, reciterId, albumId } = this.track;
       await this.$api.tracks.delete(reciterId, albumId, id);
-      this.$router.push({ name: 'reciters.show', params: { reciter: this.track.reciter.slug } });
+      this.$router.push(getReciterUri(this.track.reciter));
     }
   }
 
