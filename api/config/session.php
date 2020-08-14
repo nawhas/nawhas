@@ -126,7 +126,7 @@ return [
 
     'cookie' => env(
         'SESSION_COOKIE',
-        'nawhas_session'
+        env('SESSION_COOKIE_PREFIX') . 'nawhas_session',
     ),
 
     /*
