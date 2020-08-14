@@ -18,6 +18,8 @@ class CreatePlaylistTracksTable extends Migration
             $table->uuid('playlist_id');
             $table->uuid('track_id');
             $table->timestamps();
+
+            $table->unique(['playlist_id', 'track_id']);
         });
     }
 
