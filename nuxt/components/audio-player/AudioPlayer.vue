@@ -267,6 +267,8 @@ import {
   PlayerState, QueuedTrack, TrackQueue, RepeatType,
 } from '@/store/player';
 import { getAlbumArtwork } from '@/entities/album';
+import { getReciterUri } from '@/entities/reciter';
+import { getTrackUri } from '@/entities/track';
 
 interface CachedTrackReference {
   queued: QueuedTrack|null;
@@ -502,11 +504,7 @@ export default class AudioPlayer extends Vue {
     if (this.mobile && !this.minimized) {
       this.toggleMinimized();
     }
-
-    this.$router.push({
-      name: 'reciters.show',
-      params: { reciter: this.track.reciter.slug },
-    }).catch(() => null);
+    this.$router.push(getReciterUri(this.track.reciter)).catch(() => null);
   }
 
   goToTrack() {
@@ -514,15 +512,7 @@ export default class AudioPlayer extends Vue {
       this.toggleMinimized();
     }
 
-    this.$router.push({
-      name: 'tracks.show',
-      params: {
-        reciter: this.track.reciter.slug,
-        album: this.track.album.year,
-        track: this.track.slug,
-        trackObject: this.track,
-      },
-    }).catch(() => null);
+    this.$router.push(getTrackUri(this.track)).catch(() => null);
   }
 
   /**
@@ -734,7 +724,7 @@ export default class AudioPlayer extends Vue {
   }
 
   setMediaSessionMetadata() {
-    if (navigator.mediaSession && this.track) {
+    if (navigator.mediaSession !== undefined && navigator.mediaSession && this.track) {
       navigator.mediaSession.metadata = new MediaMetadata({
         title: this.track.title,
         artist: this.track.reciter.name,
@@ -753,7 +743,7 @@ export default class AudioPlayer extends Vue {
   }
 
   updateMediaSessionNextHandler() {
-    if (this.hasNext) {
+    if (this.hasNext && navigator.mediaSession !== undefined) {
       (navigator as any).mediaSession.setActionHandler('nexttrack', () => this.next());
     }
   }
