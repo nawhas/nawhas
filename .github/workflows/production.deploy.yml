@@ -105,16 +105,15 @@ jobs:
           set -a
           . ./k8s/overlays/production/secrets/web.env
           set +a
-          docker build --file ./web/Dockerfile \
+          docker build --file ./nuxt/Dockerfile \
           -t $WEB_IMAGE:${GITHUB_SHA::8} \
           -t $WEB_IMAGE:${GITHUB_REF##*/} \
           -t $GH_WEB_IMAGE:${GITHUB_SHA::8} \
           -t $GH_WEB_IMAGE:${GITHUB_REF##*/} \
-          --build-arg ALGOLIA_APP_ID=$VUE_APP_ALGOLIA_APP_ID \
-          --build-arg ALGOLIA_SEARCH_KEY=$VUE_APP_ALGOLIA_SEARCH_KEY \
-          --build-arg API_DOMAIN=$VUE_APP_API_DOMAIN \
-          --build-arg APP_DOMAIN=$VUE_APP_APP_DOMAIN \
-          ./web
+          --build-arg API_DOMAIN=$API_DOMAIN \
+          --build-arg APP_DOMAIN=$APP_DOMAIN \
+          --build-arg SEARCH_HOST=$SEARCH_HOST \
+          ./nuxt
 
       - name: Publish Web
         run: |
@@ -163,8 +162,8 @@ jobs:
           ./kustomize edit set image IMAGE:TAG=$API_IMAGE:${GITHUB_REF##*/}
           ./kustomize edit set image WEB:TAG=$WEB_IMAGE:${GITHUB_REF##*/}
           ./kustomize build . | kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig apply -f -
-          kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig rollout status --timeout=2m deployment/api
-          kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig rollout status --timeout=2m deployment/web
+          kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig rollout status --timeout=3m deployment/api
+          kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig rollout status --timeout=3m deployment/web
           kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig get services -o wide
   ################################################################
   # Notify Build Status

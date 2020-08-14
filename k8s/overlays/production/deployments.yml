@@ -52,3 +52,16 @@ spec:
           envFrom:
             - secretRef:
                 name: web.env
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: search
+spec:
+  template:
+    spec:
+      containers:
+        - name: search
+          envFrom:
+            - secretRef:
+                name: search.env

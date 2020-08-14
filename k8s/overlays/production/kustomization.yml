@@ -17,3 +17,6 @@ secretGenerator:
   - name: api-secrets
     files:
       - secrets/github.pem
+  - name: search.env
+    envs:
+      - secrets/search.env

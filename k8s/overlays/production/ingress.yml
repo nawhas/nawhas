@@ -10,6 +10,7 @@ spec:
       - api.nawhas.com
       - nawhas.com
       - www.nawhas.com
+      - search.nawhas.com
       secretName: nawhas-tls
   rules:
     - host: api.nawhas.com
@@ -24,3 +25,9 @@ spec:
           - backend:
               serviceName: web
               servicePort: 3000
+    - host: search.nawhas.com
+      http:
+        paths:
+          - backend:
+              serviceName: search
+              servicePort: 7700
