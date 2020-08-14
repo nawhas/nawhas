@@ -93,7 +93,7 @@ class TracksController extends Controller
     {
         $document = DocumentFactory::create(
             $request->get('lyrics'),
-            new Format($request->get('format', Format::PLAIN_TEXT))
+            new Format($request->get('format', Format::JSON_V1))
         );
 
         if (!$document->isEmpty()) {
