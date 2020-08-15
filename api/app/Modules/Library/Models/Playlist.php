@@ -12,7 +12,9 @@ use Ramsey\Uuid\Uuid;
 
 class Playlist extends Model
 {
-    public static function create(string $userId, string $name): self
+    protected $guarded = [];
+
+    public static function create(string $name, string $trackId): self
     {
         $id = Uuid::uuid1()->toString();
 
