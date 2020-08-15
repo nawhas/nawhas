@@ -75,7 +75,7 @@ Route::prefix('v1')->group(function () {
         Route::post('/', [Controllers\PlaylistsController::class, 'store']);
         Route::get('/{Playlist}', [Controllers\PlaylistsController::class, 'show']);
         Route::post('/{Playlist}/add_track', [Controllers\PlaylistsController::class, 'addTrack']);
-        Route::delete('/{Playlist}/remove_track', [Controllers\PlaylistsController::class, 'removeTrack']);
+        Route::delete('/{Playlist}/remove_track/{PlaylistTrack}', [Controllers\PlaylistsController::class, 'removeTrack']);
         Route::patch('/{Playlist}', [Controllers\PlaylistsController::class, 'update']);
         Route::delete('/{Playlist}', [Controllers\PlaylistsController::class, 'delete']);
     });
