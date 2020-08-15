@@ -12,7 +12,7 @@ use Ramsey\Uuid\Uuid;
 
 class Playlist extends Model
 {
-    public function create(string $userId, string $name): self
+    public static function create(string $userId, string $name): self
     {
         $id = Uuid::uuid1()->toString();
 
@@ -21,7 +21,7 @@ class Playlist extends Model
         return self::retrieve($id);
     }
 
-    public function retrieve(string $identifier): self
+    public static function retrieve(string $identifier): self
     {
         /** @var self $model */
         $model = self::query()->findOrFail($identifier);
