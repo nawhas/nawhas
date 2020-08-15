@@ -17,6 +17,7 @@ class CreatePlaylistsTable extends Migration
             $table->uuid('id')->primary();
             $table->uuid('user_id');
             $table->string('name');
+            $table->string('type');
             $table->timestamps();
             $table->unique(['user_id', 'name']);
         });
