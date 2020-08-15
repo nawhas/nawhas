@@ -13,6 +13,8 @@ use Ramsey\Uuid\Uuid;
 
 class Playlist extends Model
 {
+    protected $fillable = ['name'];
+
     public static function create(string $name, string $trackId): self
     {
         $id = Uuid::uuid1()->toString();

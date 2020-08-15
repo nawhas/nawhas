@@ -10,7 +10,7 @@ use Ramsey\Uuid\Uuid;
 
 class PlaylistTracks extends Model
 {
-    protected $guarded = [];
+    protected $fillable = ['playlistId', 'trackId'];
 
     public static function create(string $playlistId, string $trackId): self
     {
