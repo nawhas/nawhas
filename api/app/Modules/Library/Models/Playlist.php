@@ -24,7 +24,7 @@ class Playlist extends Model
     public function retrieve(string $identifier): self
     {
         /** @var self $model */
-        $model = self::query()->firstOrFail($identifier);
+        $model = self::query()->findOrFail($identifier);
         return $model;
     }
 
