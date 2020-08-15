@@ -64,4 +64,19 @@ Route::prefix('v1')->group(function () {
         Route::get('/reciters', [Controllers\PopularController::class, 'reciters']);
         Route::get('/tracks', [Controllers\PopularController::class, 'tracks']);
     });
+
+    /*
+    |--------------------------------------------------------------------------
+    | Playlist Routes
+    |--------------------------------------------------------------------------
+    */
+    Route::prefix('playlist')->group(function () {
+        Route::get('/', [Controllers\PlaylistsController::class, 'index']);
+        Route::post('/', [Controllers\PlaylistsController::class, 'store']);
+        Route::get('/{Playlist}', [Controllers\PlaylistsController::class, 'show']);
+        Route::post('/{Playlist}/add_track', [Controllers\PlaylistsController::class, 'addTrack']);
+        Route::delete('/{Playlist}/remove_track', [Controllers\PlaylistsController::class, 'removeTrack']);
+        Route::patch('/{Playlist}', [Controllers\PlaylistsController::class, 'update']);
+        Route::delete('/{Playlist}', [Controllers\PlaylistsController::class, 'delete']);
+    });
 });
