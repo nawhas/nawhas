@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Modules\Library\Models;
 
 use App\Modules\Authentication\Models\User;
+use App\Modules\Library\Events\Playlists\PlaylistCreated;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -12,11 +13,15 @@ use Ramsey\Uuid\Uuid;
 
 class Playlist extends Model
 {
-    public static function create(string $userId, string $name): self
+    public static function create(string $name, string $trackId): self
     {
         $id = Uuid::uuid1()->toString();
 
-        // TODO - Need to trigger an event to create the playlist record
+        event(new PlaylistCreated($id,[
+            'name' => $name
+        ]));
+
+        PlaylistTracks::create($id, $trackId);
 
         return self::retrieve($id);
     }
