@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Library\Models;
 
+use App\Modules\Library\Events\Playlists\PlaylistTrackAdded;
 use Illuminate\Database\Eloquent\Model;
 use Ramsey\Uuid\Uuid;
 
@@ -13,7 +14,10 @@ class PlaylistTracks extends Model
     {
         $id = Uuid::uuid1()->toString();
 
-        // TODO - Need to trigger an event to create the playlist record
+        event(new PlaylistTrackAdded($id, [
+            'playlistId' => $playlistId,
+            'trackId' => $trackId,
+        ]));
 
         return self::retrieve($id);
     }
