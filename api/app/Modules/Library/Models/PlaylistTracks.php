@@ -4,15 +4,12 @@ declare(strict_types=1);
 
 namespace App\Modules\Library\Models;
 
-use App\Modules\Authentication\Models\User;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Ramsey\Uuid\Uuid;
 
-class Playlist extends Model
+class PlaylistTracks extends Model
 {
-    public function create(string $userId, string $name): self
+    public function create(string $playlistId, string $trackId): self
     {
         $id = Uuid::uuid1()->toString();
 
@@ -26,15 +23,5 @@ class Playlist extends Model
         /** @var self $model */
         $model = self::query()->firstOrFail($identifier);
         return $model;
-    }
-
-    public function user(): BelongsTo
-    {
-        return $this->belongsTo(User::class);
-    }
-
-    public function tracks(): HasMany
-    {
-        return $this->hasMany(PlaylistTracks::class);
     }
 }
