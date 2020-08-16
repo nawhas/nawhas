@@ -32,7 +32,7 @@ export default Vue.extend({
 
 <style>
   .library {
-    background-color: #F19100;
+    background: linear-gradient(229.64deg, #F19100 -3.22%, #950900 90.48%);
     min-height: calc(100vh - 64px);
     display: flex;
   }
