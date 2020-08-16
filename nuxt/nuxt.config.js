@@ -29,6 +29,7 @@ export default {
   ** See https://axios.nuxtjs.org/options.html#runtime-config
   */
   publicRuntimeConfig: {
+    release: process.env.APP_VERSION || 'unreleased',
     apiUrl: process.env.API_BASE_URL || 'https://api.nawhas.test/',
     searchHost: process.env.SEARCH_HOST || 'https://search.nawhas.test',
 
@@ -147,6 +148,7 @@ export default {
     '@nuxtjs/proxy',
     '@nuxtjs/axios',
     '@nuxtjs/pwa',
+    '@nuxtjs/sentry',
   ],
   /*
   ** Axios module configuration
@@ -259,4 +261,16 @@ export default {
    ** See https://github.com/nuxt-community/proxy-module#proxy
    */
   proxy,
+
+  /*
+   ** Sentry Settings
+   ** See https://github.com/nuxt-community/sentry-module
+   */
+  sentry: {
+    dsn: process.env.SENTRY_DSN || '',
+    config: {
+      environment: process.env.APP_ENV,
+      release: process.env.APP_VERSION,
+    },
+  },
 };
