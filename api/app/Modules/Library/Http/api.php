@@ -64,15 +64,4 @@ Route::prefix('v1')->group(function () {
         Route::get('/reciters', [Controllers\PopularController::class, 'reciters']);
         Route::get('/tracks', [Controllers\PopularController::class, 'tracks']);
     });
-
-    /*
-    |--------------------------------------------------------------------------
-    | Library Routes
-    |--------------------------------------------------------------------------
-    */
-    Route::prefix('me')->group(function () {
-        Route::get('/tracks', [Controllers\LibraryController::class, 'tracks']);
-        Route::put('/tracks', [Controllers\LibraryController::class, 'addTrack']);
-        Route::delete('/tracks', [Controllers\LibraryController::class, 'removeTrack']);
-    });
 });
