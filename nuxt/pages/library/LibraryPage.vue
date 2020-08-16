@@ -6,12 +6,16 @@
 <template>
   <div class="library justify-center align-center">
     <div class="icon">
-      <v-icon size="40">
-        local_library
-      </v-icon>
+      <v-avatar class="outlined" size="80">
+        <v-icon size="50">
+          local_library
+        </v-icon>
+      </v-avatar>
     </div>
     <div class="main-heading">
-      Welcome to your library
+      <h1 class="display-1 font-weight-thin mb-4">
+        Welcome to your library
+      </h1>
     </div>
     <div class="sub-heading">
       Add nawhas to your favorites, create playlists, and curate your own collection.
@@ -36,5 +40,21 @@ export default Vue.extend({
   min-height: calc(100vh - 64px);
   display: flex;
   flex-direction: column;
+}
+
+.icon {
+  margin-bottom: 68px;
+}
+
+.outlined {
+  border: solid 1px white;
+}
+
+.main-heading {
+  margin-bottom: 10px;
+}
+
+.sub-heading {
+  margin-bottom: 60px;
 }
 </style>
