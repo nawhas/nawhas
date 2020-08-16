@@ -6,7 +6,7 @@
 <template>
   <div class="library justify-center align-center">
     <div class="icon">
-      <v-icon>
+      <v-icon size="40">
         local_library
       </v-icon>
     </div>
@@ -31,9 +31,10 @@ export default Vue.extend({
 </script>
 
 <style>
-  .library {
-    background: linear-gradient(229.64deg, #F19100 -3.22%, #950900 90.48%);
-    min-height: calc(100vh - 64px);
-    display: flex;
-  }
+.library {
+  background: linear-gradient(229.64deg, #F19100 -3.22%, #950900 90.48%);
+  min-height: calc(100vh - 64px);
+  display: flex;
+  flex-direction: column;
+}
 </style>
