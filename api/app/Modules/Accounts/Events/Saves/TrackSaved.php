@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Modules\Library\Events\Saves;
+namespace App\Modules\Accounts\Events\Saves;
 
 use App\Modules\Library\Events\UserAction;
 
-class SavedTrackRemoved extends UserAction
+class TrackSaved extends UserAction
 {
     public string $trackId;
 
