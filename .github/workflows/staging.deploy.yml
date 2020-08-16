@@ -91,7 +91,7 @@ jobs:
 
       - name: Build Web
         run: |
-          cp ./k8s/overlays/staging/secrets/web.staging.env .env.docker
+          cp ./k8s/overlays/staging/secrets/web.staging.env ./nuxt/.env.docker
           set +a
           docker build --file ./nuxt/Dockerfile \
             -t $WEB_IMAGE:dev-${GITHUB_SHA::8} \
