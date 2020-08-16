@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Library\Events\Tracks;
 
-use App\Modules\Library\Events\UserAction;
+use App\Modules\Core\Events\UserAction;
 
 class TrackDeleted extends UserAction
 {

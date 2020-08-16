@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Modules\Library\Events\Reciters;
 
-use App\Modules\Core\Events\UserAwareEvent;
 use App\Modules\Core\Events\HasUserContext;
 use App\Modules\Core\Events\SerializableEvent;
-use App\Modules\Library\Events\UserAction;
+use App\Modules\Core\Events\UserAction;
+use App\Modules\Core\Events\UserAwareEvent;
 
 class ReciterNameChanged extends UserAction implements SerializableEvent, UserAwareEvent
 {
