@@ -4,11 +4,10 @@ declare(strict_types=1);
 
 namespace App\Modules\Library\Events\Tracks;
 
-use App\Modules\Library\Events\UserAction;
+use App\Modules\Audit\Enum\ChangeType;
 
-class TrackCreated extends UserAction
+class TrackCreated extends RevisionableTrackEvent
 {
-    public string $id;
     public string $albumId;
     public array $attributes = [];
 
@@ -17,5 +16,10 @@ class TrackCreated extends UserAction
         $this->id = $id;
         $this->albumId = $albumId;
         $this->attributes = $attributes;
+    }
+
+    public function changeType(): ChangeType
+    {
+        return ChangeType::CREATED();
     }
 }

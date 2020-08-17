@@ -4,14 +4,18 @@ declare(strict_types=1);
 
 namespace App\Modules\Library\Events\Tracks;
 
+use App\Modules\Audit\Enum\ChangeType;
 use App\Modules\Library\Events\UserAction;
 
-class TrackDeleted extends UserAction
+class TrackDeleted extends RevisionableTrackEvent
 {
-    public string $id;
-
     public function __construct(string $id)
     {
         $this->id = $id;
+    }
+
+    public function changeType(): ChangeType
+    {
+        return ChangeType::DELETED();
     }
 }

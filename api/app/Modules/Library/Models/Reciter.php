@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Modules\Library\Models;
 
+use App\Modules\Audit\Models\HasRevisions;
+use App\Modules\Audit\Models\Revisionable;
 use App\Modules\Core\Contracts\TimestampedEntity;
 use App\Modules\Core\Models\HasTimestamps;
 use App\Modules\Core\Models\HasUuid;
@@ -33,24 +35,27 @@ use Spatie\Sluggable\{HasSlug, SlugOptions};
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\Library\Models\Album[] $albums
  * @property-read int|null $albums_count
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Library\Models\Reciter newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Library\Models\Reciter newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Library\Models\Reciter query()
- * @mixin \Eloquent
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\Audit\Models\Revision[] $revisions
+ * @property-read int|null $revisions_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\Library\Models\Visit[] $visits
  * @property-read int|null $visits_count
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Library\Models\Reciter newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Library\Models\Reciter newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Library\Models\Reciter popularAllTime()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Library\Models\Reciter popularDay()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Library\Models\Reciter popularLast($days)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Library\Models\Reciter popularMonth()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Library\Models\Reciter popularWeek()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Library\Models\Reciter popularYear()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Library\Models\Reciter query()
+ * @mixin \Eloquent
  */
-class Reciter extends Model implements TimestampedEntity
+class Reciter extends Model implements TimestampedEntity, Revisionable
 {
     use HasSlug;
     use HasTimestamps;
     use HasUuid;
+    use HasRevisions;
     use UsesDataConnection;
     use Visitable;
     use Searchable;

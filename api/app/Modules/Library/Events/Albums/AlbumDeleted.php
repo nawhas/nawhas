@@ -4,14 +4,17 @@ declare(strict_types=1);
 
 namespace App\Modules\Library\Events\Albums;
 
-use App\Modules\Library\Events\UserAction;
+use App\Modules\Audit\Enum\ChangeType;
 
-class AlbumDeleted extends UserAction
+class AlbumDeleted extends RevisionableAlbumEvent
 {
-    public string $id;
-
     public function __construct(string $id)
     {
         $this->id = $id;
+    }
+
+    public function changeType(): ChangeType
+    {
+        return ChangeType::DELETED();
     }
 }

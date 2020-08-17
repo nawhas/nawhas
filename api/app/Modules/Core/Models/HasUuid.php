@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Modules\Core\Models;
 
+use Illuminate\Database\Eloquent\Model;
+use Ramsey\Uuid\Uuid;
+
 /**
  * @property-read string $id
  */
@@ -17,5 +20,14 @@ trait HasUuid
     public function getKeyType()
     {
         return 'string';
+    }
+
+    public static function bootHasUuid(): void
+    {
+        static::creating(function (Model $model) {
+            if (!isset($model->id)) {
+                $model->id = Uuid::uuid1()->toString();
+            }
+        });
     }
 }

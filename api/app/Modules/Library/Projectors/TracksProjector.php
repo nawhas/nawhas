@@ -29,6 +29,7 @@ class TracksProjector extends Projector
 
     public function onTrackTitleChanged(TrackTitleChanged $event): void
     {
+        logger()->debug('Tracks Projector called.');
         $track = Track::retrieve($event->id);
         $track->title = $event->title;
         $track->saveOrFail();

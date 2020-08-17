@@ -28,21 +28,6 @@ services:
     networks:
       - nawhas
     depends_on:
-      - init
-  init:
-    image: szainmehdi/php:7.4-dev
-    container_name: nawhas_init
-    working_dir: /var/www/api
-    environment:
-      - APP_ENV=local
-    volumes:
-      - ./api:/var/www/api:delegated
-    networks:
-      - nawhas
-    restart: "no"
-    command: >
-      sh -c "composer install && php artisan boot"
-    depends_on:
       - db
       - cache
   queue:
@@ -58,7 +43,8 @@ services:
     restart: unless-stopped
     command: php artisan horizon
     depends_on:
-      - init
+      - db
+      - cache
   nginx:
     image: nginx:stable-alpine
     container_name: nawhas_api_nginx

@@ -4,16 +4,20 @@ declare(strict_types=1);
 
 namespace App\Modules\Library\Events\Reciters;
 
-use App\Modules\Library\Events\UserAction;
+use App\Modules\Audit\Enum\ChangeType;
 
-class ReciterCreated extends UserAction
+class ReciterCreated extends RevisionableReciterEvent
 {
-    public string $id;
     public array $attributes = [];
 
     public function __construct(string $id, array $attributes)
     {
         $this->id = $id;
         $this->attributes = $attributes;
+    }
+
+    public function changeType(): ChangeType
+    {
+        return ChangeType::CREATED();
     }
 }

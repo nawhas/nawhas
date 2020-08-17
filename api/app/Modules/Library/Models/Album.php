@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Modules\Library\Models;
 
+use App\Modules\Audit\Models\HasRevisions;
+use App\Modules\Audit\Models\Revisionable;
 use App\Modules\Core\Contracts\TimestampedEntity;
 use App\Modules\Core\Models\HasTimestamps;
 use App\Modules\Core\Models\HasUuid;
@@ -28,6 +30,8 @@ use Ramsey\Uuid\Uuid;
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Modules\Library\Models\Reciter $reciter
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\Audit\Models\Revision[] $revisions
+ * @property-read int|null $revisions_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\Library\Models\Track[] $tracks
  * @property-read int|null $tracks_count
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Library\Models\Album newModelQuery()
@@ -35,10 +39,11 @@ use Ramsey\Uuid\Uuid;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Library\Models\Album query()
  * @mixin \Eloquent
  */
-class Album extends Model implements TimestampedEntity
+class Album extends Model implements TimestampedEntity, Revisionable
 {
     use HasTimestamps;
     use HasUuid;
+    use HasRevisions;
     use UsesDataConnection;
     use Searchable;
 

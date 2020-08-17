@@ -4,11 +4,10 @@ declare(strict_types=1);
 
 namespace App\Modules\Library\Events\Albums;
 
-use App\Modules\Library\Events\UserAction;
+use App\Modules\Audit\Enum\ChangeType;
 
-class AlbumCreated extends UserAction
+class AlbumCreated extends RevisionableAlbumEvent
 {
-    public string $id;
     public string $reciterId;
     public array $attributes = [];
 
@@ -17,5 +16,10 @@ class AlbumCreated extends UserAction
         $this->id = $id;
         $this->reciterId = $reciterId;
         $this->attributes = $attributes;
+    }
+
+    public function changeType(): ChangeType
+    {
+        return ChangeType::CREATED();
     }
 }

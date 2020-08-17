@@ -4,16 +4,20 @@ declare(strict_types=1);
 
 namespace App\Modules\Library\Events\Albums;
 
-use App\Modules\Library\Events\UserAction;
+use App\Modules\Audit\Enum\ChangeType;
 
-class AlbumTitleChanged extends UserAction
+class AlbumTitleChanged extends RevisionableAlbumEvent
 {
-    public string $id;
     public string $title;
 
     public function __construct(string $id, string $title)
     {
         $this->id = $id;
         $this->title = $title;
+    }
+
+    public function changeType(): ChangeType
+    {
+        return ChangeType::MODIFIED();
     }
 }

@@ -9,9 +9,10 @@ use App\Modules\Library\Events\Tracks\TrackViewed;
 use App\Modules\Library\Models\Reciter;
 use App\Modules\Library\Models\Track;
 use App\Modules\Library\Models\Visit;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Spatie\EventSourcing\EventHandlers\Projectors\Projector;
 
-class VisitsProjector extends Projector
+class VisitsProjector extends Projector implements ShouldQueue
 {
     public function onReciterViewed(ReciterViewed $event): void
     {

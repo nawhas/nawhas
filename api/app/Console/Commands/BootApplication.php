@@ -26,12 +26,12 @@ class BootApplication extends Command
                 'config:cache',
                 'route:cache',
                 'event-sourcing:cache-event-handlers',
+                'audit:cache-events',
                 'horizon:publish',
                 'telescope:publish',
             ]),
             'wait:database',
             'migrate:all',
-            ['meilisearch:setup', ['--import' => true]],
             $this->mergeWhen($app->environment('integration'), [
                 'db:seed',
             ]),
