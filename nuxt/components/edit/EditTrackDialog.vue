@@ -274,7 +274,7 @@ export default class EditTrackDialog extends Vue {
   }
 
   redirect(response) {
-    this.$router.push(getTrackUri(response)).catch(() => window.location.reload());
+    this.$router.push(getTrackUri(response));
   }
 
   async confirmDelete() {
