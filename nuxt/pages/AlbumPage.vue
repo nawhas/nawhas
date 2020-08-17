@@ -161,8 +161,6 @@ export default Vue.extend({
     });
 
     this.tracks = response.data;
-
-    this.setBackgroundFromImage();
   },
 
   data(): Data {
@@ -210,6 +208,10 @@ export default Vue.extend({
 
   watch: {
     $route: 'onRouteChanged',
+  },
+
+  mounted() {
+    this.setBackgroundFromImage();
   },
 
   methods: {

@@ -212,8 +212,6 @@ export default Vue.extend({
         this.albumTracks = response.data;
       }),
     ]);
-
-    this.setBackgroundFromImage();
   },
 
   data: (): Data => ({
@@ -288,6 +286,8 @@ export default Vue.extend({
     };
     this.$el['__onPrintHandler__'] = handler;
     window.addEventListener('beforeprint', handler);
+
+    this.setBackgroundFromImage();
   },
 
   beforeDestroy() {
