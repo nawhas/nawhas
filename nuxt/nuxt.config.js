@@ -22,7 +22,7 @@ const proxy = process.env.PROXY_API ? {
 } : {};
 
 export default {
-  debug: true,
+  debug: process.env.APP_ENV !== 'production',
   /*
   ** Nuxt runtime config
   ** See https://nuxtjs.org/api/configuration-runtime-config
