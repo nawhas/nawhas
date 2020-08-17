@@ -10,7 +10,7 @@
         'reciter-profile__hero': true,
         'reciter-profile__hero--with-toolbar': showToolbar
       }"
-      background="/backgrounds/azadari-flags.jpg"
+      :background="require('@/assets/img/backgrounds/azadari-flags.jpg')"
     >
       <div class="hero__content">
         <template v-if="reciter">
