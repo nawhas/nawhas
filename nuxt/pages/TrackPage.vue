@@ -210,7 +210,10 @@ export default Vue.extend({
         }),
       ]);
 
-      return { track, albumTracks };
+      return {
+        track,
+        albumTracks: albumTracks.data,
+      };
     } catch (e) {
       error({ statusCode: 404, message: 'Track not found.' });
     }
