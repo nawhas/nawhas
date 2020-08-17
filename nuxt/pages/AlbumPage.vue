@@ -45,7 +45,7 @@
           </div>
         </div>
       </v-container>
-      <div class="hero__bar">
+      <div v-if="showHeroBar" class="hero__bar">
         <v-container class="bar__content">
           <div class="bar__actions bar__actions--visible">
             <template v-if="hasPlayableTracks">
@@ -81,9 +81,6 @@
                 </v-icon>
                 Added to Queue
               </v-btn>
-            </template>
-            <template v-else>
-              <v-skeleton-loader type="text" dark width="100px" class="mt-3" />
             </template>
           </div>
           <div class="bar__actions bar__actions--overflow">
@@ -144,25 +141,32 @@ export default Vue.extend({
     EditTrackDialog,
     EditAlbumDialog,
   },
-  async fetch() {
-    const { reciterId, albumId } = this.$route.params;
-    this.album = await this.$api.albums.get(reciterId, albumId, {
-      include: [AlbumIncludes.Reciter, AlbumIncludes.Related],
-    });
+  async asyncData({ route, $api, error }) {
+    const { reciterId, albumId } = route.params;
 
-    const response = await this.$api.tracks.index(reciterId, albumId, {
-      include: [
-        TrackIncludes.Reciter,
-        TrackIncludes.Lyrics,
-        TrackIncludes.Album,
-        TrackIncludes.Media,
-        TrackIncludes.Related,
-      ],
-    });
+    try {
+      const [album, tracksResponse] = await Promise.all([
+        $api.albums.get(reciterId, albumId, {
+          include: [AlbumIncludes.Reciter, AlbumIncludes.Related],
+        }),
+        $api.tracks.index(reciterId, albumId, {
+          include: [
+            TrackIncludes.Reciter,
+            TrackIncludes.Lyrics,
+            TrackIncludes.Album,
+            TrackIncludes.Media,
+            TrackIncludes.Related,
+          ],
+        }),
+      ]);
 
-    this.tracks = response.data;
-
-    this.setBackgroundFromImage();
+      return {
+        album,
+        tracks: tracksResponse.data,
+      };
+    } catch (e) {
+      error({ statusCode: 404, message: 'Album not found.' });
+    }
   },
 
   data(): Data {
@@ -206,10 +210,13 @@ export default Vue.extend({
     isDark(): boolean {
       return this.$vuetify.theme.dark;
     },
+    showHeroBar(): boolean {
+      return this.isModerator || this.hasPlayableTracks;
+    },
   },
 
-  watch: {
-    $route: 'onRouteChanged',
+  mounted() {
+    this.setBackgroundFromImage();
   },
 
   methods: {
@@ -254,10 +261,6 @@ export default Vue.extend({
     addToQueue() {
       this.$store.commit('player/ADD_ALBUM_TO_QUEUE', { tracks: this.playable });
       this.addedToQueueSnackbar = true;
-    },
-    onRouteChanged() {
-      this.$vuetify.goTo(0);
-      this.$fetch();
     },
   },
 
