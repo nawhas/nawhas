@@ -25,3 +25,5 @@ $ dev exec db sh
 > psql {{connection-string}}
 defaultdb=> GRANT ALL PRIVILEGES ON DATABASE {{new_database}} TO "{{user}}"; 
 ```
+
+
