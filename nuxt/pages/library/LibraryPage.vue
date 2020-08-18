@@ -4,25 +4,21 @@
 </router>
 
 <template>
-  <div class="library justify-center align-center">
-    <div class="icon">
-      <v-avatar class="outlined" size="80">
-        <v-icon size="50">
-          local_library
-        </v-icon>
-      </v-avatar>
+  <div class="library">
+    <div class="icon outlined">
+      <v-icon size="64">
+        local_library
+      </v-icon>
     </div>
-    <div class="main-heading">
-      <h1 class="display-1 font-weight-thin mb-4">
-        Welcome to your library
-      </h1>
-    </div>
-    <div class="sub-heading">
+    <h1 class="main-heading">
+      Welcome to your library
+    </h1>
+    <h2 class="sub-heading">
       Add nawhas to your favorites, create playlists, and curate your own collection.
-    </div>
-    <div class="getting-started">
-      <v-btn>Get Started</v-btn>
-    </div>
+    </h2>
+    <v-btn to="/" x-large>
+      Get Started
+    </v-btn>
   </div>
 </template>
 
@@ -37,13 +33,22 @@ export default Vue.extend({
 <style>
 .library {
   background: linear-gradient(229.64deg, #F19100 -3.22%, #950900 90.48%);
-  min-height: calc(100vh - 64px);
+  min-height: calc(100vh - 100px);
+  width: 100%;
   display: flex;
   flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .icon {
+  width: 128px;
+  height: 128px;
+  border-radius: 128px;
   margin-bottom: 68px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .outlined {
@@ -52,9 +57,14 @@ export default Vue.extend({
 
 .main-heading {
   margin-bottom: 10px;
+  font-size: 64px;
+  font-weight: 200;
+  padding: 0;
 }
 
 .sub-heading {
-  margin-bottom: 60px;
+  font-size: 32px;
+  font-weight: 200;
+  margin-bottom: 32px;
 }
 </style>
