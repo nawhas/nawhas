@@ -15,9 +15,9 @@
       <h5 class="section__title mt-6">
         <v-icon>favorite</v-icon> Recently Saved Nawhas
       </h5>
-      <template v-if="popularTracks">
+      <template v-if="tracks">
         <v-row :dense="$vuetify.breakpoint.smAndDown">
-          <v-col v-for="track in popularTracks" :key="track.id" cols="12" sm="6" md="4">
+          <v-col v-for="track in tracks" :key="track.id" cols="12" sm="6" md="4">
             <track-card :track="track" :colored="true" :show-reciter="true" />
           </v-col>
         </v-row>
@@ -45,8 +45,6 @@ import TrackCardSkeleton from '@/components/loaders/TrackCardSkeleton.vue';
 import { Track } from '@/entities/track';
 import { TrackIncludes } from '@/api/tracks';
 
-const POPULAR_ENTITIES_LIMIT = 6;
-
 interface Data {
   tracks: Array<Track>|null;
 }
@@ -67,17 +65,15 @@ export default Vue.extend({
         TrackIncludes.Related,
         'album.tracks',
       ],
+      pagination: {
+        limit: 6,
+      },
     });
     this.tracks = response.data;
   },
   data: (): Data => ({
     tracks: null,
   }),
-  computed: {
-    popularTracks() {
-      return this.tracks ? this.tracks.slice(0, POPULAR_ENTITIES_LIMIT) : null;
-    },
-  },
 });
 </script>
 
