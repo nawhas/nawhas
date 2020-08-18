@@ -36,7 +36,7 @@ export default class ReciterCard extends Vue {
   private vibrantTextColor: null|string = null;
 
   get image() {
-    return this.avatar || '/defaults/default-reciter-avatar.png';
+    return this.avatar || require('@/assets/img/defaults/default-reciter-avatar.png');
   }
 
   get link(): string {

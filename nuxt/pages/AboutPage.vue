@@ -5,7 +5,7 @@
 
 <template>
   <div class="about">
-    <hero-banner background="/backgrounds/shrine.jpg" class="mb-4">
+    <hero-banner :background="require('@/assets/img/backgrounds/shrine.jpg')" class="mb-4">
       <hero-quote author="Imam Al-Ridha (a.s.)">
         I desire that you recite for me poetry, for surely,
         these days are the days of grief and sorrow,
@@ -86,7 +86,7 @@
         </v-col>
       </v-row>
     </v-container>
-    <hero-banner background="/backgrounds/azadari-sunset.jpg" :opacity="0.76">
+    <hero-banner :background="require('@/assets/img/backgrounds/azadari-sunset.jpg')" :opacity="0.76">
       <v-container class="app__section app__section--dark app__section--padded">
         <h5 class="section__title text-center mt-4 mb-8 display-1">
           Contribute
@@ -190,7 +190,7 @@ export default Vue.extend({
       return [
         {
           name: 'Shabbir & Abbas Tejani',
-          avatar: '/about/credits/tejani-brothers.jpg',
+          avatar: require('@/assets/img/about/credits/tejani-brothers.jpg'),
           caption: 'Creators of Nawhas.com',
           contributions: [
             'Created & maintained Nawhas.com for over 17 years',
@@ -202,7 +202,7 @@ export default Vue.extend({
         },
         {
           name: 'Syed Zain Mehdi',
-          avatar: '/about/credits/zain.jpg',
+          avatar: require('@/assets/img/about/credits/zain.jpg'),
           caption: 'Software Engineer',
           contributions: [
             'Project lead for the new Nawhas.com',
@@ -215,7 +215,7 @@ export default Vue.extend({
         },
         {
           name: 'Asif Ali',
-          avatar: '/about/credits/asif.jpg',
+          avatar: require('@/assets/img/about/credits/asif.jpg'),
           caption: 'Software Engineer',
           contributions: [
             'Devoted hundreds of hours of engineering work on the new Nawhas.com',
