@@ -44,8 +44,8 @@ export class LibraryApi {
     return await this.axios.$get<TracksIndexResponse>('/me/tracks', { params });
   }
 
-  async saveTrack(payload: TracksPayload): Promise<Track> {
-    return await this.axios.$put<Track>('/me/tracks', payload);
+  async saveTrack(payload: TracksPayload): Promise<void> {
+    await this.axios.$put('/me/tracks', payload);
   }
 
   async removeTrack(payload: TracksPayload): Promise<void> {
