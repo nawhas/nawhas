@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\Modules\Core\Cache;
+namespace App\Infrastructure\Cache;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Spatie\ResponseCache\CacheProfiles\BaseCacheProfile;
 use Symfony\Component\HttpFoundation\Response;
 
-class ApiResponseCacheProfile extends BaseCacheProfile
+class ResponseCacheProfile extends BaseCacheProfile
 {
     public function shouldCacheRequest(Request $request): bool
     {

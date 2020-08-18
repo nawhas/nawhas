@@ -63,7 +63,8 @@ class Kernel extends HttpKernel
         'signed' => \Illuminate\Routing\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
-        'cache.disabled' => \Spatie\ResponseCache\Middlewares\DoNotCacheResponse::class,
+        'cache.disable' => \Spatie\ResponseCache\Middlewares\DoNotCacheResponse::class,
+        'cache.clear' => \App\Infrastructure\Cache\Middleware\ClearResponseCache::class,
     ];
 
     /**
