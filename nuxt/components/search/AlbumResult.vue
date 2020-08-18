@@ -46,7 +46,7 @@ export default class AlbumResult extends Vue {
   }
 
   get image() {
-    return this.album.meta.artwork || '/defaults/default-album-image.png';
+    return this.album.meta.artwork || require('@/assets/img/defaults/default-album-image.png');
   }
 
   get isDark() {

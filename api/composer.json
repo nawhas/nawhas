@@ -26,6 +26,7 @@
         "sentry/sentry-laravel": "1.7.0",
         "socialiteproviders/apple": "^3.0",
         "spatie/laravel-event-sourcing": "^4.0",
+        "spatie/laravel-responsecache": "^6.6",
         "spatie/laravel-sluggable": "^2.5",
         "timacdonald/has-parameters": "^1.0",
         "zain/laravel-doctrine-algolia": "^0.1.0"

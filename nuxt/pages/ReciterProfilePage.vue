@@ -10,7 +10,7 @@
         'reciter-profile__hero': true,
         'reciter-profile__hero--with-toolbar': showToolbar
       }"
-      background="/backgrounds/azadari-flags.jpg"
+      :background="require('@/assets/img/backgrounds/azadari-flags.jpg')"
     >
       <div class="hero__content">
         <template v-if="reciter">
@@ -69,7 +69,7 @@
       </template>
     </v-container>
 
-    <v-container class="app__section">
+    <v-container id="albums-section" class="app__section">
       <h5 class="section__title section__title--with-actions">
         <span class="d-block">Albums</span>
         <edit-album-dialog v-if="reciter && isModerator" :reciter="reciter" />
@@ -139,30 +139,36 @@ export default Vue.extend({
     EditAlbumDialog,
   },
 
+  async fetch() {
+    if (!this.reciter) {
+      return;
+    }
+
+    const [tracks, albums] = await Promise.all([
+      this.$api.tracks.popular({
+        reciterId: this.reciter.id,
+        pagination: { limit: 6 },
+        include: [TrackIncludes.Album, TrackIncludes.Reciter],
+      }),
+      this.$api.albums.index(this.reciter.id, {
+        pagination: { page: getPage(this.$route) },
+        include: ['tracks.media', 'tracks.reciter', 'tracks.album', 'tracks.related'],
+      }),
+    ]);
+
+    this.popularTracks = tracks.data;
+    this.albums = albums.data;
+    this.length = albums.meta.pagination.total_pages;
+  },
+
   async asyncData({ route, $api, error }) {
     const { reciterId } = route.params;
     try {
-      const [reciter, tracks, albums] = await Promise.all([
-        $api.reciters.get(reciterId, {
-          include: [ReciterIncludes.Related],
-        }),
-        $api.tracks.popular({
-          reciterId,
-          pagination: { limit: 6 },
-          include: [TrackIncludes.Album, TrackIncludes.Reciter],
-        }),
-        $api.albums.index(reciterId, {
-          pagination: { page: getPage(route) },
-          include: ['tracks.media', 'tracks.reciter', 'tracks.album', 'tracks.related'],
-        }),
-      ]);
+      const reciter = await $api.reciters.get(reciterId, {
+        include: [ReciterIncludes.Related],
+      });
 
-      return {
-        reciter,
-        popularTracks: tracks.data,
-        albums: albums.data,
-        length: albums.meta.pagination.total_pages,
-      };
+      return { reciter };
     } catch (e) {
       error({ statusCode: 404, message: 'Reciter not found.' });
     }
@@ -193,11 +199,13 @@ export default Vue.extend({
     },
   },
 
-  watchQuery: ['page'],
+  watch: {
+    '$route.query': 'onQueryChanged',
+  },
 
   methods: {
-    onRouteChanged() {
-      this.$vuetify.goTo(0);
+    onQueryChanged() {
+      this.$vuetify.goTo('#albums-section');
       this.$fetch();
     },
     onPageChanged(page) {
