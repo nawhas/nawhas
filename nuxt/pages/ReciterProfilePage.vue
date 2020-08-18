@@ -116,6 +116,7 @@ import { TrackIncludes } from '@/api/tracks';
 import EditReciterDialog from '@/components/edit/EditReciterDialog.vue';
 import EditAlbumDialog from '@/components/edit/EditAlbumDialog.vue';
 import { generateMeta } from '@/utils/meta';
+import { getPage } from '@/utils/route';
 import { ReciterIncludes } from '@/api/reciters';
 
 interface Data {
@@ -138,31 +139,37 @@ export default Vue.extend({
     EditAlbumDialog,
   },
 
-  async fetch() {
-    const { reciterId } = this.$route.params;
-    const [reciter, tracks, albums] = await Promise.all([
-      this.$api.reciters.get(reciterId, {
-        include: [ReciterIncludes.Related],
-      }),
-      this.$api.tracks.popular({
-        reciterId,
-        pagination: { limit: 6 },
-        include: [TrackIncludes.Album, TrackIncludes.Reciter],
-      }),
-      this.$api.albums.index(reciterId, {
-        pagination: { page: this.page },
-        include: ['tracks.media', 'tracks.reciter', 'tracks.album', 'tracks.related'],
-      }),
-    ]);
+  async asyncData({ route, $api, error }) {
+    const { reciterId } = route.params;
+    try {
+      const [reciter, tracks, albums] = await Promise.all([
+        $api.reciters.get(reciterId, {
+          include: [ReciterIncludes.Related],
+        }),
+        $api.tracks.popular({
+          reciterId,
+          pagination: { limit: 6 },
+          include: [TrackIncludes.Album, TrackIncludes.Reciter],
+        }),
+        $api.albums.index(reciterId, {
+          pagination: { page: getPage(route) },
+          include: ['tracks.media', 'tracks.reciter', 'tracks.album', 'tracks.related'],
+        }),
+      ]);
 
-    this.reciter = reciter;
-    this.popularTracks = tracks.data;
-    this.albums = albums.data;
-    this.length = albums.meta.pagination.total_pages;
+      return {
+        reciter,
+        popularTracks: tracks.data,
+        albums: albums.data,
+        length: albums.meta.pagination.total_pages,
+      };
+    } catch (e) {
+      error({ statusCode: 404, message: 'Reciter not found.' });
+    }
   },
 
   data(): Data {
-    const page = Number(this.$route.query.page || 1);
+    const page = getPage(this.$route);
 
     return {
       page,
@@ -186,9 +193,7 @@ export default Vue.extend({
     },
   },
 
-  watch: {
-    $route: 'onRouteChanged',
-  },
+  watchQuery: ['page'],
 
   methods: {
     onRouteChanged() {

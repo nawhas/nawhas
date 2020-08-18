@@ -91,15 +91,12 @@ jobs:
 
       - name: Build Web
         run: |
-          set -a
-          . ./k8s/overlays/staging/secrets/web.staging.env
+          cp ./k8s/overlays/staging/secrets/web.staging.env ./nuxt/.env.docker
           set +a
           docker build --file ./nuxt/Dockerfile \
             -t $WEB_IMAGE:dev-${GITHUB_SHA::8} \
             -t $WEB_IMAGE:develop \
-            --build-arg API_DOMAIN=$API_DOMAIN \
-            --build-arg APP_DOMAIN=$APP_DOMAIN \
-            --build-arg SEARCH_HOST=$SEARCH_HOST \
+            --build-arg APP_VERSION=dev-${GITHUB_SHA::8} \
             ./nuxt
 
       - name: Publish Web

@@ -504,7 +504,7 @@ export default class AudioPlayer extends Vue {
     if (this.mobile && !this.minimized) {
       this.toggleMinimized();
     }
-    this.$router.push(getReciterUri(this.track.reciter)).catch(() => null);
+    this.$router.push(getReciterUri(this.track.reciter));
   }
 
   goToTrack() {
@@ -512,7 +512,7 @@ export default class AudioPlayer extends Vue {
       this.toggleMinimized();
     }
 
-    this.$router.push(getTrackUri(this.track)).catch(() => null);
+    this.$router.push(getTrackUri(this.track));
   }
 
   /**
