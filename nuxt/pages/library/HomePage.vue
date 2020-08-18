@@ -21,6 +21,11 @@
             <track-card :track="track" :colored="true" :show-reciter="true" />
           </v-col>
         </v-row>
+        <v-row>
+          <v-col class="text-center">
+            <v-btn color="primary">View All</v-btn>
+          </v-col>
+        </v-row>
       </template>
       <template v-else>
         <skeleton-card-grid>
