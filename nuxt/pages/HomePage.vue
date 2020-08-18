@@ -12,7 +12,7 @@
         </h1>
       </v-container>
       <div class="search">
-        <!-- <global-search hero /> -->
+        <global-search hero />
       </div>
     </header>
 
@@ -34,7 +34,7 @@
       </template>
     </v-container>
 
-    <hero-banner background="/backgrounds/imam-hussain-header.jpg" class="my-12">
+    <hero-banner :background="require('@/assets/img/backgrounds/imam-hussain-header.jpg')" class="my-12">
       <hero-quote author="Imam Jafar Sadiq (a.s.)">
         The murder of Hussain has lit a fire in the hearts of the believers which will never
         extinguish.
@@ -72,7 +72,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'nuxt-property-decorator';
+import Vue from 'vue';
 import HeroBanner from '@/components/HeroBanner.vue';
 import HeroQuote from '@/components/HeroQuote.vue';
 import ReciterCard from '@/components/ReciterCard.vue';
@@ -80,10 +80,20 @@ import TrackCard from '@/components/tracks/TrackCard.vue';
 import SkeletonCardGrid from '@/components/loaders/SkeletonCardGrid.vue';
 import TrackCardSkeleton from '@/components/loaders/TrackCardSkeleton.vue';
 import TrackList from '@/components/tracks/TrackList.vue';
+import GlobalSearch from '@/components/search/GlobalSearch.vue';
+import { Reciter } from '@/entities/reciter';
+import { Track } from '@/entities/track';
+import { ReciterIncludes } from '@/api/reciters';
+import { TrackIncludes } from '@/api/tracks';
 
 const POPULAR_ENTITIES_LIMIT = 6;
 
-@Component({
+interface Data {
+  reciters: Array<Reciter> | null;
+  tracks: Array<Track> | null;
+}
+
+export default Vue.extend({
   components: {
     TrackList,
     HeroBanner,
@@ -92,30 +102,40 @@ const POPULAR_ENTITIES_LIMIT = 6;
     TrackCard,
     SkeletonCardGrid,
     TrackCardSkeleton,
+    GlobalSearch,
   },
-})
-export default class HomeView extends Vue {
-  private reciters: any = null;
-  private tracks: any = null;
-
-  get popularReciters() {
-    return this.reciters ? this.reciters.slice(0, POPULAR_ENTITIES_LIMIT) : null;
-  }
-
-  get popularTracks() {
-    return this.tracks ? this.tracks.slice(0, POPULAR_ENTITIES_LIMIT) : null;
-  }
 
   async fetch() {
     const [reciters, tracks] = await Promise.all([
-      this.$axios.$get('v1/popular/reciters?per_page=20&include=related'),
-      this.$axios.$get('v1/popular/tracks?per_page=20&include=reciter,lyrics,album.tracks,media,related'),
+      this.$api.reciters.popular({
+        pagination: { limit: 6 },
+        include: [ReciterIncludes.Related],
+      }),
+      this.$api.tracks.popular({
+        pagination: { limit: 20 },
+        include: [TrackIncludes.Reciter, TrackIncludes.Album, TrackIncludes.Media, TrackIncludes.Related],
+      }),
     ]);
 
     this.reciters = reciters.data;
     this.tracks = tracks.data;
-  }
-}
+  },
+
+  data: (): Data => ({
+    reciters: null,
+    tracks: null,
+  }),
+
+  computed: {
+    popularReciters(): Array<Reciter> | null {
+      return this.reciters ? this.reciters.slice(0, POPULAR_ENTITIES_LIMIT) : null;
+    },
+
+    popularTracks(): Array<Track> | null {
+      return this.tracks ? this.tracks.slice(0, POPULAR_ENTITIES_LIMIT) : null;
+    },
+  },
+});
 </script>
 
 <style lang="scss" scoped>

@@ -186,34 +186,38 @@ export default Vue.extend({
     LyricsCard,
   },
 
+  async fetch() {
+    if (!this.track) {
+      return;
+    }
+
+    const response = await this.$api.tracks.index(this.track.reciterId, this.track.albumId, {
+      include: [
+        TrackIncludes.Reciter,
+        TrackIncludes.Lyrics,
+        TrackIncludes.Media,
+        TrackIncludes.Album,
+        TrackIncludes.Related,
+      ],
+    });
+
+    this.albumTracks = response.data;
+  },
+
   async asyncData({ route, $api, error }) {
     const { reciterId, albumId, trackId } = route.params;
 
     try {
-      const [track, albumTracks] = await Promise.all([
-        $api.tracks.get(reciterId, albumId, trackId, {
-          include: [
-            TrackIncludes.Reciter,
-            TrackIncludes.Lyrics,
-            TrackIncludes.Media,
-            'album.tracks',
-          ],
-        }),
-        $api.tracks.index(reciterId, albumId, {
-          include: [
-            TrackIncludes.Reciter,
-            TrackIncludes.Lyrics,
-            TrackIncludes.Media,
-            TrackIncludes.Album,
-            TrackIncludes.Related,
-          ],
-        }),
-      ]);
+      const track = await $api.tracks.get(reciterId, albumId, trackId, {
+        include: [
+          TrackIncludes.Reciter,
+          TrackIncludes.Lyrics,
+          TrackIncludes.Media,
+          'album.tracks',
+        ],
+      });
 
-      return {
-        track,
-        albumTracks: albumTracks.data,
-      };
+      return { track };
     } catch (e) {
       error({ statusCode: 404, message: 'Track not found.' });
     }

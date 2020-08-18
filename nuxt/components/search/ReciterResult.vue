@@ -42,7 +42,7 @@ export default class ReciterResult extends Vue {
   }
 
   get image() {
-    return this.reciter.meta.avatar ?? '/defaults/default-reciter-avatar.png';
+    return this.reciter.meta.avatar ?? require('@/assets/img/defaults/default-reciter-avatar.png');
   }
 
   get isDark() {

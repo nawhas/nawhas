@@ -28,7 +28,7 @@
           :dense="false"
           :full-width="mobile"
           :clearable="!!search"
-          placeholder="Search for nawhas, reciters, or lyrics..."
+          :placeholder="hero ? 'Search Nawhas.com' : 'Search for nawhas, reciters, or lyrics...'"
           :class="{'search__input': true, 'search__input--dark': isDark}"
           @focus="onFocus"
           @blur="onBlur"
@@ -259,10 +259,6 @@ $width: 400px;
     }
     .search__container {
       width: 100%;
-
-      .search__footer-hint {
-        display: none;
-      }
     }
   }
 
