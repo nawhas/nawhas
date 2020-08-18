@@ -21,6 +21,7 @@ class PopularController extends Controller
         $pagination = PaginationState::fromRequest($request);
         $reciters = Reciter::query()
             ->popularAllTime()
+            ->withCount(['albums'])
             ->paginate($pagination->getLimit());
 
         return $this->respondWithCollection($reciters, $transformer);
@@ -32,6 +33,7 @@ class PopularController extends Controller
 
         $tracks = Track::query()
             ->popularAllTime()
+            ->with(['reciter', 'album'])
             ->when($request->has('reciterId'), function (Builder $builder) use ($request) {
                 $reciter = Reciter::retrieve($request->get('reciterId'));
                 $builder->where('reciter_id', $reciter->id);

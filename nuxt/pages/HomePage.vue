@@ -109,7 +109,7 @@ export default class HomeView extends Vue {
   async fetch() {
     const [reciters, tracks] = await Promise.all([
       this.$axios.$get('v1/popular/reciters?per_page=20&include=related'),
-      this.$axios.$get('v1/popular/tracks?per_page=20&include=reciter,lyrics,album.tracks,media,related'),
+      this.$axios.$get('v1/popular/tracks?per_page=20&include=reciter,lyrics,album,media,related'),
     ]);
 
     this.reciters = reciters.data;
