@@ -13,5 +13,5 @@ export function getReciterUri(reciter: Reciter) {
 }
 
 export function getReciterAvatar(reciter?: Reciter|null) {
-  return reciter?.avatar ?? '/defaults/default-reciter-avatar.png';
+  return reciter?.avatar ?? require('@/assets/img/defaults/default-reciter-avatar.png');
 }

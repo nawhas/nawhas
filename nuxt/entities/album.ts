@@ -23,5 +23,5 @@ export function getAlbumUri(album: Album, reciter?: Reciter|null) {
 }
 
 export function getAlbumArtwork(album?: Album|null) {
-  return album?.artwork ?? '/defaults/default-album-image.png';
+  return album?.artwork ?? require('@/assets/img/defaults/default-album-image.png');
 }
