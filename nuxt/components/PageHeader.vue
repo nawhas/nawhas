@@ -1,13 +1,11 @@
 <template>
-  <div>
-    <header :class="{ 'header': true, 'header--dark': $vuetify.theme.dark }">
-      <v-container class="app__section">
-        <h1 class="header__title">
-          <slot />
-        </h1>
-      </v-container>
-    </header>
-  </div>
+  <header :class="{ 'header': true, 'header--dark': $vuetify.theme.dark }">
+    <v-container class="app__section">
+      <h1 class="header__title">
+        <slot />
+      </h1>
+    </v-container>
+  </header>
 </template>
 
 <script lang="ts">
