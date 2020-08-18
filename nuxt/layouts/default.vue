@@ -107,6 +107,12 @@ const links = [
     to: '/reciters',
   },
   {
+    icon: 'local_library',
+    title: 'Library',
+    exact: false,
+    to: '/library',
+  },
+  {
     icon: 'info',
     title: 'About',
     exact: false,
