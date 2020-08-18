@@ -13,8 +13,7 @@
 
     <v-container class="app__section">
       <h5 class="section__title mt-6">
-        <v-icon>favorite</v-icon>
-        Recently Saved Nawhas
+        <v-icon>favorite</v-icon> Recently Saved Nawhas
       </h5>
       <template v-if="popularTracks">
         <v-row :dense="$vuetify.breakpoint.smAndDown">
@@ -34,7 +33,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import PageHeader from '@/components/PageHeader';
+import PageHeader from '@/components/PageHeader.vue';
 import TrackCard from '@/components/tracks/TrackCard.vue';
 import SkeletonCardGrid from '@/components/loaders/SkeletonCardGrid.vue';
 import TrackCardSkeleton from '@/components/loaders/TrackCardSkeleton.vue';
@@ -55,7 +54,7 @@ export default Vue.extend({
     TrackCardSkeleton,
   },
   async fetch() {
-    const respone = await this.$api.tracks.popular({
+    const response = await this.$api.tracks.popular({
       include: [
         TrackIncludes.Reciter,
         TrackIncludes.Lyrics,
@@ -64,13 +63,11 @@ export default Vue.extend({
         'album.tracks',
       ],
     });
-    this.tracks = respone.data;
+    this.tracks = response.data;
   },
-  data() : Data {
-    return {
-      tracks: [],
-    };
-  },
+  data: (): Data => ({
+    tracks: null,
+  }),
   computed: {
     popularTracks() {
       return this.tracks ? this.tracks.slice(0, POPULAR_ENTITIES_LIMIT) : null;
