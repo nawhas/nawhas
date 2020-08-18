@@ -16,7 +16,7 @@
     <h2 class="sub-heading">
       Add nawhas to your favorites, create playlists, and curate your own collection.
     </h2>
-    <v-btn to="/" x-large>
+    <v-btn to="/" x-large color="white" class="black--text">
       Get Started
     </v-btn>
   </div>
@@ -30,7 +30,9 @@ export default Vue.extend({
 });
 </script>
 
-<style>
+<style lang="scss" scoped>
+@import '~assets/theme';
+
 .library {
   background: linear-gradient(229.64deg, #F19100 -3.22%, #950900 90.48%);
   min-height: calc(100vh - 64px);
@@ -39,6 +41,7 @@ export default Vue.extend({
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  text-align: center;
 }
 
 .icon {
@@ -66,5 +69,19 @@ export default Vue.extend({
   font-size: 32px;
   font-weight: 200;
   margin-bottom: 32px;
+}
+
+@include breakpoint('md-and-down') {
+  .library {
+    min-height: calc(100vh - 56px);
+  }
+
+  .main-heading {
+    font-size: 48px;
+  }
+
+  .sub-heading {
+    font-size: 22px;
+  }
 }
 </style>
