@@ -42,6 +42,7 @@ export default Vue.extend({
   align-items: center;
   justify-content: center;
   text-align: center;
+  padding: 0px 20px;
 }
 
 .icon {
