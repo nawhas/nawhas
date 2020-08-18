@@ -102,17 +102,14 @@ jobs:
 
       - name: Build Web
         run: |
-          set -a
-          . ./k8s/overlays/production/secrets/web.env
-          set +a
+          cp ./k8s/overlays/production/secrets/web.env ./nuxt/.env.docker
+
           docker build --file ./nuxt/Dockerfile \
           -t $WEB_IMAGE:${GITHUB_SHA::8} \
           -t $WEB_IMAGE:${GITHUB_REF##*/} \
           -t $GH_WEB_IMAGE:${GITHUB_SHA::8} \
           -t $GH_WEB_IMAGE:${GITHUB_REF##*/} \
-          --build-arg API_DOMAIN=$API_DOMAIN \
-          --build-arg APP_DOMAIN=$APP_DOMAIN \
-          --build-arg SEARCH_HOST=$SEARCH_HOST \
+          --build-arg APP_VERSION=${GITHUB_REF##*/} \
           ./nuxt
 
       - name: Publish Web

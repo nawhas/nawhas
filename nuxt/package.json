@@ -27,6 +27,7 @@
     "@nuxtjs/axios": "^5.12.0",
     "@nuxtjs/proxy": "^2.0.1",
     "@nuxtjs/pwa": "^3.0.0-beta.20",
+    "@nuxtjs/sentry": "^4.3.4",
     "@nuxtjs/universal-storage": "^0.5.5",
     "@nuxtjs/vuetify": "^1.11.2",
     "dotenv": "^8.2.0",

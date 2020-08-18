@@ -136,17 +136,15 @@ jobs:
 
       - name: Build Web
         run: |
-          set -a
-          . ./k8s/overlays/integration/secrets/web.integration.env
-          set +a
+          cp ./k8s/overlays/integration/secrets/web.integration.env ./nuxt/.env.docker
+
+          printf "\nAPI_BASE_URL=https://$API_DOMAIN/" >> ./nuxt/.env.docker
+          printf "\nAPP_DOMAIN=https://$APP_DOMAIN" >> ./nuxt/.env.docker
+          printf "\nSEARCH_HOST=https://$SEARCH_HOST" >> ./nuxt/.env.docker
+
           docker build --file ./nuxt/Dockerfile \
             -t $WEB_IMAGE:$NAMESPACE-${GITHUB_SHA::8} \
-            --build-arg ALGOLIA_APP_ID=$VUE_APP_ALGOLIA_APP_ID \
-            --build-arg ALGOLIA_SEARCH_KEY=$VUE_APP_ALGOLIA_SEARCH_KEY \
-            --build-arg ALGOLIA_INDEX_PREFIX=intg_${PR_NUM}_ \
-            --build-arg API_DOMAIN="https://$API_DOMAIN" \
-            --build-arg APP_DOMAIN="https://$APP_DOMAIN" \
-            --build-arg SEARCH_HOST="https://$SEARCH_HOST" \
+            --build-arg APP_VERSION="$NAMESPACE-${GITHUB_SHA::8}" \
             ./nuxt
 
       - name: Publish Web
