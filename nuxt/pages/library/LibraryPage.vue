@@ -33,7 +33,7 @@ export default Vue.extend({
 <style>
 .library {
   background: linear-gradient(229.64deg, #F19100 -3.22%, #950900 90.48%);
-  min-height: calc(100vh - 100px);
+  min-height: calc(100vh - 64px);
   width: 100%;
   display: flex;
   flex-direction: column;
