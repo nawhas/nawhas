@@ -17,7 +17,7 @@
         class="track-card__album-art-gradient"
         :style="{background: gradient}"
       />
-      <img ref="artwork" crossorigin :src="artwork" :alt="track.title">
+      <lazy-image ref="artwork" crossorigin :src="artwork" :alt="track.title" />
     </div>
   </v-card>
 </template>
@@ -25,10 +25,15 @@
 <script lang="ts">
 import { Component, Prop, Vue } from 'nuxt-property-decorator';
 import Vibrant from 'node-vibrant';
+import LazyImage from '@/components/utils/LazyImage.vue';
 import { getTrackUri, Track } from '@/entities/track';
 import { Album, getAlbumArtwork } from '@/entities/album';
 
-@Component
+@Component({
+  components: {
+    LazyImage,
+  },
+})
 export default class TrackCard extends Vue {
   @Prop({
     type: Object,

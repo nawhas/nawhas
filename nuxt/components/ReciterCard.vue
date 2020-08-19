@@ -2,7 +2,7 @@
   <v-card :to="link" :class="classObject" :style="{ 'background-color': background }">
     <div class="reciter-card__avatar">
       <v-avatar size="40" class="avatar">
-        <img ref="avatarElement" crossorigin :src="image" :alt="name">
+        <lazy-image ref="avatarElement" crossorigin :src="image" :alt="name" />
       </v-avatar>
     </div>
     <div class="reciter-card__text" :style="{ 'color': textColor }">
@@ -19,9 +19,14 @@
 <script lang="ts">
 /* eslint-disable dot-notation */
 import { Component, Vue, Prop } from 'nuxt-property-decorator';
+import LazyImage from '@/components/utils/LazyImage.vue';
 import Vibrant from 'node-vibrant';
 
-@Component
+@Component({
+  components: {
+    LazyImage,
+  },
+})
 export default class ReciterCard extends Vue {
   @Prop({ type: String }) private id!: any;
   @Prop({ type: String }) private name!: any;
@@ -36,7 +41,7 @@ export default class ReciterCard extends Vue {
   private vibrantTextColor: null|string = null;
 
   get image() {
-    return this.avatar || '/defaults/default-reciter-avatar.png';
+    return this.avatar || require('@/assets/img/defaults/default-reciter-avatar.png');
   }
 
   get link(): string {

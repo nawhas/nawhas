@@ -8,7 +8,7 @@
     <div class="hero" :style="{'background-color': background, color: textColor}">
       <v-container class="hero__content">
         <v-avatar :size="heroArtworkSize" class="hero__artwork" tile>
-          <img v-if="album" crossorigin :src="image" :alt="album.name">
+          <lazy-image v-if="album" crossorigin :src="image" :alt="album.name" />
         </v-avatar>
         <div class="hero__text">
           <h4 class="hero__title">
@@ -45,7 +45,7 @@
           </div>
         </div>
       </v-container>
-      <div class="hero__bar">
+      <div v-if="showHeroBar" class="hero__bar">
         <v-container class="bar__content">
           <div class="bar__actions bar__actions--visible">
             <template v-if="hasPlayableTracks">
@@ -81,9 +81,6 @@
                 </v-icon>
                 Added to Queue
               </v-btn>
-            </template>
-            <template v-else>
-              <v-skeleton-loader type="text" dark width="100px" class="mt-3" />
             </template>
           </div>
           <div class="bar__actions bar__actions--overflow">
@@ -128,6 +125,7 @@ import TrackList from '@/components/tracks/TrackList.vue';
 import EditTrackDialog from '@/components/edit/EditTrackDialog.vue';
 import EditAlbumDialog from '@/components/edit/EditAlbumDialog.vue';
 import { generateMeta } from '@/utils/meta';
+import LazyImage from '@/components/utils/LazyImage.vue';
 
 interface Data {
   album: Album | null;
@@ -140,17 +138,18 @@ interface Data {
 
 export default Vue.extend({
   components: {
+    LazyImage,
     TrackList,
     EditTrackDialog,
     EditAlbumDialog,
   },
-  async fetch() {
-    const { reciterId, albumId } = this.$route.params;
-    this.album = await this.$api.albums.get(reciterId, albumId, {
-      include: [AlbumIncludes.Reciter, AlbumIncludes.Related],
-    });
 
-    const response = await this.$api.tracks.index(reciterId, albumId, {
+  async fetch() {
+    if (!this.album) {
+      return;
+    }
+
+    const response = await this.$api.tracks.index(this.album.reciterId, this.album.id, {
       include: [
         TrackIncludes.Reciter,
         TrackIncludes.Lyrics,
@@ -161,8 +160,22 @@ export default Vue.extend({
     });
 
     this.tracks = response.data;
+  },
 
-    this.setBackgroundFromImage();
+  async asyncData({ route, $api, error }) {
+    const { reciterId, albumId } = route.params;
+
+    try {
+      const album = await $api.albums.get(reciterId, albumId, {
+        include: [AlbumIncludes.Reciter, AlbumIncludes.Related],
+      });
+
+      return {
+        album,
+      };
+    } catch (e) {
+      error({ statusCode: 404, message: 'Album not found.' });
+    }
   },
 
   data(): Data {
@@ -206,10 +219,13 @@ export default Vue.extend({
     isDark(): boolean {
       return this.$vuetify.theme.dark;
     },
+    showHeroBar(): boolean {
+      return this.isModerator || this.hasPlayableTracks;
+    },
   },
 
-  watch: {
-    $route: 'onRouteChanged',
+  mounted() {
+    this.setBackgroundFromImage();
   },
 
   methods: {
@@ -254,10 +270,6 @@ export default Vue.extend({
     addToQueue() {
       this.$store.commit('player/ADD_ALBUM_TO_QUEUE', { tracks: this.playable });
       this.addedToQueueSnackbar = true;
-    },
-    onRouteChanged() {
-      this.$vuetify.goTo(0);
-      this.$fetch();
     },
   },
 

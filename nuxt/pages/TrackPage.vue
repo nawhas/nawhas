@@ -8,7 +8,7 @@
     <div class="hero" :style="{'background-color': background, color: textColor}">
       <v-container class="hero__content">
         <v-avatar :size="heroArtworkSize" class="hero__artwork" tile>
-          <img v-if="track && album" crossorigin :src="image" :alt="album.name">
+          <lazy-image v-if="track && album" crossorigin :src="image" :alt="album.name" />
         </v-avatar>
         <div class="hero__text">
           <h4 class="hero__title">
@@ -170,6 +170,7 @@ import { Album, getAlbumArtwork, getAlbumUri } from '@/entities/album';
 import { TrackIncludes } from '@/api/tracks';
 import { MetaInfo } from 'vue-meta';
 import { generateMeta } from '@/utils/meta';
+import LazyImage from '@/components/utils/LazyImage.vue';
 
 interface Data {
   track: Track | null;
@@ -181,39 +182,47 @@ interface Data {
 
 export default Vue.extend({
   components: {
+    LazyImage,
     MoreTracksSkeleton,
     EditTrackDialog,
     LyricsCard,
   },
 
   async fetch() {
-    const { reciterId, albumId, trackId } = this.$route.params;
+    if (!this.track) {
+      return;
+    }
 
-    await Promise.all([
-      this.$api.tracks.get(reciterId, albumId, trackId, {
+    const response = await this.$api.tracks.index(this.track.reciterId, this.track.albumId, {
+      include: [
+        TrackIncludes.Reciter,
+        TrackIncludes.Lyrics,
+        TrackIncludes.Media,
+        TrackIncludes.Album,
+        TrackIncludes.Related,
+      ],
+    });
+
+    this.albumTracks = response.data;
+  },
+
+  async asyncData({ route, $api, error }) {
+    const { reciterId, albumId, trackId } = route.params;
+
+    try {
+      const track = await $api.tracks.get(reciterId, albumId, trackId, {
         include: [
           TrackIncludes.Reciter,
           TrackIncludes.Lyrics,
           TrackIncludes.Media,
           'album.tracks',
         ],
-      }).then((track) => {
-        this.track = track;
-      }),
-      this.$api.tracks.index(reciterId, albumId, {
-        include: [
-          TrackIncludes.Reciter,
-          TrackIncludes.Lyrics,
-          TrackIncludes.Media,
-          TrackIncludes.Album,
-          TrackIncludes.Related,
-        ],
-      }).then((response) => {
-        this.albumTracks = response.data;
-      }),
-    ]);
+      });
 
-    this.setBackgroundFromImage();
+      return { track };
+    } catch (e) {
+      error({ statusCode: 404, message: 'Track not found.' });
+    }
   },
 
   data: (): Data => ({
@@ -277,10 +286,6 @@ export default Vue.extend({
     },
   },
 
-  watch: {
-    $route: '$fetch',
-  },
-
   mounted() {
     const handler = (e) => {
       e.preventDefault();
@@ -288,6 +293,8 @@ export default Vue.extend({
     };
     this.$el['__onPrintHandler__'] = handler;
     window.addEventListener('beforeprint', handler);
+
+    this.setBackgroundFromImage();
   },
 
   beforeDestroy() {

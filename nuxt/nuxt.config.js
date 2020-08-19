@@ -22,7 +22,7 @@ const proxy = process.env.PROXY_API ? {
 } : {};
 
 export default {
-  debug: true,
+  debug: process.env.APP_ENV !== 'production',
   /*
   ** Nuxt runtime config
   ** See https://nuxtjs.org/api/configuration-runtime-config
@@ -71,6 +71,9 @@ export default {
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
+      { rel: 'preconnect', href: 'https://cdn2.nawhas.com' },
+      { rel: 'preconnect', href: process.env.API_BASE_URL },
+      { rel: 'preconnect', href: process.env.SEARCH_HOST },
     ],
   },
   /*
@@ -97,13 +100,18 @@ export default {
     },
     workbox: {
       config: { debug: process.env.APP_ENV === 'development' },
-      importScripts: [
-        'sw-extensions/skip-waiting.js',
+      workboxExtensions: [
+        '@/static/sw-extensions/skip-waiting.js',
       ],
       swDest: path.resolve(__dirname, 'static', 'service-worker.js'),
       swURL: 'service-worker.js',
       skipWaiting: false,
       clientsClaim: false,
+      runtimeCaching: [
+        {
+          urlPattern: 'https://cdn2.nawhas.com/.*',
+        },
+      ],
     },
   },
   /*
@@ -123,6 +131,7 @@ export default {
     '@/plugins/search',
     '@/plugins/theme.client',
     '@/plugins/service-worker.client',
+    '@/plugins/lazy-images.client',
   ],
   /*
   ** Auto import components
@@ -272,5 +281,14 @@ export default {
       environment: process.env.APP_ENV,
       release: process.env.APP_VERSION,
     },
+  },
+
+  /*
+   ** Image Optimization Settings
+   ** See https://marquez.co/docs/nuxt-optimized-images/configuration/
+   */
+  optimizedImages: {
+    optimizeImages: true,
+    handleImages: ['jpeg', 'jpg', 'png', 'svg', 'webp', 'gif'],
   },
 };
