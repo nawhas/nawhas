@@ -16,7 +16,7 @@
         <template v-if="reciter">
           <div class="hero__avatar">
             <v-avatar class="hero__avatar__component" :size="heroAvatarSize">
-              <img :src="image" :alt="reciter ? reciter.name : 'Loading'">
+              <lazy-image :src="image" :alt="reciter ? reciter.name : 'Loading'" />
             </v-avatar>
           </div>
           <div class="hero__details">
@@ -118,6 +118,7 @@ import EditAlbumDialog from '@/components/edit/EditAlbumDialog.vue';
 import { generateMeta } from '@/utils/meta';
 import { getPage } from '@/utils/route';
 import { ReciterIncludes } from '@/api/reciters';
+import LazyImage from '@/components/utils/LazyImage.vue';
 
 interface Data {
   page: number;
@@ -129,6 +130,7 @@ interface Data {
 
 export default Vue.extend({
   components: {
+    LazyImage,
     HeroBanner,
     TrackCard,
     Album,
