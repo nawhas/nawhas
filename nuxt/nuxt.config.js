@@ -97,13 +97,18 @@ export default {
     },
     workbox: {
       config: { debug: process.env.APP_ENV === 'development' },
-      importScripts: [
-        'sw-extensions/skip-waiting.js',
+      workboxExtensions: [
+        '@/static/sw-extensions/skip-waiting.js',
       ],
       swDest: path.resolve(__dirname, 'static', 'service-worker.js'),
       swURL: 'service-worker.js',
       skipWaiting: false,
       clientsClaim: false,
+      runtimeCaching: [
+        {
+          urlPattern: 'https://cdn2.nawhas.com/.*',
+        },
+      ],
     },
   },
   /*
