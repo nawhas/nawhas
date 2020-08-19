@@ -116,6 +116,7 @@ const links = [
 
 export default Vue.extend({
   name: 'DefaultLayout',
+
   components: {
     LogoWordmark,
     LogoIcon,
@@ -125,9 +126,18 @@ export default Vue.extend({
     GlobalSearch,
     UpdateServiceWorker,
   },
+
+  async fetch() {
+    await Promise.all([
+      this.$store.dispatch('auth/check').catch(() => null),
+      this.$store.dispatch('features/fetch').catch(() => null),
+    ]);
+  },
+
   data: () => ({
     drawer: false,
   }),
+
   computed: {
     mobile() {
       return this.$vuetify.breakpoint.smAndDown;

@@ -141,28 +141,35 @@ export default Vue.extend({
     EditTrackDialog,
     EditAlbumDialog,
   },
+
+  async fetch() {
+    if (!this.album) {
+      return;
+    }
+
+    const response = await this.$api.tracks.index(this.album.reciterId, this.album.id, {
+      include: [
+        TrackIncludes.Reciter,
+        TrackIncludes.Lyrics,
+        TrackIncludes.Album,
+        TrackIncludes.Media,
+        TrackIncludes.Related,
+      ],
+    });
+
+    this.tracks = response.data;
+  },
+
   async asyncData({ route, $api, error }) {
     const { reciterId, albumId } = route.params;
 
     try {
-      const [album, tracksResponse] = await Promise.all([
-        $api.albums.get(reciterId, albumId, {
-          include: [AlbumIncludes.Reciter, AlbumIncludes.Related],
-        }),
-        $api.tracks.index(reciterId, albumId, {
-          include: [
-            TrackIncludes.Reciter,
-            TrackIncludes.Lyrics,
-            TrackIncludes.Album,
-            TrackIncludes.Media,
-            TrackIncludes.Related,
-          ],
-        }),
-      ]);
+      const album = await $api.albums.get(reciterId, albumId, {
+        include: [AlbumIncludes.Reciter, AlbumIncludes.Related],
+      });
 
       return {
         album,
-        tracks: tracksResponse.data,
       };
     } catch (e) {
       error({ statusCode: 404, message: 'Album not found.' });

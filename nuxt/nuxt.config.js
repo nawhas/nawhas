@@ -278,4 +278,13 @@ export default {
       release: process.env.APP_VERSION,
     },
   },
+
+  /*
+   ** Image Optimization Settings
+   ** See https://marquez.co/docs/nuxt-optimized-images/configuration/
+   */
+  optimizedImages: {
+    optimizeImages: true,
+    handleImages: ['jpeg', 'jpg', 'png', 'svg', 'webp', 'gif'],
+  },
 };

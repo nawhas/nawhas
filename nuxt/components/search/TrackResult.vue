@@ -57,7 +57,7 @@ export default class TrackResult extends Vue {
   }
 
   get image() {
-    return this.track.meta.artwork ?? '/defaults/default-album-image.png';
+    return this.track.meta.artwork ?? require('@/assets/img/defaults/default-album-image.png');
   }
 
   get isDark() {
