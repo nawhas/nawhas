@@ -71,6 +71,9 @@ export default {
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
+      { rel: 'preconnect', href: 'https://cdn2.nawhas.com' },
+      { rel: 'preconnect', href: process.env.API_BASE_URL },
+      { rel: 'preconnect', href: process.env.SEARCH_HOST },
     ],
   },
   /*
@@ -128,6 +131,7 @@ export default {
     '@/plugins/search',
     '@/plugins/theme.client',
     '@/plugins/service-worker.client',
+    '@/plugins/lazy-images.client',
   ],
   /*
   ** Auto import components

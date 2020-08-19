@@ -7,7 +7,7 @@
         :class="{ 'album__artwork': true, 'album__artwork--dark': isDark }"
         @click="$router.push(link)"
       >
-        <img ref="artwork" crossorigin :src="image" :alt="album.title">
+        <lazy-image ref="artwork" crossorigin :src="image" :alt="album.title" />
       </v-avatar>
       <div class="album__details" :style="{ color: textColor }">
         <nuxt-link :to="link" class="album__title">
@@ -130,9 +130,11 @@ import { RawLocation } from 'vue-router';
 import { DataTableHeader } from 'vuetify';
 import EditTrackDialog from '@/components/edit/EditTrackDialog.vue';
 import EditAlbumDialog from '@/components/edit/EditAlbumDialog.vue';
+import LazyImage from '@/components/utils/LazyImage.vue';
 
 @Component({
   components: {
+    LazyImage,
     EditAlbumDialog,
     EditTrackDialog,
   },
