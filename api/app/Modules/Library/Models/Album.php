@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Support\Facades\Storage;
 use Laravel\Scout\Searchable;
 use Ramsey\Uuid\Uuid;
@@ -149,5 +150,10 @@ class Album extends Model implements TimestampedEntity
     {
         $this->tracks->each(fn (Track $track) => $track->delete());
         $this->delete();
+    }
+
+    public function librarySave(): MorphOne
+    {
+        return $this->morphOne(Album::class, 'saveable');
     }
 }

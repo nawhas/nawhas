@@ -8,6 +8,7 @@ use App\Modules\Core\Contracts\TimestampedEntity;
 use App\Modules\Core\Models\HasTimestamps;
 use App\Modules\Core\Models\HasUuid;
 use App\Modules\Core\Models\UsesDataConnection;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Support\Facades\Storage;
 use Laravel\Scout\Searchable;
 use App\Modules\Library\Events\Reciters\{ReciterAvatarChanged,
@@ -164,5 +165,10 @@ class Reciter extends Model implements TimestampedEntity
     {
         $this->albums->each(fn (Album $album) => $album->deleteAlbum());
         $this->delete();
+    }
+
+    public function librarySave(): MorphOne
+    {
+        return $this->morphOne(Reciter::class, 'saveable');
     }
 }

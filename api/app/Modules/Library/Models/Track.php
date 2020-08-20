@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Library\Models;
 
+use App\Modules\Accounts\Models\LibrarySave;
 use App\Modules\Core\Contracts\TimestampedEntity;
 use App\Modules\Core\Models\HasTimestamps;
 use App\Modules\Core\Models\HasUuid;
@@ -17,6 +18,7 @@ use App\Modules\Lyrics\Documents\Document;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Laravel\Scout\Searchable;
 use Ramsey\Uuid\Uuid;
 use Spatie\Sluggable\HasSlug;
@@ -161,5 +163,13 @@ class Track extends Model implements TimestampedEntity
                 ),
             ],
         ];
+    }
+
+    /**
+     * Get the track's library saves.
+     */
+    public function librarySave(): MorphOne
+    {
+        return $this->morphOne(LibrarySave::class, 'saveable');
     }
 }
