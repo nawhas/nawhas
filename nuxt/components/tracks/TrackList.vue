@@ -61,8 +61,8 @@
             :class="{
               'material-icons-outlined': true,
               track__feature: true,
-              'track__feature--disabled': !isSaved && !isDark,
-              'track__feature--disabled--dark': !isSaved && isDark
+              'track__feature--disabled': !isTrackSaved && !isDark,
+              'track__feature--disabled--dark': !isTrackSaved && isDark
             }"
           >
             <v-icon>favorite</v-icon>
@@ -98,7 +98,7 @@ export default class TrackList extends Vue {
 
   private hasAudioFile = hasAudioFile;
   private hasLyrics = hasLyrics;
-  private isSaved = false;
+  private isTrackSaved = false;
   private getTrackUri = getTrackUri;
 
   get playable() {
