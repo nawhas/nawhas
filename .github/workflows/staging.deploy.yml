@@ -97,6 +97,7 @@ jobs:
             -t $WEB_IMAGE:dev-${GITHUB_SHA::8} \
             -t $WEB_IMAGE:develop \
             --build-arg APP_VERSION=dev-${GITHUB_SHA::8} \
+            --build-arg SENTRY_PUBLISH_RELEASE=1 \
             ./nuxt
 
       - name: Publish Web

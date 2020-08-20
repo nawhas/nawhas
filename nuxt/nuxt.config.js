@@ -277,6 +277,7 @@ export default {
    */
   sentry: {
     dsn: process.env.SENTRY_DSN || '',
+    publishRelease: process.env.SENTRY_PUBLISH_RELEASE || false,
     config: {
       environment: process.env.APP_ENV,
       release: process.env.APP_VERSION,
