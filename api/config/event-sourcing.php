@@ -97,7 +97,7 @@ return [
         'track.changed.title' => Library\Tracks\TrackTitleChanged::class,
         'track.changed.audio' => Library\Tracks\TrackAudioChanged::class,
         'track.changed.lyrics' => Library\Tracks\TrackLyricsChanged::class,
-        'track.deleted' => Library\Tracks\TrackViewed::class,
+        'track.deleted' => Library\Tracks\TrackDeleted::class,
         'track.viewed' => Library\Tracks\TrackViewed::class,
         // Lyric Events
         'lyrics.created' => Library\Lyrics\LyricsCreated::class,
