@@ -16,7 +16,7 @@ class UpdateReciterRequest extends Request
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string'],
+            'name' => ['string'],
             'description' => ['string'],
         ];
     }

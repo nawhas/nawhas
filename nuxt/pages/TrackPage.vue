@@ -8,7 +8,7 @@
     <div class="hero" :style="{'background-color': background, color: textColor}">
       <v-container class="hero__content">
         <v-avatar :size="heroArtworkSize" class="hero__artwork" tile>
-          <img v-if="track && album" crossorigin :src="image" :alt="album.name">
+          <lazy-image v-if="track && album" crossorigin :src="image" :alt="album.name" />
         </v-avatar>
         <div class="hero__text">
           <h4 class="hero__title">
@@ -170,6 +170,7 @@ import { Album, getAlbumArtwork, getAlbumUri } from '@/entities/album';
 import { TrackIncludes } from '@/api/tracks';
 import { MetaInfo } from 'vue-meta';
 import { generateMeta } from '@/utils/meta';
+import LazyImage from '@/components/utils/LazyImage.vue';
 
 interface Data {
   track: Track | null;
@@ -181,6 +182,7 @@ interface Data {
 
 export default Vue.extend({
   components: {
+    LazyImage,
     MoreTracksSkeleton,
     EditTrackDialog,
     LyricsCard,

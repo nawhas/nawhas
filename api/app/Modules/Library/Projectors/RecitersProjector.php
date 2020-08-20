@@ -51,7 +51,7 @@ class RecitersProjector extends Projector
     public function onReciterDeleted(ReciterDeleted $event): void
     {
         $reciter = Reciter::retrieve($event->id);
-        $reciter->delete();
+        $reciter->deleteReciter();
     }
 
     public function resetState(): void

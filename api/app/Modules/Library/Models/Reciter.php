@@ -159,4 +159,10 @@ class Reciter extends Model implements TimestampedEntity
             ],
         ];
     }
+
+    public function deleteReciter()
+    {
+        $this->albums->each(fn (Album $album) => $album->deleteAlbum());
+        $this->delete();
+    }
 }
