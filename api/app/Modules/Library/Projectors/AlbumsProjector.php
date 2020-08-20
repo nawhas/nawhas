@@ -11,7 +11,7 @@ use App\Modules\Library\Events\Albums\{
     AlbumTitleChanged,
     AlbumYearChanged
 };
-use App\Modules\Library\Models\{Album, Reciter, Track};
+use App\Modules\Library\Models\{Album, Reciter};
 use Spatie\EventSourcing\EventHandlers\Projectors\Projector;
 
 class AlbumsProjector extends Projector
@@ -53,8 +53,7 @@ class AlbumsProjector extends Projector
     public function onAlbumDeleted(AlbumDeleted $event): void
     {
         $album = Album::retrieve($event->id);
-        $album->tracks->each(fn (Track $track) => $track->delete());
-        $album->delete();
+        $album->deleteAlbum();
     }
 
     public function resetState(): void
