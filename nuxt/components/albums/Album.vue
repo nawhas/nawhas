@@ -116,10 +116,10 @@
               :class="{
                 'material-icons-outlined': true,
                 track__feature: true,
-                'track__feature--disabled': !isSaved && !isDark,
-                'track__feature--disabled--dark': !isSaved && isDark
+                'track__feature--disabled': !isTrackSaved && !isDark,
+                'track__feature--disabled--dark': !isTrackSaved && isDark
               }"
-              @click.stop="isSaved = !isSaved"
+              @click.stop="isTrackSaved = !isTrackSaved"
             >
               <v-icon>favorite</v-icon>
             </v-btn>
@@ -157,7 +157,7 @@ export default class AlbumComponent extends Vue {
   private textColor = 'white';
   private fabColor = 'white';
   private fab = false;
-  private isSaved = false;
+  private isTrackSaved = false;
 
   // TODO - Replace `any` with a proper interface.
   @Prop({ type: Object, required: true }) private album!: Album;
