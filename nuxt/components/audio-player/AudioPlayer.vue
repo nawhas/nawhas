@@ -172,6 +172,10 @@
               <v-list-item @click="goToTrack">
                 Go to track
               </v-list-item>
+              <v-list-item @click="isTrackSaved = !isTrackSaved">
+                <span v-if="!isTrackSaved">Add to Library</span>
+                <span v-else>Remove from Library</span>
+              </v-list-item>
               <v-list-item @click="toggleMinimized">
                 Expand player
               </v-list-item>
@@ -302,6 +306,8 @@ export default class AudioPlayer extends Vue {
   /* Keep a reference to the progress bar interval to clear it when needed. */
   private progressInterval: number|null = null;
   private currentOverlay: null | 'lyrics' | 'queue' = null;
+
+  private isTrackSaved = false;
 
   get isDark() {
     return this.$vuetify.theme.dark;
