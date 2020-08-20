@@ -77,6 +77,11 @@
                   done
                 </v-icon>Added to Queue
               </v-btn>
+              <v-btn text :color="textColor">
+                <v-icon left>
+                  favorite
+                </v-icon>Add to Library
+              </v-btn>
             </template>
             <template v-else>
               <v-skeleton-loader type="text" dark width="100px" class="mt-3" />
