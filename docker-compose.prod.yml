@@ -66,6 +66,9 @@ services:
     build:
       context: nuxt
       dockerfile: Dockerfile
+      args:
+        SENTRY_PUBLISH_RELEASE: 1
+        APP_VERSION: local-0.0.1
     container_name: nawhas_web
     networks:
       - nawhas

@@ -111,7 +111,10 @@ jobs:
           -t $GH_WEB_IMAGE:${GITHUB_REF##*/} \
           --build-arg APP_VERSION=${GITHUB_REF##*/} \
           --build-arg SENTRY_PUBLISH_RELEASE=1 \
+          --build-arg SENTRY_AUTH_TOKEN=$SENTRY_AUTH_TOKEN \
           ./nuxt
+      env:
+        SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
 
       - name: Publish Web
         run: |
