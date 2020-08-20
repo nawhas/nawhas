@@ -77,7 +77,7 @@
                   done
                 </v-icon>Added to Queue
               </v-btn>
-              <v-btn text :color="textColor">
+              <v-btn v-if="$vuetify.breakpoint.mdAndUp" text :color="textColor">
                 <v-icon left>
                   favorite
                 </v-icon>Add to Library
@@ -88,6 +88,11 @@
             </template>
           </div>
           <div class="bar__actions bar__actions--overflow">
+            <v-btn v-if="$vuetify.breakpoint.smAndDown" text :color="textColor">
+              <v-icon>
+                favorite
+              </v-icon>
+            </v-btn>
             <v-btn v-if="track && track.lyrics" icon :color="textColor" @click="print">
               <v-icon>print</v-icon>
             </v-btn>
