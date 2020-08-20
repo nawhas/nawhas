@@ -110,6 +110,19 @@
                 volume_off
               </template>
             </v-icon>
+            <v-btn
+              icon
+              :disabled="!hasAudioFile(props.item) && !hasLyrics(props.item)"
+              :class="{
+                'material-icons-outlined': true,
+                track__feature: true,
+                'track__feature--disabled': !isSaved && !isDark,
+                'track__feature--disabled--dark': !isSaved && isDark
+              }"
+              @click.stop="isSaved = !isSaved"
+            >
+              <v-icon>favorite</v-icon>
+            </v-btn>
           </td>
         </tr>
       </template>
@@ -144,6 +157,7 @@ export default class AlbumComponent extends Vue {
   private textColor = 'white';
   private fabColor = 'white';
   private fab = false;
+  private isSaved = false;
 
   // TODO - Replace `any` with a proper interface.
   @Prop({ type: Object, required: true }) private album!: Album;
