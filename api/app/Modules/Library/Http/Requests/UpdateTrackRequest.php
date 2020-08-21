@@ -5,21 +5,18 @@ declare(strict_types=1);
 namespace App\Modules\Library\Http\Requests;
 
 use App\Http\Requests\Request;
-use App\Modules\Authentication\Enum\Role;
 use App\Modules\Library\Http\Requests\Traits\HasAlbumRouteParameter;
-use App\Modules\Library\Http\Requests\Traits\HasReciterRouteParameter;
 use App\Modules\Library\Http\Requests\Traits\HasTrackRouteParameter;
 use Illuminate\Validation\Rule;
 
 class UpdateTrackRequest extends Request
 {
-    use HasReciterRouteParameter;
     use HasAlbumRouteParameter;
     use HasTrackRouteParameter;
 
     public function authorize(): bool
     {
-        return $this->user()->role === Role::MODERATOR;
+        return true;
     }
 
     public function rules(): array
