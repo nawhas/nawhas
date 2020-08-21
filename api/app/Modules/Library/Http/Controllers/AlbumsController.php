@@ -7,6 +7,8 @@ namespace App\Modules\Library\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Modules\Library\Events\Albums\AlbumDeleted;
 use App\Modules\Library\Events\Albums\AlbumViewed;
+use App\Modules\Library\Http\Requests\CreateAlbumRequest;
+use App\Modules\Library\Http\Requests\UpdateAlbumRequest;
 use App\Modules\Library\Http\Transformers\AlbumTransformer;
 use App\Modules\Library\Models\Album;
 use App\Modules\Library\Models\Reciter;
@@ -32,7 +34,7 @@ class AlbumsController extends Controller
         return $this->respondWithPaginator($albums);
     }
 
-    public function store(Request $request, Reciter $reciter): JsonResponse
+    public function store(CreateAlbumRequest $request, Reciter $reciter): JsonResponse
     {
         $album = Album::create($reciter, $request->get('title'), $request->get('year'));
 
@@ -46,14 +48,14 @@ class AlbumsController extends Controller
         return $this->respondWithItem($album);
     }
 
-    public function update(Request $request, Reciter $reciter, Album $album): JsonResponse
+    public function update(UpdateAlbumRequest $request, Reciter $reciter, Album $album): JsonResponse
     {
         if ($request->has('title')) {
             $album->changeTitle($request->get('title'));
         }
 
         if ($request->has('year')) {
-            $album->changeTitle($request->get('year'));
+            $album->changeYear($request->get('year'));
         }
 
         return $this->respondWithItem($album->fresh());
