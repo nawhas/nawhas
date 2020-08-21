@@ -765,6 +765,10 @@ export default class AudioPlayer extends Vue {
         return;
       }
 
+      if (!Number.isFinite(this.seek)) {
+        return;
+      }
+
       (navigator.mediaSession as any).setPositionState({
         duration: this.duration,
         position: this.seek,

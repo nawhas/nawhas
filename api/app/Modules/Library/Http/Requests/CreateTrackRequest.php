@@ -5,12 +5,14 @@ declare(strict_types=1);
 namespace App\Modules\Library\Http\Requests;
 
 use App\Http\Requests\Request;
+use App\Modules\Library\Http\Requests\Traits\HasAlbumRouteParameter;
 use App\Modules\Library\Http\Requests\Traits\HasReciterRouteParameter;
 use Illuminate\Validation\Rule;
 
-class UpdateReciterRequest extends Request
+class CreateTrackRequest extends Request
 {
     use HasReciterRouteParameter;
+    use HasAlbumRouteParameter;
 
     public function authorize(): bool
     {
@@ -20,24 +22,18 @@ class UpdateReciterRequest extends Request
     public function rules(): array
     {
         return [
-            'name' => [
+            'title' => [
+                'required',
                 'string',
-                Rule::unique('reciters', 'name')
-                    ->ignoreModel($this->reciter()),
+                Rule::unique('tracks', 'title')
+                    ->where('album_id', $this->album()->id)
             ],
-            'description' => [
+            'lyrics' => [
                 'string',
+            ],
+            'format' => [
+                'integer',
             ],
         ];
-    }
-
-    public function name(): string
-    {
-        return $this->get('name');
-    }
-
-    public function description(): ?string
-    {
-        return $this->get('description');
     }
 }
