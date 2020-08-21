@@ -6,12 +6,16 @@ namespace App\Modules\Library\Http\Requests;
 
 use App\Http\Requests\Request;
 use App\Modules\Authentication\Enum\Role;
+use App\Modules\Library\Http\Requests\Traits\HasAlbumRouteParameter;
 use App\Modules\Library\Http\Requests\Traits\HasReciterRouteParameter;
+use App\Modules\Library\Http\Requests\Traits\HasTrackRouteParameter;
 use Illuminate\Validation\Rule;
 
-class UpdateReciterRequest extends Request
+class UpdateTrackRequest extends Request
 {
     use HasReciterRouteParameter;
+    use HasAlbumRouteParameter;
+    use HasTrackRouteParameter;
 
     public function authorize(): bool
     {
@@ -21,24 +25,18 @@ class UpdateReciterRequest extends Request
     public function rules(): array
     {
         return [
-            'name' => [
+            'title' => [
                 'string',
-                Rule::unique('reciters', 'name')
-                    ->ignoreModel($this->reciter()),
+                Rule::unique('tracks', 'title')
+                    ->where('album_id', $this->album()->id)
+                    ->ignoreModel($this->track())
             ],
-            'description' => [
+            'lyrics' => [
                 'string',
+            ],
+            'format' => [
+                'integer',
             ],
         ];
-    }
-
-    public function name(): string
-    {
-        return $this->get('name');
-    }
-
-    public function description(): ?string
-    {
-        return $this->get('description');
     }
 }
