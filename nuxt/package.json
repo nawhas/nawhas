@@ -30,6 +30,7 @@
     "@nuxtjs/sentry": "^4.3.4",
     "@nuxtjs/universal-storage": "^0.5.5",
     "@nuxtjs/vuetify": "^1.11.2",
+    "axios-auth-refresh": "^2.2.8",
     "dotenv": "^8.2.0",
     "lazysizes": "^5.2.2",
     "meilisearch": "^0.12.0",

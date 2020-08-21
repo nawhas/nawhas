@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Modules\Library\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Modules\Library\Http\Requests\CreateTrackRequest;
+use App\Modules\Library\Http\Requests\UpdateTrackRequest;
 use App\Modules\Lyrics\Documents\Factory as DocumentFactory;
 use App\Modules\Lyrics\Documents\Format;
 use Illuminate\Validation\ValidationException;
@@ -30,7 +32,7 @@ class TracksController extends Controller
         return $this->respondWithPaginator($tracks);
     }
 
-    public function store(Request $request, Reciter $reciter, Album $album): JsonResponse
+    public function store(CreateTrackRequest $request, Reciter $reciter, Album $album): JsonResponse
     {
         $track = Track::create($album, $request->get('title'));
 
@@ -48,7 +50,7 @@ class TracksController extends Controller
         return $this->respondWithItem($track);
     }
 
-    public function update(Request $request, Reciter $reciter, Album $album, Track $track): JsonResponse
+    public function update(UpdateTrackRequest $request, Reciter $reciter, Album $album, Track $track): JsonResponse
     {
         if ($request->has('title')) {
             $track->changeTitle($request->get('title'));
