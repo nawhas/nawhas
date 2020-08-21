@@ -24,14 +24,12 @@ class UpdateAlbumRequest extends Request
     {
         return [
             'title' => [
-                'required',
                 'string',
                 Rule::unique('albums', 'year')
                     ->where('reciter_id', $this->reciter()->id)
                     ->ignoreModel($this->album())
             ],
             'year' => [
-                'required',
                 'string',
                 Rule::unique('albums', 'year')
                     ->where('reciter_id', $this->reciter()->id)
