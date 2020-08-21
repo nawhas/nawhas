@@ -55,7 +55,7 @@ class AlbumsController extends Controller
         }
 
         if ($request->has('year')) {
-            $album->changeTitle($request->get('year'));
+            $album->changeYear($request->get('year'));
         }
 
         return $this->respondWithItem($album->fresh());
