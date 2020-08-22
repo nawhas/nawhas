@@ -164,4 +164,10 @@ class Reciter extends Model implements TimestampedEntity, Revisionable
             ],
         ];
     }
+
+    public function deleteReciter()
+    {
+        $this->albums->each(fn (Album $album) => $album->deleteAlbum());
+        $this->delete();
+    }
 }

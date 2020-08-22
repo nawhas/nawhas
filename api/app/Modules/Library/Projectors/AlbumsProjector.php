@@ -52,7 +52,8 @@ class AlbumsProjector extends Projector
 
     public function onAlbumDeleted(AlbumDeleted $event): void
     {
-        Album::retrieve($event->id)->delete();
+        $album = Album::retrieve($event->id);
+        $album->deleteAlbum();
     }
 
     public function resetState(): void
