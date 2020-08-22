@@ -145,10 +145,14 @@ class LibraryProjector extends Projector
 
     public function onTrackTitleChanged(TrackTitleChanged $event): void
     {
-        $reciter = $this->repository->retrieveByTrackId($event->id);
-        $track = $reciter->getTrack($event->id);
+        try {
+            $reciter = $this->repository->retrieveByTrackId($event->id);
+            $track = $reciter->getTrack($event->id);
 
-        $track->title = $event->title;
+            $track->title = $event->title;
+        } catch (ModelNotFoundException $e) {
+            //
+        }
     }
 
     public function onTrackDeleted(TrackDeleted $event): void
@@ -163,16 +167,24 @@ class LibraryProjector extends Projector
 
     public function onTrackLyricsChanged(TrackLyricsChanged $event): void
     {
-        $reciter = $this->repository->retrieveByTrackId($event->id);
-        $track = $reciter->getTrack($event->id);
-        $track->lyrics = $event->document;
+        try {
+            $reciter = $this->repository->retrieveByTrackId($event->id);
+            $track = $reciter->getTrack($event->id);
+            $track->lyrics = $event->document;
+        } catch (ModelNotFoundException $e) {
+            //
+        }
     }
 
     public function onTrackAudioChanged(TrackAudioChanged $event): void
     {
-        $reciter = $this->repository->retrieveByTrackId($event->id);
-        $track = $reciter->getTrack($event->id);
-        $track->audio = $event->path;
+        try {
+            $reciter = $this->repository->retrieveByTrackId($event->id);
+            $track = $reciter->getTrack($event->id);
+            $track->audio = $event->path;
+        } catch (ModelNotFoundException $e) {
+            //
+        }
     }
 
     public function resetState(): void

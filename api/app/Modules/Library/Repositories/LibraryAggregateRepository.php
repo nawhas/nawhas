@@ -102,6 +102,7 @@ class LibraryAggregateRepository
             ->findOrNew($reciter->id);
 
         $reciterModel->fill([
+            'id' => $reciter->id,
             'name' => $reciter->name,
             'description' => $reciter->description,
             'avatar' => $reciter->avatar,
