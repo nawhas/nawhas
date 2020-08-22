@@ -149,4 +149,10 @@ class Album extends Model implements TimestampedEntity, Revisionable
             ]
         ];
     }
+
+    public function deleteAlbum()
+    {
+        $this->tracks->each(fn (Track $track) => $track->delete());
+        $this->delete();
+    }
 }

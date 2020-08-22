@@ -8,7 +8,7 @@ use App\Http\Requests\Request;
 use App\Modules\Library\Http\Requests\Traits\HasReciterRouteParameter;
 use Illuminate\Validation\Rule;
 
-class UpdateReciterRequest extends Request
+class CreateAlbumRequest extends Request
 {
     use HasReciterRouteParameter;
 
@@ -20,24 +20,16 @@ class UpdateReciterRequest extends Request
     public function rules(): array
     {
         return [
-            'name' => [
+            'title' => [
+                'required',
                 'string',
-                Rule::unique('reciters', 'name')
-                    ->ignoreModel($this->reciter()),
             ],
-            'description' => [
+            'year' => [
+                'required',
                 'string',
+                Rule::unique('albums', 'year')
+                    ->where('reciter_id', $this->reciter()->id)
             ],
         ];
-    }
-
-    public function name(): string
-    {
-        return $this->get('name');
-    }
-
-    public function description(): ?string
-    {
-        return $this->get('description');
     }
 }

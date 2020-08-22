@@ -133,8 +133,27 @@ class Track extends Model implements TimestampedEntity, Revisionable
     {
         return SlugOptions::create()
             ->generateSlugsFrom('title')
-            ->saveSlugsTo('slug')
-            ->allowDuplicateSlugs();
+            ->saveSlugsTo('slug');
+    }
+
+    protected function otherRecordExistsWithSlug(string $slug): bool
+    {
+        $key = $this->getKey();
+
+        if ($this->getIncrementing()) {
+            $key ??= '0';
+        }
+
+        $query = static::where($this->slugOptions->slugField, $slug)
+            ->where($this->getKeyName(), '!=', $key)
+            ->where('album_id', $this->album_id)
+            ->withoutGlobalScopes();
+
+        if ($this->usesSoftDeletes()) {
+            $query->withTrashed();
+        }
+
+        return $query->exists();
     }
 
     public function resolveRouteBinding($value, $field = null)
