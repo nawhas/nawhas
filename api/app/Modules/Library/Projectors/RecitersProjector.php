@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Library\Projectors;
 
+use App\Modules\Library\Repositories\ReciterRepository;
 use App\Modules\Library\Events\Reciters\{
     ReciterAvatarChanged,
     ReciterCreated,
@@ -11,51 +12,61 @@ use App\Modules\Library\Events\Reciters\{
     ReciterDescriptionChanged,
     ReciterNameChanged
 };
-use App\Modules\Library\Models\Reciter;
+use App\Modules\Library\Models\Reciter as ReciterModel;
+use App\Modules\Library\Entities\Reciter as ReciterEntity;
 use Spatie\EventSourcing\EventHandlers\Projectors\Projector;
 
 class RecitersProjector extends Projector
 {
+    private ReciterRepository $repository;
+
+    public function __construct(ReciterRepository $repository)
+    {
+        $this->repository = $repository;
+    }
+
     public function onReciterCreated(ReciterCreated $event): void
     {
         $data = collect($event->attributes);
-        $data->put('id', $event->id);
 
-        $reciter = new Reciter($data->all());
+        $reciter = new ReciterEntity(
+            $event->id,
+            $data->get('name'),
+            $data->get('description'),
+            $data->get('avatar'),
+        );
 
-        $reciter->saveOrFail();
+        $this->repository->persist($reciter);
     }
 
     public function onReciterNameChanged(ReciterNameChanged $event): void
     {
-        $reciter = Reciter::retrieve($event->id);
+        $reciter = $this->repository->retrieve($event->id);
         $reciter->name = $event->name;
-
-        $reciter->saveOrFail();
+        $this->repository->persist($reciter);
     }
 
     public function onReciterDescriptionChanged(ReciterDescriptionChanged $event): void
     {
-        $reciter = Reciter::retrieve($event->id);
+        $reciter = $this->repository->retrieve($event->id);
         $reciter->description = $event->description;
-        $reciter->saveOrFail();
+        $this->repository->persist($reciter);
     }
 
     public function onReciterAvatarChanged(ReciterAvatarChanged $event): void
     {
-        $reciter = Reciter::retrieve($event->id);
+        $reciter = $this->repository->retrieve($event->id);
         $reciter->avatar = $event->avatar;
-        $reciter->saveOrFail();
+        $this->repository->persist($reciter);
     }
 
     public function onReciterDeleted(ReciterDeleted $event): void
     {
-        $reciter = Reciter::retrieve($event->id);
-        $reciter->delete();
+        $this->repository->remove($event->id);
     }
 
     public function resetState(): void
     {
-        Reciter::truncate();
+        ReciterModel::truncate();
     }
 }
