@@ -58,11 +58,22 @@
         -->
       <v-expand-x-transition>
         <div v-if="!minimized || mobile" class="track-info">
-          <div class="track-info--track-name body-1" @click="onTrackTitleClicked">
-            {{ track.title }}
+          <div class="track-info--container">
+            <div class="track-info--track-name body-1" @click="onTrackTitleClicked">
+              {{ track.title }}
+            </div>
+            <div class="track-info--track-meta body-2" @click="onReciterNameClicked">
+              {{ track.reciter.name }} &bull; {{ track.year }}
+            </div>
           </div>
-          <div class="track-info--track-meta body-2" @click="onReciterNameClicked">
-            {{ track.reciter.name }} &bull; {{ track.year }}
+          <div class="track-info--track-favorite">
+            <v-icon
+              :class="{
+                'material-icons-outlined': true,
+                'track-favorite--disabled': !isTrackSaved && !isDark,
+                'track-favorite--disabled--dark': !isTrackSaved && isDark
+              }"
+            >favorite</v-icon>
           </div>
         </div>
       </v-expand-x-transition>
@@ -860,6 +871,24 @@ $duration: 580ms;
   .track-info {
     padding: 0 12px;
     flex: 1;
+    display: flex;
+    flex-direction: row;
+    &--container {
+      display: flex;
+      flex-direction: column;
+    }
+    &--track-favorite {
+      display: flex;
+      justify-self: center;
+      margin-left: 20px;
+
+      .track-favorite--disabled {
+        color: rgba(0, 0, 0, 0.1) !important;
+      }
+      .track-favorite--disabled--dark {
+        color: rgba(map-get($shades, 'white'), 0.5) !important;
+      }
+    }
   }
   .player-actions {
     margin: auto;
