@@ -91,8 +91,38 @@ class Reciter
         return $album;
     }
 
+    public function getAlbumForTrack(string $id, ?string $albumId = null): Album
+    {
+        if ($albumId !== null) {
+            return $this->getAlbum($albumId);
+        }
+
+        /** @var Album|null $album */
+        $album = $this->albums->first(fn (Album $a) => $a->tracks->has($id));
+
+        if (!$album) {
+            throw new ModelNotFoundException("Track#{$id} not found.");
+        }
+
+        return $album;
+    }
+
+    public function getTrack(string $id, ?string $albumId = null): Track
+    {
+        return $this->getAlbumForTrack($id, $albumId)->getTrack($id);
+    }
+
+    public function removeTrack(string $id, ?string $albumId = null): self
+    {
+        $this->getAlbumForTrack($id, $albumId)->removeTrack($id);
+
+        return $this;
+    }
+
     public function removeAlbum(string $id): self
     {
         $this->albums->forget($id);
+
+        return $this;
     }
 }

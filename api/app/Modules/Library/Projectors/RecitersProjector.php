@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Library\Projectors;
 
-use App\Modules\Library\Repositories\ReciterRepository;
+use App\Modules\Library\Repositories\LibraryAggregateRepository;
 use App\Modules\Library\Events\Reciters\{
     ReciterAvatarChanged,
     ReciterCreated,
@@ -18,9 +18,9 @@ use Spatie\EventSourcing\EventHandlers\Projectors\Projector;
 
 class RecitersProjector extends Projector
 {
-    private ReciterRepository $repository;
+    private LibraryAggregateRepository $repository;
 
-    public function __construct(ReciterRepository $repository)
+    public function __construct(LibraryAggregateRepository $repository)
     {
         $this->repository = $repository;
     }

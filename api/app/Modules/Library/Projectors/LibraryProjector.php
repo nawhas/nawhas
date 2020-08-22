@@ -4,16 +4,22 @@ declare(strict_types=1);
 
 namespace App\Modules\Library\Projectors;
 
-use App\Modules\Library\Entities\Album;
 use App\Modules\Library\Entities\Album as AlbumEntity;
 use App\Modules\Library\Events\Albums\AlbumArtworkChanged;
 use App\Modules\Library\Events\Albums\AlbumCreated;
 use App\Modules\Library\Events\Albums\AlbumDeleted;
 use App\Modules\Library\Events\Albums\AlbumTitleChanged;
 use App\Modules\Library\Events\Albums\AlbumYearChanged;
+use App\Modules\Library\Events\Tracks\TrackAudioChanged;
+use App\Modules\Library\Events\Tracks\TrackCreated;
+use App\Modules\Library\Events\Tracks\TrackDeleted;
+use App\Modules\Library\Events\Tracks\TrackLyricsChanged;
+use App\Modules\Library\Events\Tracks\TrackTitleChanged;
 use App\Modules\Library\Models\Album as AlbumModel;
 use App\Modules\Library\Models\Track as TrackModel;
-use App\Modules\Library\Repositories\ReciterRepository;
+use App\Modules\Library\Entities\Track as TrackEntity;
+use App\Modules\Library\Repositories\LibraryAggregateRepository;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Modules\Library\Events\Reciters\{
     ReciterAvatarChanged,
     ReciterCreated,
@@ -27,9 +33,9 @@ use Spatie\EventSourcing\EventHandlers\Projectors\Projector;
 
 class LibraryProjector extends Projector
 {
-    private ReciterRepository $repository;
+    private LibraryAggregateRepository $repository;
 
-    public function __construct(ReciterRepository $repository)
+    public function __construct(LibraryAggregateRepository $repository)
     {
         $this->repository = $repository;
     }
@@ -120,6 +126,53 @@ class LibraryProjector extends Projector
         $reciter = $this->repository->retrieveByAlbumId($event->id);
 
         $reciter->removeAlbum($event->id);
+    }
+
+    public function onTrackCreated(TrackCreated $event): void
+    {
+        $reciter = $this->repository->retrieveByAlbumId($event->albumId);
+        $album = $reciter->getAlbum($event->albumId);
+
+        $data = collect($event->attributes);
+
+        $track = new TrackEntity(
+            $event->id,
+            $data->get('title'),
+        );
+
+        $album->addTrack($track);
+    }
+
+    public function onTrackTitleChanged(TrackTitleChanged $event): void
+    {
+        $reciter = $this->repository->retrieveByTrackId($event->id);
+        $track = $reciter->getTrack($event->id);
+
+        $track->title = $event->title;
+    }
+
+    public function onTrackDeleted(TrackDeleted $event): void
+    {
+        try {
+            $reciter = $this->repository->retrieveByTrackId($event->id);
+            $reciter->removeTrack($event->id);
+        } catch (ModelNotFoundException $e) {
+            // Doesn't exist, so no worries.
+        }
+    }
+
+    public function onTrackLyricsChanged(TrackLyricsChanged $event): void
+    {
+        $reciter = $this->repository->retrieveByTrackId($event->id);
+        $track = $reciter->getTrack($event->id);
+        $track->lyrics = $event->document;
+    }
+
+    public function onTrackAudioChanged(TrackAudioChanged $event): void
+    {
+        $reciter = $this->repository->retrieveByTrackId($event->id);
+        $track = $reciter->getTrack($event->id);
+        $track->audio = $event->path;
     }
 
     public function resetState(): void

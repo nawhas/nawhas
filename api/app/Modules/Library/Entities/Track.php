@@ -12,4 +12,12 @@ class Track
     public string $title;
     public ?Document $lyrics;
     public ?string $audio;
+
+    public function __construct(string $id, string $title, ?Document $lyrics = null, ?string $audio = null)
+    {
+        $this->id = $id;
+        $this->title = $title;
+        $this->lyrics = $lyrics;
+        $this->audio = $audio;
+    }
 }
