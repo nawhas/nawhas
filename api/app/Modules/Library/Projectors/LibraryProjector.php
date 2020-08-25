@@ -57,22 +57,19 @@ class LibraryProjector extends Projector
     public function onReciterNameChanged(ReciterNameChanged $event): void
     {
         $reciter = $this->repository->retrieve($event->id);
-        $reciter->name = $event->name;
-        $this->repository->persist($reciter);
+        $reciter->applyReciterNameChanged($event);
     }
 
     public function onReciterDescriptionChanged(ReciterDescriptionChanged $event): void
     {
         $reciter = $this->repository->retrieve($event->id);
-        $reciter->description = $event->description;
-        $this->repository->persist($reciter);
+        $reciter->applyReciterDescriptionChanged($event);
     }
 
     public function onReciterAvatarChanged(ReciterAvatarChanged $event): void
     {
         $reciter = $this->repository->retrieve($event->id);
-        $reciter->avatar = $event->avatar;
-        $this->repository->persist($reciter);
+        $reciter->applyReciterAvatarChanged($event);
     }
 
     public function onReciterDeleted(ReciterDeleted $event): void
@@ -83,42 +80,25 @@ class LibraryProjector extends Projector
     public function onAlbumCreated(AlbumCreated $event): void
     {
         $reciter = $this->repository->retrieve($event->reciterId);
-
-        $data = collect($event->attributes);
-
-        $album = new AlbumEntity(
-            $event->id,
-            $data->get('title'),
-            $data->get('year'),
-            $data->get('artwork'),
-        );
-
-        $reciter->addAlbum($album);
-        $this->repository->persist($reciter);
+        $reciter->applyAlbumCreated($event);
     }
 
     public function onAlbumTitleChanged(AlbumTitleChanged $event): void
     {
         $reciter = $this->repository->retrieveByAlbumId($event->id);
-
-        $album = $reciter->getAlbum($event->id);
-        $album->title = $event->title;
+        $reciter->applyAlbumTitleChanged($event);
     }
 
     public function onAlbumYearChanged(AlbumYearChanged $event): void
     {
         $reciter = $this->repository->retrieveByAlbumId($event->id);
-
-        $album = $reciter->getAlbum($event->id);
-        $album->year = $event->year;
+        $reciter->applyAlbumYearChanged($event);
     }
 
     public function onAlbumArtworkChanged(AlbumArtworkChanged $event): void
     {
         $reciter = $this->repository->retrieveByAlbumId($event->id);
-
-        $album = $reciter->getAlbum($event->id);
-        $album->artwork = $event->artwork;
+        $reciter->applyAlbumArtworkChanged($event);
     }
 
     public function onAlbumDeleted(AlbumDeleted $event): void
@@ -131,25 +111,14 @@ class LibraryProjector extends Projector
     public function onTrackCreated(TrackCreated $event): void
     {
         $reciter = $this->repository->retrieveByAlbumId($event->albumId);
-        $album = $reciter->getAlbum($event->albumId);
-
-        $data = collect($event->attributes);
-
-        $track = new TrackEntity(
-            $event->id,
-            $data->get('title'),
-        );
-
-        $album->addTrack($track);
+        $reciter->applyTrackCreated($event);
     }
 
     public function onTrackTitleChanged(TrackTitleChanged $event): void
     {
         try {
             $reciter = $this->repository->retrieveByTrackId($event->id);
-            $track = $reciter->getTrack($event->id);
-
-            $track->title = $event->title;
+            $reciter->applyTrackTitleChanged($event);
         } catch (ModelNotFoundException $e) {
             //
         }
@@ -159,7 +128,7 @@ class LibraryProjector extends Projector
     {
         try {
             $reciter = $this->repository->retrieveByTrackId($event->id);
-            $reciter->removeTrack($event->id);
+
         } catch (ModelNotFoundException $e) {
             // Doesn't exist, so no worries.
         }
@@ -169,8 +138,7 @@ class LibraryProjector extends Projector
     {
         try {
             $reciter = $this->repository->retrieveByTrackId($event->id);
-            $track = $reciter->getTrack($event->id);
-            $track->lyrics = $event->document;
+            $reciter->applyTrackLyricsChanged($event);
         } catch (ModelNotFoundException $e) {
             //
         }
@@ -180,8 +148,7 @@ class LibraryProjector extends Projector
     {
         try {
             $reciter = $this->repository->retrieveByTrackId($event->id);
-            $track = $reciter->getTrack($event->id);
-            $track->audio = $event->path;
+            $reciter->applyTrackAudioChanged($event);
         } catch (ModelNotFoundException $e) {
             //
         }

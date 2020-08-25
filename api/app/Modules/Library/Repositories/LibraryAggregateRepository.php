@@ -116,7 +116,7 @@ class LibraryAggregateRepository
 
         $reciter->albums->each(function (AlbumEntity $album) use ($reciter, $reciterModel) {
             /** @var AlbumModel|null $albumModel */
-            $albumModel = $reciterModel->albums->first(fn (Album $a) => $a->id === $album->id);
+            $albumModel = $reciterModel->albums->first(fn (AlbumModel $a) => $a->id === $album->id);
 
             if (!$albumModel) {
                 $albumModel = new AlbumModel(['id' => $album->id]);
@@ -137,7 +137,9 @@ class LibraryAggregateRepository
 
             $album->tracks->each(function (TrackEntity $track) use ($album, $reciter, $albumModel) {
                 /** @var TrackModel|null $trackModel */
-                $trackModel = $albumModel->tracks->first(fn (TrackModel $t) => $t->id === $track->id);
+                $trackModel = $albumModel->tracks->first(
+                    fn (TrackModel $t) => $t->id === $track->id
+                );
 
                 if (!$trackModel) {
                     $trackModel = new TrackModel(['id' => $track->id]);

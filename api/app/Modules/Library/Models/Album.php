@@ -34,9 +34,9 @@ use Ramsey\Uuid\Uuid;
  * @property-read int|null $revisions_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\Library\Models\Track[] $tracks
  * @property-read int|null $tracks_count
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Library\Models\Album newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Library\Models\Album newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Library\Models\Album query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Album newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Album newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Album query()
  * @mixin \Eloquent
  */
 class Album extends Model implements TimestampedEntity, Revisionable

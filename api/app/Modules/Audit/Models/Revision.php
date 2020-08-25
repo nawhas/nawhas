@@ -15,19 +15,18 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
  * App\Modules\Audit\Models\Revision
  *
  * @property string $id
- * @property string $entity_type
- * @property string $entity_id
- * @property array $old_values
- * @property array $new_values
+ * @property string $aggregate_id
+ * @property array|null $old_values
+ * @property array|null $new_values
  * @property string $change_type
  * @property string|null $user_id
  * @property int $version
  * @property \Illuminate\Support\Carbon $created_at
- * @property-read \Illuminate\Database\Eloquent\Model|\Eloquent $entity
- * @property-read \App\Modules\Authentication\Models\User|null $user
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Audit\Models\Revision newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Audit\Models\Revision newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Audit\Models\Revision query()
+ * @property-read Model|\Eloquent $entity
+ * @property-read User|null $user
+ * @method static \Illuminate\Database\Eloquent\Builder|Revision newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Revision newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Revision query()
  * @mixin \Eloquent
  */
 class Revision extends Model
