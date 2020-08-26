@@ -55,6 +55,18 @@
               </template>
             </v-icon>
           </v-btn>
+          <v-btn
+            icon
+            :disabled="!hasAudioFile(track) && !hasLyrics(track)"
+            :class="{
+              'material-icons-outlined': true,
+              track__feature: true,
+              'track__feature--disabled': !isTrackSaved && !isDark,
+              'track__feature--disabled--dark': !isTrackSaved && isDark
+            }"
+          >
+            <v-icon>favorite</v-icon>
+          </v-btn>
         </v-list-item-action>
       </v-list-item>
     </v-list>
@@ -86,6 +98,7 @@ export default class TrackList extends Vue {
 
   private hasAudioFile = hasAudioFile;
   private hasLyrics = hasLyrics;
+  private isTrackSaved = false;
   private getTrackUri = getTrackUri;
 
   get playable() {

@@ -52,7 +52,7 @@
               >
                 <v-icon left>
                   play_circle_filled
-                </v-icon>Play
+                </v-icon><span v-if="$vuetify.breakpoint.mdAndUp">Play</span>
               </v-btn>
               <v-btn
                 v-else-if="hasAudio && isSameTrackPlaying"
@@ -70,12 +70,17 @@
               >
                 <v-icon left>
                   playlist_add
-                </v-icon>Add to Queue
+                </v-icon><span v-if="$vuetify.breakpoint.mdAndUp">Add to Queue</span>
               </v-btn>
               <v-btn v-if="hasAudio && addedToQueueSnackbar" text :color="textColor">
                 <v-icon color="green" left>
                   done
-                </v-icon>Added to Queue
+                </v-icon><span v-if="$vuetify.breakpoint.mdAndUp">Added to Queue</span>
+              </v-btn>
+              <v-btn v-if="$vuetify.breakpoint.mdAndUp" text :color="textColor">
+                <v-icon left>
+                  favorite
+                </v-icon>Add to Library
               </v-btn>
             </template>
             <template v-else>
@@ -83,6 +88,11 @@
             </template>
           </div>
           <div class="bar__actions bar__actions--overflow">
+            <v-btn v-if="$vuetify.breakpoint.smAndDown" text :color="textColor">
+              <v-icon>
+                favorite
+              </v-icon>
+            </v-btn>
             <v-btn v-if="track && track.lyrics" icon :color="textColor" @click="print">
               <v-icon>print</v-icon>
             </v-btn>
