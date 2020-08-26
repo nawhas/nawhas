@@ -9,9 +9,9 @@ Route::prefix('v1')->group(function () {
     | Library Routes
     |--------------------------------------------------------------------------
     */
-    Route::prefix('me')->group(function () {
+    Route::prefix('me')->middleware('auth:sanctum')->group(function () {
         Route::get('/tracks', [Controllers\LibraryController::class, 'tracks']);
-        Route::put('/tracks', [Controllers\LibraryController::class, 'addTrack']);
-        Route::delete('/tracks', [Controllers\LibraryController::class, 'removeTrack']);
+        Route::put('/tracks', [Controllers\LibraryController::class, 'saveTracks']);
+        Route::delete('/tracks', [Controllers\LibraryController::class, 'removeSavedTracks']);
     });
 });

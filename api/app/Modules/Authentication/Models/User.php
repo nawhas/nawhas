@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Modules\Authentication\Models;
 
 use App\Modules\Authentication\Enum\Role;
+use App\Modules\Library\Models\Track;
 use App\Modules\Authentication\Events\{UserEmailChanged,
     UserNameChanged,
     UserNicknameChanged,
@@ -120,5 +121,10 @@ class User extends Authenticatable implements TimestampedEntity
         $hash = md5(strtolower(trim($this->email)));
 
         return "https://www.gravatar.com/avatar/{$hash}?s={$size}";
+    }
+
+    public function savedTracks()
+    {
+        return $this->morphedByMany(Track::class, 'saveable');
     }
 }
