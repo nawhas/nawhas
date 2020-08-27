@@ -41,14 +41,14 @@ export class LibraryApi {
     usePagination(params, options.pagination);
     useIncludes(params, options.include);
 
-    return await this.axios.$get<TracksIndexResponse>('/me/tracks', { params });
+    return await this.axios.$get<TracksIndexResponse>('/v1/me/tracks', { params });
   }
 
   async saveTrack(payload: TracksPayload): Promise<void> {
-    await this.axios.$put('/me/tracks', payload);
+    await this.axios.$put('/v1/me/tracks', payload);
   }
 
   async removeTrack(payload: TracksPayload): Promise<void> {
-    await this.axios.$delete('/me/tracks', { data: payload });
+    await this.axios.$delete('/v1/me/tracks', { data: payload });
   }
 }
