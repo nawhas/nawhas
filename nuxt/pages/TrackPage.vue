@@ -88,7 +88,12 @@
             </template>
           </div>
           <div class="bar__actions bar__actions--overflow">
-            <v-btn v-if="$vuetify.breakpoint.smAndDown" text :color="textColor">
+            <v-btn
+              v-if="$vuetify.breakpoint.smAndDown"
+              text
+              :color="textColor"
+              @click="onSaveTrack"
+            >
               <v-icon>
                 favorite
               </v-icon>
@@ -180,6 +185,7 @@ import { Album, getAlbumArtwork, getAlbumUri } from '@/entities/album';
 import { TrackIncludes } from '@/api/tracks';
 import { MetaInfo } from 'vue-meta';
 import { generateMeta } from '@/utils/meta';
+import { saevTrack } from '@/utils/library';
 import LazyImage from '@/components/utils/LazyImage.vue';
 
 interface Data {
@@ -359,6 +365,12 @@ export default Vue.extend({
       const { id } = this.$store.state.player.queue.slice(-1)[0];
       this.$store.commit('player/REMOVE_TRACK', { id });
       this.addedToQueueSnackbar = false;
+    },
+
+    onSaveTrack() {
+      if (this.track) {
+        saevTrack(this, { ids: [this.track.id] });
+      }
     },
   },
 
