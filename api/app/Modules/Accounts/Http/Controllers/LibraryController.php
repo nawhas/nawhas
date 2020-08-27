@@ -26,6 +26,14 @@ class LibraryController extends Controller
         return $this->respondWithPaginator($tracks, new TrackTransformer());
     }
 
+    public function getTrackIds()
+    {
+        $tracks = $this->getUser()->savedTracks()->get(['saveable_id'])->map(function ($result) {
+            return $result->saveable_id;
+        });
+        return $this->respondWithArray($tracks->all());
+    }
+
     public function saveTracks(SaveTracksRequest $request): Response
     {
         $this->prepareIds($request->get('ids'))

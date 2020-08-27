@@ -11,6 +11,7 @@ Route::prefix('v1')->group(function () {
     */
     Route::prefix('me')->middleware('auth:sanctum')->group(function () {
         Route::get('/tracks', [Controllers\LibraryController::class, 'tracks']);
+        Route::get('/tracks/ids', [Controllers\LibraryController::class, 'getTrackIds']);
         Route::put('/tracks', [Controllers\LibraryController::class, 'saveTracks']);
         Route::delete('/tracks', [Controllers\LibraryController::class, 'removeSavedTracks']);
     });
