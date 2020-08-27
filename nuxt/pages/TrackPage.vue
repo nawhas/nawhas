@@ -77,7 +77,12 @@
                   done
                 </v-icon><span v-if="$vuetify.breakpoint.mdAndUp">Added to Queue</span>
               </v-btn>
-              <v-btn v-if="$vuetify.breakpoint.mdAndUp" text :color="textColor">
+              <v-btn
+                v-if="$vuetify.breakpoint.mdAndUp"
+                text
+                :color="textColor"
+                @click="onSaveTrack"
+              >
                 <v-icon left>
                   favorite
                 </v-icon>Add to Library
