@@ -11,7 +11,7 @@ const state = (): libraryState => ({
 
 const mutations: MutationTree<libraryState> = {
   SET_TRACKS(state, data) {
-    state.tracks = data.data;
+    state.tracks = data;
   },
 };
 
