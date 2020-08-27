@@ -138,6 +138,7 @@ export default Vue.extend({
       this.$store.dispatch('auth/check').catch(() => null),
       this.$store.dispatch('features/fetch').catch(() => null),
     ]);
+    await this.$store.dispatch('library/getTracks').catch(() => null);
   },
 
   data: () => ({
