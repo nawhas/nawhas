@@ -18,6 +18,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Laravel\Scout\Searchable;
+use OwenIt\Auditing\Auditable;
+use OwenIt\Auditing\Contracts\Auditable as AuditableModel;
 use Ramsey\Uuid\Uuid;
 use Spatie\Sluggable\HasSlug;
 use Spatie\Sluggable\SlugOptions;
@@ -49,7 +51,7 @@ use Spatie\Sluggable\SlugOptions;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Library\Models\Track popularWeek()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Library\Models\Track popularYear()
  */
-class Track extends Model implements TimestampedEntity
+class Track extends Model implements TimestampedEntity, AuditableModel
 {
     use HasSlug;
     use HasTimestamps;
@@ -57,6 +59,7 @@ class Track extends Model implements TimestampedEntity
     use UsesDataConnection;
     use Visitable;
     use Searchable;
+    use Auditable;
 
     protected $guarded = [];
 
@@ -179,6 +182,18 @@ class Track extends Model implements TimestampedEntity
                     $this->slug
                 ),
             ],
+        ];
+    }
+
+    /**
+     * For auditing
+     */
+    public function generateTags(): array
+    {
+        return [
+            "reciter:{$this->reciter_id}",
+            "album:{$this->album_id}",
+            "track:{$this->id}",
         ];
     }
 }

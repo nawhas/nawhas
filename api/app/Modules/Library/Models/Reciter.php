@@ -10,6 +10,8 @@ use App\Modules\Core\Models\HasUuid;
 use App\Modules\Core\Models\UsesDataConnection;
 use Illuminate\Support\Facades\Storage;
 use Laravel\Scout\Searchable;
+use OwenIt\Auditing\Auditable;
+use OwenIt\Auditing\Contracts\Auditable as AuditableModel;
 use App\Modules\Library\Events\Reciters\{ReciterAvatarChanged,
     ReciterCreated,
     ReciterDescriptionChanged,
@@ -46,7 +48,7 @@ use Spatie\Sluggable\{HasSlug, SlugOptions};
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Library\Models\Reciter popularWeek()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Library\Models\Reciter popularYear()
  */
-class Reciter extends Model implements TimestampedEntity
+class Reciter extends Model implements TimestampedEntity, AuditableModel
 {
     use HasSlug;
     use HasTimestamps;
@@ -54,6 +56,7 @@ class Reciter extends Model implements TimestampedEntity
     use UsesDataConnection;
     use Visitable;
     use Searchable;
+    use Auditable;
 
     protected $guarded = [];
 
@@ -164,5 +167,15 @@ class Reciter extends Model implements TimestampedEntity
     {
         $this->albums->each(fn (Album $album) => $album->deleteAlbum());
         $this->delete();
+    }
+
+    /**
+     * For auditing
+     */
+    public function generateTags(): array
+    {
+        return [
+            "reciter:{$this->id}",
+        ];
     }
 }

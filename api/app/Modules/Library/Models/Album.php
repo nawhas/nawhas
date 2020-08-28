@@ -15,6 +15,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Storage;
 use Laravel\Scout\Searchable;
+use OwenIt\Auditing\Auditable;
+use OwenIt\Auditing\Contracts\Auditable as AuditableModel;
 use Ramsey\Uuid\Uuid;
 
 /**
@@ -35,12 +37,13 @@ use Ramsey\Uuid\Uuid;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Library\Models\Album query()
  * @mixin \Eloquent
  */
-class Album extends Model implements TimestampedEntity
+class Album extends Model implements TimestampedEntity, AuditableModel
 {
     use HasTimestamps;
     use HasUuid;
     use UsesDataConnection;
     use Searchable;
+    use Auditable;
 
     protected $guarded = [];
 
@@ -149,5 +152,16 @@ class Album extends Model implements TimestampedEntity
     {
         $this->tracks->each(fn (Track $track) => $track->delete());
         $this->delete();
+    }
+
+    /**
+     * For auditing
+     */
+    public function generateTags(): array
+    {
+        return [
+            "reciter:{$this->reciter_id}",
+            "album:{$this->id}",
+        ];
     }
 }

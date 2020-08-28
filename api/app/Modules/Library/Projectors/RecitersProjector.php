@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Library\Projectors;
 
+use OwenIt\Auditing\Models\Audit;
 use App\Modules\Library\Events\Reciters\{
     ReciterAvatarChanged,
     ReciterCreated,
@@ -57,5 +58,6 @@ class RecitersProjector extends Projector
     public function resetState(): void
     {
         Reciter::truncate();
+        Audit::query()->where('auditable_type', Reciter::class)->delete();
     }
 }

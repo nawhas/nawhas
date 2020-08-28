@@ -2,8 +2,9 @@
 
 namespace App\Providers;
 
+use App\Modules\Core\Events\Guard as EventsGuard;
+use Auth;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
-use Laravel\Sanctum\Sanctum;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -24,5 +25,9 @@ class AuthServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->registerPolicies();
+
+        Auth::extend('events', function () {
+            return new EventsGuard();
+        });
     }
 }

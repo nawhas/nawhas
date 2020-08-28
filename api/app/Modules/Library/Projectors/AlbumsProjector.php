@@ -12,6 +12,7 @@ use App\Modules\Library\Events\Albums\{
     AlbumYearChanged
 };
 use App\Modules\Library\Models\{Album, Reciter};
+use OwenIt\Auditing\Models\Audit;
 use Spatie\EventSourcing\EventHandlers\Projectors\Projector;
 
 class AlbumsProjector extends Projector
@@ -59,5 +60,6 @@ class AlbumsProjector extends Projector
     public function resetState(): void
     {
         Album::truncate();
+        Audit::query()->where('auditable_type', Album::class)->delete();
     }
 }

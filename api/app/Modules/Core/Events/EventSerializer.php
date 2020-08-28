@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Modules\Core\Events;
 
+use App\Modules\Authentication\Models\User;
 use App\Modules\Library\Events\Tracks\TrackLyricsChanged;
+use Auth;
 use Spatie\EventSourcing\EventSerializers\EventSerializer as SpatieEventSerializer;
 use Spatie\EventSourcing\EventSerializers\JsonEventSerializer;
 use Spatie\EventSourcing\StoredEvents\ShouldBeStored;
@@ -47,6 +49,10 @@ class EventSerializer implements SpatieEventSerializer
 
             if ($event instanceof UserAwareEvent) {
                 $event->setUserId($payload['userId']);
+
+                Auth::guard('events')->setUser(
+                    $payload['userId'] ? User::retrieve($payload['userId']) : null
+                );
             }
 
             return $event;

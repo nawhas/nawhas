@@ -46,6 +46,11 @@ return [
             'provider' => 'users',
             'hash' => false,
         ],
+
+        'events' => [
+            'driver' => 'events',
+            'provider' => 'users',
+        ],
     ],
 
     /*

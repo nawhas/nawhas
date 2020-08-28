@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Modules\Library\Projectors;
 
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use OwenIt\Auditing\Auditable;
+use OwenIt\Auditing\Models\Audit;
 use App\Modules\Library\Events\Tracks\{
     TrackAudioChanged,
     TrackCreated,
@@ -34,12 +37,6 @@ class TracksProjector extends Projector
         $track->saveOrFail();
     }
 
-    public function onTrackDeleted(TrackDeleted $event): void
-    {
-        $track = Track::retrieve($event->id);
-        $track->delete();
-    }
-
     public function onTrackLyricsChanged(TrackLyricsChanged $event): void
     {
         $track = Track::retrieve($event->id);
@@ -54,8 +51,19 @@ class TracksProjector extends Projector
         $track->saveOrFail();
     }
 
+    public function onTrackDeleted(TrackDeleted $event): void
+    {
+        try {
+            $track = Track::retrieve($event->id);
+            $track->delete();
+        } catch (ModelNotFoundException $e) {
+            //
+        }
+    }
+
     public function resetState(): void
     {
         Track::truncate();
+        Audit::query()->where('auditable_type', Track::class)->delete();
     }
 }
