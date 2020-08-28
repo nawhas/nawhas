@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Modules\Library\Entities;
+namespace App\Modules\Library\Data;
 
-use App\Modules\Library\Entities\Album as AlbumEntity;
-use App\Modules\Library\Entities\Track as TrackEntity;
+use App\Modules\Library\Data\Album as AlbumEntity;
+use App\Modules\Library\Data\Track as TrackEntity;
 use App\Modules\Library\Events\Albums\AlbumArtworkChanged;
 use App\Modules\Library\Events\Albums\AlbumCreated;
 use App\Modules\Library\Events\Albums\AlbumDeleted;
@@ -19,9 +19,7 @@ use App\Modules\Library\Events\Tracks\TrackCreated;
 use App\Modules\Library\Events\Tracks\TrackDeleted;
 use App\Modules\Library\Events\Tracks\TrackLyricsChanged;
 use App\Modules\Library\Events\Tracks\TrackTitleChanged;
-use App\Modules\Library\Models\Album as AlbumModel;
 use App\Modules\Library\Models\Reciter as ReciterModel;
-use App\Modules\Library\Models\Track as TrackModel;
 use App\Modules\Lyrics\Documents\Factory;
 use App\Modules\Lyrics\Documents\Format;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -32,7 +30,6 @@ class Reciter
 {
     public string $id;
     public string $name;
-    // public string $slug;
     public ?string $description;
     public ?string $avatar;
 
@@ -61,7 +58,7 @@ class Reciter
         );
 
         collect($attributes['albums'])->each(function (array $attributes) use ($reciter) {
-            $album = new Album(
+            $album = new AlbumEntity(
                 $attributes['id'],
                 $attributes['title'],
                 $attributes['year'],
@@ -77,7 +74,7 @@ class Reciter
                     $lyrics = Factory::create($lyrics['content'], new Format($lyrics['format']));
                 }
 
-                $track = new Track(
+                $track = new TrackEntity(
                     $attributes['id'],
                     $attributes['title'],
                     $lyrics,
@@ -96,16 +93,16 @@ class Reciter
         return self::fromArray($model->toArray());
     }
 
-    public function addAlbum(Album $album): self
+    public function addAlbum(AlbumEntity $album): self
     {
         $this->albums->put($album->id, $album);
 
         return $this;
     }
 
-    public function getAlbum(string $id): Album
+    public function getAlbum(string $id): AlbumEntity
     {
-        /** @var Album $album */
+        /** @var AlbumEntity $album */
         $album = $this->albums->get($id);
 
         if (!$album) {
@@ -115,14 +112,14 @@ class Reciter
         return $album;
     }
 
-    public function getAlbumForTrack(string $id, ?string $albumId = null): Album
+    public function getAlbumForTrack(string $id, ?string $albumId = null): AlbumEntity
     {
         if ($albumId !== null) {
             return $this->getAlbum($albumId);
         }
 
-        /** @var Album|null $album */
-        $album = $this->albums->first(fn (Album $a) => $a->tracks->has($id));
+        /** @var AlbumEntity|null $album */
+        $album = $this->albums->first(fn (AlbumEntity $a) => $a->tracks->has($id));
 
         if (!$album) {
             throw new ModelNotFoundException("Track#{$id} not found.");
@@ -131,7 +128,7 @@ class Reciter
         return $album;
     }
 
-    public function getTrack(string $id, ?string $albumId = null): Track
+    public function getTrack(string $id, ?string $albumId = null): TrackEntity
     {
         return $this->getAlbumForTrack($id, $albumId)->getTrack($id);
     }
@@ -287,13 +284,13 @@ class Reciter
             'name'  => $this->name,
             'description' => $this->description,
             'avatar' => $this->avatar,
-            'albums' => $this->albums->map(function (Album $album) {
+            'albums' => $this->albums->map(function (AlbumEntity $album) {
                 return [
                     'id' => $album->id,
                     'title' => $album->title,
                     'year' => $album->year,
                     'artwork' => $album->artwork,
-                    'tracks' => $album->tracks->map(function (Track $track) {
+                    'tracks' => $album->tracks->map(function (TrackEntity $track) {
                         return [
                             'id' => $track->id,
                             'title' => $track->title,

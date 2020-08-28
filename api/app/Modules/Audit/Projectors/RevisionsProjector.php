@@ -8,11 +8,11 @@ use App\Modules\Audit\Events\RevisionableEvent;
 use App\Modules\Audit\Jobs\WriteRevision;
 use App\Modules\Audit\Models\Revision;
 use App\Modules\Audit\Support\DiscoverRevisionableEvents;
-use App\Modules\Library\Entities\Reciter;
+use App\Modules\Library\Data\Reciter;
 use App\Modules\Library\Events\Reciters\ReciterCreated;
+use Illuminate\Support\Collection;
 use Spatie\EventSourcing\EventHandlers\Projectors\Projector;
 use Spatie\EventSourcing\StoredEvents\StoredEvent;
-use Illuminate\Support\Collection;
 
 class RevisionsProjector extends Projector
 {

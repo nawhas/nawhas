@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Modules\Library\Repositories;
 
-use App\Modules\Library\Entities\Album as AlbumEntity;
-use App\Modules\Library\Entities\Reciter as ReciterEntity;
-use App\Modules\Library\Entities\Track as TrackEntity;
+use App\Modules\Library\Data\Album as AlbumEntity;
+use App\Modules\Library\Data\Reciter as ReciterEntity;
+use App\Modules\Library\Data\Track as TrackEntity;
 use App\Modules\Library\Models\Album as AlbumModel;
 use App\Modules\Library\Models\Reciter as ReciterModel;
 use App\Modules\Library\Models\Track as TrackModel;

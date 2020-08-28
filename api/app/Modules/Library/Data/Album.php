@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Modules\Library\Entities;
+namespace App\Modules\Library\Data;
 
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Collection;

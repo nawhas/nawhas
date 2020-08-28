@@ -4,7 +4,7 @@ namespace App\Modules\Audit\Jobs;
 
 use App\Modules\Audit\Events\RevisionableEvent;
 use App\Modules\Audit\Models\Revision;
-use App\Modules\Library\Entities\Reciter;
+use App\Modules\Library\Data\Reciter;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -41,7 +41,9 @@ class WriteRevision implements ShouldQueue
         $last = $this->getLastRevision($this->storedEvent->aggregate_uuid);
 
         if (!$last) {
-            throw new ModelNotFoundException("No initial revision found for aggregate {$storedEvent->aggregate_uuid}");
+            throw new ModelNotFoundException(
+                "No initial revision found for aggregate {$this->storedEvent->aggregate_uuid}"
+            );
         }
 
         $reciter = Reciter::fromArray($last->new_values);
@@ -59,6 +61,9 @@ class WriteRevision implements ShouldQueue
 
     private function getLastRevision(string $aggregateId): ?Revision
     {
-        return Revision::query()->where('aggregate_id', $aggregateId)->orderByDesc('version')->first();
+        return Revision::query()
+            ->where('aggregate_id', $aggregateId)
+            ->orderByDesc('version')
+            ->first(['new_values', 'version']);
     }
 }

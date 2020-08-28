@@ -49,11 +49,6 @@ class Revision extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function entity(): MorphTo
-    {
-        return $this->morphTo('entity');
-    }
-
     public function hasDiff(): bool
     {
         if ($this->change_type === ChangeType::MODIFIED) {

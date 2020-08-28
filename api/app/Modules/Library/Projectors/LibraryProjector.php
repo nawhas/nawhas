@@ -4,31 +4,27 @@ declare(strict_types=1);
 
 namespace App\Modules\Library\Projectors;
 
-use App\Modules\Library\Entities\Album as AlbumEntity;
+use App\Modules\Library\Data\Reciter as ReciterEntity;
 use App\Modules\Library\Events\Albums\AlbumArtworkChanged;
 use App\Modules\Library\Events\Albums\AlbumCreated;
 use App\Modules\Library\Events\Albums\AlbumDeleted;
 use App\Modules\Library\Events\Albums\AlbumTitleChanged;
 use App\Modules\Library\Events\Albums\AlbumYearChanged;
+use App\Modules\Library\Events\Reciters\{ReciterAvatarChanged,
+    ReciterCreated,
+    ReciterDeleted,
+    ReciterDescriptionChanged,
+    ReciterNameChanged};
 use App\Modules\Library\Events\Tracks\TrackAudioChanged;
 use App\Modules\Library\Events\Tracks\TrackCreated;
 use App\Modules\Library\Events\Tracks\TrackDeleted;
 use App\Modules\Library\Events\Tracks\TrackLyricsChanged;
 use App\Modules\Library\Events\Tracks\TrackTitleChanged;
 use App\Modules\Library\Models\Album as AlbumModel;
+use App\Modules\Library\Models\Reciter as ReciterModel;
 use App\Modules\Library\Models\Track as TrackModel;
-use App\Modules\Library\Entities\Track as TrackEntity;
 use App\Modules\Library\Repositories\LibraryAggregateRepository;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use App\Modules\Library\Events\Reciters\{
-    ReciterAvatarChanged,
-    ReciterCreated,
-    ReciterDeleted,
-    ReciterDescriptionChanged,
-    ReciterNameChanged
-};
-use App\Modules\Library\Models\Reciter as ReciterModel;
-use App\Modules\Library\Entities\Reciter as ReciterEntity;
 use Spatie\EventSourcing\EventHandlers\Projectors\Projector;
 
 class LibraryProjector extends Projector
