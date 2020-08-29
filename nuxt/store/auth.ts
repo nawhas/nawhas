@@ -61,9 +61,10 @@ const actions: ActionTree<AuthState, RootState> = {
     context.dispatch('features/fetch', null, { root: true });
     context.dispatch('library/getTrackIds', null, { root: true });
   },
-  async logout({ commit }) {
-    commit('LOGOUT');
+  async logout(context) {
+    context.commit('LOGOUT');
     await this.$api.auth.logout();
+    context.dispatch('library/getTrackIds', null, { root: true });
   },
   async check({ commit }: Context) {
     try {

@@ -31,7 +31,9 @@ const actions: ActionTree<libraryState, RootState> = {
     try {
       const response = await this.$api.library.trackIds();
       commit('SET_TRACK_IDS', response);
-    } catch {}
+    } catch {
+      commit('SET_TRACK_IDS', []);
+    }
   },
 
   async saveTrack(context, payload: TracksPayload) {
