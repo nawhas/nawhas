@@ -33,12 +33,20 @@
     >
       <v-container class="app-bar__container">
         <div class="app-bar__left">
-          <v-app-bar-nav-icon
-            v-if="$vuetify.breakpoint.mdAndDown"
-            @click.native="drawer = !drawer"
-          >
-            <v-icon>menu</v-icon>
-          </v-app-bar-nav-icon>
+          <template v-if="$vuetify.breakpoint.mdAndDown">
+            <v-app-bar-nav-icon
+              v-if="$route.path !== '/'"
+              @click.native="$router.back()"
+            >
+              <v-icon>arrow_back</v-icon>
+            </v-app-bar-nav-icon>
+            <v-app-bar-nav-icon
+              v-else
+              @click.native="drawer = !drawer"
+            >
+              <v-icon>menu</v-icon>
+            </v-app-bar-nav-icon>
+          </template>
           <v-toolbar-title class="nav__title">
             <nuxt-link to="/" tag="div" class="masthead__logo">
               <logo-icon class="masthead__logo__icon" />
