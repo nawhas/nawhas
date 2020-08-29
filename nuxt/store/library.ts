@@ -1,5 +1,6 @@
 import { ActionTree, MutationTree, GetterTree } from 'vuex';
 import { RootState } from '@/store/index';
+import { TracksPayload } from '@/api/library';
 
 interface libraryState {
   tracks: Array<any>;
@@ -33,7 +34,7 @@ const actions: ActionTree<libraryState, RootState> = {
     } catch {}
   },
 
-  async saveTrack(context, payload) {
+  async saveTrack(context, payload: TracksPayload) {
     // @ts-ignore
     if (context.rootState.auth.user) {
       await this.$api.library.saveTrack(payload);
@@ -41,6 +42,11 @@ const actions: ActionTree<libraryState, RootState> = {
     } else {
       context.commit('auth/PROMPT_USER', { prompt: 'favourite' }, { root: true });
     }
+  },
+
+  async removeTrack(_, payload: TracksPayload) {
+    await this.$api.library.removeTrack(payload);
+    this.dispatch('library/getTrackIds');
   },
 };
 

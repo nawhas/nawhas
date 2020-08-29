@@ -45,15 +45,21 @@ const mutations: MutationTree<AuthState> = {
 };
 
 const actions: ActionTree<AuthState, RootState> = {
-  async login({ commit }, payload: LoginPayload) {
+  async login(context, payload: LoginPayload) {
     const user = await this.$api.auth.login(payload);
 
-    commit('LOGIN', user);
+    context.commit('LOGIN', user);
+
+    context.dispatch('features/fetch', null, { root: true });
+    context.dispatch('library/getTrackIds', null, { root: true });
   },
-  async register({ commit }, payload: RegisterPayload) {
+  async register(context, payload: RegisterPayload) {
     const user = await this.$api.auth.register(payload);
 
-    commit('LOGIN', user);
+    context.commit('LOGIN', user);
+
+    context.dispatch('features/fetch', null, { root: true });
+    context.dispatch('library/getTrackIds', null, { root: true });
   },
   async logout({ commit }) {
     commit('LOGOUT');
