@@ -70,7 +70,7 @@ class Revision extends Model
         ?DateTimeInterface $timestamp = null
     ): self {
         $revision = new self();
-        $revision->entity_type = $snapshot->getType();
+        $revision->entity_type = $snapshot->getType()->getValue();
         $revision->entity_id = $snapshot->getId();
         $revision->version = 1;
         $revision->user_id = $userId;

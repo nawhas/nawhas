@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Audit\Snapshots;
 
+use App\Modules\Audit\Enum\EntityType;
 use App\Modules\Audit\Models\Revision;
 use App\Modules\Lyrics\Documents\{Document, Factory, Format};
 
@@ -62,9 +63,9 @@ class TrackSnapshot implements Snapshot
         ];
     }
 
-    public function getType(): string
+    public function getType(): EntityType
     {
-        return 'track';
+        return EntityType::TRACK();
     }
 
     public function getId(): string

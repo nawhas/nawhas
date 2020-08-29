@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Audit\Snapshots;
 
+use App\Modules\Audit\Enum\EntityType;
 use App\Modules\Audit\Models\Revision;
 use Illuminate\Support\Collection;
 
@@ -65,9 +66,9 @@ class AlbumSnapshot implements Snapshot
         ];
     }
 
-    public function getType(): string
+    public function getType(): EntityType
     {
-        return 'album';
+        return EntityType::ALBUM();
     }
 
     public function getId(): string

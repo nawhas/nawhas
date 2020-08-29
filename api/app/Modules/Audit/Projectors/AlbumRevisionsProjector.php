@@ -4,28 +4,17 @@ declare(strict_types=1);
 
 namespace App\Modules\Audit\Projectors;
 
-use App\Modules\Audit\Snapshots\AlbumSnapshot;
-use App\Modules\Audit\Snapshots\TrackSnapshot;
-use App\Modules\Library\Events\Albums\AlbumArtworkChanged;
-use App\Modules\Library\Events\Albums\AlbumCreated;
-use App\Modules\Library\Events\Albums\AlbumDeleted;
-use App\Modules\Library\Events\Albums\AlbumTitleChanged;
-use App\Modules\Library\Events\Albums\AlbumYearChanged;
-use App\Modules\Library\Events\Albums\AlbumEvent;
-use App\Modules\Library\Events\Tracks\TrackCreated;
-use App\Modules\Library\Events\Tracks\TrackDeleted;
-use App\Modules\Library\Models\Album;
 use App\Modules\Audit\Enum\{ChangeType, EntityType};
 use App\Modules\Audit\Exceptions\RevisionNotFoundException;
 use App\Modules\Audit\Models\Revision;
-use App\Modules\Audit\Snapshots\ReciterSnapshot;
-use App\Modules\Library\Events\Reciters\{
-    ReciterAvatarChanged,
-    ReciterCreated,
-    ReciterDeleted,
-    ReciterDescriptionChanged,
-    ReciterNameChanged
-};
+use App\Modules\Audit\Snapshots\{AlbumSnapshot, ReciterSnapshot, TrackSnapshot};
+use App\Modules\Library\Events\Albums\{AlbumArtworkChanged,
+    AlbumCreated,
+    AlbumDeleted,
+    AlbumEvent,
+    AlbumTitleChanged,
+    AlbumYearChanged};
+use App\Modules\Library\Events\Tracks\{TrackCreated, TrackDeleted};
 use Carbon\Carbon;
 use Spatie\EventSourcing\EventHandlers\Projectors\Projector;
 use Spatie\EventSourcing\StoredEvents\StoredEvent;
