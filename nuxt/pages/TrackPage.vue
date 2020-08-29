@@ -80,12 +80,14 @@
               <v-btn
                 v-if="$vuetify.breakpoint.mdAndUp"
                 text
-                :color="textColor"
+                :color="savedTextColor"
                 @click="onSaveTrack"
               >
                 <v-icon left>
                   favorite
-                </v-icon>Add to Library
+                </v-icon>
+                <span v-if="!isTrackSaved">Add to Library</span>
+                <span v-else>Remove from Library</span>
               </v-btn>
             </template>
             <template v-else>
@@ -96,7 +98,7 @@
             <v-btn
               v-if="$vuetify.breakpoint.smAndDown"
               text
-              :color="textColor"
+              :color="savedTextColor"
               @click="onSaveTrack"
             >
               <v-icon>
@@ -304,8 +306,11 @@ export default Vue.extend({
     isDark(): boolean {
       return this.$vuetify.theme.dark;
     },
-    isTrackSaved(): any {
+    isTrackSaved(): boolean {
       return this.$store.getters['library/isTrackSaved'](this.track?.id);
+    },
+    savedTextColor(): string {
+      return (this.isTrackSaved) ? '#FE5B00' : this.textColor;
     },
   },
 
