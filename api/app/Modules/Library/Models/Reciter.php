@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Modules\Library\Models;
 
 use App\Modules\Audit\Models\HasRevisions;
-use App\Modules\Audit\Models\Revisionable;
 use App\Modules\Core\Contracts\TimestampedEntity;
 use App\Modules\Core\Models\HasTimestamps;
 use App\Modules\Core\Models\HasUuid;
@@ -50,7 +49,7 @@ use Spatie\Sluggable\{HasSlug, SlugOptions};
  * @method static \Illuminate\Database\Eloquent\Builder|Reciter query()
  * @mixin \Eloquent
  */
-class Reciter extends Model implements TimestampedEntity, Revisionable
+class Reciter extends Model implements TimestampedEntity
 {
     use HasSlug;
     use HasTimestamps;

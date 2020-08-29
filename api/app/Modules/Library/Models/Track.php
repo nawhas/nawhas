@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Modules\Library\Models;
 
 use App\Modules\Audit\Models\HasRevisions;
-use App\Modules\Audit\Models\Revisionable;
 use App\Modules\Core\Contracts\TimestampedEntity;
 use App\Modules\Core\Models\HasTimestamps;
 use App\Modules\Core\Models\HasUuid;
@@ -53,7 +52,7 @@ use Spatie\Sluggable\SlugOptions;
  * @method static \Illuminate\Database\Eloquent\Builder|Track query()
  * @mixin \Eloquent
  */
-class Track extends Model implements TimestampedEntity, Revisionable
+class Track extends Model implements TimestampedEntity
 {
     use HasSlug;
     use HasTimestamps;
