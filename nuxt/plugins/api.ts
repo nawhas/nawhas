@@ -15,12 +15,12 @@ export interface InjectedApiPlugin {
   library: LibraryApi
 }
 
-const ApiPlugin: Plugin = ({ $axios, req }, inject) => {
+const ApiPlugin: Plugin = ({ $axios }, inject) => {
   const api: InjectedApiPlugin = {
     reciters: new RecitersApi($axios),
     albums: new AlbumsApi($axios),
     tracks: new TracksApi($axios),
-    auth: new AuthApi($axios, req),
+    auth: new AuthApi($axios),
     features: new FeaturesApi($axios),
     library: new LibraryApi($axios),
   };
