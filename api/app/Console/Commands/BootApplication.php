@@ -26,7 +26,6 @@ class BootApplication extends Command
                 'config:cache',
                 'route:cache',
                 'event-sourcing:cache-event-handlers',
-                'audit:cache-events',
                 'horizon:publish',
                 'telescope:publish',
             ]),
