@@ -27,8 +27,10 @@ const actions: ActionTree<libraryState, RootState> = {
   },
 
   async getTrackIds({ commit }) {
-    const response = await this.$api.library.trackIds();
-    commit('SET_TRACK_IDS', response);
+    try {
+      const response = await this.$api.library.trackIds();
+      commit('SET_TRACK_IDS', response);
+    } catch {}
   },
 
   async saveTrack(context, payload) {
@@ -43,9 +45,7 @@ const actions: ActionTree<libraryState, RootState> = {
 };
 
 const getters: GetterTree<libraryState, RootState> = {
-  isTrackSaved: (state) => (trackId) => {
-    return state.trackIds.find((track) => track === trackId);
-  },
+  isTrackSaved: (state) => (trackId) => state.trackIds.includes(trackId),
 };
 
 export default {

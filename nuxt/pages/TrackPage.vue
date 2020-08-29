@@ -304,6 +304,9 @@ export default Vue.extend({
     isDark(): boolean {
       return this.$vuetify.theme.dark;
     },
+    isTrackSaved(): any {
+      return this.$store.getters['library/isTrackSaved'](this.track?.id);
+    },
   },
 
   mounted() {

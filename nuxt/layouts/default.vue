@@ -137,8 +137,8 @@ export default Vue.extend({
     await Promise.all([
       this.$store.dispatch('auth/check').catch(() => null),
       this.$store.dispatch('features/fetch').catch(() => null),
+      this.$store.dispatch('library/getTrackIds'),
     ]);
-    await this.$store.dispatch('library/getTrackIds').catch(() => null);
   },
 
   data: () => ({
@@ -165,6 +165,8 @@ export default Vue.extend({
 
   mounted() {
     applyTheme(this.$store.state.preferences.theme, this.$vuetify, this.$storage);
+    // @ts-ignore
+    window.http = this.$api.library;
   },
 });
 </script>

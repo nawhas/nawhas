@@ -181,7 +181,7 @@ import { Feature } from '@/entities/feature';
 export default class UserMenu extends Vue {
   private readonly Role = Role;
   private open = false;
-  private showRegisterDialog = false;
+  private showLoginDialog = false;
   private showWhatsNewDialog = false;
   private showBugReportDialog = false;
 
@@ -189,12 +189,11 @@ export default class UserMenu extends Vue {
     return this.$store.getters['auth/user'];
   }
 
-  // Create getter to listen to the prompt
-  get showLoginDialog() {
+  get showRegisterDialog() {
     return this.$store.state.auth.prompt;
   }
 
-  set showLoginDialog(value) {
+  set showRegisterDialog(value) {
     if (!value) {
       this.$store.commit('auth/REMOVE_PROMPT');
     } else {
