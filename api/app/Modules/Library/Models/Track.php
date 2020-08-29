@@ -118,6 +118,11 @@ class Track extends Model implements TimestampedEntity
         event(new TrackLyricsChanged($this->id, $document));
     }
 
+    public function getUrlPath(): string
+    {
+        return "{$this->album->getUrlPath()}/tracks/{$this->slug}";
+    }
+
     public function reciter(): BelongsTo
     {
         return $this->belongsTo(Reciter::class);

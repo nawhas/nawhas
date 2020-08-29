@@ -12,6 +12,7 @@ use Carbon\Carbon;
 use DateTimeInterface;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 /**
  * App\Modules\Audit\Models\Revision
@@ -25,6 +26,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string|null $user_id
  * @property int $version
  * @property \Illuminate\Support\Carbon $created_at
+ * @property-read Model|\Eloquent $entity
  * @property-read User|null $user
  * @method static \Illuminate\Database\Eloquent\Builder|Revision newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Revision newQuery()
@@ -49,6 +51,11 @@ class Revision extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function entity(): MorphTo
+    {
+        return $this->morphTo('entity');
     }
 
     public static function getLast(
