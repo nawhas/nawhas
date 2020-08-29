@@ -55,6 +55,17 @@ export default Vue.extend({
       default: null,
     },
   },
+  asyncData({ redirect }) {
+    console.log('404 Not Found: ', this.$route.path);
+
+    return new Promise((resolve) => {
+      // eslint-disable-next-line nuxt/no-timing-in-fetch-data
+      setTimeout(() => {
+        redirect('/');
+        resolve();
+      }, 2000);
+    });
+  },
   data: () => ({
     mdiBinoculars,
   }),
