@@ -8,7 +8,7 @@ use App\Modules\Audit\Enum\{ChangeType, EntityType};
 use App\Modules\Audit\Exceptions\RevisionNotFoundException;
 use App\Modules\Audit\Models\Revision;
 use App\Modules\Audit\Snapshots\TrackSnapshot;
-use App\Modules\Library\Events\Tracks\RevisionableTrackEvent;
+use App\Modules\Library\Events\Tracks\TrackEvent;
 use App\Modules\Library\Events\Tracks\TrackAudioChanged;
 use App\Modules\Library\Events\Tracks\TrackCreated;
 use App\Modules\Library\Events\Tracks\TrackDeleted;
@@ -82,7 +82,7 @@ class TrackRevisionsProjector extends Projector
         Revision::where('entity_type', EntityType::TRACK)->delete();
     }
 
-    private function recordModification(RevisionableTrackEvent $event, StoredEvent $storedEvent, callable $modify): void
+    private function recordModification(TrackEvent $event, StoredEvent $storedEvent, callable $modify): void
     {
         $last = $this->getLastRevision($event->id);
         $snapshot = TrackSnapshot::fromRevision($last);

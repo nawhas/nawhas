@@ -6,7 +6,7 @@ namespace App\Modules\Library\Events\Albums;
 
 use App\Modules\Audit\Enum\ChangeType;
 
-class AlbumYearChanged extends RevisionableAlbumEvent
+class AlbumYearChanged extends AlbumEvent
 {
     public string $year;
 

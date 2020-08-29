@@ -7,7 +7,7 @@ namespace App\Modules\Library\Events\Tracks;
 use App\Modules\Audit\Enum\ChangeType;
 use App\Modules\Library\Events\UserAction;
 
-class TrackAudioChanged extends RevisionableTrackEvent
+class TrackAudioChanged extends TrackEvent
 {
     public ?string $path;
 

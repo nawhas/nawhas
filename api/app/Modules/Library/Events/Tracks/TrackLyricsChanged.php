@@ -11,7 +11,7 @@ use App\Modules\Lyrics\Documents\Factory;
 use App\Modules\Lyrics\Documents\Format;
 use App\Modules\Library\Events\UserAction;
 
-class TrackLyricsChanged extends RevisionableTrackEvent implements SerializableEvent
+class TrackLyricsChanged extends TrackEvent implements SerializableEvent
 {
     public ?Document $document;
 

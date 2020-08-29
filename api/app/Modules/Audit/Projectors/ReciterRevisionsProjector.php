@@ -16,7 +16,7 @@ use App\Modules\Library\Events\Reciters\{
     ReciterDeleted,
     ReciterDescriptionChanged,
     ReciterNameChanged,
-    RevisionableReciterEvent
+    ReciterEvent
 };
 use Carbon\Carbon;
 use Spatie\EventSourcing\EventHandlers\Projectors\Projector;
@@ -128,7 +128,7 @@ class ReciterRevisionsProjector extends Projector
         return $last;
     }
 
-    private function recordModification(RevisionableReciterEvent $event, StoredEvent $storedEvent, callable $modify): void
+    private function recordModification(ReciterEvent $event, StoredEvent $storedEvent, callable $modify): void
     {
         $last = $this->getLastRevision($event->id);
         $snapshot = ReciterSnapshot::fromRevision($last);

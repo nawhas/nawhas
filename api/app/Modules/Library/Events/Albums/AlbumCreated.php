@@ -6,7 +6,7 @@ namespace App\Modules\Library\Events\Albums;
 
 use App\Modules\Audit\Enum\ChangeType;
 
-class AlbumCreated extends RevisionableAlbumEvent
+class AlbumCreated extends AlbumEvent
 {
     public string $reciterId;
     public array $attributes = [];

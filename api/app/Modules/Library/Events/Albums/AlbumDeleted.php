@@ -6,7 +6,7 @@ namespace App\Modules\Library\Events\Albums;
 
 use App\Modules\Audit\Enum\ChangeType;
 
-class AlbumDeleted extends RevisionableAlbumEvent
+class AlbumDeleted extends AlbumEvent
 {
     public function __construct(string $id)
     {

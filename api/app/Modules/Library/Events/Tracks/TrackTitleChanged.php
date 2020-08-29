@@ -4,10 +4,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Library\Events\Tracks;
 
-use App\Modules\Audit\Enum\ChangeType;
-use App\Modules\Audit\Events\RevisionableEvent;
-
-class TrackTitleChanged extends RevisionableTrackEvent implements RevisionableEvent
+class TrackTitleChanged extends TrackEvent
 {
     public string $title;
 
@@ -15,10 +12,5 @@ class TrackTitleChanged extends RevisionableTrackEvent implements RevisionableEv
     {
         $this->id = $id;
         $this->title = $title;
-    }
-
-    public function changeType(): ChangeType
-    {
-        return ChangeType::MODIFIED();
     }
 }

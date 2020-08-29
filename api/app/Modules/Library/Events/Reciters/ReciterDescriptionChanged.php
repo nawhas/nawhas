@@ -6,7 +6,7 @@ namespace App\Modules\Library\Events\Reciters;
 
 use App\Modules\Audit\Enum\ChangeType;
 
-class ReciterDescriptionChanged extends RevisionableReciterEvent
+class ReciterDescriptionChanged extends ReciterEvent
 {
     public ?string $description;
 

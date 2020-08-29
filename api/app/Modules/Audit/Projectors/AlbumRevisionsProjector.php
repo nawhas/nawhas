@@ -11,7 +11,7 @@ use App\Modules\Library\Events\Albums\AlbumCreated;
 use App\Modules\Library\Events\Albums\AlbumDeleted;
 use App\Modules\Library\Events\Albums\AlbumTitleChanged;
 use App\Modules\Library\Events\Albums\AlbumYearChanged;
-use App\Modules\Library\Events\Albums\RevisionableAlbumEvent;
+use App\Modules\Library\Events\Albums\AlbumEvent;
 use App\Modules\Library\Events\Tracks\TrackCreated;
 use App\Modules\Library\Events\Tracks\TrackDeleted;
 use App\Modules\Library\Models\Album;
@@ -126,7 +126,7 @@ class AlbumRevisionsProjector extends Projector
         Revision::where('entity_type', EntityType::ALBUM)->delete();
     }
 
-    private function recordModification(RevisionableAlbumEvent $event, StoredEvent $storedEvent, callable $modify): void
+    private function recordModification(AlbumEvent $event, StoredEvent $storedEvent, callable $modify): void
     {
         $last = $this->getLastRevision($event->id);
         $snapshot = AlbumSnapshot::fromRevision($last);

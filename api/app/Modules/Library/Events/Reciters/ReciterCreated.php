@@ -6,7 +6,7 @@ namespace App\Modules\Library\Events\Reciters;
 
 use App\Modules\Audit\Enum\ChangeType;
 
-class ReciterCreated extends RevisionableReciterEvent
+class ReciterCreated extends ReciterEvent
 {
     public array $attributes = [];
 

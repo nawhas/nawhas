@@ -6,7 +6,7 @@ namespace App\Modules\Library\Events\Tracks;
 
 use App\Modules\Audit\Enum\ChangeType;
 
-class TrackCreated extends RevisionableTrackEvent
+class TrackCreated extends TrackEvent
 {
     public string $albumId;
     public array $attributes = [];

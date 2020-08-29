@@ -6,7 +6,7 @@ namespace App\Modules\Library\Events\Albums;
 
 use App\Modules\Audit\Enum\ChangeType;
 
-class AlbumArtworkChanged extends RevisionableAlbumEvent
+class AlbumArtworkChanged extends AlbumEvent
 {
     public ?string $artwork;
 
