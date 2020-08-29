@@ -3,15 +3,20 @@ import { RootState } from '@/store/index';
 
 interface libraryState {
   tracks: Array<any>;
+  trackIds: Array<string>;
 }
 
 const state = (): libraryState => ({
   tracks: [],
+  trackIds: [],
 });
 
 const mutations: MutationTree<libraryState> = {
-  SET_TRACKS(state, data) {
-    state.tracks = data;
+  SET_TRACKS(state, tracks) {
+    state.tracks = tracks;
+  },
+  SET_TRACK_IDS(state, trackIds) {
+    state.trackIds = trackIds;
   },
 };
 
@@ -21,14 +26,18 @@ const actions: ActionTree<libraryState, RootState> = {
     commit('SET_TRACKS', response.data);
   },
 
+  async getTrackIds({ commit }) {
+    const response = await this.$api.library.trackIds();
+    commit('SET_TRACK_IDS', response);
+  },
+
   async saveTrack(context, payload) {
     // @ts-ignore
     if (context.rootState.auth.user) {
       await this.$api.library.saveTrack(payload);
-      this.dispatch('library/getTracks');
+      this.dispatch('library/getTrackIds');
     } else {
-      // if not then commit a mutation to auth state creating a prompt
-      console.log('user is not logged in');
+      context.commit('auth/PROMPT_USER', { prompt: 'favourite' }, { root: true });
     }
   },
 };
