@@ -52,15 +52,6 @@ class Revision extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function hasDiff(): bool
-    {
-        if ($this->change_type === ChangeType::MODIFIED) {
-            return json_encode($this->old_values) !== json_encode($this->new_values);
-        }
-
-        return true;
-    }
-
     public static function getLast(
         string $entityType,
         string $entityId
