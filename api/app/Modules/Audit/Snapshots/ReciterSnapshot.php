@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Modules\Audit\Snapshots;
 
 use App\Modules\Audit\Enum\EntityType;
-use App\Modules\Audit\Exceptions\RevisionNotFoundException;
 use App\Modules\Audit\Models\Revision;
 use Illuminate\Support\Collection;
 

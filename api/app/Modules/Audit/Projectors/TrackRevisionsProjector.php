@@ -8,10 +8,10 @@ use App\Modules\Audit\Enum\{ChangeType, EntityType};
 use App\Modules\Audit\Exceptions\RevisionNotFoundException;
 use App\Modules\Audit\Models\Revision;
 use App\Modules\Audit\Snapshots\TrackSnapshot;
-use App\Modules\Library\Events\Tracks\{TrackEvent,
-    TrackAudioChanged,
+use App\Modules\Library\Events\Tracks\{TrackAudioChanged,
     TrackCreated,
     TrackDeleted,
+    TrackEvent,
     TrackLyricsChanged,
     TrackTitleChanged};
 use Carbon\Carbon;

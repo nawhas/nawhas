@@ -4,20 +4,18 @@ declare(strict_types=1);
 
 namespace App\Modules\Audit\Projectors;
 
-use App\Modules\Audit\Snapshots\AlbumSnapshot;
-use App\Modules\Library\Events\Albums\{AlbumCreated, AlbumDeleted};
 use App\Modules\Audit\Enum\{ChangeType, EntityType};
 use App\Modules\Audit\Exceptions\RevisionNotFoundException;
 use App\Modules\Audit\Models\Revision;
+use App\Modules\Audit\Snapshots\AlbumSnapshot;
 use App\Modules\Audit\Snapshots\ReciterSnapshot;
-use App\Modules\Library\Events\Reciters\{
-    ReciterAvatarChanged,
+use App\Modules\Library\Events\Albums\{AlbumCreated, AlbumDeleted};
+use App\Modules\Library\Events\Reciters\{ReciterAvatarChanged,
     ReciterCreated,
     ReciterDeleted,
     ReciterDescriptionChanged,
-    ReciterNameChanged,
-    ReciterEvent
-};
+    ReciterEvent,
+    ReciterNameChanged};
 use Carbon\Carbon;
 use Spatie\EventSourcing\EventHandlers\Projectors\Projector;
 use Spatie\EventSourcing\StoredEvents\StoredEvent;

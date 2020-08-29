@@ -6,7 +6,6 @@ namespace App\Modules\Audit;
 
 use Illuminate\Support\Facades\Route as Router;
 use Illuminate\Support\ServiceProvider as CoreServiceProvider;
-use Symfony\Component\Finder\Finder;
 
 class ServiceProvider extends CoreServiceProvider
 {
