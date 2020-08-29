@@ -190,7 +190,6 @@ import { Album, getAlbumArtwork, getAlbumUri } from '@/entities/album';
 import { TrackIncludes } from '@/api/tracks';
 import { MetaInfo } from 'vue-meta';
 import { generateMeta } from '@/utils/meta';
-import { saevTrack } from '@/utils/library';
 import LazyImage from '@/components/utils/LazyImage.vue';
 
 interface Data {
@@ -374,7 +373,9 @@ export default Vue.extend({
 
     onSaveTrack() {
       if (this.track) {
-        saevTrack(this, { ids: [this.track.id] });
+        this.$store.dispatch('library/saveTrack', {
+          ids: [this.track.id],
+        });
       }
     },
   },
