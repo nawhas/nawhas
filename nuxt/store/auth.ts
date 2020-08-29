@@ -4,15 +4,21 @@ import { User, Role } from '@/entities/user';
 
 import { RootState } from '@/store';
 
+interface AuthPrompt {
+  type: string;
+}
+
 interface AuthState {
   user: User | null;
   initialized: boolean;
+  prompt: AuthPrompt | null;
 }
 type Context = ActionContext<AuthState, RootState>;
 
 const state = (): AuthState => ({
   user: null,
   initialized: false,
+  prompt: null,
 });
 
 const mutations: MutationTree<AuthState> = {
@@ -27,6 +33,14 @@ const mutations: MutationTree<AuthState> = {
 
   LOGOUT(state) {
     state.user = null;
+  },
+
+  PROMPT_USER(state, prompt) {
+    state.prompt = { type: prompt };
+  },
+
+  REMOVE_PROMPT(state) {
+    state.prompt = null;
   },
 };
 

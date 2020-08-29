@@ -181,13 +181,25 @@ import { Feature } from '@/entities/feature';
 export default class UserMenu extends Vue {
   private readonly Role = Role;
   private open = false;
-  private showLoginDialog = false;
   private showRegisterDialog = false;
   private showWhatsNewDialog = false;
   private showBugReportDialog = false;
 
   get user(): User|null {
     return this.$store.getters['auth/user'];
+  }
+
+  // Create getter to listen to the prompt
+  get showLoginDialog() {
+    return this.$store.state.auth.prompt;
+  }
+
+  set showLoginDialog(value) {
+    if (!value) {
+      this.$store.commit('auth/REMOVE_PROMPT');
+    } else {
+      this.$store.commit('auth/PROMPT_USER', { prompt: 'auth' });
+    }
   }
 
   get authenticated(): boolean {
