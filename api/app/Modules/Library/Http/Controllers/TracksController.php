@@ -5,16 +5,16 @@ declare(strict_types=1);
 namespace App\Modules\Library\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Modules\Library\Events\{Tracks\TrackDeleted, Tracks\TrackViewed};
 use App\Modules\Library\Http\Requests\CreateTrackRequest;
 use App\Modules\Library\Http\Requests\UpdateTrackRequest;
-use App\Modules\Lyrics\Documents\Factory as DocumentFactory;
-use App\Modules\Lyrics\Documents\Format;
-use Illuminate\Validation\ValidationException;
-use App\Modules\Library\Events\{Tracks\TrackDeleted, Tracks\TrackViewed};
 use App\Modules\Library\Http\Transformers\TrackTransformer;
 use App\Modules\Library\Models\{Album, Reciter, Track};
+use App\Modules\Lyrics\Documents\Factory as DocumentFactory;
+use App\Modules\Lyrics\Documents\Format;
 use App\Support\Pagination\PaginationState;
 use Illuminate\Http\{JsonResponse, Request, Response};
+use Illuminate\Validation\ValidationException;
 
 class TracksController extends Controller
 {

@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\Modules\Library\Events\Reciters;
 
-use App\Modules\Audit\Enum\ChangeType;
-
 class ReciterDescriptionChanged extends ReciterEvent
 {
     public ?string $description;
@@ -14,10 +12,5 @@ class ReciterDescriptionChanged extends ReciterEvent
     {
         $this->id = $id;
         $this->description = $description;
-    }
-
-    public function changeType(): ChangeType
-    {
-        return ChangeType::MODIFIED();
     }
 }

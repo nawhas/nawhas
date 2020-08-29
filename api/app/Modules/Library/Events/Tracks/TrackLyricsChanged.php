@@ -4,12 +4,10 @@ declare(strict_types=1);
 
 namespace App\Modules\Library\Events\Tracks;
 
-use App\Modules\Audit\Enum\ChangeType;
 use App\Modules\Core\Events\SerializableEvent;
 use App\Modules\Lyrics\Documents\Document;
 use App\Modules\Lyrics\Documents\Factory;
 use App\Modules\Lyrics\Documents\Format;
-use App\Modules\Library\Events\UserAction;
 
 class TrackLyricsChanged extends TrackEvent implements SerializableEvent
 {
@@ -37,10 +35,5 @@ class TrackLyricsChanged extends TrackEvent implements SerializableEvent
         ) : null;
 
         return new static($payload['id'], $document);
-    }
-
-    public function changeType(): ChangeType
-    {
-        return ChangeType::MODIFIED();
     }
 }

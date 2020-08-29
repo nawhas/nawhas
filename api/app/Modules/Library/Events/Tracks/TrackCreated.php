@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\Modules\Library\Events\Tracks;
 
-use App\Modules\Audit\Enum\ChangeType;
-
 class TrackCreated extends TrackEvent
 {
     public string $albumId;
@@ -16,10 +14,5 @@ class TrackCreated extends TrackEvent
         $this->id = $id;
         $this->albumId = $albumId;
         $this->attributes = $attributes;
-    }
-
-    public function changeType(): ChangeType
-    {
-        return ChangeType::CREATED();
     }
 }

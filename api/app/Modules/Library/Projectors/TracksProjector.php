@@ -4,13 +4,11 @@ declare(strict_types=1);
 
 namespace App\Modules\Library\Projectors;
 
-use App\Modules\Library\Events\Tracks\{
-    TrackAudioChanged,
+use App\Modules\Library\Events\Tracks\{TrackAudioChanged,
     TrackCreated,
     TrackDeleted,
     TrackLyricsChanged,
-    TrackTitleChanged
-};
+    TrackTitleChanged};
 use App\Modules\Library\Models\{Album, Track};
 use Spatie\EventSourcing\EventHandlers\Projectors\Projector;
 

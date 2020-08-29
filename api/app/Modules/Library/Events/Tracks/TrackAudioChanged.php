@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace App\Modules\Library\Events\Tracks;
 
-use App\Modules\Audit\Enum\ChangeType;
-use App\Modules\Library\Events\UserAction;
-
 class TrackAudioChanged extends TrackEvent
 {
     public ?string $path;
@@ -15,10 +12,5 @@ class TrackAudioChanged extends TrackEvent
     {
         $this->id = $id;
         $this->path = $path;
-    }
-
-    public function changeType(): ChangeType
-    {
-        return ChangeType::MODIFIED();
     }
 }
