@@ -1,4 +1,4 @@
-import { ActionTree, MutationTree } from 'vuex';
+import { ActionTree, MutationTree, GetterTree } from 'vuex';
 import { RootState } from '@/store/index';
 
 interface libraryState {
@@ -42,8 +42,15 @@ const actions: ActionTree<libraryState, RootState> = {
   },
 };
 
+const getters: GetterTree<libraryState, RootState> = {
+  isTrackSaved: (state) => (trackId) => {
+    return state.trackIds.find((track) => track === trackId);
+  },
+};
+
 export default {
   state,
   actions,
   mutations,
+  getters,
 };
