@@ -17,8 +17,19 @@ const mutations: MutationTree<libraryState> = {
 
 const actions: ActionTree<libraryState, RootState> = {
   async getTracks({ commit }) {
-    const response = await this.$api.library.tracks;
-    commit('SET_TRACKS', response);
+    const response = await this.$api.library.tracks();
+    commit('SET_TRACKS', response.data);
+  },
+
+  async saveTrack(context, payload) {
+    // @ts-ignore
+    if (context.rootState.auth.user) {
+      await this.$api.library.saveTrack(payload);
+      this.dispatch('library/getTracks');
+    } else {
+      // if not then commit a mutation to auth state creating a prompt
+      console.log('user is not logged in');
+    }
   },
 };
 
