@@ -284,22 +284,7 @@ class Reciter
             'name'  => $this->name,
             'description' => $this->description,
             'avatar' => $this->avatar,
-            'albums' => $this->albums->map(function (AlbumEntity $album) {
-                return [
-                    'id' => $album->id,
-                    'title' => $album->title,
-                    'year' => $album->year,
-                    'artwork' => $album->artwork,
-                    'tracks' => $album->tracks->map(function (TrackEntity $track) {
-                        return [
-                            'id' => $track->id,
-                            'title' => $track->title,
-                            'audio' => $track->audio,
-                            'lyrics' => optional($track->lyrics)->toArray(),
-                        ];
-                    }),
-                ];
-            })
+            'albums' => $this->albums->all(),
         ];
     }
 }

@@ -15,15 +15,15 @@ class CreateRevisionsTable extends Migration
     {
         Schema::connection('data')->create('revisions', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->uuid('aggregate_id');
+            $table->uuidMorphs('entity');
             $table->json('old_values')->nullable();
             $table->json('new_values')->nullable();
             $table->string('change_type');
-            $table->uuid('user_id')->nullable();
-            $table->bigInteger('version')->index();
+            $table->uuid('user_id')->nullable()->index();
+            $table->bigInteger('version');
             $table->dateTime('created_at');
 
-            $table->index(['aggregate_id', 'version']);
+            $table->unique(['entity_type', 'entity_id', 'version']);
         });
     }
 
