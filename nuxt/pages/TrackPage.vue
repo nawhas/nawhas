@@ -375,7 +375,14 @@ export default Vue.extend({
     },
 
     onSaveTrack() {
-      if (this.track) {
+      if (!this.track) {
+        return;
+      }
+      if (this.isTrackSaved) {
+        this.$store.dispatch('library/removeTrack', {
+          ids: [this.track.id],
+        });
+      } else {
         this.$store.dispatch('library/saveTrack', {
           ids: [this.track.id],
         });
