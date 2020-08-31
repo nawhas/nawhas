@@ -66,19 +66,7 @@
               {{ track.reciter.name }} &bull; {{ track.year }}
             </div>
           </div>
-          <div class="track-info--track-favorite">
-            <v-icon
-              :class="{
-                'material-icons-outlined': true,
-                'track-favorite--disabled': !isTrackSaved && !isDark,
-                'track-favorite--disabled--dark': !isTrackSaved && isDark
-              }"
-              color="#FE5B00"
-              @click="onSaveTrack"
-            >
-              favorite
-            </v-icon>
-          </div>
+          <div class="track-info--track-favorite" />
         </div>
       </v-expand-x-transition>
 

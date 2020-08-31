@@ -52,7 +52,7 @@
               >
                 <v-icon left>
                   play_circle_filled
-                </v-icon><span v-if="$vuetify.breakpoint.mdAndUp">Play</span>
+                </v-icon><span v-show="$vuetify.breakpoint.mdAndUp">Play</span>
               </v-btn>
               <v-btn
                 v-else-if="hasAudio && isSameTrackPlaying"
@@ -70,24 +70,12 @@
               >
                 <v-icon left>
                   playlist_add
-                </v-icon><span v-if="$vuetify.breakpoint.mdAndUp">Add to Queue</span>
+                </v-icon><span v-show="$vuetify.breakpoint.mdAndUp">Add to Queue</span>
               </v-btn>
               <v-btn v-if="hasAudio && addedToQueueSnackbar" text :color="textColor">
                 <v-icon color="green" left>
                   done
-                </v-icon><span v-if="$vuetify.breakpoint.mdAndUp">Added to Queue</span>
-              </v-btn>
-              <v-btn
-                v-if="$vuetify.breakpoint.mdAndUp"
-                text
-                :color="savedTextColor"
-                @click="onSaveTrack"
-              >
-                <v-icon left>
-                  favorite
-                </v-icon>
-                <span v-if="!isTrackSaved">Add to Library</span>
-                <span v-else>Remove from Library</span>
+                </v-icon><span v-show="$vuetify.breakpoint.mdAndUp">Added to Queue</span>
               </v-btn>
             </template>
             <template v-else>
@@ -95,16 +83,7 @@
             </template>
           </div>
           <div class="bar__actions bar__actions--overflow">
-            <v-btn
-              v-if="$vuetify.breakpoint.smAndDown"
-              text
-              :color="savedTextColor"
-              @click="onSaveTrack"
-            >
-              <v-icon>
-                favorite
-              </v-icon>
-            </v-btn>
+            <favorite-track-button v-if="track" :track="track.id" />
             <v-btn v-if="track && track.lyrics" icon :color="textColor" @click="print">
               <v-icon>print</v-icon>
             </v-btn>
@@ -193,6 +172,7 @@ import { TrackIncludes } from '@/api/tracks';
 import { MetaInfo } from 'vue-meta';
 import { generateMeta } from '@/utils/meta';
 import LazyImage from '@/components/utils/LazyImage.vue';
+import FavoriteTrackButton from '~/components/tracks/FavoriteTrackButton.vue';
 
 interface Data {
   track: Track | null;
@@ -204,6 +184,7 @@ interface Data {
 
 export default Vue.extend({
   components: {
+    FavoriteTrackButton,
     LazyImage,
     MoreTracksSkeleton,
     EditTrackDialog,
@@ -377,21 +358,6 @@ export default Vue.extend({
       const { id } = this.$store.state.player.queue.slice(-1)[0];
       this.$store.commit('player/REMOVE_TRACK', { id });
       this.addedToQueueSnackbar = false;
-    },
-
-    onSaveTrack() {
-      if (!this.track) {
-        return;
-      }
-      if (this.isTrackSaved) {
-        this.$store.dispatch('library/removeTrack', {
-          ids: [this.track.id],
-        });
-      } else {
-        this.$store.dispatch('library/saveTrack', {
-          ids: [this.track.id],
-        });
-      }
     },
   },
 
