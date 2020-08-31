@@ -3,26 +3,21 @@ import { RootState } from '@/store/index';
 import { TracksPayload } from '@/api/library';
 import { TrackIncludes } from '@/api/tracks';
 
-interface libraryState {
-  tracks: Array<any>;
+export interface LibraryState {
   trackIds: Array<string>;
 }
 
-const state = (): libraryState => ({
-  tracks: [],
+const state = (): LibraryState => ({
   trackIds: [],
 });
 
-const mutations: MutationTree<libraryState> = {
-  SET_TRACKS(state, tracks) {
-    state.tracks = tracks;
-  },
+const mutations: MutationTree<LibraryState> = {
   SET_TRACK_IDS(state, trackIds) {
     state.trackIds = trackIds;
   },
 };
 
-const actions: ActionTree<libraryState, RootState> = {
+const actions: ActionTree<LibraryState, RootState> = {
   async getTracks({ commit }) {
     const response = await this.$api.library.tracks({
       include: [
@@ -48,13 +43,12 @@ const actions: ActionTree<libraryState, RootState> = {
     }
   },
 
-  async saveTrack(context, payload: TracksPayload) {
-    // @ts-ignore
-    if (context.rootState.auth.user) {
+  async saveTrack({ commit, rootState }, payload: TracksPayload) {
+    if (rootState.auth.user) {
       await this.$api.library.saveTrack(payload);
       this.dispatch('library/getTrackIds');
     } else {
-      context.commit('auth/PROMPT_USER', { prompt: 'favourite' }, { root: true });
+      commit('auth/PROMPT_USER', { prompt: 'favourite' }, { root: true });
     }
   },
 
@@ -64,7 +58,7 @@ const actions: ActionTree<libraryState, RootState> = {
   },
 };
 
-const getters: GetterTree<libraryState, RootState> = {
+const getters: GetterTree<LibraryState, RootState> = {
   isTrackSaved: (state) => (trackId) => state.trackIds.includes(trackId),
 };
 
