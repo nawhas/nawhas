@@ -22,6 +22,7 @@ Route::prefix('v1')->group(function () {
         Route::put('/tracks', [Controllers\LibraryController::class, 'saveTracks'])
             ->middleware(ClearResponseCache::withTags(CacheTags::SAVED_TRACKS));
 
-        Route::delete('/tracks', [Controllers\LibraryController::class, 'removeSavedTracks']);
+        Route::delete('/tracks', [Controllers\LibraryController::class, 'removeSavedTracks'])
+            ->middleware(ClearResponseCache::withTags(CacheTags::SAVED_TRACKS));
     });
 });
