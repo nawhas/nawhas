@@ -156,14 +156,6 @@ export default Vue.extend({
     popularTracks(): Array<Track> | null {
       return this.tracks ? this.tracks.slice(0, POPULAR_ENTITIES_LIMIT) : null;
     },
-
-    saveTracksPlayable(): Array<Track> {
-      if (!this.tracks) {
-        return [];
-      }
-
-      return this.tracks.filter((track) => this.hasAudioFile(track));
-    },
   },
 
   watch: {
