@@ -55,6 +55,11 @@ interface Data {
 }
 
 export default Vue.extend({
+  middleware({ store, redirect }) {
+    if (!store.state.auth.user) {
+      return redirect('/library');
+    }
+  },
   components: {
     PageHeader,
     TrackCard,
@@ -88,12 +93,20 @@ export default Vue.extend({
       return this.tracks.filter((track) => this.hasAudioFile(track));
     },
   },
+  watch: {
+    '$store.state.auth.user': 'onAuthChange',
+  },
   methods: {
     playSavedTracks() {
       this.$store.commit('player/PLAY_ALBUM', { tracks: this.playable, start: this.playable[0] });
     },
     hasAudioFile(track): boolean {
       return track.related?.audio ?? false;
+    },
+    onAuthChange(value) {
+      if (!value) {
+        this.$router.replace('/library');
+      }
     },
   },
 });
