@@ -46,36 +46,53 @@
             <template v-if="track && albumTracks">
               <v-btn
                 v-if="hasAudio && albumTracks && !isSameTrackPlaying"
-                text
+                :text="showExpandedButtonText"
+                :icon="!showExpandedButtonText"
                 :color="textColor"
                 @click="playAlbum"
               >
-                <v-icon left>
+                <v-icon :left="showExpandedButtonText">
                   play_circle_filled
-                </v-icon><span v-show="$vuetify.breakpoint.mdAndUp">Play</span>
+                </v-icon>
+                <span v-if="showExpandedButtonText">Play</span>
               </v-btn>
               <v-btn
                 v-else-if="hasAudio && isSameTrackPlaying"
-                text
+                :text="showExpandedButtonText"
+                :icon="!showExpandedButtonText"
                 :color="textColor"
                 @click="stopPlaying"
               >
-                <v-icon>stop</v-icon>Stop
+                <v-icon :left="showExpandedButtonText">
+                  stop
+                </v-icon>
+                <span v-if="showExpandedButtonText">Stop</span>
               </v-btn>
               <v-btn
                 v-if="hasAudio && !addedToQueueSnackbar && albumTracks"
-                text
+                :text="showExpandedButtonText"
+                :icon="!showExpandedButtonText"
                 :color="textColor"
                 @click="addToQueue"
               >
-                <v-icon left>
+                <v-icon :left="showExpandedButtonText">
                   playlist_add
-                </v-icon><span v-show="$vuetify.breakpoint.mdAndUp">Add to Queue</span>
+                </v-icon>
+                <span v-if="showExpandedButtonText">Add to Queue</span>
               </v-btn>
-              <v-btn v-if="hasAudio && addedToQueueSnackbar" text :color="textColor">
-                <v-icon color="green" left>
-                  done
-                </v-icon><span v-show="$vuetify.breakpoint.mdAndUp">Added to Queue</span>
+              <v-btn
+                v-if="hasAudio && addedToQueueSnackbar"
+                :text="showExpandedButtonText"
+                :icon="!showExpandedButtonText"
+                :color="textColor"
+              >
+                <v-icon
+                  color="green"
+                  :left="showExpandedButtonText"
+                >
+                  playlist_add_check
+                </v-icon>
+                <span v-if="showExpandedButtonText">Added to Queue</span>
               </v-btn>
             </template>
             <template v-else>
@@ -238,6 +255,9 @@ export default Vue.extend({
 
   computed: {
     ...mapGetters('auth', ['isModerator']),
+    showExpandedButtonText(): boolean {
+      return this.$vuetify.breakpoint.mdAndUp;
+    },
     reciter(): Reciter|null {
       return this.track?.reciter ?? null;
     },
