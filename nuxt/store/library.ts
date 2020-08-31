@@ -17,11 +17,6 @@ const mutations: MutationTree<LibraryState> = {
 };
 
 const actions: ActionTree<LibraryState, RootState> = {
-  async getTracks({ commit }) {
-    const response = await this.$api.library.tracks();
-    commit('SET_TRACKS', response.data);
-  },
-
   async getTrackIds({ commit }) {
     try {
       const response = await this.$api.library.trackIds();

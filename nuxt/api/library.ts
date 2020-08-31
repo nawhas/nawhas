@@ -20,7 +20,7 @@ export interface TracksPayload {
  * Request Options
  */
 interface IndexRequestOptions {
-  include?: Array<TrackIncludes>;
+  include?: Array<TrackIncludes|string>;
   pagination?: PaginationOptions;
   sortBy?: string;
   sortDir?: 'asc'|'desc';
