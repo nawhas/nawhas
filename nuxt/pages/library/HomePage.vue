@@ -43,7 +43,6 @@ import TrackCard from '@/components/tracks/TrackCard.vue';
 import SkeletonCardGrid from '@/components/loaders/SkeletonCardGrid.vue';
 import TrackCardSkeleton from '@/components/loaders/TrackCardSkeleton.vue';
 import { Track } from '@/entities/track';
-import { TrackIncludes } from '@/api/tracks';
 
 interface Data {
   tracks: Array<Track>|null;
@@ -57,23 +56,13 @@ export default Vue.extend({
     TrackCardSkeleton,
   },
   async fetch() {
-    const response = await this.$api.tracks.popular({
-      include: [
-        TrackIncludes.Reciter,
-        TrackIncludes.Lyrics,
-        TrackIncludes.Media,
-        TrackIncludes.Related,
-        'album.tracks',
-      ],
-      pagination: {
-        limit: 6,
-      },
-    });
-    this.tracks = response.data;
+    await this.$store.dispatch('library/getTracks');
   },
-  data: (): Data => ({
-    tracks: null,
-  }),
+  computed: {
+    tracks() {
+      return this.$store.state.library.tracks;
+    },
+  },
 });
 </script>
 
