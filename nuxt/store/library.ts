@@ -1,6 +1,7 @@
 import { ActionTree, MutationTree, GetterTree } from 'vuex';
 import { RootState } from '@/store/index';
 import { TracksPayload } from '@/api/library';
+import { TrackIncludes } from '@/api/tracks';
 
 interface libraryState {
   tracks: Array<any>;
@@ -23,7 +24,18 @@ const mutations: MutationTree<libraryState> = {
 
 const actions: ActionTree<libraryState, RootState> = {
   async getTracks({ commit }) {
-    const response = await this.$api.library.tracks();
+    const response = await this.$api.library.tracks({
+      include: [
+        TrackIncludes.Reciter,
+        TrackIncludes.Lyrics,
+        TrackIncludes.Media,
+        TrackIncludes.Related,
+        'album.tracks',
+      ],
+      pagination: {
+        limit: 6,
+      },
+    });
     commit('SET_TRACKS', response.data);
   },
 
