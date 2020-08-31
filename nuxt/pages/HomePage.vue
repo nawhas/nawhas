@@ -17,13 +17,10 @@
     </header>
 
     <v-container v-if="savedTracks" class="app__section">
-      <h5 class="section__title section__title--with-actions mt-6">
+      <h5 class="section__title mt-6">
         <div>
           <v-icon>favorite</v-icon> Recently Saved Nawhas
         </div>
-        <v-btn text @click="playSavedTracks">
-          Play All
-        </v-btn>
       </h5>
       <template v-if="savedTracks">
         <v-row :dense="$vuetify.breakpoint.smAndDown">
@@ -139,8 +136,8 @@ export default Vue.extend({
         pagination: { limit: 20 },
         include: [TrackIncludes.Reciter, TrackIncludes.Album, TrackIncludes.Media, TrackIncludes.Related],
       }),
+      this.getSavedTracks(),
     ]);
-    await this.getSavedTracks();
     this.reciters = reciters.data;
     this.tracks = tracks.data;
   },
@@ -174,12 +171,6 @@ export default Vue.extend({
   },
 
   methods: {
-    playSavedTracks() {
-      this.$store.commit('player/PLAY_ALBUM', { tracks: this.saveTracksPlayable, start: this.saveTracksPlayable[0] });
-    },
-    hasAudioFile(track): boolean {
-      return track.related?.audio ?? false;
-    },
     async getSavedTracks() {
       if (!this.$store.getters['auth/user']) {
         return;
