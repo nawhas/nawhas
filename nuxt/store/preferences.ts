@@ -1,7 +1,7 @@
 import { MutationTree } from 'vuex';
 import { Theme } from '@/services/theme';
 
-interface PreferencesState {
+export interface PreferencesState {
   theme: Theme;
 }
 

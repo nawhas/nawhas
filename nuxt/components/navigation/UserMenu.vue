@@ -182,12 +182,23 @@ export default class UserMenu extends Vue {
   private readonly Role = Role;
   private open = false;
   private showLoginDialog = false;
-  private showRegisterDialog = false;
   private showWhatsNewDialog = false;
   private showBugReportDialog = false;
 
   get user(): User|null {
     return this.$store.getters['auth/user'];
+  }
+
+  get showRegisterDialog() {
+    return this.$store.state.auth.prompt;
+  }
+
+  set showRegisterDialog(value) {
+    if (!value) {
+      this.$store.commit('auth/REMOVE_PROMPT');
+    } else {
+      this.$store.commit('auth/PROMPT_USER', { prompt: 'auth' });
+    }
   }
 
   get authenticated(): boolean {

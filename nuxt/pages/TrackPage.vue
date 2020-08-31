@@ -77,10 +77,17 @@
                   done
                 </v-icon><span v-if="$vuetify.breakpoint.mdAndUp">Added to Queue</span>
               </v-btn>
-              <v-btn v-if="$vuetify.breakpoint.mdAndUp" text :color="textColor">
+              <v-btn
+                v-if="$vuetify.breakpoint.mdAndUp"
+                text
+                :color="savedTextColor"
+                @click="onSaveTrack"
+              >
                 <v-icon left>
                   favorite
-                </v-icon>Add to Library
+                </v-icon>
+                <span v-if="!isTrackSaved">Add to Library</span>
+                <span v-else>Remove from Library</span>
               </v-btn>
             </template>
             <template v-else>
@@ -88,7 +95,12 @@
             </template>
           </div>
           <div class="bar__actions bar__actions--overflow">
-            <v-btn v-if="$vuetify.breakpoint.smAndDown" text :color="textColor">
+            <v-btn
+              v-if="$vuetify.breakpoint.smAndDown"
+              text
+              :color="savedTextColor"
+              @click="onSaveTrack"
+            >
               <v-icon>
                 favorite
               </v-icon>
@@ -294,6 +306,12 @@ export default Vue.extend({
     isDark(): boolean {
       return this.$vuetify.theme.dark;
     },
+    isTrackSaved(): boolean {
+      return this.$store.getters['library/isTrackSaved'](this.track?.id);
+    },
+    savedTextColor(): string {
+      return (this.isTrackSaved) ? '#FE5B00' : this.textColor;
+    },
   },
 
   mounted() {
@@ -359,6 +377,21 @@ export default Vue.extend({
       const { id } = this.$store.state.player.queue.slice(-1)[0];
       this.$store.commit('player/REMOVE_TRACK', { id });
       this.addedToQueueSnackbar = false;
+    },
+
+    onSaveTrack() {
+      if (!this.track) {
+        return;
+      }
+      if (this.isTrackSaved) {
+        this.$store.dispatch('library/removeTrack', {
+          ids: [this.track.id],
+        });
+      } else {
+        this.$store.dispatch('library/saveTrack', {
+          ids: [this.track.id],
+        });
+      }
     },
   },
 
