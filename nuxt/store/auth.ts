@@ -8,7 +8,7 @@ interface AuthPrompt {
   type: string;
 }
 
-interface AuthState {
+export interface AuthState {
   user: User | null;
   initialized: boolean;
   prompt: AuthPrompt | null;
