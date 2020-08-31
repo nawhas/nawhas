@@ -45,26 +45,26 @@ const mutations: MutationTree<AuthState> = {
 };
 
 const actions: ActionTree<AuthState, RootState> = {
-  async login(context, payload: LoginPayload) {
+  async login({ commit, dispatch }, payload: LoginPayload) {
     const user = await this.$api.auth.login(payload);
 
-    context.commit('LOGIN', user);
+    commit('LOGIN', user);
 
-    context.dispatch('features/fetch', null, { root: true });
-    context.dispatch('library/getTrackIds', null, { root: true });
+    dispatch('features/fetch', null, { root: true });
+    dispatch('library/getTrackIds', null, { root: true });
   },
-  async register(context, payload: RegisterPayload) {
+  async register({ commit, dispatch }, payload: RegisterPayload) {
     const user = await this.$api.auth.register(payload);
 
-    context.commit('LOGIN', user);
+    commit('LOGIN', user);
 
-    context.dispatch('features/fetch', null, { root: true });
-    context.dispatch('library/getTrackIds', null, { root: true });
+    dispatch('features/fetch', null, { root: true });
+    dispatch('library/getTrackIds', null, { root: true });
   },
-  async logout(context) {
-    context.commit('LOGOUT');
+  async logout({ commit, dispatch }) {
+    commit('LOGOUT');
     await this.$api.auth.logout();
-    context.dispatch('library/getTrackIds', null, { root: true });
+    dispatch('library/getTrackIds', null, { root: true });
   },
   async check({ commit }: Context) {
     try {
