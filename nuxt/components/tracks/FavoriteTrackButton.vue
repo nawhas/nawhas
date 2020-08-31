@@ -1,15 +1,10 @@
 <template>
-  <v-btn icon>
+  <v-btn icon class="track-favorite" @click.prevent="toggleSaveState">
     <v-icon
-      :class="{
-        'material-icons-outlined': true,
-        'track-favorite--disabled': !saved && !isDark,
-        'track-favorite--disabled--dark': !saved && isDark
-      }"
-      color="primary"
-      @click="toggleSaveState"
+      class="track-favorite__icon"
+      :color="saved ? 'primary' : undefined"
     >
-      favorite
+      {{ saved ? 'favorite' : 'favorite_border' }}
     </v-icon>
   </v-btn>
 </template>
@@ -37,7 +32,3 @@ export default class FavoriteTrackButton extends Vue {
   }
 }
 </script>
-
-<style lang="scss" scoped>
-
-</style>
