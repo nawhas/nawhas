@@ -50,6 +50,11 @@ interface Data {
 }
 
 export default Vue.extend({
+  middleware({ store, redirect }) {
+    if (!store.state.auth.user) {
+      return redirect('/library');
+    }
+  },
   components: {
     PageHeader,
     TrackCard,
@@ -74,6 +79,11 @@ export default Vue.extend({
   data: (): Data => ({
     tracks: null,
   }),
+  mounted(): void {
+    if (!this.$store.state.auth.user) {
+      this.$router.replace('/library');
+    }
+  },
 });
 </script>
 

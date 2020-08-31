@@ -26,7 +26,16 @@
 import Vue from 'vue';
 
 export default Vue.extend({
-
+  middleware({ store, redirect }) {
+    if (store.state.auth.user) {
+      return redirect('/library/home');
+    }
+  },
+  mounted(): void {
+    if (this.$store.state.auth.user) {
+      this.$router.replace('/library/home');
+    }
+  },
 });
 </script>
 
