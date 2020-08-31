@@ -26,7 +26,21 @@
 import Vue from 'vue';
 
 export default Vue.extend({
-
+  middleware({ store, redirect }) {
+    if (store.state.auth.user) {
+      return redirect('/library/home');
+    }
+  },
+  watch: {
+    '$store.state.auth.user': 'onAuthChange',
+  },
+  methods: {
+    onAuthChange(value) {
+      if (value) {
+        this.$router.replace('/library/home');
+      }
+    },
+  },
 });
 </script>
 

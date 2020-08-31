@@ -135,7 +135,6 @@ export default Vue.extend({
 
   async fetch() {
     await Promise.all([
-      this.$store.dispatch('auth/check').catch(() => null),
       this.$store.dispatch('features/fetch').catch(() => null),
       this.$store.dispatch('library/getTrackIds'),
     ]);
