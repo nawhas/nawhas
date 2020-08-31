@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Library\Models;
 
+use App\Modules\Audit\Models\HasRevisions;
 use App\Modules\Core\Contracts\TimestampedEntity;
 use App\Modules\Core\Models\HasTimestamps;
 use App\Modules\Core\Models\HasUuid;
@@ -36,24 +37,27 @@ use Spatie\Sluggable\SlugOptions;
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Modules\Library\Models\Album $album
  * @property-read \App\Modules\Library\Models\Reciter $reciter
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Library\Models\Track newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Library\Models\Track newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Library\Models\Track query()
- * @mixin \Eloquent
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\Audit\Models\Revision[] $revisions
+ * @property-read int|null $revisions_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\Library\Models\Visit[] $visits
  * @property-read int|null $visits_count
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Library\Models\Track popularAllTime()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Library\Models\Track popularDay()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Library\Models\Track popularLast($days)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Library\Models\Track popularMonth()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Library\Models\Track popularWeek()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Library\Models\Track popularYear()
+ * @method static \Illuminate\Database\Eloquent\Builder|Track newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Track newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Track popularAllTime()
+ * @method static \Illuminate\Database\Eloquent\Builder|Track popularDay()
+ * @method static \Illuminate\Database\Eloquent\Builder|Track popularLast($days)
+ * @method static \Illuminate\Database\Eloquent\Builder|Track popularMonth()
+ * @method static \Illuminate\Database\Eloquent\Builder|Track popularWeek()
+ * @method static \Illuminate\Database\Eloquent\Builder|Track popularYear()
+ * @method static \Illuminate\Database\Eloquent\Builder|Track query()
+ * @mixin \Eloquent
  */
 class Track extends Model implements TimestampedEntity
 {
     use HasSlug;
     use HasTimestamps;
     use HasUuid;
+    use HasRevisions;
     use UsesDataConnection;
     use Visitable;
     use Searchable;

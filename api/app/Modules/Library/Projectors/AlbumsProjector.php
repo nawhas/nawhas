@@ -4,13 +4,11 @@ declare(strict_types=1);
 
 namespace App\Modules\Library\Projectors;
 
-use App\Modules\Library\Events\Albums\{
-    AlbumArtworkChanged,
+use App\Modules\Library\Events\Albums\{AlbumArtworkChanged,
     AlbumCreated,
     AlbumDeleted,
     AlbumTitleChanged,
-    AlbumYearChanged
-};
+    AlbumYearChanged};
 use App\Modules\Library\Models\{Album, Reciter};
 use Spatie\EventSourcing\EventHandlers\Projectors\Projector;
 

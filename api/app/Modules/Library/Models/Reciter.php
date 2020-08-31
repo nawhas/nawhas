@@ -4,12 +4,11 @@ declare(strict_types=1);
 
 namespace App\Modules\Library\Models;
 
+use App\Modules\Audit\Models\HasRevisions;
 use App\Modules\Core\Contracts\TimestampedEntity;
 use App\Modules\Core\Models\HasTimestamps;
 use App\Modules\Core\Models\HasUuid;
 use App\Modules\Core\Models\UsesDataConnection;
-use Illuminate\Support\Facades\Storage;
-use Laravel\Scout\Searchable;
 use App\Modules\Library\Events\Reciters\{ReciterAvatarChanged,
     ReciterCreated,
     ReciterDescriptionChanged,
@@ -18,6 +17,8 @@ use App\Modules\Library\Models\Traits\Visitable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Storage;
+use Laravel\Scout\Searchable;
 use Ramsey\Uuid\Uuid;
 use Spatie\Sluggable\{HasSlug, SlugOptions};
 
@@ -33,24 +34,27 @@ use Spatie\Sluggable\{HasSlug, SlugOptions};
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\Library\Models\Album[] $albums
  * @property-read int|null $albums_count
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Library\Models\Reciter newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Library\Models\Reciter newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Library\Models\Reciter query()
- * @mixin \Eloquent
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\Audit\Models\Revision[] $revisions
+ * @property-read int|null $revisions_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\Library\Models\Visit[] $visits
  * @property-read int|null $visits_count
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Library\Models\Reciter popularAllTime()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Library\Models\Reciter popularDay()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Library\Models\Reciter popularLast($days)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Library\Models\Reciter popularMonth()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Library\Models\Reciter popularWeek()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Library\Models\Reciter popularYear()
+ * @method static \Illuminate\Database\Eloquent\Builder|Reciter newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Reciter newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Reciter popularAllTime()
+ * @method static \Illuminate\Database\Eloquent\Builder|Reciter popularDay()
+ * @method static \Illuminate\Database\Eloquent\Builder|Reciter popularLast($days)
+ * @method static \Illuminate\Database\Eloquent\Builder|Reciter popularMonth()
+ * @method static \Illuminate\Database\Eloquent\Builder|Reciter popularWeek()
+ * @method static \Illuminate\Database\Eloquent\Builder|Reciter popularYear()
+ * @method static \Illuminate\Database\Eloquent\Builder|Reciter query()
+ * @mixin \Eloquent
  */
 class Reciter extends Model implements TimestampedEntity
 {
     use HasSlug;
     use HasTimestamps;
     use HasUuid;
+    use HasRevisions;
     use UsesDataConnection;
     use Visitable;
     use Searchable;

@@ -4,11 +4,8 @@ declare(strict_types=1);
 
 namespace App\Modules\Library\Events\Albums;
 
-use App\Modules\Library\Events\UserAction;
-
-class AlbumCreated extends UserAction
+class AlbumCreated extends AlbumEvent
 {
-    public string $id;
     public string $reciterId;
     public array $attributes = [];
 

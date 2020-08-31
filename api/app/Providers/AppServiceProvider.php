@@ -2,6 +2,11 @@
 
 namespace App\Providers;
 
+use App\Modules\Audit\Enum\EntityType;
+use App\Modules\Library\Models\Album;
+use App\Modules\Library\Models\Reciter;
+use App\Modules\Library\Models\Track;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Sanctum\Sanctum;
@@ -34,6 +39,12 @@ class AppServiceProvider extends ServiceProvider
         });
 
         $this->app->bind(Search::class, fn () => new Search(config('meilisearch.host'), config('meilisearch.key')));
+
+        Relation::morphMap([
+            EntityType::RECITER => Reciter::class,
+            EntityType::ALBUM => Album::class,
+            EntityType::TRACK => Track::class,
+        ]);
     }
 
     /**
