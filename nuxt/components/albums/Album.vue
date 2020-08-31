@@ -116,10 +116,10 @@
               :class="{
                 'material-icons-outlined': true,
                 track__feature: true,
-                'track__feature--disabled': !isTrackSaved && !isDark,
-                'track__feature--disabled--dark': !isTrackSaved && isDark
+                'track__feature--disabled': !isTrackSaved(props.item) && !isDark,
+                'track__feature--disabled--dark': !isTrackSaved(props.item) && isDark
               }"
-              @click.stop="isTrackSaved = !isTrackSaved"
+              @click.stop="onSaveTrack(props.item)"
             >
               <v-icon>favorite</v-icon>
             </v-btn>
@@ -157,7 +157,6 @@ export default class AlbumComponent extends Vue {
   private textColor = 'white';
   private fabColor = 'white';
   private fab = false;
-  private isTrackSaved = false;
 
   // TODO - Replace `any` with a proper interface.
   @Prop({ type: Object, required: true }) private album!: Album;
@@ -292,6 +291,22 @@ export default class AlbumComponent extends Vue {
 
   addAlbumToQueue(): void {
     this.$store.commit('player/ADD_ALBUM_TO_QUEUE', { tracks: this.album.tracks?.data });
+  }
+
+  isTrackSaved(track) {
+    return this.$store.getters['library/isTrackSaved'](track.id);
+  }
+
+  onSaveTrack(track) {
+    if (this.isTrackSaved(track)) {
+      this.$store.dispatch('library/removeTrack', {
+        ids: [track.id],
+      });
+    } else {
+      this.$store.dispatch('library/saveTrack', {
+        ids: [track.id],
+      });
+    }
   }
 }
 </script>

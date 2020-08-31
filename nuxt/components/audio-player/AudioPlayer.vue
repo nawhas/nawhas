@@ -73,7 +73,11 @@
                 'track-favorite--disabled': !isTrackSaved && !isDark,
                 'track-favorite--disabled--dark': !isTrackSaved && isDark
               }"
-            >favorite</v-icon>
+              color="#FE5B00"
+              @click="onSaveTrack"
+            >
+              favorite
+            </v-icon>
           </div>
         </div>
       </v-expand-x-transition>
@@ -183,7 +187,7 @@
               <v-list-item @click="goToTrack">
                 Go to track
               </v-list-item>
-              <v-list-item @click="isTrackSaved = !isTrackSaved">
+              <v-list-item @click="onSaveTrack">
                 <span v-if="!isTrackSaved">Add to Library</span>
                 <span v-else>Remove from Library</span>
               </v-list-item>
@@ -317,8 +321,6 @@ export default class AudioPlayer extends Vue {
   /* Keep a reference to the progress bar interval to clear it when needed. */
   private progressInterval: number|null = null;
   private currentOverlay: null | 'lyrics' | 'queue' = null;
-
-  private isTrackSaved = false;
 
   get isDark() {
     return this.$vuetify.theme.dark;
@@ -470,6 +472,10 @@ export default class AudioPlayer extends Vue {
 
   get formattedDuration() {
     return moment.utc(moment.duration(this.duration, 'seconds').asMilliseconds()).format('m:ss');
+  }
+
+  get isTrackSaved() {
+    return this.$store.getters['library/isTrackSaved'](this.track.id);
   }
 
   toggleOverlay(key) {
@@ -794,6 +800,21 @@ export default class AudioPlayer extends Vue {
     }
   }
 
+  onSaveTrack() {
+    if (!this.track) {
+      return;
+    }
+    if (this.isTrackSaved) {
+      this.$store.dispatch('library/removeTrack', {
+        ids: [this.track.id],
+      });
+    } else {
+      this.$store.dispatch('library/saveTrack', {
+        ids: [this.track.id],
+      });
+    }
+  }
+
   /**
    * For development purpose only
    * stops playing and unloads howl on hot reload
@@ -881,6 +902,7 @@ $duration: 580ms;
       display: flex;
       justify-self: center;
       margin-left: 20px;
+      color: #FE5B00;
 
       .track-favorite--disabled {
         color: rgba(0, 0, 0, 0.1) !important;

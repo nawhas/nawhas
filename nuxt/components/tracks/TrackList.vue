@@ -61,9 +61,10 @@
             :class="{
               'material-icons-outlined': true,
               track__feature: true,
-              'track__feature--disabled': !isTrackSaved && !isDark,
-              'track__feature--disabled--dark': !isTrackSaved && isDark
+              'track__feature--disabled': !isTrackSaved(track) && !isDark,
+              'track__feature--disabled--dark': !isTrackSaved(track) && isDark
             }"
+            @click.prevent="onSaveTrack(track)"
           >
             <v-icon>favorite</v-icon>
           </v-btn>
@@ -98,7 +99,6 @@ export default class TrackList extends Vue {
 
   private hasAudioFile = hasAudioFile;
   private hasLyrics = hasLyrics;
-  private isTrackSaved = false;
   private getTrackUri = getTrackUri;
 
   get playable() {
@@ -115,6 +115,22 @@ export default class TrackList extends Vue {
 
   playTrack(track) {
     this.$store.commit('player/PLAY_ALBUM', { tracks: this.playable, start: track });
+  }
+
+  isTrackSaved(track) {
+    return this.$store.getters['library/isTrackSaved'](track.id);
+  }
+
+  onSaveTrack(track) {
+    if (this.isTrackSaved(track)) {
+      this.$store.dispatch('library/removeTrack', {
+        ids: [track.id],
+      });
+    } else {
+      this.$store.dispatch('library/saveTrack', {
+        ids: [track.id],
+      });
+    }
   }
 }
 </script>
