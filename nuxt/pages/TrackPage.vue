@@ -172,7 +172,7 @@ import { TrackIncludes } from '@/api/tracks';
 import { MetaInfo } from 'vue-meta';
 import { generateMeta } from '@/utils/meta';
 import LazyImage from '@/components/utils/LazyImage.vue';
-import FavoriteTrackButton from '~/components/tracks/FavoriteTrackButton.vue';
+import FavoriteTrackButton from '@/components/tracks/FavoriteTrackButton.vue';
 
 interface Data {
   track: Track | null;

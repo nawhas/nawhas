@@ -55,19 +55,7 @@
               </template>
             </v-icon>
           </v-btn>
-          <v-btn
-            icon
-            :disabled="!hasAudioFile(track) && !hasLyrics(track)"
-            :class="{
-              'material-icons-outlined': true,
-              track__feature: true,
-              'track__feature--disabled': !isTrackSaved(track) && !isDark,
-              'track__feature--disabled--dark': !isTrackSaved(track) && isDark
-            }"
-            @click.prevent="onSaveTrack(track)"
-          >
-            <v-icon>favorite</v-icon>
-          </v-btn>
+          <favorite-track-button :track="track.id" @click.prevent />
         </v-list-item-action>
       </v-list-item>
     </v-list>
@@ -87,11 +75,16 @@
 import {
   Component, Prop, Vue,
 } from 'nuxt-property-decorator';
+import FavoriteTrackButton from '@/components/tracks/FavoriteTrackButton.vue';
 import { PropType } from 'vue';
 import { hasAudioFile, hasLyrics } from '@/utils/tracks';
 import { Track, getTrackUri } from '@/entities/track';
 
-@Component
+@Component({
+  components: {
+    FavoriteTrackButton,
+  },
+})
 export default class TrackList extends Vue {
   @Prop({ type: Array as PropType<Array<Track>> }) private readonly tracks!: Array<Track>;
   @Prop({ type: Boolean, default: false }) private readonly metadata!: boolean;
