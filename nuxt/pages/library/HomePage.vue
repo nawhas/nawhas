@@ -79,10 +79,15 @@ export default Vue.extend({
   data: (): Data => ({
     tracks: null,
   }),
-  mounted(): void {
-    if (!this.$store.state.auth.user) {
-      this.$router.replace('/library');
-    }
+  watch: {
+    '$store.state.auth.user': 'onAuthChange',
+  },
+  methods: {
+    onAuthChange(value) {
+      if (!value) {
+        this.$router.replace('/library');
+      }
+    },
   },
 });
 </script>

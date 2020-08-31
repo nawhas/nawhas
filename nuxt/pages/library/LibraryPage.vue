@@ -31,10 +31,15 @@ export default Vue.extend({
       return redirect('/library/home');
     }
   },
-  mounted(): void {
-    if (this.$store.state.auth.user) {
-      this.$router.replace('/library/home');
-    }
+  watch: {
+    '$store.state.auth.user': 'onAuthChange',
+  },
+  methods: {
+    onAuthChange(value) {
+      if (value) {
+        this.$router.replace('/library/home');
+      }
+    },
   },
 });
 </script>

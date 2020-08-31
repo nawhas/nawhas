@@ -45,7 +45,10 @@ const actions: ActionTree<AuthState, RootState> = {
     commit('LOGOUT');
     await this.$api.auth.logout();
   },
-  async check({ commit }: Context) {
+  async initialize({ commit, state }: Context) {
+    if (state.initialized) {
+      return;
+    }
     try {
       const user = await this.$api.auth.user();
       commit('INITIALIZE', user);
