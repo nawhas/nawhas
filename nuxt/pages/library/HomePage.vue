@@ -48,6 +48,7 @@ import TrackCard from '@/components/tracks/TrackCard.vue';
 import SkeletonCardGrid from '@/components/loaders/SkeletonCardGrid.vue';
 import TrackCardSkeleton from '@/components/loaders/TrackCardSkeleton.vue';
 import { Track } from '@/entities/track';
+import { TrackIncludes } from '@/api/tracks';
 
 interface Data {
   tracks: Array<Track>|null;
@@ -61,8 +62,23 @@ export default Vue.extend({
     TrackCardSkeleton,
   },
   async fetch() {
-    await this.$store.dispatch('library/getTracks');
+    const response = await this.$api.library.tracks({
+      include: [
+        TrackIncludes.Reciter,
+        TrackIncludes.Lyrics,
+        TrackIncludes.Media,
+        TrackIncludes.Related,
+        'album.tracks',
+      ],
+      pagination: {
+        limit: 6,
+      },
+    });
+    this.tracks = response.data;
   },
+  data: (): Data => ({
+    tracks: null,
+  }),
   computed: {
     playable(): Array<Track> {
       if (!this.tracks) {
@@ -70,9 +86,6 @@ export default Vue.extend({
       }
 
       return this.tracks.filter((track) => this.hasAudioFile(track));
-    },
-    tracks(): Array<Track> {
-      return this.$store.state.library.tracks;
     },
   },
   methods: {
