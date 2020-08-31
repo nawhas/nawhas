@@ -130,7 +130,7 @@ export default Vue.extend({
   },
 
   async fetch() {
-    const [reciters, tracks, savedTracks] = await Promise.all([
+    const [reciters, tracks] = await Promise.all([
       this.$api.reciters.popular({
         pagination: { limit: 6 },
         include: [ReciterIncludes.Related],
@@ -139,23 +139,10 @@ export default Vue.extend({
         pagination: { limit: 20 },
         include: [TrackIncludes.Reciter, TrackIncludes.Album, TrackIncludes.Media, TrackIncludes.Related],
       }),
-      this.$api.library.tracks({
-        include: [
-          TrackIncludes.Reciter,
-          TrackIncludes.Lyrics,
-          TrackIncludes.Media,
-          TrackIncludes.Related,
-          'album.tracks',
-        ],
-        pagination: {
-          limit: 6,
-        },
-      }),
     ]);
-
+    await this.getSavedTracks();
     this.reciters = reciters.data;
     this.tracks = tracks.data;
-    this.savedTracks = savedTracks.data;
   },
 
   data: (): Data => ({
@@ -182,12 +169,41 @@ export default Vue.extend({
     },
   },
 
+  watch: {
+    '$store.state.auth.user': 'onAuthChange',
+  },
+
   methods: {
     playSavedTracks() {
       this.$store.commit('player/PLAY_ALBUM', { tracks: this.saveTracksPlayable, start: this.saveTracksPlayable[0] });
     },
     hasAudioFile(track): boolean {
       return track.related?.audio ?? false;
+    },
+    async getSavedTracks() {
+      if (!this.$store.getters['auth/user']) {
+        return;
+      }
+      const response = await this.$api.library.tracks({
+        include: [
+          TrackIncludes.Reciter,
+          TrackIncludes.Lyrics,
+          TrackIncludes.Media,
+          TrackIncludes.Related,
+          'album.tracks',
+        ],
+        pagination: {
+          limit: 6,
+        },
+      });
+      this.savedTracks = response.data;
+    },
+    onAuthChange(value) {
+      if (value) {
+        this.getSavedTracks();
+      } else {
+        this.savedTracks = null;
+      }
     },
   },
 });
