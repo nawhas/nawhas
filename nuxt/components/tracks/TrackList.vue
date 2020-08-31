@@ -109,22 +109,6 @@ export default class TrackList extends Vue {
   playTrack(track) {
     this.$store.commit('player/PLAY_ALBUM', { tracks: this.playable, start: track });
   }
-
-  isTrackSaved(track) {
-    return this.$store.getters['library/isTrackSaved'](track.id);
-  }
-
-  onSaveTrack(track) {
-    if (this.isTrackSaved(track)) {
-      this.$store.dispatch('library/removeTrack', {
-        ids: [track.id],
-      });
-    } else {
-      this.$store.dispatch('library/saveTrack', {
-        ids: [track.id],
-      });
-    }
-  }
 }
 </script>
 

@@ -110,19 +110,7 @@
                 volume_off
               </template>
             </v-icon>
-            <v-btn
-              icon
-              :disabled="!hasAudioFile(props.item) && !hasLyrics(props.item)"
-              :class="{
-                'material-icons-outlined': true,
-                track__feature: true,
-                'track__feature--disabled': !isTrackSaved(props.item) && !isDark,
-                'track__feature--disabled--dark': !isTrackSaved(props.item) && isDark
-              }"
-              @click.stop="onSaveTrack(props.item)"
-            >
-              <v-icon>favorite</v-icon>
-            </v-btn>
+            <favorite-track-button :track="props.item.id" />
           </td>
         </tr>
       </template>
@@ -144,9 +132,11 @@ import { DataTableHeader } from 'vuetify';
 import EditTrackDialog from '@/components/edit/EditTrackDialog.vue';
 import EditAlbumDialog from '@/components/edit/EditAlbumDialog.vue';
 import LazyImage from '@/components/utils/LazyImage.vue';
+import FavoriteTrackButton from '@/components/tracks/FavoriteTrackButton.vue';
 
 @Component({
   components: {
+    FavoriteTrackButton,
     LazyImage,
     EditAlbumDialog,
     EditTrackDialog,
@@ -291,22 +281,6 @@ export default class AlbumComponent extends Vue {
 
   addAlbumToQueue(): void {
     this.$store.commit('player/ADD_ALBUM_TO_QUEUE', { tracks: this.album.tracks?.data });
-  }
-
-  isTrackSaved(track) {
-    return this.$store.getters['library/isTrackSaved'](track.id);
-  }
-
-  onSaveTrack(track) {
-    if (this.isTrackSaved(track)) {
-      this.$store.dispatch('library/removeTrack', {
-        ids: [track.id],
-      });
-    } else {
-      this.$store.dispatch('library/saveTrack', {
-        ids: [track.id],
-      });
-    }
   }
 }
 </script>
