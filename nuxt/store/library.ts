@@ -1,6 +1,8 @@
 import { ActionTree, MutationTree, GetterTree } from 'vuex';
 import { RootState } from '@/store/index';
 import { TracksPayload } from '@/api/library';
+import { EventBus } from '@/events';
+import { TOAST_SHOW } from '@/events/toaster';
 
 export interface LibraryState {
   trackIds: Array<string>;
@@ -29,6 +31,9 @@ const actions: ActionTree<LibraryState, RootState> = {
   async saveTrack({ commit, rootState }, payload: TracksPayload) {
     if (rootState.auth.user) {
       await this.$api.library.saveTrack(payload);
+      EventBus.$emit(TOAST_SHOW, {
+        text: 'Added to Library',
+      });
       this.dispatch('library/getTrackIds');
     } else {
       commit('auth/PROMPT_USER', { prompt: 'favourite' }, { root: true });
@@ -37,6 +42,9 @@ const actions: ActionTree<LibraryState, RootState> = {
 
   async removeTrack(_, payload: TracksPayload) {
     await this.$api.library.removeTrack(payload);
+    EventBus.$emit(TOAST_SHOW, {
+      text: 'Removed from Library',
+    });
     this.dispatch('library/getTrackIds');
   },
 };
