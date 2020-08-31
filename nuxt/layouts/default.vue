@@ -164,8 +164,6 @@ export default Vue.extend({
 
   mounted() {
     applyTheme(this.$store.state.preferences.theme, this.$vuetify, this.$storage);
-    // @ts-ignore
-    window.http = this.$api.library;
   },
 });
 </script>
