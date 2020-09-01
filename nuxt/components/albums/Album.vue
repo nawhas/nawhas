@@ -110,6 +110,7 @@
                 volume_off
               </template>
             </v-icon>
+            <favorite-track-button :track="props.item.id" />
           </td>
         </tr>
       </template>
@@ -131,9 +132,11 @@ import { DataTableHeader } from 'vuetify';
 import EditTrackDialog from '@/components/edit/EditTrackDialog.vue';
 import EditAlbumDialog from '@/components/edit/EditAlbumDialog.vue';
 import LazyImage from '@/components/utils/LazyImage.vue';
+import FavoriteTrackButton from '@/components/tracks/FavoriteTrackButton.vue';
 
 @Component({
   components: {
+    FavoriteTrackButton,
     LazyImage,
     EditAlbumDialog,
     EditTrackDialog,

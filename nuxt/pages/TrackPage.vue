@@ -46,36 +46,53 @@
             <template v-if="track && albumTracks">
               <v-btn
                 v-if="hasAudio && albumTracks && !isSameTrackPlaying"
-                text
+                :text="showExpandedButtonText"
+                :icon="!showExpandedButtonText"
                 :color="textColor"
                 @click="playAlbum"
               >
-                <v-icon left>
+                <v-icon :left="showExpandedButtonText">
                   play_circle_filled
-                </v-icon>Play
+                </v-icon>
+                <span v-if="showExpandedButtonText">Play</span>
               </v-btn>
               <v-btn
                 v-else-if="hasAudio && isSameTrackPlaying"
-                text
+                :text="showExpandedButtonText"
+                :icon="!showExpandedButtonText"
                 :color="textColor"
                 @click="stopPlaying"
               >
-                <v-icon>stop</v-icon>Stop
+                <v-icon :left="showExpandedButtonText">
+                  stop
+                </v-icon>
+                <span v-if="showExpandedButtonText">Stop</span>
               </v-btn>
               <v-btn
                 v-if="hasAudio && !addedToQueueSnackbar && albumTracks"
-                text
+                :text="showExpandedButtonText"
+                :icon="!showExpandedButtonText"
                 :color="textColor"
                 @click="addToQueue"
               >
-                <v-icon left>
+                <v-icon :left="showExpandedButtonText">
                   playlist_add
-                </v-icon>Add to Queue
+                </v-icon>
+                <span v-if="showExpandedButtonText">Add to Queue</span>
               </v-btn>
-              <v-btn v-if="hasAudio && addedToQueueSnackbar" text :color="textColor">
-                <v-icon color="green" left>
-                  done
-                </v-icon>Added to Queue
+              <v-btn
+                v-if="hasAudio && addedToQueueSnackbar"
+                :text="showExpandedButtonText"
+                :icon="!showExpandedButtonText"
+                :color="textColor"
+              >
+                <v-icon
+                  color="green"
+                  :left="showExpandedButtonText"
+                >
+                  playlist_add_check
+                </v-icon>
+                <span v-if="showExpandedButtonText">Added to Queue</span>
               </v-btn>
             </template>
             <template v-else>
@@ -83,6 +100,7 @@
             </template>
           </div>
           <div class="bar__actions bar__actions--overflow">
+            <favorite-track-button v-if="track" :track="track.id" />
             <v-btn v-if="track && track.lyrics" icon :color="textColor" @click="print">
               <v-icon>print</v-icon>
             </v-btn>
@@ -171,6 +189,7 @@ import { TrackIncludes } from '@/api/tracks';
 import { MetaInfo } from 'vue-meta';
 import { generateMeta } from '@/utils/meta';
 import LazyImage from '@/components/utils/LazyImage.vue';
+import FavoriteTrackButton from '@/components/tracks/FavoriteTrackButton.vue';
 
 interface Data {
   track: Track | null;
@@ -182,6 +201,7 @@ interface Data {
 
 export default Vue.extend({
   components: {
+    FavoriteTrackButton,
     LazyImage,
     MoreTracksSkeleton,
     EditTrackDialog,
@@ -235,6 +255,9 @@ export default Vue.extend({
 
   computed: {
     ...mapGetters('auth', ['isModerator']),
+    showExpandedButtonText(): boolean {
+      return this.$vuetify.breakpoint.mdAndUp;
+    },
     reciter(): Reciter|null {
       return this.track?.reciter ?? null;
     },
@@ -283,6 +306,12 @@ export default Vue.extend({
     },
     isDark(): boolean {
       return this.$vuetify.theme.dark;
+    },
+    isTrackSaved(): boolean {
+      return this.$store.getters['library/isTrackSaved'](this.track?.id);
+    },
+    savedTextColor(): string {
+      return (this.isTrackSaved) ? '#FE5B00' : this.textColor;
     },
   },
 

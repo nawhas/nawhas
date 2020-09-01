@@ -2,6 +2,7 @@
 
 use App\Modules\Library\Events as Library;
 use App\Modules\Authentication\Events as Authentication;
+use App\Modules\Accounts\Events as Accounts;
 
 return [
 
@@ -110,7 +111,10 @@ return [
         'auth.login' => Authentication\UserLoggedIn::class,
         'auth.logout' => Authentication\UserLoggedOut::class,
         // Social Accounts Events
-        'user.social.registered' => Authentication\SocialAccountRegistered::class
+        'user.social.registered' => Authentication\SocialAccountRegistered::class,
+        // Account Events
+        'accounts.saves.track.added' => Accounts\Saves\TrackSaved::class,
+        'accounts.saves.track.removed' => Accounts\Saves\SavedTrackRemoved::class,
     ],
 
     /*

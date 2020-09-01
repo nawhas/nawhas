@@ -2,10 +2,8 @@
 
 declare(strict_types=1);
 
-namespace App\Modules\Library\Events;
+namespace App\Modules\Core\Events;
 
-use App\Modules\Core\Events\HasUserContext;
-use App\Modules\Core\Events\UserAwareEvent;
 use Spatie\EventSourcing\StoredEvents\ShouldBeStored;
 
 abstract class UserAction extends ShouldBeStored implements UserAwareEvent
