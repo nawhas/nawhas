@@ -100,7 +100,7 @@ export default Vue.extend({
   watch: {
     '$store.state.auth.user': 'onAuthChange',
     '$route.query': 'getTracks',
-    'sort': 'getTracks',
+    'sort': 'onSortChange',
   },
   methods: {
     onAuthChange(value) {
@@ -135,6 +135,10 @@ export default Vue.extend({
     },
     onPageChanged(page) {
       this.$router.push({ query: { page: String(page) } });
+    },
+    onSortChange() {
+      this.onPageChanged(1);
+      this.getTracks();
     },
   },
 });
