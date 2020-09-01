@@ -16,6 +16,24 @@
       </div>
     </header>
 
+    <v-container class="app__section">
+      <h5 class="section__title mt-6">
+        Trending This Month
+      </h5>
+      <template v-if="popularTracks">
+        <v-row :dense="$vuetify.breakpoint.smAndDown">
+          <v-col v-for="track in popularTracks" :key="track.id" cols="12" sm="6" md="4">
+            <track-card :track="track" :colored="true" :show-reciter="true" />
+          </v-col>
+        </v-row>
+      </template>
+      <template v-else>
+        <skeleton-card-grid>
+          <track-card-skeleton />
+        </skeleton-card-grid>
+      </template>
+    </v-container>
+
     <v-container v-if="savedTracks" class="app__section">
       <h5 class="section__title mt-6">
         <div>
@@ -28,22 +46,11 @@
             <track-card :track="track" :colored="true" :show-reciter="true" />
           </v-col>
         </v-row>
-      </template>
-      <template v-else>
-        <skeleton-card-grid>
-          <track-card-skeleton />
-        </skeleton-card-grid>
-      </template>
-    </v-container>
-
-    <v-container class="app__section">
-      <h5 class="section__title mt-6">
-        Trending This Month
-      </h5>
-      <template v-if="popularTracks">
-        <v-row :dense="$vuetify.breakpoint.smAndDown">
-          <v-col v-for="track in popularTracks" :key="track.id" cols="12" sm="6" md="4">
-            <track-card :track="track" :colored="true" :show-reciter="true" />
+        <v-row>
+          <v-col class="text-center">
+            <v-btn color="primary" to="/library/tracks">
+              View All
+            </v-btn>
           </v-col>
         </v-row>
       </template>

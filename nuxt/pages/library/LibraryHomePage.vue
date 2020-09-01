@@ -18,8 +18,8 @@
           </v-col>
         </v-row>
         <v-row>
-          <v-col class="text-center" @click="$router.push('/library/tracks')">
-            <v-btn color="primary">
+          <v-col class="text-center">
+            <v-btn color="primary" to="/library/tracks">
               View All
             </v-btn>
           </v-col>
