@@ -2,18 +2,27 @@ import { PersistedEntity } from '@/entities/common';
 import { User } from '@/entities/user';
 
 export enum EntityType {
-  RECITER = 'reciter',
-  ALBUM = 'album',
-  TRACK = 'track',
+  Reciter = 'reciter',
+  Album = 'album',
+  Track = 'track',
+}
+
+interface Snapshot {
+  [key: string]: any;
+}
+
+interface Metadata {
+  link: string;
+  [key: string]: string;
 }
 
 export interface Revision extends PersistedEntity {
   version: number;
   entityType: EntityType;
   entityId: string;
-  previous: Map<string, any> | null;
-  snapshot: Map<string, any>;
-  meta: Map<string, any>;
+  previous: Snapshot | null;
+  snapshot: Snapshot | null;
+  meta: Metadata;
   user: User | null;
   createdAt: string;
 }
