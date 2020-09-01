@@ -27,8 +27,10 @@
           </v-col>
         </v-row>
         <v-row>
-          <v-col class="text-center">
-            <v-btn color="primary">View All</v-btn>
+          <v-col class="text-center" @click="$router.push('/library/tracks')">
+            <v-btn color="primary">
+              View All
+            </v-btn>
           </v-col>
         </v-row>
       </template>
