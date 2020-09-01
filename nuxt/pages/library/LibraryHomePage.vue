@@ -9,7 +9,9 @@
 
     <v-container class="app__section">
       <h5 class="section__title mt-6 d-flex align-center justify-start">
-        <v-icon class="mr-2">favorite</v-icon> Recently Saved Nawhas
+        <v-icon class="mr-2">
+          favorite
+        </v-icon> Recently Saved Nawhas
       </h5>
       <template v-if="tracks">
         <v-row :dense="$vuetify.breakpoint.smAndDown">
@@ -42,6 +44,7 @@ import TrackCardSkeleton from '@/components/loaders/TrackCardSkeleton.vue';
 import { Track } from '@/entities/track';
 import { TrackIncludes } from '@/api/tracks';
 import LibraryHeader from '@/components/library/LibraryHeader.vue';
+import { generateMeta } from '@/utils/meta';
 
 interface Data {
   tracks: Array<Track>|null;
@@ -87,6 +90,9 @@ export default Vue.extend({
       }
     },
   },
+  head: () => generateMeta({
+    title: 'My Library',
+  }),
 });
 </script>
 

@@ -24,6 +24,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
+import { generateMeta } from '@/utils/meta';
 
 export default Vue.extend({
   middleware({ store, redirect }) {
@@ -41,6 +42,9 @@ export default Vue.extend({
       }
     },
   },
+  head: () => generateMeta({
+    title: 'Welcome to your library',
+  }),
 });
 </script>
 

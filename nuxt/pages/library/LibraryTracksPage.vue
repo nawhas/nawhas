@@ -41,6 +41,7 @@ import { Track } from '@/entities/track';
 import TrackList from '@/components/tracks/TrackList.vue';
 import { getPage } from '@/utils/route';
 import LibraryHeader from '@/components/library/LibraryHeader.vue';
+import { generateMeta } from '@/utils/meta';
 
 interface Data {
   tracks: Array<Track>|null;
@@ -116,5 +117,9 @@ export default Vue.extend({
       this.$router.push({ query: { page: String(page) } });
     },
   },
+
+  head: () => generateMeta({
+    title: 'Saved Nawhas',
+  }),
 });
 </script>
