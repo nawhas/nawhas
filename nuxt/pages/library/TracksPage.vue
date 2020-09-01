@@ -23,7 +23,8 @@
               v-bind="attrs"
               v-on="on"
             >
-              Sort
+              <v-icon left>sort</v-icon>
+              <span>Sort</span>
             </v-btn>
           </template>
           <v-list>
