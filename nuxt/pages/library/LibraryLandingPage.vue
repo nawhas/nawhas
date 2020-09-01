@@ -16,7 +16,7 @@
     <h2 class="sub-heading">
       Add nawhas to your favorites, create playlists, and curate your own collection.
     </h2>
-    <v-btn to="/" x-large color="white" class="black--text">
+    <v-btn x-large color="white" class="black--text" @click="promptRegister">
       Get Started
     </v-btn>
   </div>
@@ -40,6 +40,9 @@ export default Vue.extend({
       if (value) {
         this.$router.replace('/library/home');
       }
+    },
+    promptRegister() {
+      this.$store.commit('auth/PROMPT_USER', { prompt: 'favourite' });
     },
   },
   head: () => generateMeta({
