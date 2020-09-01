@@ -50,3 +50,14 @@ export function useIncludes(params: RequestParams, includes: Array<string> | und
     params.set('include', includes.join(','));
   }
 }
+
+export function useSortDir(params: RequestParams, sortDir: 'asc'|'desc' | undefined) {
+  if (sortDir) {
+    params.set('sortDir', String(sortDir));
+  }
+}
+export function useSortBy(params: RequestParams, sortBy: string | undefined) {
+  if (sortBy) {
+    params.set('sortBy', String(sortBy));
+  }
+}
