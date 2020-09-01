@@ -1,6 +1,6 @@
 <router>
   path: /library
-  name: "library"
+  name: "library.landing"
 </router>
 
 <template>

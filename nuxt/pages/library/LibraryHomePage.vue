@@ -1,15 +1,11 @@
 <router>
   path: /library/home
-  name: "LibraryHomePage"
+  name: "library.home"
 </router>
 
 <template>
   <div>
-    <page-header>
-      <v-icon size="64">
-        local_library
-      </v-icon>Library
-    </page-header>
+    <library-header />
 
     <v-container class="app__section">
       <h5 class="section__title mt-6 d-flex align-center justify-start">
@@ -40,12 +36,12 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import PageHeader from '@/components/PageHeader.vue';
 import TrackCard from '@/components/tracks/TrackCard.vue';
 import SkeletonCardGrid from '@/components/loaders/SkeletonCardGrid.vue';
 import TrackCardSkeleton from '@/components/loaders/TrackCardSkeleton.vue';
 import { Track } from '@/entities/track';
 import { TrackIncludes } from '@/api/tracks';
+import LibraryHeader from '@/components/library/LibraryHeader.vue';
 
 interface Data {
   tracks: Array<Track>|null;
@@ -58,10 +54,10 @@ export default Vue.extend({
     }
   },
   components: {
-    PageHeader,
     TrackCard,
     SkeletonCardGrid,
     TrackCardSkeleton,
+    LibraryHeader,
   },
   async fetch() {
     const response = await this.$api.library.tracks({

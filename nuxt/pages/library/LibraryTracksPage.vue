@@ -1,20 +1,17 @@
 <router>
   path: /library/tracks
-  name: "LibraryTracksPage"
+  name: "library.tracks"
 </router>
 
 <template>
   <div>
-    <page-header>
-      <v-icon size="64">
-        local_library
-      </v-icon>Library
-    </page-header>
-
+    <library-header />
     <v-container class="app__section">
       <h5 class="section__title section__title--with-actions mt-6">
         <div class="d-flex align-center justify-start">
-          <v-icon class="mr-2">favorite</v-icon>Saved Nawhas
+          <v-icon class="mr-2">
+            favorite
+          </v-icon>Saved Nawhas
         </div>
         <v-btn text @click="playSavedTracks">
           Play All
@@ -43,6 +40,7 @@ import { TrackIncludes } from '@/api/tracks';
 import { Track } from '@/entities/track';
 import TrackList from '@/components/tracks/TrackList.vue';
 import { getPage } from '@/utils/route';
+import LibraryHeader from '@/components/library/LibraryHeader.vue';
 
 interface Data {
   tracks: Array<Track>|null;
@@ -58,18 +56,10 @@ export default Vue.extend({
   },
   components: {
     TrackList,
+    LibraryHeader,
   },
   async fetch() {
     await this.getTracks();
-  },
-  computed: {
-    playable(): Array<Track> {
-      if (!this.tracks) {
-        return [];
-      }
-
-      return this.tracks.filter((track) => this.hasAudioFile(track));
-    },
   },
   data(): Data {
     const page = getPage(this.$route);
@@ -79,6 +69,15 @@ export default Vue.extend({
       page,
       length: 1,
     };
+  },
+  computed: {
+    playable(): Array<Track> {
+      if (!this.tracks) {
+        return [];
+      }
+
+      return this.tracks.filter((track) => this.hasAudioFile(track));
+    },
   },
   watch: {
     '$store.state.auth.user': 'onAuthChange',
@@ -119,7 +118,3 @@ export default Vue.extend({
   },
 });
 </script>
-
-<style scoped>
-
-</style>
