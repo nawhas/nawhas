@@ -16,27 +16,6 @@
         <div>
           <v-icon>favorite</v-icon>Saved Nawhas
         </div>
-        <v-menu offset-y>
-          <template v-slot:activator="{ on, attrs }">
-            <v-btn
-              color="primary"
-              v-bind="attrs"
-              v-on="on"
-            >
-              <v-icon left>sort</v-icon>
-              <span>Sort</span>
-            </v-btn>
-          </template>
-          <v-list>
-            <v-list-item
-              v-for="(item, index) in sortDropdown"
-              :key="index"
-              @click="sort = item.value"
-            >
-              <v-list-item-title>{{ item.title }}</v-list-item-title>
-            </v-list-item>
-          </v-list>
-        </v-menu>
       </h5>
     </v-container>
 
@@ -69,10 +48,8 @@ import { getPage } from '@/utils/route';
 
 interface Data {
   tracks: Array<Track>|null;
-  sortDropdown: Array<object>;
   page: number;
   length: number;
-  sort: 'asc' | 'desc';
 }
 
 export default Vue.extend({
@@ -92,19 +69,13 @@ export default Vue.extend({
 
     return {
       tracks: null,
-      sortDropdown: [
-        { title: 'Ascending', value: 'asc' },
-        { title: 'Descending', value: 'desc' },
-      ],
       page,
       length: 1,
-      sort: 'asc',
     };
   },
   watch: {
     '$store.state.auth.user': 'onAuthChange',
     '$route.query': 'getTracks',
-    'sort': 'onSortChange',
   },
   methods: {
     onAuthChange(value) {
@@ -125,17 +96,12 @@ export default Vue.extend({
           limit: 10,
           page: getPage(this.$route),
         },
-        sortDir: this.sort,
       });
       this.tracks = response.data;
       this.length = response.meta.pagination.total_pages;
     },
     onPageChanged(page) {
       this.$router.push({ query: { page: String(page) } });
-    },
-    onSortChange() {
-      this.onPageChanged(1);
-      this.getTracks();
     },
   },
 });
