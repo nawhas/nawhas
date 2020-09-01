@@ -7,7 +7,7 @@
         :to="getTrackUri(track)"
         :two-line="metadata"
       >
-        <v-list-item-avatar>
+        <v-list-item-avatar tile>
           <v-avatar v-if="!displayAvatar" size="36">
             <span>{{ index+1 }}</span>
           </v-avatar>

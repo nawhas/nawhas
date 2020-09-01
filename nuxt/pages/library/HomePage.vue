@@ -12,13 +12,8 @@
     </page-header>
 
     <v-container class="app__section">
-      <h5 class="section__title section__title--with-actions mt-6">
-        <div>
-          <v-icon>favorite</v-icon> Recently Saved Nawhas
-        </div>
-        <v-btn text @click="playSavedTracks">
-          Play All
-        </v-btn>
+      <h5 class="section__title mt-6 d-flex align-center justify-start">
+        <v-icon class="mr-2">favorite</v-icon> Recently Saved Nawhas
       </h5>
       <template v-if="tracks">
         <v-row :dense="$vuetify.breakpoint.smAndDown">
@@ -86,25 +81,10 @@ export default Vue.extend({
   data: (): Data => ({
     tracks: null,
   }),
-  computed: {
-    playable(): Array<Track> {
-      if (!this.tracks) {
-        return [];
-      }
-
-      return this.tracks.filter((track) => this.hasAudioFile(track));
-    },
-  },
   watch: {
     '$store.state.auth.user': 'onAuthChange',
   },
   methods: {
-    playSavedTracks() {
-      this.$store.commit('player/PLAY_ALBUM', { tracks: this.playable, start: this.playable[0] });
-    },
-    hasAudioFile(track): boolean {
-      return track.related?.audio ?? false;
-    },
     onAuthChange(value) {
       if (!value) {
         this.$router.replace('/library');

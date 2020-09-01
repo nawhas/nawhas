@@ -13,22 +13,20 @@
 
     <v-container class="app__section">
       <h5 class="section__title section__title--with-actions mt-6">
-        <div>
-          <v-icon>favorite</v-icon>Saved Nawhas
+        <div class="d-flex align-center justify-start">
+          <v-icon class="mr-2">favorite</v-icon>Saved Nawhas
         </div>
+        <v-btn text @click="playSavedTracks">
+          Play All
+        </v-btn>
       </h5>
-    </v-container>
-
-    <v-container class="app__section">
       <v-card>
         <track-list :tracks="tracks" metadata :display-avatar="true" />
       </v-card>
-    </v-container>
-
-    <v-container class="app__section">
       <v-pagination
         v-model="page"
         color="deep-orange"
+        class="mt-6"
         :length="length"
         circle
         next-icon="navigate_next"
@@ -64,6 +62,15 @@ export default Vue.extend({
   async fetch() {
     await this.getTracks();
   },
+  computed: {
+    playable(): Array<Track> {
+      if (!this.tracks) {
+        return [];
+      }
+
+      return this.tracks.filter((track) => this.hasAudioFile(track));
+    },
+  },
   data(): Data {
     const page = getPage(this.$route);
 
@@ -83,6 +90,12 @@ export default Vue.extend({
         this.$router.replace('/library');
       }
     },
+    playSavedTracks() {
+      this.$store.commit('player/PLAY_ALBUM', { tracks: this.playable, start: this.playable[0] });
+    },
+    hasAudioFile(track): boolean {
+      return track.related?.audio ?? false;
+    },
     async getTracks() {
       const response = await this.$api.library.tracks({
         include: [
@@ -93,7 +106,7 @@ export default Vue.extend({
           'album.tracks',
         ],
         pagination: {
-          limit: 10,
+          limit: 20,
           page: getPage(this.$route),
         },
       });
