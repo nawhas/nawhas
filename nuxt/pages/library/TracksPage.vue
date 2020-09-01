@@ -30,7 +30,7 @@
             <v-list-item
               v-for="(item, index) in sortDropdown"
               :key="index"
-              @click="onSort(index)"
+              @click="sort = item.value"
             >
               <v-list-item-title>{{ item.title }}</v-list-item-title>
             </v-list-item>
@@ -84,7 +84,7 @@ export default Vue.extend({
     TrackList,
   },
   async fetch() {
-    await this.getTracks('asc');
+    await this.getTracks();
   },
   data(): Data {
     const page = getPage(this.$route);
@@ -92,8 +92,8 @@ export default Vue.extend({
     return {
       tracks: null,
       sortDropdown: [
-        { title: 'Ascending' },
-        { title: 'Descending' },
+        { title: 'Ascending', value: 'asc' },
+        { title: 'Descending', value: 'desc' },
       ],
       page,
       length: 1,
@@ -128,13 +128,6 @@ export default Vue.extend({
       });
       this.tracks = response.data;
       this.length = response.meta.pagination.total_pages;
-    },
-    onSort(value) {
-      if (value === 0) {
-        this.sort = 'asc';
-      } else {
-        this.sort = 'desc';
-      }
     },
     onPageChanged(page) {
       this.$router.push({ query: { page: String(page) } });
