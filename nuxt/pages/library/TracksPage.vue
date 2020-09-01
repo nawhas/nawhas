@@ -43,6 +43,9 @@
       <v-card>
         <track-list :tracks="tracks" metadata :display-avatar="true" />
       </v-card>
+    </v-container>
+
+    <v-container class="app__section">
       <v-pagination
         v-model="page"
         color="deep-orange"
