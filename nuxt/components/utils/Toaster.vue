@@ -4,11 +4,30 @@
       v-model="snackbar"
       top
       right
+      multi-line
     >
-      {{ toast.text }}
-      <v-btn dark text @click="snackbar = false">
-        Close
-      </v-btn>
+      <div class="snackbar__content d-flex align-center justify-start">
+        <v-icon
+          v-if="toast.icon"
+          :color="color"
+          class="mr-2"
+        >
+          {{ toast.icon }}
+        </v-icon>
+        {{ toast.text }}
+      </div>
+
+      <template v-slot:action="{ attrs }">
+        <v-btn
+          color="accent"
+          dark
+          text
+          v-bind="attrs"
+          @click="snackbar = false"
+        >
+          Close
+        </v-btn>
+      </template>
     </v-snackbar>
   </div>
 </template>
@@ -24,6 +43,13 @@ export default class Toaster extends Vue {
   private toast: ToastOptions = {
     text: '',
   };
+
+  get color(): string|undefined {
+    switch (this.toast.type) {
+      case 'success': return 'green';
+      default: return undefined;
+    }
+  }
 
   mounted() {
     EventBus.$on(TOAST_SHOW, (toast: ToastOptions) => {

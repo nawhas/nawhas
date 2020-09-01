@@ -66,19 +66,6 @@
               {{ track.reciter.name }} &bull; {{ track.year }}
             </div>
           </div>
-          <div class="track-info--track-favorite">
-            <v-icon
-              :class="{
-                'material-icons-outlined': true,
-                'track-favorite--disabled': !isTrackSaved && !isDark,
-                'track-favorite--disabled--dark': !isTrackSaved && isDark
-              }"
-              color="#FE5B00"
-              @click="onSaveTrack"
-            >
-              favorite
-            </v-icon>
-          </div>
         </div>
       </v-expand-x-transition>
 
@@ -115,6 +102,10 @@
         >
           <v-icon>shuffle</v-icon>
         </v-btn>
+        <favorite-track-button
+          v-if="mobile && minimized"
+          :track="track.id"
+        />
         <v-btn
           v-if="!mobile || !minimized"
           icon
@@ -249,27 +240,37 @@
       v-if="mobile && !minimized"
       class="audio-player__bottom-actions"
     >
-      <v-btn
-        text
-        :disabled="!track.lyrics"
-        :class="{'bottom-actions__button': true, 'bottom-action__button--active': currentOverlay === 'lyrics'}"
-        @click="toggleOverlay('lyrics')"
-      >
-        <v-icon left>
-          speaker_notes
-        </v-icon>
-        Write-Up
-      </v-btn>
-      <v-btn
-        text
-        :class="{'bottom-actions__button': true, 'bottom-action__button--active': currentOverlay === 'queue'}"
-        @click="toggleOverlay('queue')"
-      >
-        <v-icon left>
-          queue_music
-        </v-icon>
-        Queue
-      </v-btn>
+      <div class="bottom-actions__left">
+        <v-btn
+          text
+          :disabled="!track.lyrics"
+          :class="{'bottom-actions__button': true, 'bottom-action__button--active': currentOverlay === 'lyrics'}"
+          @click="toggleOverlay('lyrics')"
+        >
+          <v-icon left>
+            speaker_notes
+          </v-icon>
+          Write-Up
+        </v-btn>
+      </div>
+      <div class="bottom-actions__center">
+        <favorite-track-button
+          class="bottom-actions__button"
+          :track="track.id"
+        />
+      </div>
+      <div class="bottom-actions__right">
+        <v-btn
+          text
+          :class="{'bottom-actions__button': true, 'bottom-action__button--active': currentOverlay === 'queue'}"
+          @click="toggleOverlay('queue')"
+        >
+          <v-icon left>
+            queue_music
+          </v-icon>
+          Queue
+        </v-btn>
+      </div>
     </div>
   </v-sheet>
 </template>
@@ -288,6 +289,7 @@ import {
 import { getAlbumArtwork } from '@/entities/album';
 import { getReciterUri } from '@/entities/reciter';
 import { getTrackUri } from '@/entities/track';
+import FavoriteTrackButton from '~/components/tracks/FavoriteTrackButton.vue';
 
 interface CachedTrackReference {
   queued: QueuedTrack|null;
@@ -296,6 +298,7 @@ interface CachedTrackReference {
 
 @Component({
   components: {
+    FavoriteTrackButton,
     QueueList,
     LyricsRenderer,
     LyricsOverlay,
@@ -898,19 +901,6 @@ $duration: 580ms;
       display: flex;
       flex-direction: column;
     }
-    &--track-favorite {
-      display: flex;
-      justify-self: center;
-      margin-left: 20px;
-      color: #FE5B00;
-
-      .track-favorite--disabled {
-        color: rgba(0, 0, 0, 0.1) !important;
-      }
-      .track-favorite--disabled--dark {
-        color: rgba(map-get($shades, 'white'), 0.5) !important;
-      }
-    }
   }
   .player-actions {
     margin: auto;
@@ -1087,8 +1077,24 @@ $duration: 580ms;
     width: 100%;
     margin-bottom: 12px;
     display: flex;
-    padding: 15px 30px;
-    justify-content: space-between;
+    padding: 15px 20px;
+
+    .bottom-actions__left,
+    .bottom-actions__center,
+    .bottom-actions__right {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .bottom-actions__left {
+      justify-content: flex-start;
+    }
+
+    .bottom-actions__right {
+      justify-content: flex-end;
+    }
 
     .bottom-action__button--active {
       color: $accent;
