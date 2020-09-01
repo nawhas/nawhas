@@ -16,6 +16,26 @@
       </div>
     </header>
 
+    <v-container v-if="savedTracks" class="app__section">
+      <h5 class="section__title mt-6">
+        <div>
+          <v-icon>favorite</v-icon> Recently Saved Nawhas
+        </div>
+      </h5>
+      <template v-if="savedTracks">
+        <v-row :dense="$vuetify.breakpoint.smAndDown">
+          <v-col v-for="track in savedTracks" :key="track.id" cols="12" sm="6" md="4">
+            <track-card :track="track" :colored="true" :show-reciter="true" />
+          </v-col>
+        </v-row>
+      </template>
+      <template v-else>
+        <skeleton-card-grid>
+          <track-card-skeleton />
+        </skeleton-card-grid>
+      </template>
+    </v-container>
+
     <v-container class="app__section">
       <h5 class="section__title mt-6">
         Trending This Month
@@ -91,6 +111,7 @@ const POPULAR_ENTITIES_LIMIT = 6;
 interface Data {
   reciters: Array<Reciter> | null;
   tracks: Array<Track> | null;
+  savedTracks: Array<Track> | null;
 }
 
 export default Vue.extend({
@@ -115,8 +136,8 @@ export default Vue.extend({
         pagination: { limit: 20 },
         include: [TrackIncludes.Reciter, TrackIncludes.Album, TrackIncludes.Media, TrackIncludes.Related],
       }),
+      this.getSavedTracks(),
     ]);
-
     this.reciters = reciters.data;
     this.tracks = tracks.data;
   },
@@ -124,6 +145,7 @@ export default Vue.extend({
   data: (): Data => ({
     reciters: null,
     tracks: null,
+    savedTracks: null,
   }),
 
   computed: {
@@ -133,6 +155,38 @@ export default Vue.extend({
 
     popularTracks(): Array<Track> | null {
       return this.tracks ? this.tracks.slice(0, POPULAR_ENTITIES_LIMIT) : null;
+    },
+  },
+
+  watch: {
+    '$store.state.auth.user': 'onAuthChange',
+  },
+
+  methods: {
+    async getSavedTracks() {
+      if (!this.$store.getters['auth/user']) {
+        return;
+      }
+      const response = await this.$api.library.tracks({
+        include: [
+          TrackIncludes.Reciter,
+          TrackIncludes.Lyrics,
+          TrackIncludes.Media,
+          TrackIncludes.Related,
+          'album.tracks',
+        ],
+        pagination: {
+          limit: 6,
+        },
+      });
+      this.savedTracks = response.data;
+    },
+    onAuthChange(value) {
+      if (value) {
+        this.getSavedTracks();
+      } else {
+        this.savedTracks = null;
+      }
     },
   },
 });

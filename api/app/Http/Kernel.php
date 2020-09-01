@@ -41,7 +41,6 @@ class Kernel extends HttpKernel
             \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
             // 'throttle:60,1', // TODO - Make this work with proxies.
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
-            \Spatie\ResponseCache\Middlewares\CacheResponse::class,
         ],
     ];
 

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Modules\Library\Events\Tracks;
 
 use App\Modules\Core\Events\SerializableEvent;
+use App\Modules\Core\Events\UserAction;
 use App\Modules\Lyrics\Documents\Document;
 use App\Modules\Lyrics\Documents\Factory;
 use App\Modules\Lyrics\Documents\Format;

@@ -58,11 +58,13 @@
         -->
       <v-expand-x-transition>
         <div v-if="!minimized || mobile" class="track-info">
-          <div class="track-info--track-name body-1" @click="onTrackTitleClicked">
-            {{ track.title }}
-          </div>
-          <div class="track-info--track-meta body-2" @click="onReciterNameClicked">
-            {{ track.reciter.name }} &bull; {{ track.year }}
+          <div class="track-info--container">
+            <div class="track-info--track-name body-1" @click="onTrackTitleClicked">
+              {{ track.title }}
+            </div>
+            <div class="track-info--track-meta body-2" @click="onReciterNameClicked">
+              {{ track.reciter.name }} &bull; {{ track.year }}
+            </div>
           </div>
         </div>
       </v-expand-x-transition>
@@ -100,6 +102,10 @@
         >
           <v-icon>shuffle</v-icon>
         </v-btn>
+        <favorite-track-button
+          v-if="mobile && minimized"
+          :track="track.id"
+        />
         <v-btn
           v-if="!mobile || !minimized"
           icon
@@ -172,6 +178,10 @@
               <v-list-item @click="goToTrack">
                 Go to track
               </v-list-item>
+              <v-list-item @click="onSaveTrack">
+                <span v-if="!isTrackSaved">Add to Library</span>
+                <span v-else>Remove from Library</span>
+              </v-list-item>
               <v-list-item @click="toggleMinimized">
                 Expand player
               </v-list-item>
@@ -230,27 +240,37 @@
       v-if="mobile && !minimized"
       class="audio-player__bottom-actions"
     >
-      <v-btn
-        text
-        :disabled="!track.lyrics"
-        :class="{'bottom-actions__button': true, 'bottom-action__button--active': currentOverlay === 'lyrics'}"
-        @click="toggleOverlay('lyrics')"
-      >
-        <v-icon left>
-          speaker_notes
-        </v-icon>
-        Write-Up
-      </v-btn>
-      <v-btn
-        text
-        :class="{'bottom-actions__button': true, 'bottom-action__button--active': currentOverlay === 'queue'}"
-        @click="toggleOverlay('queue')"
-      >
-        <v-icon left>
-          queue_music
-        </v-icon>
-        Queue
-      </v-btn>
+      <div class="bottom-actions__left">
+        <v-btn
+          text
+          :disabled="!track.lyrics"
+          :class="{'bottom-actions__button': true, 'bottom-action__button--active': currentOverlay === 'lyrics'}"
+          @click="toggleOverlay('lyrics')"
+        >
+          <v-icon left>
+            speaker_notes
+          </v-icon>
+          Write-Up
+        </v-btn>
+      </div>
+      <div class="bottom-actions__center">
+        <favorite-track-button
+          class="bottom-actions__button"
+          :track="track.id"
+        />
+      </div>
+      <div class="bottom-actions__right">
+        <v-btn
+          text
+          :class="{'bottom-actions__button': true, 'bottom-action__button--active': currentOverlay === 'queue'}"
+          @click="toggleOverlay('queue')"
+        >
+          <v-icon left>
+            queue_music
+          </v-icon>
+          Queue
+        </v-btn>
+      </div>
     </div>
   </v-sheet>
 </template>
@@ -269,6 +289,7 @@ import {
 import { getAlbumArtwork } from '@/entities/album';
 import { getReciterUri } from '@/entities/reciter';
 import { getTrackUri } from '@/entities/track';
+import FavoriteTrackButton from '~/components/tracks/FavoriteTrackButton.vue';
 
 interface CachedTrackReference {
   queued: QueuedTrack|null;
@@ -277,6 +298,7 @@ interface CachedTrackReference {
 
 @Component({
   components: {
+    FavoriteTrackButton,
     QueueList,
     LyricsRenderer,
     LyricsOverlay,
@@ -453,6 +475,10 @@ export default class AudioPlayer extends Vue {
 
   get formattedDuration() {
     return moment.utc(moment.duration(this.duration, 'seconds').asMilliseconds()).format('m:ss');
+  }
+
+  get isTrackSaved() {
+    return this.$store.getters['library/isTrackSaved'](this.track.id);
   }
 
   toggleOverlay(key) {
@@ -777,6 +803,21 @@ export default class AudioPlayer extends Vue {
     }
   }
 
+  onSaveTrack() {
+    if (!this.track) {
+      return;
+    }
+    if (this.isTrackSaved) {
+      this.$store.dispatch('library/removeTrack', {
+        ids: [this.track.id],
+      });
+    } else {
+      this.$store.dispatch('library/saveTrack', {
+        ids: [this.track.id],
+      });
+    }
+  }
+
   /**
    * For development purpose only
    * stops playing and unloads howl on hot reload
@@ -854,6 +895,12 @@ $duration: 580ms;
   .track-info {
     padding: 0 12px;
     flex: 1;
+    display: flex;
+    flex-direction: row;
+    &--container {
+      display: flex;
+      flex-direction: column;
+    }
   }
   .player-actions {
     margin: auto;
@@ -1030,8 +1077,24 @@ $duration: 580ms;
     width: 100%;
     margin-bottom: 12px;
     display: flex;
-    padding: 15px 30px;
-    justify-content: space-between;
+    padding: 15px 20px;
+
+    .bottom-actions__left,
+    .bottom-actions__center,
+    .bottom-actions__right {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .bottom-actions__left {
+      justify-content: flex-start;
+    }
+
+    .bottom-actions__right {
+      justify-content: flex-end;
+    }
 
     .bottom-action__button--active {
       color: $accent;
