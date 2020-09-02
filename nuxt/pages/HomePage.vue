@@ -92,7 +92,7 @@
         Top Nawhas
       </h5>
       <v-card>
-        <track-list :tracks="tracks" metadata :count="20" />
+        <track-list :tracks="tracks" metadata numbered :count="20" />
       </v-card>
     </v-container>
   </div>

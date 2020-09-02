@@ -8,7 +8,7 @@
         :two-line="metadata"
       >
         <v-list-item-avatar tile>
-          <v-avatar v-if="!displayAvatar" size="36">
+          <v-avatar v-if="numbered" size="36">
             <span>{{ index+1 }}</span>
           </v-avatar>
           <v-avatar v-else size="36" tile>
@@ -95,7 +95,7 @@ export default class TrackList extends Vue {
   @Prop({ type: Array as PropType<Array<Track>> }) private readonly tracks!: Array<Track>;
   @Prop({ type: Boolean, default: false }) private readonly metadata!: boolean;
   @Prop({ type: Number, default: 6 }) private readonly count!: number;
-  @Prop({ type: Boolean, default: false }) private readonly displayAvatar!: boolean;
+  @Prop({ type: Boolean, default: false }) private readonly numbered!: boolean;
 
   private hasAudioFile = hasAudioFile;
   private hasLyrics = hasLyrics;
