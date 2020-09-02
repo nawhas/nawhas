@@ -1,5 +1,5 @@
 <template>
-  <v-btn icon class="track-favorite" @click.prevent="toggleSaveState">
+  <v-btn icon class="track-favorite" @click.stop="toggleSaveState">
     <v-icon
       class="track-favorite__icon"
       :color="saved ? 'primary' : undefined"
