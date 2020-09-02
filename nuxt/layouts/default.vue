@@ -242,7 +242,8 @@ export default Vue.extend({
 }
 .user-menu {
   align-self: flex-start;
-  margin: 4px 0 0 4px;
+  margin-top: 10px;
+  margin-left: 12px;
 }
 .nav__drawer {
   z-index: 500;
@@ -260,8 +261,8 @@ export default Vue.extend({
   }
 
   .user-menu {
-    margin: 0;
     align-self: center;
+    margin: 0 0 0 10px;
   }
 
   .app-bar__right {
