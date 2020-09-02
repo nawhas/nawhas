@@ -83,6 +83,7 @@ export default Vue.extend({
   watch: {
     '$store.state.auth.user': 'onAuthChange',
     '$route.query': 'getTracks',
+    '$store.state.library.trackIds': 'getTracks',
   },
   methods: {
     onAuthChange(value) {
