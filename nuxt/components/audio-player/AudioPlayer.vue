@@ -289,7 +289,7 @@ import {
 import { getAlbumArtwork } from '@/entities/album';
 import { getReciterUri } from '@/entities/reciter';
 import { getTrackUri } from '@/entities/track';
-import FavoriteTrackButton from '~/components/tracks/FavoriteTrackButton.vue';
+import FavoriteTrackButton from '@/components/tracks/FavoriteTrackButton.vue';
 
 interface CachedTrackReference {
   queued: QueuedTrack|null;
