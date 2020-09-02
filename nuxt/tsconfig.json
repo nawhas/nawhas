@@ -18,9 +18,6 @@
     "baseUrl": ".",
     "typeRoots": ["./@types", "./node_modules/@types"],
     "paths": {
-      "~/*": [
-        "./*"
-      ],
       "@/*": [
         "./*"
       ]
