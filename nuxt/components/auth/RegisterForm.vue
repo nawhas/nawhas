@@ -8,8 +8,10 @@
         Create an account on Nawhas.com to
         <br>
         create collections, edit write-ups, and more.
-      </p><p v-if="false" class="message-line">
-        Already have an account? <a class="link" href="#">Log in.</a>
+      </p>
+      <p class="message-line">
+        Already have an account?
+        <a class="link" href="#" @click.prevent="switchToLoginDialog">Log in.</a>
       </p>
     </template>
     <v-text-field
@@ -116,6 +118,14 @@ export default class RegisterForm extends Vue {
   close() {
     this.form = createForm();
     this.$emit('close');
+  }
+
+  switchToLoginDialog() {
+    const prompt = this.$store.state.auth.prompt ?? {};
+    this.$store.commit('auth/PROMPT_USER', {
+      ...prompt,
+      type: 'login',
+    });
   }
 }
 </script>

@@ -25,6 +25,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import { generateMeta } from '@/utils/meta';
+import { AuthReason } from '@/entities/auth';
 
 export default Vue.extend({
   middleware({ store, redirect }) {
@@ -42,7 +43,7 @@ export default Vue.extend({
       }
     },
     promptRegister() {
-      this.$store.commit('auth/PROMPT_USER', { prompt: 'favourite' });
+      this.$store.commit('auth/PROMPT_USER', { reason: AuthReason.TrackSaved });
     },
   },
   head: () => generateMeta({
