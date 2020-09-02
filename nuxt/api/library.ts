@@ -4,7 +4,7 @@ import {
   PaginatedResponse,
   createParams,
   usePagination,
-  useIncludes, useSortDir, useSortBy,
+  useIncludes,
 } from '@/api/common';
 import { Track } from '@/entities/track';
 import { TrackIncludes, TracksIndexResponse } from '@/api/tracks';
@@ -40,8 +40,6 @@ export class LibraryApi {
     const params = createParams();
     usePagination(params, options.pagination);
     useIncludes(params, options.include);
-    useSortDir(params, options.sortDir);
-    useSortBy(params, options.sortBy);
 
     return await this.axios.$get<TracksIndexResponse>('/v1/me/tracks', { params });
   }
