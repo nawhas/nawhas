@@ -1,5 +1,5 @@
 <template>
-  <page-header>
+  <page-header class="library-header">
     <div class="d-flex align-center justify-center">
       <div class="header__icon">
         <v-icon size="32">
@@ -13,19 +13,25 @@
 
 <script lang="ts">
 import Vue from 'vue';
+import PageHeader from '@/components/PageHeader.vue';
 
 export default Vue.extend({
   name: 'LibraryHeader',
+
+  components: {
+    PageHeader,
+  },
 });
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .header__icon {
   border: 1px solid white;
   width: 56px;
   height: 56px;
   border-radius: 56px;
   display: flex;
+  flex: none;
   align-items: center;
   justify-content: center;
   margin-right: 18px;

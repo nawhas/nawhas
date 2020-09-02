@@ -66,6 +66,11 @@
               {{ track.reciter.name }} &bull; {{ track.year }}
             </div>
           </div>
+          <favorite-track-button
+            v-if="!mobile && !minimized"
+            :track="track.id"
+            class="track-info__favorite"
+          />
         </div>
       </v-expand-x-transition>
 
@@ -886,9 +891,9 @@ $duration: 580ms;
 }
 
 .player-content {
-  width: 100%;
   position: relative;
   display: flex;
+  flex: 1 1 100%;
   align-items: center;
   justify-content: space-between;
 
@@ -897,9 +902,14 @@ $duration: 580ms;
     flex: 1;
     display: flex;
     flex-direction: row;
+    align-items: center;
+    overflow: hidden;
     &--container {
       display: flex;
       flex-direction: column;
+    }
+    &__favorite {
+      margin-left: 12px;
     }
   }
   .player-actions {
