@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Modules\Library\Events;
 
 use App\Modules\Core\Events\SerializableEvent;
+use App\Modules\Core\Events\UserAction;
 use Carbon\Carbon;
 use DateTimeInterface;
 

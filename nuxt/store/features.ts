@@ -7,7 +7,7 @@ import { RootState } from '@/store/index';
 | Interfaces & Types
 |--------------------------------------------------------------------------
 */
-interface FeaturesState {
+export interface FeaturesState {
   features: FeatureMap;
   initialized: boolean;
 }

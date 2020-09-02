@@ -7,9 +7,12 @@
         :to="getTrackUri(track)"
         :two-line="metadata"
       >
-        <v-list-item-avatar>
-          <v-avatar size="36">
+        <v-list-item-avatar tile>
+          <v-avatar v-if="numbered" size="36">
             <span>{{ index+1 }}</span>
+          </v-avatar>
+          <v-avatar v-else size="36" tile>
+            <lazy-image crossorigin :src="image(track)" :alt="track.album.title" />
           </v-avatar>
         </v-list-item-avatar>
         <v-list-item-content>
@@ -55,6 +58,7 @@
               </template>
             </v-icon>
           </v-btn>
+          <favorite-track-button :track="track.id" @click.prevent />
         </v-list-item-action>
       </v-list-item>
     </v-list>
@@ -74,15 +78,24 @@
 import {
   Component, Prop, Vue,
 } from 'nuxt-property-decorator';
+import FavoriteTrackButton from '@/components/tracks/FavoriteTrackButton.vue';
 import { PropType } from 'vue';
 import { hasAudioFile, hasLyrics } from '@/utils/tracks';
 import { Track, getTrackUri } from '@/entities/track';
+import { getAlbumArtwork } from '@/entities/album';
+import LazyImage from '@/components/utils/LazyImage.vue';
 
-@Component
+@Component({
+  components: {
+    LazyImage,
+    FavoriteTrackButton,
+  },
+})
 export default class TrackList extends Vue {
   @Prop({ type: Array as PropType<Array<Track>> }) private readonly tracks!: Array<Track>;
   @Prop({ type: Boolean, default: false }) private readonly metadata!: boolean;
   @Prop({ type: Number, default: 6 }) private readonly count!: number;
+  @Prop({ type: Boolean, default: false }) private readonly numbered!: boolean;
 
   private hasAudioFile = hasAudioFile;
   private hasLyrics = hasLyrics;
@@ -98,6 +111,10 @@ export default class TrackList extends Vue {
 
   get isDark() {
     return this.$vuetify.theme.dark;
+  }
+
+  image(track): string {
+    return getAlbumArtwork(track.album);
   }
 
   playTrack(track) {

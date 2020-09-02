@@ -1,5 +1,3 @@
-import { IncomingMessage } from 'http';
-import { AxiosRequestConfig } from 'axios';
 import { NuxtAxiosInstance } from '@nuxtjs/axios';
 import { User } from '@/entities/user';
 
@@ -20,7 +18,6 @@ export interface RegisterPayload {
 export class AuthApi {
   constructor(
     private axios: NuxtAxiosInstance,
-    private request?: IncomingMessage,
   ) {}
 
   async login(payload: LoginPayload): Promise<User> {
@@ -32,13 +29,7 @@ export class AuthApi {
   }
 
   async user(): Promise<User> {
-    const options: AxiosRequestConfig = process.server ? {
-      headers: {
-        referer: this.request?.headers.host,
-      },
-    } : {};
-
-    return await this.axios.$get<User>('v1/auth/user', options);
+    return await this.axios.$get<User>('v1/auth/user');
   };
 
   async logout(): Promise<void> {

@@ -7,6 +7,7 @@ namespace App\Modules\Features;
 use App\Modules\Authentication\Guard;
 use App\Modules\Features\Definitions\Feature;
 use Illuminate\Contracts\Container\Container;
+use Illuminate\Support\Facades\Route as Router;
 use Illuminate\Support\ServiceProvider as IlluminateServiceProvider;
 use Illuminate\Support\Str;
 use ReflectionClass;
@@ -15,6 +16,22 @@ use Symfony\Component\Finder\Finder;
 class ServiceProvider extends IlluminateServiceProvider
 {
     private const DEFINITIONS_PATH = __DIR__ . '/Definitions';
+
+    public function boot(): void
+    {
+        $this->defineRoutes();
+    }
+
+    protected function defineRoutes(): void
+    {
+        if ($this->app->routesAreCached()) {
+            return;
+        }
+
+        Router::middleware('api')
+            ->namespace(__NAMESPACE__)
+            ->group(__DIR__ . '/Http/api.php');
+    }
 
     public function register()
     {
@@ -32,7 +49,6 @@ class ServiceProvider extends IlluminateServiceProvider
 
     public function registerFeatures(FeatureManager $manager): void
     {
-
         $namespace = $this->app->getNamespace();
 
         foreach ((new Finder())->in(self::DEFINITIONS_PATH)->files() as $file) {

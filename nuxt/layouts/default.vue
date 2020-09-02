@@ -107,6 +107,12 @@ const links = [
     to: '/reciters',
   },
   {
+    icon: 'local_library',
+    title: 'Library',
+    exact: false,
+    to: '/library',
+  },
+  {
     icon: 'info',
     title: 'About',
     exact: false,
@@ -129,7 +135,6 @@ export default Vue.extend({
 
   async fetch() {
     await Promise.all([
-      this.$store.dispatch('auth/check').catch(() => null),
       this.$store.dispatch('features/fetch').catch(() => null),
     ]);
   },

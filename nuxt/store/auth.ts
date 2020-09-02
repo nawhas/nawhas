@@ -1,18 +1,20 @@
 import { ActionContext, ActionTree, MutationTree, GetterTree } from 'vuex';
 import { LoginPayload, RegisterPayload } from '@/api/auth';
 import { User, Role } from '@/entities/user';
-
+import { AuthPrompt } from '@/entities/auth';
 import { RootState } from '@/store';
 
-interface AuthState {
+export interface AuthState {
   user: User | null;
   initialized: boolean;
+  prompt: AuthPrompt | null;
 }
 type Context = ActionContext<AuthState, RootState>;
 
 const state = (): AuthState => ({
   user: null,
   initialized: false,
+  prompt: null,
 });
 
 const mutations: MutationTree<AuthState> = {
@@ -28,24 +30,45 @@ const mutations: MutationTree<AuthState> = {
   LOGOUT(state) {
     state.user = null;
   },
+
+  PROMPT_USER(state, prompt: Partial<AuthPrompt>) {
+    state.prompt = {
+      type: 'register',
+      ...prompt,
+    };
+  },
+
+  REMOVE_PROMPT(state) {
+    state.prompt = null;
+  },
 };
 
 const actions: ActionTree<AuthState, RootState> = {
-  async login({ commit }, payload: LoginPayload) {
+  async login({ commit, dispatch }, payload: LoginPayload) {
     const user = await this.$api.auth.login(payload);
 
     commit('LOGIN', user);
+
+    dispatch('features/fetch', null, { root: true });
+    dispatch('library/getTrackIds', null, { root: true });
   },
-  async register({ commit }, payload: RegisterPayload) {
+  async register({ commit, dispatch }, payload: RegisterPayload) {
     const user = await this.$api.auth.register(payload);
 
     commit('LOGIN', user);
+
+    dispatch('features/fetch', null, { root: true });
+    dispatch('library/getTrackIds', null, { root: true });
   },
-  async logout({ commit }) {
+  async logout({ commit, dispatch }) {
     commit('LOGOUT');
     await this.$api.auth.logout();
+    dispatch('library/getTrackIds', null, { root: true });
   },
-  async check({ commit }: Context) {
+  async initialize({ commit, state }: Context) {
+    if (state.initialized) {
+      return;
+    }
     try {
       const user = await this.$api.auth.user();
       commit('INITIALIZE', user);
@@ -61,6 +84,8 @@ const getters: GetterTree<AuthState, RootState> = {
   authenticated: (state) => state.user !== null,
   isModerator: (state) => state.user?.role === Role.Moderator,
   role: (state) => state.user?.role ?? Role.Guest,
+  showLoginDialog: (state) => state.prompt?.type === 'login',
+  showRegisterDialog: (state) => state.prompt?.type === 'register',
 };
 
 export default {

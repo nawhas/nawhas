@@ -165,7 +165,7 @@
 import { Component, Vue } from 'nuxt-property-decorator';
 import AppChangelog from '@/components/notifications/AppChangelog.vue';
 import BugReportForm from '@/components/BugReportForm.vue';
-import { User, Role } from '@/entities/user';
+import { Role, User } from '@/entities/user';
 import LoginForm from '@/components/auth/LoginForm.vue';
 import RegisterForm from '@/components/auth/RegisterForm.vue';
 import { Feature } from '@/entities/feature';
@@ -181,13 +181,39 @@ import { Feature } from '@/entities/feature';
 export default class UserMenu extends Vue {
   private readonly Role = Role;
   private open = false;
-  private showLoginDialog = false;
-  private showRegisterDialog = false;
   private showWhatsNewDialog = false;
   private showBugReportDialog = false;
 
   get user(): User|null {
     return this.$store.getters['auth/user'];
+  }
+
+  get showRegisterDialog() {
+    return this.$store.getters['auth/showRegisterDialog'];
+  }
+
+  set showRegisterDialog(value) {
+    if (!value) {
+      this.$store.commit('auth/REMOVE_PROMPT');
+    } else {
+      this.$store.commit('auth/PROMPT_USER', {
+        type: 'register',
+      });
+    }
+  }
+
+  get showLoginDialog() {
+    return this.$store.getters['auth/showLoginDialog'];
+  }
+
+  set showLoginDialog(value) {
+    if (!value) {
+      this.$store.commit('auth/REMOVE_PROMPT');
+    } else {
+      this.$store.commit('auth/PROMPT_USER', {
+        type: 'login',
+      });
+    }
   }
 
   get authenticated(): boolean {
