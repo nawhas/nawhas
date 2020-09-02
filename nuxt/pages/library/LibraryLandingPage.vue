@@ -1,6 +1,6 @@
 <router>
   path: /library
-  name: "library"
+  name: "library.landing"
 </router>
 
 <template>
@@ -16,7 +16,7 @@
     <h2 class="sub-heading">
       Add nawhas to your favorites, create playlists, and curate your own collection.
     </h2>
-    <v-btn to="/" x-large color="white" class="black--text">
+    <v-btn x-large color="white" class="black--text" @click="promptRegister">
       Get Started
     </v-btn>
   </div>
@@ -24,6 +24,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
+import { generateMeta } from '@/utils/meta';
 
 export default Vue.extend({
   middleware({ store, redirect }) {
@@ -40,7 +41,13 @@ export default Vue.extend({
         this.$router.replace('/library/home');
       }
     },
+    promptRegister() {
+      this.$store.commit('auth/PROMPT_USER', { prompt: 'favourite' });
+    },
   },
+  head: () => generateMeta({
+    title: 'Welcome to your library',
+  }),
 });
 </script>
 
