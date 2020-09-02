@@ -22,6 +22,8 @@ export interface TracksPayload {
 interface IndexRequestOptions {
   include?: Array<TrackIncludes|string>;
   pagination?: PaginationOptions;
+  sortBy?: string;
+  sortDir?: 'asc'|'desc';
 }
 
 /*
