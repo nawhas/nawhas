@@ -25,12 +25,5 @@ Route::prefix('v1')->group(function () {
         Route::post('feedback', [FeedbackController::class, 'submit']);
     });
 
-    // Features
-    Route::prefix('features')->group(function () {
-        Route::get('/', [FeaturesController::class, 'index']);
-        Route::get('secret', [FeaturesController::class, 'secret'])
-            ->middleware(EnforceFeatureFlags::in([PublicUserRegistration::NAME]));
-    });
-
     Route::get('search/key', [SearchController::class, 'key']);
 });

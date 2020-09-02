@@ -27,10 +27,6 @@ class FeatureManager
 
     public function enabled(string $name): bool
     {
-        if (($override = $this->getOverride($name)) !== null) {
-            return $override;
-        }
-
         $instance = $this->resolve($name);
 
         return $instance->enabled($this->guard->user());
@@ -50,14 +46,6 @@ class FeatureManager
     public function register(Feature $feature): void
     {
         $this->features->put($feature->name(), $feature);
-    }
-
-    public function getOverride(string $feature): ?bool
-    {
-        $environment = app()->environment();
-        $overrides = config("features.overrides.{$environment}");
-
-        return $overrides[$feature] ?? null;
     }
 
     public function export(): array
