@@ -217,6 +217,7 @@ export default Vue.extend({
           TrackIncludes.Lyrics,
           TrackIncludes.Media,
           'album.tracks',
+          'album.tracks.reciter',
           'album.tracks.lyrics',
           'album.tracks.media',
           'album.tracks.album',
