@@ -36,6 +36,8 @@ use Ramsey\Uuid\Uuid;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Authentication\Models\User newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Authentication\Models\User query()
  * @mixin \Eloquent
+ * @property-read \Illuminate\Database\Eloquent\Collection|Track[] $savedTracks
+ * @property-read int|null $saved_tracks_count
  */
 class User extends Authenticatable implements TimestampedEntity
 {
