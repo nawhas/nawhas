@@ -297,12 +297,12 @@ export default Vue.extend({
     savedTextColor(): string {
       return (this.isTrackSaved) ? '#FE5B00' : this.textColor;
     },
-    albumTracks(): Array<Track> | null | undefined {
+    albumTracks(): Array<Track> | null {
       if (!this.track) {
         return null;
       }
 
-      return this.track.album?.tracks?.data;
+      return this.track.album?.tracks?.data ?? null;
     },
   },
 
