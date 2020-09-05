@@ -41,17 +41,17 @@ class Handler extends ExceptionHandler
         return $e;
     }
 
-    public function report(Throwable $exception)
+    public function report(Throwable $e)
     {
-        if (app()->bound('sentry') && $this->shouldReport($exception)) {
-            app('sentry')->captureException($exception);
+        if (app()->bound('sentry') && $this->shouldReport($e)) {
+            app('sentry')->captureException($e);
         }
 
-        parent::report($exception);
+        parent::report($e);
     }
 
-    public function render($request, Throwable $exception)
+    public function render($request, Throwable $e)
     {
-        return parent::render($request, $exception);
+        return parent::render($request, $e);
     }
 }
