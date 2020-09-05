@@ -1,12 +1,8 @@
 import { ActionContext, ActionTree, MutationTree, GetterTree } from 'vuex';
 import { LoginPayload, RegisterPayload } from '@/api/auth';
 import { User, Role } from '@/entities/user';
-
+import { AuthPrompt } from '@/entities/auth';
 import { RootState } from '@/store';
-
-interface AuthPrompt {
-  type: string;
-}
 
 export interface AuthState {
   user: User | null;
@@ -35,8 +31,11 @@ const mutations: MutationTree<AuthState> = {
     state.user = null;
   },
 
-  PROMPT_USER(state, prompt) {
-    state.prompt = { type: prompt };
+  PROMPT_USER(state, prompt: Partial<AuthPrompt>) {
+    state.prompt = {
+      type: 'register',
+      ...prompt,
+    };
   },
 
   REMOVE_PROMPT(state) {
@@ -85,6 +84,8 @@ const getters: GetterTree<AuthState, RootState> = {
   authenticated: (state) => state.user !== null,
   isModerator: (state) => state.user?.role === Role.Moderator,
   role: (state) => state.user?.role ?? Role.Guest,
+  showLoginDialog: (state) => state.prompt?.type === 'login',
+  showRegisterDialog: (state) => state.prompt?.type === 'register',
 };
 
 export default {

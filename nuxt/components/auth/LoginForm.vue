@@ -7,8 +7,9 @@
       <p class="message-line">
         <strong>Welcome back!</strong> To continue, log into your account.<br>
       </p>
-      <p v-if="false" class="message-line">
-        Don't have an account yet? <a class="link" href="#">Sign up.</a>
+      <p class="message-line">
+        Don't have an account yet?
+        <a class="link" href="#" @click.prevent="switchToRegisterDialog">Sign up.</a>
       </p>
     </template>
     <v-text-field
@@ -113,6 +114,14 @@ export default class LoginForm extends Vue {
   close() {
     this.form = createForm();
     this.$emit('close');
+  }
+
+  switchToRegisterDialog() {
+    const prompt = this.$store.state.auth.prompt ?? {};
+    this.$store.commit('auth/PROMPT_USER', {
+      ...prompt,
+      type: 'register',
+    });
   }
 }
 </script>

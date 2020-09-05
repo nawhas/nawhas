@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Controllers\Api;
+namespace App\Modules\Features\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Modules\Features\FeatureManager;
@@ -21,13 +21,6 @@ class FeaturesController extends Controller
     {
         return $this->respondWithArray([
             'data' => $this->features->export(),
-        ]);
-    }
-
-    public function secret(): JsonResponse
-    {
-        return $this->respondWithArray([
-            'data' => 'You found me!',
         ]);
     }
 }
