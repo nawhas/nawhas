@@ -55,8 +55,8 @@
     <div class="player-content">
       <!--
           # Track Title and Metadata
-        -->
-      <v-expand-x-transition>
+      -->
+      <v-expand-x-transition @before-leave="ignoreExpand">
         <div v-if="!minimized || mobile" class="track-info">
           <div class="track-info--container">
             <div class="track-info--track-name body-1" @click="onTrackTitleClicked">
@@ -194,7 +194,7 @@
           </v-card>
         </v-menu>
       </div>
-      <v-expand-transition>
+      <v-expand-transition @beforeEnter="ignoreExpand">
         <!--
             # Overflow Menu
           -->
@@ -484,6 +484,10 @@ export default class AudioPlayer extends Vue {
 
   get isTrackSaved() {
     return this.$store.getters['library/isTrackSaved'](this.track.id);
+  }
+
+  ignoreExpand() {
+    return null;
   }
 
   toggleOverlay(key) {

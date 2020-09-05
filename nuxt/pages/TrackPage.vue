@@ -193,7 +193,6 @@ import FavoriteTrackButton from '@/components/tracks/FavoriteTrackButton.vue';
 
 interface Data {
   track: Track | null;
-  albumTracks: Array<Track> | null;
   background: string;
   textColor: string;
   addedToQueueSnackbar: boolean;
@@ -208,24 +207,6 @@ export default Vue.extend({
     LyricsCard,
   },
 
-  async fetch() {
-    if (!this.track) {
-      return;
-    }
-
-    const response = await this.$api.tracks.index(this.track.reciterId, this.track.albumId, {
-      include: [
-        TrackIncludes.Reciter,
-        TrackIncludes.Lyrics,
-        TrackIncludes.Media,
-        TrackIncludes.Album,
-        TrackIncludes.Related,
-      ],
-    });
-
-    this.albumTracks = response.data;
-  },
-
   async asyncData({ route, $api, error }) {
     const { reciterId, albumId, trackId } = route.params;
 
@@ -236,6 +217,11 @@ export default Vue.extend({
           TrackIncludes.Lyrics,
           TrackIncludes.Media,
           'album.tracks',
+          'album.tracks.reciter',
+          'album.tracks.lyrics',
+          'album.tracks.media',
+          'album.tracks.album',
+          'album.tracks.related',
         ],
       });
 
@@ -247,7 +233,6 @@ export default Vue.extend({
 
   data: (): Data => ({
     track: null,
-    albumTracks: null,
     background: 'rgb(150, 37, 2)',
     textColor: '#fff',
     addedToQueueSnackbar: false,
@@ -312,6 +297,13 @@ export default Vue.extend({
     },
     savedTextColor(): string {
       return (this.isTrackSaved) ? '#FE5B00' : this.textColor;
+    },
+    albumTracks(): Array<Track> | null {
+      if (!this.track) {
+        return null;
+      }
+
+      return this.track.album?.tracks?.data ?? null;
     },
   },
 
