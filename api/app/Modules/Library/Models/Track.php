@@ -14,10 +14,13 @@ use App\Modules\Library\Events\Tracks\TrackCreated;
 use App\Modules\Library\Events\Tracks\TrackLyricsChanged;
 use App\Modules\Library\Events\Tracks\TrackTitleChanged;
 use App\Modules\Library\Models\Traits\Visitable;
+use App\Modules\Library\Models\Visits\TrackStatistic;
 use App\Modules\Lyrics\Documents\Document;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Laravel\Scout\Searchable;
 use Ramsey\Uuid\Uuid;
 use Spatie\Sluggable\HasSlug;
@@ -41,16 +44,13 @@ use Spatie\Sluggable\SlugOptions;
  * @property-read int|null $revisions_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\Library\Models\Visit[] $visits
  * @property-read int|null $visits_count
- * @method static \Illuminate\Database\Eloquent\Builder|Track newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Track newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Track popularAllTime()
- * @method static \Illuminate\Database\Eloquent\Builder|Track popularDay()
- * @method static \Illuminate\Database\Eloquent\Builder|Track popularLast($days)
- * @method static \Illuminate\Database\Eloquent\Builder|Track popularMonth()
- * @method static \Illuminate\Database\Eloquent\Builder|Track popularWeek()
- * @method static \Illuminate\Database\Eloquent\Builder|Track popularYear()
- * @method static \Illuminate\Database\Eloquent\Builder|Track query()
- * @mixin \Eloquent
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Library\Models\Track popularAllTime()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Library\Models\Track popularDay()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Library\Models\Track popularLast($days)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Library\Models\Track popularMonth()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Library\Models\Track popularWeek()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Library\Models\Track popularYear()
+ * @property-read TrackStatistic|null $statistics
  */
 class Track extends Model implements TimestampedEntity
 {
@@ -133,6 +133,11 @@ class Track extends Model implements TimestampedEntity
         return $this->belongsTo(Album::class);
     }
 
+    public function statistics(): HasOne
+    {
+        return $this->hasOne(TrackStatistic::class);
+    }
+
     public function getSlugOptions(): SlugOptions
     {
         return SlugOptions::create()
@@ -189,5 +194,16 @@ class Track extends Model implements TimestampedEntity
                 ),
             ],
         ];
+    }
+
+    /**
+     * Filter by popular in all time
+     * @param $query
+     * @return mixed
+     */
+    public function scopePopularAllTime(Builder $query)
+    {
+        return $query->join('track_statistics', 'track_statistics.track_id', '=', 'tracks.id')
+            ->orderBy('track_statistics.visits_all_time', 'desc');
     }
 }

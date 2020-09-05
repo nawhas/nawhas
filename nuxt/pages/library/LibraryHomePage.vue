@@ -1,24 +1,17 @@
 <router>
   path: /library/home
-  name: "LibraryHomePage"
+  name: "library.home"
 </router>
 
 <template>
   <div>
-    <page-header>
-      <v-icon size="64">
-        local_library
-      </v-icon>Library
-    </page-header>
+    <library-header />
 
     <v-container class="app__section">
-      <h5 class="section__title section__title--with-actions mt-6">
-        <div>
-          <v-icon>favorite</v-icon> Recently Saved Nawhas
-        </div>
-        <v-btn text @click="playSavedTracks">
-          Play All
-        </v-btn>
+      <h5 class="section__title mt-6 d-flex align-center justify-start">
+        <v-icon class="mr-2">
+          favorite
+        </v-icon> Recently Saved Nawhas
       </h5>
       <template v-if="tracks">
         <v-row :dense="$vuetify.breakpoint.smAndDown">
@@ -28,7 +21,9 @@
         </v-row>
         <v-row>
           <v-col class="text-center">
-            <v-btn color="primary">View All</v-btn>
+            <v-btn color="primary" to="/library/tracks">
+              View All
+            </v-btn>
           </v-col>
         </v-row>
       </template>
@@ -43,12 +38,13 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import PageHeader from '@/components/PageHeader.vue';
 import TrackCard from '@/components/tracks/TrackCard.vue';
 import SkeletonCardGrid from '@/components/loaders/SkeletonCardGrid.vue';
 import TrackCardSkeleton from '@/components/loaders/TrackCardSkeleton.vue';
 import { Track } from '@/entities/track';
 import { TrackIncludes } from '@/api/tracks';
+import LibraryHeader from '@/components/library/LibraryHeader.vue';
+import { generateMeta } from '@/utils/meta';
 
 interface Data {
   tracks: Array<Track>|null;
@@ -61,10 +57,10 @@ export default Vue.extend({
     }
   },
   components: {
-    PageHeader,
     TrackCard,
     SkeletonCardGrid,
     TrackCardSkeleton,
+    LibraryHeader,
   },
   async fetch() {
     const response = await this.$api.library.tracks({
@@ -84,31 +80,20 @@ export default Vue.extend({
   data: (): Data => ({
     tracks: null,
   }),
-  computed: {
-    playable(): Array<Track> {
-      if (!this.tracks) {
-        return [];
-      }
-
-      return this.tracks.filter((track) => this.hasAudioFile(track));
-    },
-  },
   watch: {
     '$store.state.auth.user': 'onAuthChange',
+    '$store.state.library.trackIds': '$fetch',
   },
   methods: {
-    playSavedTracks() {
-      this.$store.commit('player/PLAY_ALBUM', { tracks: this.playable, start: this.playable[0] });
-    },
-    hasAudioFile(track): boolean {
-      return track.related?.audio ?? false;
-    },
     onAuthChange(value) {
       if (!value) {
         this.$router.replace('/library');
       }
     },
   },
+  head: () => generateMeta({
+    title: 'My Library',
+  }),
 });
 </script>
 

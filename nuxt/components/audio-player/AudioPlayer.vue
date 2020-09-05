@@ -55,8 +55,8 @@
     <div class="player-content">
       <!--
           # Track Title and Metadata
-        -->
-      <v-expand-x-transition>
+      -->
+      <v-expand-x-transition @before-leave="ignoreExpand">
         <div v-if="!minimized || mobile" class="track-info">
           <div class="track-info--container">
             <div class="track-info--track-name body-1" @click="onTrackTitleClicked">
@@ -66,6 +66,11 @@
               {{ track.reciter.name }} &bull; {{ track.year }}
             </div>
           </div>
+          <favorite-track-button
+            v-if="!mobile && !minimized"
+            :track="track.id"
+            class="track-info__favorite"
+          />
         </div>
       </v-expand-x-transition>
 
@@ -189,7 +194,7 @@
           </v-card>
         </v-menu>
       </div>
-      <v-expand-transition>
+      <v-expand-transition @beforeEnter="ignoreExpand">
         <!--
             # Overflow Menu
           -->
@@ -289,7 +294,7 @@ import {
 import { getAlbumArtwork } from '@/entities/album';
 import { getReciterUri } from '@/entities/reciter';
 import { getTrackUri } from '@/entities/track';
-import FavoriteTrackButton from '~/components/tracks/FavoriteTrackButton.vue';
+import FavoriteTrackButton from '@/components/tracks/FavoriteTrackButton.vue';
 
 interface CachedTrackReference {
   queued: QueuedTrack|null;
@@ -479,6 +484,10 @@ export default class AudioPlayer extends Vue {
 
   get isTrackSaved() {
     return this.$store.getters['library/isTrackSaved'](this.track.id);
+  }
+
+  ignoreExpand() {
+    return null;
   }
 
   toggleOverlay(key) {
@@ -886,9 +895,9 @@ $duration: 580ms;
 }
 
 .player-content {
-  width: 100%;
   position: relative;
   display: flex;
+  flex: 1 1 100%;
   align-items: center;
   justify-content: space-between;
 
@@ -897,9 +906,14 @@ $duration: 580ms;
     flex: 1;
     display: flex;
     flex-direction: row;
+    align-items: center;
+    overflow: hidden;
     &--container {
       display: flex;
       flex-direction: column;
+    }
+    &__favorite {
+      margin-left: 12px;
     }
   }
   .player-actions {

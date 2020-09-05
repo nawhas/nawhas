@@ -97,7 +97,7 @@
         <div>Tracks</div>
         <edit-track-dialog v-if="album && isModerator" :album="album" />
       </div>
-      <track-list :tracks="tracks" />
+      <track-list :tracks="tracks" numbered />
     </v-container>
     <v-snackbar v-model="addedToQueueSnackbar" right>
       <v-icon color="white">

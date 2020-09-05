@@ -3,6 +3,7 @@ import { RootState } from '@/store/index';
 import { TracksPayload } from '@/api/library';
 import { EventBus } from '@/events';
 import { TOAST_SHOW, ToastOptions } from '@/events/toaster';
+import { AuthReason } from '@/entities/auth';
 
 export interface LibraryState {
   trackIds: Array<string>;
@@ -62,7 +63,7 @@ const actions: ActionTree<LibraryState, RootState> = {
       } as ToastOptions);
       this.dispatch('library/getTrackIds');
     } else {
-      commit('auth/PROMPT_USER', { prompt: 'favourite' }, { root: true });
+      commit('auth/PROMPT_USER', { reason: AuthReason.TrackSaved }, { root: true });
     }
   },
 
