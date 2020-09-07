@@ -3,7 +3,7 @@
     <td class="row__label overline">
       {{ attribute | startCase }}
     </td>
-    <td>
+    <td v-if="changed">
       <span v-if="old && isExternalLink" class="segment">
         <a class="external-link" :href="old" target="_blank" :title="old">Open URL</a>
       </span>
@@ -23,9 +23,9 @@
           v-text="change.value"
         />
       </span>
-      <span v-else class="segment text--disabled">N/A</span>
+      <span v-else class="segment text--disabled">NULL</span>
     </td>
-    <td>
+    <td :colspan="changed ? 1 : 2">
       <span v-if="isExternalLink" class="segment">
         <a class="external-link" :href="value" target="_blank" :title="value">Open URL</a>
       </span>
@@ -50,7 +50,7 @@
 import { Component, Prop, Vue } from 'nuxt-property-decorator';
 import * as Diff from 'diff';
 
-const extenalUrlAttributes = [
+const externalUrlAttributes = [
   'avatar', 'artwork', 'audio',
 ];
 
@@ -93,7 +93,7 @@ export default class DiffTableRow extends Vue {
   }
 
   get isExternalLink() {
-    return extenalUrlAttributes.includes(this.attribute);
+    return externalUrlAttributes.includes(this.attribute);
   }
 }
 </script>
