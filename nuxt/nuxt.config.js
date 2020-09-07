@@ -237,6 +237,11 @@ export default {
           path: '/reciters/:reciterId/albums/:albumId/tracks',
           redirect: { path: '/reciters/:id/albums/:albumId' },
         },
+        {
+          name: 'moderator.index',
+          path: '/moderator',
+          redirect: { path: '/moderator/revisions' },
+        },
       ]);
     },
   },

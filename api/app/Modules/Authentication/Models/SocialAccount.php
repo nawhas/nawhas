@@ -24,9 +24,9 @@ use Ramsey\Uuid\Uuid;
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Modules\Authentication\Models\User $user
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Authentication\Models\SocialAccount newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Authentication\Models\SocialAccount newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Authentication\Models\SocialAccount query()
+ * @method static \Illuminate\Database\Eloquent\Builder|SocialAccount newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|SocialAccount newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|SocialAccount query()
  * @mixin \Eloquent
  */
 class SocialAccount extends Model implements TimestampedEntity

@@ -100,10 +100,6 @@ return [
         'track.changed.lyrics' => Library\Tracks\TrackLyricsChanged::class,
         'track.deleted' => Library\Tracks\TrackDeleted::class,
         'track.viewed' => Library\Tracks\TrackViewed::class,
-        // Lyric Events
-        'lyrics.created' => Library\Lyrics\LyricsCreated::class,
-        'lyrics.changed' => Library\Lyrics\LyricsChanged::class,
-        'lyrics.deleted' => Library\Lyrics\LyricsDeleted::class,
         // User Events
         'user.registered' => Authentication\UserRegistered::class,
         'user.changed.name' => Authentication\UserNameChanged::class,

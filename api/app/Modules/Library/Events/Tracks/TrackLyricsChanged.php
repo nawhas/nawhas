@@ -10,9 +10,8 @@ use App\Modules\Lyrics\Documents\Document;
 use App\Modules\Lyrics\Documents\Factory;
 use App\Modules\Lyrics\Documents\Format;
 
-class TrackLyricsChanged extends UserAction implements SerializableEvent
+class TrackLyricsChanged extends TrackEvent implements SerializableEvent
 {
-    public string $id;
     public ?Document $document;
 
     public function __construct(string $id, ?Document $document)

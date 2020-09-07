@@ -32,12 +32,12 @@ use Ramsey\Uuid\Uuid;
  * @property string|null $remember_token
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Authentication\Models\User newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Authentication\Models\User newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Authentication\Models\User query()
- * @mixin \Eloquent
  * @property-read \Illuminate\Database\Eloquent\Collection|Track[] $savedTracks
  * @property-read int|null $saved_tracks_count
+ * @method static \Illuminate\Database\Eloquent\Builder|User newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|User newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|User query()
+ * @mixin \Eloquent
  */
 class User extends Authenticatable implements TimestampedEntity
 {

@@ -4,11 +4,8 @@ declare(strict_types=1);
 
 namespace App\Modules\Library\Events\Albums;
 
-use App\Modules\Core\Events\UserAction;
-
-class AlbumArtworkChanged extends UserAction
+class AlbumArtworkChanged extends AlbumEvent
 {
-    public string $id;
     public ?string $artwork;
 
     public function __construct(string $id, ?string $artwork)

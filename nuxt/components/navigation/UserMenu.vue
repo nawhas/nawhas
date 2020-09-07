@@ -98,6 +98,15 @@
 
           <div class="user-menu__section">
             <v-list>
+              <v-list-item v-if="isModerator" to="/moderator" @click="open = false">
+                <v-list-item-content>
+                  <v-list-item-title class="user-menu__action">
+                    <v-icon>security</v-icon> <div class="user-menu__action__text">
+                      Moderator dashboard
+                    </div>
+                  </v-list-item-title>
+                </v-list-item-content>
+              </v-list-item>
               <v-list-item @click="showWhatsNew">
                 <v-list-item-content>
                   <v-list-item-title class="user-menu__action">
@@ -220,6 +229,10 @@ export default class UserMenu extends Vue {
     return this.$store.getters['auth/authenticated'];
   }
 
+  get isModerator(): boolean {
+    return this.$store.getters['auth/isModerator'];
+  }
+
   get initialized(): boolean {
     return this.$store.state.auth.initialized;
   }
@@ -274,8 +287,10 @@ export default class UserMenu extends Vue {
 }
 .user-menu__avatar {
   cursor: pointer;
-  margin-top: 6px;
-  margin-left: 12px;
+
+  img {
+    border: 2px solid white;
+  }
 }
 .user-menu__section {
   .section__heading {
@@ -288,13 +303,6 @@ export default class UserMenu extends Vue {
   align-items: center;
   .user-menu__action__text {
     margin-left: 16px;
-  }
-}
-
-@media #{map-get($display-breakpoints, 'sm-and-down')} {
-  .user-menu__avatar {
-    margin-top: 0;
-    margin-left: 12px;
   }
 }
 </style>

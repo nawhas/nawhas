@@ -91,7 +91,7 @@ export default Vue.extend({
     this.popularReciters = popular.data;
   },
 
-  data (): Data {
+  data(): Data {
     const page = this.$route.query.page || 1;
 
     return {

@@ -179,6 +179,7 @@ return [
         App\Modules\Features\ServiceProvider::class,
         App\Modules\Library\ServiceProvider::class,
         App\Modules\Authentication\ServiceProvider::class,
+        App\Modules\Audit\ServiceProvider::class,
         App\Modules\Accounts\ServiceProvider::class,
     ],
 

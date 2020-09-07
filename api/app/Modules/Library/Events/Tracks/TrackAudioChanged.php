@@ -4,11 +4,8 @@ declare(strict_types=1);
 
 namespace App\Modules\Library\Events\Tracks;
 
-use App\Modules\Core\Events\UserAction;
-
-class TrackAudioChanged extends UserAction
+class TrackAudioChanged extends TrackEvent
 {
-    public string $id;
     public ?string $path;
 
     public function __construct(string $id, ?string $path)

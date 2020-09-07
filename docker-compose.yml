@@ -28,21 +28,6 @@ services:
     networks:
       - nawhas
     depends_on:
-      - init
-  init:
-    image: szainmehdi/php:7.4-dev
-    container_name: nawhas_init
-    working_dir: /var/www/api
-    environment:
-      - APP_ENV=local
-    volumes:
-      - ./api:/var/www/api:delegated
-    networks:
-      - nawhas
-    restart: "no"
-    command: >
-      sh -c "composer install && php artisan boot"
-    depends_on:
       - db
       - cache
   queue:
@@ -58,7 +43,8 @@ services:
     restart: unless-stopped
     command: php artisan horizon
     depends_on:
-      - init
+      - db
+      - cache
   nginx:
     image: nginx:stable-alpine
     container_name: nawhas_api_nginx
@@ -100,7 +86,7 @@ services:
     env_file:
       - ./docker/postgres/.env
     volumes:
-      - postgres:/var/lib/postgresql/data
+      - postgres:/var/lib/postgresql/data:delegated
       - ./docker/postgres/scripts:/usr/local/sbin
     networks:
       - nawhas
@@ -116,7 +102,7 @@ services:
       - POSTGRES_USER=docker
       - POSTGRES_PASSWORD=secret
     volumes:
-      - pg_events:/var/lib/postgresql/data
+      - pg_events:/var/lib/postgresql/data:delegated
     networks:
       - nawhas
   data_db:
@@ -131,7 +117,7 @@ services:
       - POSTGRES_USER=docker
       - POSTGRES_PASSWORD=secret
     volumes:
-      - pg_data:/var/lib/postgresql/data
+      - pg_data:/var/lib/postgresql/data:delegated
     networks:
       - nawhas
   cache:
@@ -151,6 +137,6 @@ services:
     environment:
       - MEILI_MASTER_KEY=secret
     volumes:
-      - search:/data.ms
+      - search:/data.ms:delegated
     networks:
       - nawhas

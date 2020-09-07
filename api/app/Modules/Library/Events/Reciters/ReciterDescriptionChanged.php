@@ -4,11 +4,8 @@ declare(strict_types=1);
 
 namespace App\Modules\Library\Events\Reciters;
 
-use App\Modules\Core\Events\UserAction;
-
-class ReciterDescriptionChanged extends UserAction
+class ReciterDescriptionChanged extends ReciterEvent
 {
-    public string $id;
     public ?string $description;
 
     public function __construct(string $id, ?string $description)
