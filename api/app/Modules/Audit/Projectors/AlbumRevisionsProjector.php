@@ -7,7 +7,7 @@ namespace App\Modules\Audit\Projectors;
 use App\Modules\Audit\Enum\{ChangeType, EntityType};
 use App\Modules\Audit\Exceptions\RevisionNotFoundException;
 use App\Modules\Audit\Models\Revision;
-use App\Modules\Audit\Snapshots\{AlbumSnapshot, ReciterSnapshot, TrackSnapshot};
+use App\Modules\Audit\Snapshots\{AlbumSnapshot, TrackSnapshot};
 use App\Modules\Library\Events\Albums\{AlbumArtworkChanged,
     AlbumCreated,
     AlbumDeleted,
@@ -15,7 +15,6 @@ use App\Modules\Library\Events\Albums\{AlbumArtworkChanged,
     AlbumTitleChanged,
     AlbumYearChanged};
 use App\Modules\Library\Events\Tracks\{TrackCreated, TrackDeleted};
-use Carbon\Carbon;
 use Spatie\EventSourcing\EventHandlers\Projectors\Projector;
 use Spatie\EventSourcing\StoredEvents\StoredEvent;
 
@@ -99,8 +98,8 @@ class AlbumRevisionsProjector extends Projector
         $trackSnapshot = TrackSnapshot::fromRevision($trackRevision);
 
         $last = $this->getLastRevision($trackSnapshot->albumId);
-        $snapshot = ReciterSnapshot::fromRevision($last);
-        $snapshot->albums = $snapshot->albums->filter(fn ($id) => $id !== $trackSnapshot->id);
+        $snapshot = AlbumSnapshot::fromRevision($last);
+        $snapshot->tracks = $snapshot->tracks->filter(fn ($id) => $id !== $trackSnapshot->id);
 
         $last->revise(
             $snapshot,

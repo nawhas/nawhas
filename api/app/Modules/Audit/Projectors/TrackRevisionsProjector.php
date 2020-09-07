@@ -14,7 +14,6 @@ use App\Modules\Library\Events\Tracks\{TrackAudioChanged,
     TrackEvent,
     TrackLyricsChanged,
     TrackTitleChanged};
-use Carbon\Carbon;
 use Spatie\EventSourcing\EventHandlers\Projectors\Projector;
 use Spatie\EventSourcing\StoredEvents\StoredEvent;
 

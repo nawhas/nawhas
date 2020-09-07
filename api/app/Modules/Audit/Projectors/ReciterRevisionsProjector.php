@@ -16,7 +16,6 @@ use App\Modules\Library\Events\Reciters\{ReciterAvatarChanged,
     ReciterDescriptionChanged,
     ReciterEvent,
     ReciterNameChanged};
-use Carbon\Carbon;
 use Spatie\EventSourcing\EventHandlers\Projectors\Projector;
 use Spatie\EventSourcing\StoredEvents\StoredEvent;
 
