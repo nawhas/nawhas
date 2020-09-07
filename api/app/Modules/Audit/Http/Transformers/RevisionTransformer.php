@@ -6,12 +6,15 @@ namespace App\Modules\Audit\Http\Transformers;
 
 use App\Modules\Audit\Enum\EntityType;
 use App\Modules\Audit\Models\Revision;
+use App\Modules\Audit\Snapshots\AlbumSnapshot;
+use App\Modules\Audit\Snapshots\ReciterSnapshot;
 use App\Modules\Authentication\Http\Transformers\UserTransformer;
 use App\Modules\Core\Transformers\Transformer;
 use App\Modules\Library\Models\Album;
 use App\Modules\Library\Models\Reciter;
 use App\Modules\Library\Models\Track;
 use App\Modules\Lyrics\Documents\Format;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 use App\Modules\Lyrics\Documents\Factory as DocumentFactory;
 use App\Modules\Lyrics\Documents\JsonV1\Document as JsonDocument;
@@ -100,7 +103,7 @@ class RevisionTransformer extends Transformer
                 $album = $revision->entity;
 
                 return [
-                    'reciter' => $album->reciter->name,
+                    'reciter' => $this->getReciterName($album),
                     'link' => $album->getUrlPath(),
                 ];
             case EntityType::TRACK:
@@ -108,9 +111,9 @@ class RevisionTransformer extends Transformer
                 $track = $revision->entity;
 
                 return [
-                    'reciter' => $track->reciter->name,
-                    'album' => $track->album->title,
-                    'year' => $track->album->year,
+                    'reciter' => $this->getReciterName($track),
+                    'album' => $this->getAlbum($track)->title,
+                    'year' => $this->getAlbum($track)->year,
                     'link' => $track->getUrlPath(),
                 ];
             default:
@@ -121,5 +124,44 @@ class RevisionTransformer extends Transformer
     private function qualifyAssetPath(?string $path): ?string
     {
         return $path ? Storage::url($path) : null;
+    }
+
+    /**
+     * @param Album|Track $model
+     * @return string
+     */
+    private function getReciterName($model): string
+    {
+        $reciter = $model->reciter;
+
+        if ($reciter !== null) {
+            return $reciter->name;
+        }
+
+        if ($model->reciter_id !== null) {
+            $revision = Revision::getLast(Reciter::class, $model->reciter_id);
+            return ReciterSnapshot::fromRevision($revision)->name;
+        }
+
+        throw new \InvalidArgumentException('No reciter associated');
+    }
+
+    /**
+     * @return Album|AlbumSnapshot
+     */
+    private function getAlbum(Track $model)
+    {
+        $album = $model->album;
+
+        if ($album !== null) {
+            return $album;
+        }
+
+        if ($model->album_id !== null) {
+            $revision = Revision::getLast(Album::class, $model->album_id);
+            return AlbumSnapshot::fromRevision($revision);
+        }
+
+        throw new \InvalidArgumentException('No album associated');
     }
 }
