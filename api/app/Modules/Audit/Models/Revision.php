@@ -152,6 +152,4 @@ class Revision extends Model
 
         return parent::save($options);
     }
-
-
 }

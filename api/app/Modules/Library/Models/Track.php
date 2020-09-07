@@ -45,15 +45,15 @@ use Spatie\Sluggable\SlugOptions;
  * @property-read TrackStatistic|null $statistics
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\Library\Models\Visit[] $visits
  * @property-read int|null $visits_count
- * @method static Builder|Track newModelQuery()
- * @method static Builder|Track newQuery()
- * @method static Builder|Track popularAllTime()
- * @method static Builder|Track popularDay()
- * @method static Builder|Track popularLast($days)
- * @method static Builder|Track popularMonth()
- * @method static Builder|Track popularWeek()
- * @method static Builder|Track popularYear()
- * @method static Builder|Track query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Track newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Track newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Track popularAllTime()
+ * @method static \Illuminate\Database\Eloquent\Builder|Track popularDay()
+ * @method static \Illuminate\Database\Eloquent\Builder|Track popularLast($days)
+ * @method static \Illuminate\Database\Eloquent\Builder|Track popularMonth()
+ * @method static \Illuminate\Database\Eloquent\Builder|Track popularWeek()
+ * @method static \Illuminate\Database\Eloquent\Builder|Track popularYear()
+ * @method static \Illuminate\Database\Eloquent\Builder|Track query()
  * @mixin \Eloquent
  */
 class Track extends Model implements TimestampedEntity
