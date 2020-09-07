@@ -147,10 +147,10 @@ class Revision extends Model
     public function save(array $options = [])
     {
         if ($this->change_type === ChangeType::MODIFIED && empty($this->old_values)) {
-            return;
+            return false;
         }
 
-        parent::save($options);
+        return parent::save($options);
     }
 
 
