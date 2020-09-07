@@ -64,6 +64,7 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'cache.disable' => \Spatie\ResponseCache\Middlewares\DoNotCacheResponse::class,
         'cache.clear' => \App\Infrastructure\Cache\Middleware\ClearResponseCache::class,
+        'role' => \App\Modules\Authentication\Http\Middleware\EnforceRole::class,
     ];
 
     /**

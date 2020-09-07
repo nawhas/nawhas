@@ -8,7 +8,7 @@ Route::prefix('v1')->group(function () {
     | Revisions Routes
     |--------------------------------------------------------------------------
     */
-    Route::prefix('revisions')->group(function () {
+    Route::prefix('revisions')->middleware(['auth:sanctum', 'role:moderator'])->group(function () {
         Route::get('/', [Controllers\RevisionsController::class, 'index']);
     });
 });

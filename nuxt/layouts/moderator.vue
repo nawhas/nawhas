@@ -79,16 +79,22 @@ const links = [
     exact: true,
     to: '/moderator/revisions',
   },
-  {
-    icon: 'group',
-    title: 'Users',
-    exact: true,
-    to: '/moderator/users',
-  },
+  // {
+  //   icon: 'group',
+  //   title: 'Users',
+  //   exact: true,
+  //   to: '/moderator/users',
+  // },
 ];
 
 export default Vue.extend({
   name: 'DefaultLayout',
+
+  middleware({ store, redirect }) {
+    if (!store.getters['auth/isModerator']) {
+      return redirect('/');
+    }
+  },
 
   components: {
     Toaster,
@@ -118,8 +124,20 @@ export default Vue.extend({
     },
   },
 
+  watch: {
+    '$store.state.auth.user': 'onAuthChange',
+  },
+
   mounted() {
     applyTheme(this.$store.state.preferences.theme, this.$vuetify, this.$storage);
+  },
+
+  methods: {
+    onAuthChange(value) {
+      if (!value) {
+        this.$router.replace('/');
+      }
+    },
   },
 });
 </script>
