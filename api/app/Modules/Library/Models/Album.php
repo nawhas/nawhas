@@ -107,6 +107,11 @@ class Album extends Model implements TimestampedEntity
         }
     }
 
+    public function getUrlPath(): string
+    {
+        return "{$this->reciter->getUrlPath()}/albums/{$this->year}";
+    }
+
     public function reciter(): BelongsTo
     {
         return $this->belongsTo(Reciter::class);

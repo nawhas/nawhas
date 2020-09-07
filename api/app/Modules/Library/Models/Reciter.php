@@ -128,6 +128,11 @@ class Reciter extends Model implements TimestampedEntity
         }
     }
 
+    public function getUrlPath(): string
+    {
+        return "/reciters/{$this->slug}";
+    }
+
     public function albums(): HasMany
     {
         return $this->hasMany(Album::class);

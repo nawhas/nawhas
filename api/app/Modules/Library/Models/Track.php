@@ -42,15 +42,19 @@ use Spatie\Sluggable\SlugOptions;
  * @property-read \App\Modules\Library\Models\Reciter $reciter
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\Audit\Models\Revision[] $revisions
  * @property-read int|null $revisions_count
+ * @property-read TrackStatistic|null $statistics
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\Library\Models\Visit[] $visits
  * @property-read int|null $visits_count
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Library\Models\Track popularAllTime()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Library\Models\Track popularDay()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Library\Models\Track popularLast($days)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Library\Models\Track popularMonth()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Library\Models\Track popularWeek()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Modules\Library\Models\Track popularYear()
- * @property-read TrackStatistic|null $statistics
+ * @method static \Illuminate\Database\Eloquent\Builder|Track newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Track newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Track popularAllTime()
+ * @method static \Illuminate\Database\Eloquent\Builder|Track popularDay()
+ * @method static \Illuminate\Database\Eloquent\Builder|Track popularLast($days)
+ * @method static \Illuminate\Database\Eloquent\Builder|Track popularMonth()
+ * @method static \Illuminate\Database\Eloquent\Builder|Track popularWeek()
+ * @method static \Illuminate\Database\Eloquent\Builder|Track popularYear()
+ * @method static \Illuminate\Database\Eloquent\Builder|Track query()
+ * @mixin \Eloquent
  */
 class Track extends Model implements TimestampedEntity
 {
@@ -116,6 +120,11 @@ class Track extends Model implements TimestampedEntity
     public function changeLyrics(?Document $document): void
     {
         event(new TrackLyricsChanged($this->id, $document));
+    }
+
+    public function getUrlPath(): string
+    {
+        return "{$this->album->getUrlPath()}/tracks/{$this->slug}";
     }
 
     public function reciter(): BelongsTo

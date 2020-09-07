@@ -1,0 +1,39 @@
+import { PersistedEntity } from '@/entities/common';
+import { User } from '@/entities/user';
+
+export enum EntityType {
+  Reciter = 'reciter',
+  Album = 'album',
+  Track = 'track',
+}
+
+export enum ChangeType {
+  Created = 'created',
+  Modified = 'modified',
+  Deleted = 'deleted',
+}
+
+interface Snapshot {
+  [key: string]: any;
+}
+
+interface Metadata {
+  link: string;
+  [key: string]: string;
+}
+
+export interface Revision extends PersistedEntity {
+  version: number;
+  entityType: EntityType;
+  entityId: string;
+  changeType: ChangeType;
+  previous: Snapshot | null;
+  snapshot: Snapshot;
+  meta: Metadata;
+  user: User | null;
+  createdAt: string;
+}
+
+export function getUserDisplay(revision: Revision) {
+  return revision.user?.email ?? 'system';
+}
