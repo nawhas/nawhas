@@ -36,7 +36,7 @@ class ReciterRevisionsProjector extends Projector
             $snapshot,
             ChangeType::CREATED(),
             $event->getUserId(),
-            Carbon::make($storedEvent->created_at),
+            $storedEvent,
         );
 
         $revision->save();
@@ -75,7 +75,7 @@ class ReciterRevisionsProjector extends Projector
 
         $last->reviseForDeletion(
             $event->getUserId(),
-            Carbon::make($storedEvent->created_at),
+            $storedEvent,
         )->save();
     }
 
@@ -89,7 +89,7 @@ class ReciterRevisionsProjector extends Projector
             $snapshot,
             ChangeType::MODIFIED(),
             $event->getUserId(),
-            Carbon::make($storedEvent->created_at),
+            $storedEvent,
         )->save();
     }
 
@@ -106,7 +106,7 @@ class ReciterRevisionsProjector extends Projector
             $snapshot,
             ChangeType::MODIFIED(),
             $event->getUserId(),
-            Carbon::make($storedEvent->created_at),
+            $storedEvent,
         );
     }
 
@@ -137,7 +137,7 @@ class ReciterRevisionsProjector extends Projector
             $snapshot,
             ChangeType::MODIFIED(),
             $event->getUserId(),
-            Carbon::make($storedEvent->created_at)
-        );
+            $storedEvent
+        )->save();
     }
 }

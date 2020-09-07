@@ -36,7 +36,7 @@ class AlbumRevisionsProjector extends Projector
             $snapshot,
             ChangeType::CREATED(),
             $event->getUserId(),
-            Carbon::make($storedEvent->created_at),
+            $storedEvent,
         );
 
         $revision->save();
@@ -75,7 +75,7 @@ class AlbumRevisionsProjector extends Projector
 
         $last->reviseForDeletion(
             $event->getUserId(),
-            Carbon::make($storedEvent->created_at),
+            $storedEvent,
         )->save();
     }
 
@@ -89,7 +89,7 @@ class AlbumRevisionsProjector extends Projector
             $snapshot,
             ChangeType::MODIFIED(),
             $event->getUserId(),
-            Carbon::make($storedEvent->created_at),
+            $storedEvent,
         )->save();
     }
 
@@ -106,7 +106,7 @@ class AlbumRevisionsProjector extends Projector
             $snapshot,
             ChangeType::MODIFIED(),
             $event->getUserId(),
-            Carbon::make($storedEvent->created_at),
+            $storedEvent,
         );
     }
 
@@ -126,8 +126,8 @@ class AlbumRevisionsProjector extends Projector
             $snapshot,
             ChangeType::MODIFIED(),
             $event->getUserId(),
-            Carbon::make($storedEvent->created_at)
-        );
+            $storedEvent
+        )->save();
     }
 
     private function getLastRevision(string $id): Revision

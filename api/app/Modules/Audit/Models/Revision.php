@@ -13,6 +13,7 @@ use DateTimeInterface;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
+use Spatie\EventSourcing\StoredEvents\StoredEvent;
 
 /**
  * App\Modules\Audit\Models\Revision
@@ -25,6 +26,7 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
  * @property string $change_type
  * @property string|null $user_id
  * @property int $version
+ * @property int $event_id
  * @property \Illuminate\Support\Carbon $created_at
  * @property-read Model|\Eloquent $entity
  * @property-read User|null $user
@@ -73,7 +75,7 @@ class Revision extends Model
         Snapshot $snapshot,
         ChangeType $changeType,
         ?string $userId = null,
-        ?DateTimeInterface $timestamp = null
+        ?StoredEvent $event = null
     ): self {
         $revision = new self();
         $revision->entity_type = $snapshot->getType()->getValue();
@@ -81,7 +83,8 @@ class Revision extends Model
         $revision->version = 1;
         $revision->user_id = $userId;
         $revision->change_type = $changeType->getValue();
-        $revision->created_at = Carbon::make($timestamp ?? 'now');
+        $revision->event_id = $event->id;
+        $revision->created_at = Carbon::make($event ? $event->created_at : 'now');
         $revision->setValues(
             $old = [],
             $new = $snapshot->toArray()
@@ -94,14 +97,15 @@ class Revision extends Model
         Snapshot $snapshot,
         ChangeType $changeType,
         ?string $userId = null,
-        ?DateTimeInterface $timestamp = null
+        ?StoredEvent $event = null
     ): self {
         $revision = $this->replicate();
 
         $revision->user_id = $userId;
         $revision->change_type = $changeType->getValue();
         $revision->version = $this->version + 1;
-        $revision->created_at = Carbon::make($timestamp ?? 'now');
+        $revision->created_at = Carbon::make($event ? $event->created_at : 'now');
+        $revision->event_id = $event->id;
         $revision->setValues(
             $old = $this->new_values,
             $snapshot->toArray(),
@@ -112,17 +116,18 @@ class Revision extends Model
 
     public function reviseForDeletion(
         ?string $userId = null,
-        ?DateTimeInterface $timestamp = null
+        ?StoredEvent $event = null
     ): self  {
         $revision = $this->replicate();
 
         $revision->user_id = $userId;
         $revision->change_type = ChangeType::DELETED;
         $revision->version = $this->version + 1;
-        $revision->created_at = Carbon::make($timestamp ?? 'now');
+        $revision->created_at = Carbon::make($event ? $event->created_at : 'now');
+        $revision->event_id = $event->id;
         $revision->setValues(
-            $old = $this->new_values,
-            $new = []
+            $old = [],
+            $new = $this->new_values,
         );
 
         return $revision;
@@ -130,9 +135,23 @@ class Revision extends Model
 
     protected function setValues(array $old, array $new): void
     {
-        $this->old_values = collect($old)->filter(
-            fn ($value, $key) => $value !== ($new[$key] ?? null)
-        )->all();
+        $this->old_values = collect($old)->filter(function ($value, $key) use ($new) {
+            if (is_array($value)) {
+                return json_encode($value) !== json_encode($new[$key] ?? []);
+            }
+            return $value !== ($new[$key] ?? null);
+        })->all();
         $this->new_values = $new;
     }
+
+    public function save(array $options = [])
+    {
+        if ($this->change_type === ChangeType::MODIFIED && empty($this->old_values)) {
+            return;
+        }
+
+        parent::save($options);
+    }
+
+
 }

@@ -21,6 +21,7 @@ class CreateRevisionsTable extends Migration
             $table->string('change_type');
             $table->uuid('user_id')->nullable()->index();
             $table->bigInteger('version');
+            $table->bigInteger('event_id')->index();
             $table->dateTime('created_at');
 
             $table->unique(['entity_type', 'entity_id', 'version']);

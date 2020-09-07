@@ -42,8 +42,8 @@ class TrackSnapshot implements Snapshot
             $attributes['id'],
             $attributes['albumId'],
             $attributes['title'],
-            $lyrics,
             $attributes['audio'],
+            $lyrics,
         );
     }
 

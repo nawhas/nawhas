@@ -11,7 +11,10 @@ use App\Modules\Core\Transformers\Transformer;
 use App\Modules\Library\Models\Album;
 use App\Modules\Library\Models\Reciter;
 use App\Modules\Library\Models\Track;
+use App\Modules\Lyrics\Documents\Format;
 use Illuminate\Support\Facades\Storage;
+use App\Modules\Lyrics\Documents\Factory as DocumentFactory;
+use App\Modules\Lyrics\Documents\JsonV1\Document as JsonDocument;
 use League\Fractal\Resource\Item;
 
 class RevisionTransformer extends Transformer
@@ -26,6 +29,7 @@ class RevisionTransformer extends Transformer
             'version' => $revision->version,
             'entityType' => $revision->entity_type,
             'entityId' => $revision->entity_id,
+            'changeType' => $revision->change_type,
             'previous' => $this->prepareSnapshot($revision->old_values, new EntityType($revision->entity_type)),
             'snapshot' => $this->prepareSnapshot($revision->new_values, new EntityType($revision->entity_type)),
             'meta' => $this->getMeta($revision),
@@ -65,19 +69,18 @@ class RevisionTransformer extends Transformer
                 $data['audio'] = $this->qualifyAssetPath($data['audio']);
             }
 
-            // TODO - Maybe we need to better handle lyrics revisions?
-//            if ($data['format'] !== null && $data['content'] !== null) {
-//                $document = DocumentFactory::create(
-//                    $data['content'],
-//                    new Format($data['format'])
-//                );
-//                $data['content'] = $document->render();
-//                $data['timestamps'] = null;
-//
-//                if ($document instanceof JsonDocument) {
-//                    $data['timestamps'] = $document->meta()->showTimestamps() ? 'Yes' : 'No';
-//                }
-//            }
+            if (isset($data['lyrics'])) {
+                $document = DocumentFactory::create(
+                    $data['lyrics']['content'],
+                    new Format($data['lyrics']['format'])
+                );
+                $data['lyrics'] = $document->render();
+                $data['timestamps'] = 'No';
+
+                if ($document instanceof JsonDocument) {
+                    $data['timestamps'] = $document->meta()->showTimestamps() ? 'Yes' : 'No';
+                }
+            }
         }
 
         return $data;
