@@ -77,7 +77,7 @@ export default class DiffTable extends Vue {
   position: relative;
 }
 .diff-table__table {
-  /*table-layout: fixed;*/
+  table-layout: fixed;
 }
 .diff-table__actions {
   padding: 10px;

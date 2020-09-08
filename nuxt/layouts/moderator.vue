@@ -120,6 +120,7 @@ export default Vue.extend({
     classes() {
       return {
         [`app--${this.$vuetify.breakpoint.name}`]: true,
+        'app--player-showing': this.$store.getters['player/track'] !== null,
       };
     },
   },
@@ -160,8 +161,6 @@ export default Vue.extend({
 }
 .app-bar__right {
   justify-content: flex-end;
-}
-.user-menu {
 }
 
 @media #{map-get($display-breakpoints, 'sm-and-down')} {
