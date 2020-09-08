@@ -14,6 +14,7 @@
       />
       <v-pagination
         v-model="page"
+        class="my-8"
         color="deep-orange"
         :length="length"
         :total-visible="10"
