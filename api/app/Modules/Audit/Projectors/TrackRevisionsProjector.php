@@ -98,7 +98,7 @@ class TrackRevisionsProjector extends Projector
 
     private function getLastRevision(string $id): Revision
     {
-        $last = Revision::getLast(EntityType::TRACK, $id);
+        $last = Revision::getLast(EntityType::TRACK(), $id);
 
         if ($last === null) {
             throw RevisionNotFoundException::forEntity(EntityType::TRACK, $id);

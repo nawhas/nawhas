@@ -18,8 +18,8 @@ interface Snapshot {
 }
 
 interface Metadata {
-  link: string;
-  [key: string]: string;
+  link: string | null;
+  [key: string]: string | null;
 }
 
 export interface Revision extends PersistedEntity {

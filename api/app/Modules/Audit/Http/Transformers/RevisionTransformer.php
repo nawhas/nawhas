@@ -8,17 +8,16 @@ use App\Modules\Audit\Enum\EntityType;
 use App\Modules\Audit\Models\Revision;
 use App\Modules\Audit\Snapshots\AlbumSnapshot;
 use App\Modules\Audit\Snapshots\ReciterSnapshot;
+use App\Modules\Audit\Snapshots\TrackSnapshot;
 use App\Modules\Authentication\Http\Transformers\UserTransformer;
 use App\Modules\Core\Transformers\Transformer;
 use App\Modules\Library\Models\Album;
 use App\Modules\Library\Models\Reciter;
 use App\Modules\Library\Models\Track;
 use App\Modules\Lyrics\Documents\Format;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 use App\Modules\Lyrics\Documents\Factory as DocumentFactory;
 use App\Modules\Lyrics\Documents\JsonV1\Document as JsonDocument;
-use League\Fractal\Resource\Item;
 
 class RevisionTransformer extends Transformer
 {
@@ -93,28 +92,29 @@ class RevisionTransformer extends Transformer
     {
         switch ($revision->entity_type) {
             case EntityType::RECITER:
-                /** @var Reciter $reciter */
+                /** @var Reciter|null $reciter */
                 $reciter = $revision->entity;
                 return [
-                    'link' => $reciter->getUrlPath(),
+                    'link' => optional($reciter)->getUrlPath(),
                 ];
             case EntityType::ALBUM:
-                /** @var Album $album */
+                /** @var Album|null $album */
                 $album = $revision->entity;
 
                 return [
-                    'reciter' => $this->getReciterName($album),
-                    'link' => $album->getUrlPath(),
+                    'reciter' => $this->getReciterSnapshot($revision)->name,
+                    'link' => optional($album)->getUrlPath(),
                 ];
             case EntityType::TRACK:
-                /** @var Track $track */
+                /** @var Track|null $track */
                 $track = $revision->entity;
+                $album = $this->getAlbumSnapshot($revision);
 
                 return [
-                    'reciter' => $this->getReciterName($track),
-                    'album' => $this->getAlbum($track)->title,
-                    'year' => $this->getAlbum($track)->year,
-                    'link' => $track->getUrlPath(),
+                    'reciter' => $this->getReciterSnapshot($revision)->name,
+                    'album' => $album->title,
+                    'year' => $album->year,
+                    'link' => optional($track)->getUrlPath(),
                 ];
             default:
                 throw new \InvalidArgumentException('Unknown entity type.');
@@ -127,39 +127,52 @@ class RevisionTransformer extends Transformer
     }
 
     /**
-     * @param Album|Track $model
-     * @return string
+     * Get the last snapshot of the reciter associated with the entity.
+     * @return ReciterSnapshot
      */
-    private function getReciterName($model): string
+    private function getReciterSnapshot(Revision $revision): ReciterSnapshot
     {
-        $reciter = $model->reciter;
-
-        if ($reciter !== null) {
-            return $reciter->name;
+        if ($revision->entity_type === EntityType::RECITER) {
+            return ReciterSnapshot::fromRevision($revision);
         }
 
-        if ($model->reciter_id !== null) {
-            $revision = Revision::getLast(Reciter::class, $model->reciter_id);
-            return ReciterSnapshot::fromRevision($revision)->name;
-        }
+        $id = (function (Revision $revision) {
+            if ($revision->entity_type === EntityType::ALBUM) {
+                $album = AlbumSnapshot::fromRevision($revision);
+                return $album->reciterId;
+            }
 
-        throw new \InvalidArgumentException('No reciter associated');
+            if ($revision->entity_type === EntityType::TRACK) {
+                $track = TrackSnapshot::fromRevision($revision);
+                $album = AlbumSnapshot::fromRevision(
+                    Revision::getLast(EntityType::ALBUM(), $track->albumId)
+                );
+                return $album->reciterId;
+            }
+
+            throw new \BadMethodCallException('No reciter associated');
+        })($revision);
+
+        return ReciterSnapshot::fromRevision(
+            Revision::getLast(EntityType::RECITER(), $id)
+        );
     }
 
     /**
      * @return Album|AlbumSnapshot
      */
-    private function getAlbum(Track $model)
+    private function getAlbumSnapshot(Revision $revision)
     {
-        $album = $model->album;
-
-        if ($album !== null) {
-            return $album;
+        if ($revision->entity_type === EntityType::ALBUM) {
+            return AlbumSnapshot::fromRevision($revision);
         }
 
-        if ($model->album_id !== null) {
-            $revision = Revision::getLast(Album::class, $model->album_id);
-            return AlbumSnapshot::fromRevision($revision);
+        if ($revision->entity_type === EntityType::TRACK) {
+            $track = TrackSnapshot::fromRevision($revision);
+            logger()->debug('Track Snapshot', ['track' => $track->toArray()]);
+            return AlbumSnapshot::fromRevision(
+                Revision::getLast(EntityType::ALBUM(), $track->albumId)
+            );
         }
 
         throw new \InvalidArgumentException('No album associated');

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Modules\Audit\Models;
 
 use App\Modules\Audit\Enum\ChangeType;
+use App\Modules\Audit\Enum\EntityType;
 use App\Modules\Audit\Snapshots\Snapshot;
 use App\Modules\Authentication\Models\User;
 use App\Modules\Core\Models\HasUuid;
@@ -61,11 +62,11 @@ class Revision extends Model
     }
 
     public static function getLast(
-        string $entityType,
+        EntityType $entityType,
         string $entityId
     ): ?Revision {
         return self::query()
-            ->where('entity_type', $entityType)
+            ->where('entity_type', $entityType->getValue())
             ->where('entity_id', $entityId)
             ->orderByDesc('version')
             ->first();

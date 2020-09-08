@@ -1,6 +1,6 @@
 <template>
   <v-card :class="classes" outlined>
-    <div :to="revision.meta.link" class="revision-card__content">
+    <div class="revision-card__content">
       <div class="revision-card__avatar">
         <v-avatar size="40" class="avatar">
           <v-icon>{{ icon }}</v-icon>
@@ -13,6 +13,7 @@
           </div>
           <div v-if="subtitle" class="body-2 text--disabled" v-text="subtitle" />
           <v-btn
+            v-if="revision.meta.link"
             small
             icon
             :to="revision.meta.link"

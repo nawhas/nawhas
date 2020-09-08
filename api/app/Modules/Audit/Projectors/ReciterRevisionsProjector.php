@@ -94,7 +94,7 @@ class ReciterRevisionsProjector extends Projector
 
     public function onAlbumDeleted(AlbumDeleted $event, StoredEvent $storedEvent): void
     {
-        $albumRevision = Revision::getLast(EntityType::ALBUM, $event->id);
+        $albumRevision = Revision::getLast(EntityType::ALBUM(), $event->id);
         $albumSnapshot = AlbumSnapshot::fromRevision($albumRevision);
 
         $last = $this->getLastRevision($albumSnapshot->reciterId);
@@ -116,7 +116,7 @@ class ReciterRevisionsProjector extends Projector
 
     private function getLastRevision(string $id): Revision
     {
-        $last = Revision::getLast(EntityType::RECITER, $id);
+        $last = Revision::getLast(EntityType::RECITER(), $id);
 
         if ($last === null) {
             throw RevisionNotFoundException::forEntity(EntityType::RECITER, $id);
