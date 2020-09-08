@@ -7,6 +7,11 @@
   <v-container class="app__section mt-4">
     <h2>Revision History</h2>
     <div v-if="revisions.length > 0" class="revisions">
+      <v-overlay v-if="$fetchState.pending" absolute class="revisions__loading">
+        <v-progress-circular
+          indeterminate
+        />
+      </v-overlay>
       <revision-history-card
         v-for="revision in revisions"
         :key="revision.id"
@@ -53,7 +58,6 @@ export default Vue.extend({
   },
 
   async fetch() {
-    this.revisions = [];
     const response = await this.$api.revisions.index({
       pagination: { limit: 30, page: this.page },
     });
@@ -98,5 +102,12 @@ h2 {
   font-size: 24px;
   font-weight: 200;
   opacity: 0.7;
+}
+.revisions {
+  position: relative;
+}
+.revisions__loading {
+  padding-top: 24px;
+  align-items: flex-start;
 }
 </style>
