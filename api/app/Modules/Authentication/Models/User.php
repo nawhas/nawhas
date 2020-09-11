@@ -129,4 +129,9 @@ class User extends Authenticatable implements TimestampedEntity
     {
         return $this->morphedByMany(Track::class, 'saveable');
     }
+
+    public function hasSavedTrack(string $id): bool
+    {
+        return $this->savedTracks()->where('saveable_id', $id)->exists();
+    }
 }

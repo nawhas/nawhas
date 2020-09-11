@@ -41,7 +41,7 @@ class LibraryController extends Controller
         $user = $request->user();
         $this->prepareIds($request->get('ids'))
             ->each(function (string $id) use ($user) {
-                if ($user->savedTracks()->where('saveable_id', $id)->exists()) {
+                if ($user->hasSavedTrack($id)) {
                     return;
                 }
                 event(new TrackSaved($id));
