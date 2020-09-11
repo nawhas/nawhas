@@ -31,7 +31,7 @@ class LibraryController extends Controller
     {
         $tracks = $this->getUser()->savedTracks()->get(['saveable_id'])->map(function ($result) {
             return $result->saveable_id;
-        });
+        })->unique();
         return $this->respondWithArray($tracks->all());
     }
 
