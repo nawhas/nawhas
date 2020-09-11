@@ -9,6 +9,7 @@ use App\Modules\Accounts\Events\Saves\SavedTrackRemoved;
 use App\Modules\Accounts\Events\Saves\TrackSaved;
 use App\Modules\Accounts\Http\Requests\RemoveSavedTracksRequest;
 use App\Modules\Accounts\Http\Requests\SaveTracksRequest;
+use App\Modules\Authentication\Models\User;
 use App\Modules\Library\Http\Transformers\TrackTransformer;
 use App\Support\Pagination\PaginationState;
 use Illuminate\Http\JsonResponse;
@@ -30,14 +31,21 @@ class LibraryController extends Controller
     {
         $tracks = $this->getUser()->savedTracks()->get(['saveable_id'])->map(function ($result) {
             return $result->saveable_id;
-        });
+        })->unique();
         return $this->respondWithArray($tracks->all());
     }
 
     public function saveTracks(SaveTracksRequest $request): Response
     {
+        /** @var User $user */
+        $user = $request->user();
         $this->prepareIds($request->get('ids'))
-            ->each(fn (string $id) => event(new TrackSaved($id)));
+            ->each(function (string $id) use ($user) {
+                if ($user->hasSavedTrack($id)) {
+                    return;
+                }
+                event(new TrackSaved($id));
+            });
 
         return response()->noContent();
     }
