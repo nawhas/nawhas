@@ -128,6 +128,7 @@ export default {
     '@/plugins/axios',
     '@/plugins/filters',
     '@/plugins/api',
+    '@/plugins/errors',
     '@/plugins/search',
     '@/plugins/theme.client',
     '@/plugins/service-worker.client',

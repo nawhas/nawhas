@@ -163,7 +163,7 @@ export default Vue.extend({
     this.length = albums.meta.pagination.total_pages;
   },
 
-  async asyncData({ route, $api, error }) {
+  async asyncData({ route, $api, $errors }) {
     const { reciterId } = route.params;
     try {
       const reciter = await $api.reciters.get(reciterId, {
@@ -172,7 +172,7 @@ export default Vue.extend({
 
       return { reciter };
     } catch (e) {
-      error({ statusCode: 404, message: 'Reciter not found.' });
+      $errors.handle404();
     }
   },
 
