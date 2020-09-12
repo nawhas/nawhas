@@ -25,6 +25,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class TrackAlias extends Alias
 {
+    protected $fillable = [
+        'reciter_id', 'album_id', 'track_id', 'alias', 'created_at', 'updated_at',
+    ];
+
     public function track(): BelongsTo
     {
         return $this->belongsTo(Track::class);

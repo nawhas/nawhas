@@ -24,6 +24,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class AlbumAlias extends Alias
 {
+    protected $fillable = [
+        'reciter_id', 'album_id', 'alias', 'created_at', 'updated_at',
+    ];
+
     public function album(): BelongsTo
     {
         return $this->belongsTo(Album::class);
