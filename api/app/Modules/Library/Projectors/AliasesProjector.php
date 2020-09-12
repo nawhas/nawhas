@@ -13,12 +13,11 @@ use App\Modules\Library\Events\{
     Tracks\TrackTitleChanged
 };
 use App\Modules\Library\Models\Aliases\{AlbumAlias, ReciterAlias, TrackAlias};
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Str;
 use Spatie\EventSourcing\EventHandlers\Projectors\Projector;
 use Spatie\EventSourcing\StoredEvents\StoredEvent;
 
-class AliasesProjector extends Projector implements ShouldQueue
+class AliasesProjector extends Projector
 {
     public function onReciterCreated(ReciterCreated $event, StoredEvent $storedEvent): void
     {
