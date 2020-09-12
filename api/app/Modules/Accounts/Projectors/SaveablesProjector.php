@@ -22,6 +22,10 @@ class SaveablesProjector extends Projector
 
         $user = User::findOrFail($userId);
 
+        if ($user->hasSavedTrack($event->trackId)) {
+            return;
+        }
+
         $user->savedTracks()->attach($event->trackId, [
             'created_at' => $storedEvent->created_at,
         ]);
