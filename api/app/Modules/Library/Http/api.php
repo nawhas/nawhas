@@ -84,5 +84,4 @@ Route::prefix('v1')->middleware(CacheResponse::withTags(CacheTags::LIBRARY))->gr
     |--------------------------------------------------------------------------
     */
     Route::get('/redirect', [Controllers\RedirectController::class, 'redirect']);
-    Route::post('/redirect', [Controllers\RedirectController::class, 'redirect']);
 });
