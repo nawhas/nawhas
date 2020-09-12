@@ -1,5 +1,5 @@
 <router>
-  path: /reciters/:reciterId
+  path: /reciters/:reciter
   name: "reciters.show"
 </router>
 
@@ -164,7 +164,7 @@ export default Vue.extend({
   },
 
   async asyncData({ route, $api, $errors }) {
-    const { reciterId } = route.params;
+    const { reciter: reciterId } = route.params;
     try {
       const reciter = await $api.reciters.get(reciterId, {
         include: [ReciterIncludes.Related],
@@ -172,7 +172,7 @@ export default Vue.extend({
 
       return { reciter };
     } catch (e) {
-      $errors.handle404();
+      await $errors.handle404();
     }
   },
 

@@ -1,5 +1,5 @@
 <router>
-  path: /reciters/:reciterId/albums/:albumId
+  path: /reciters/:reciter/albums/:album
   name: "albums.show"
 </router>
 
@@ -162,8 +162,8 @@ export default Vue.extend({
     this.tracks = response.data;
   },
 
-  async asyncData({ route, $api, error }) {
-    const { reciterId, albumId } = route.params;
+  async asyncData({ route, $api, $errors }) {
+    const { reciter: reciterId, album: albumId } = route.params;
 
     try {
       const album = await $api.albums.get(reciterId, albumId, {
@@ -174,7 +174,7 @@ export default Vue.extend({
         album,
       };
     } catch (e) {
-      error({ statusCode: 404, message: 'Album not found.' });
+      await $errors.handle404();
     }
   },
 

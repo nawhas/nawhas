@@ -4,12 +4,17 @@ export interface InjectedErrorsPlugin {
   handle404: () => Promise<void>;
 }
 
-const ErrorsPlugin: Plugin = ({ error }, inject) => {
+const ErrorsPlugin: Plugin = ({ error, $axios, route, redirect }, inject) => {
   const errors: InjectedErrorsPlugin = {
-    handle404: () => {
-      console.log('Custom 404 handler');
-      error({ statusCode: 404, message: 'Page not found.' });
-      return Promise.resolve();
+    handle404: async () => {
+      try {
+        const response = await $axios.$get('v1/redirect', {
+          params: route.params,
+        });
+        redirect(301, response.to);
+      } catch (e) {
+        error({ statusCode: 404, message: 'Page not found.' });
+      }
     },
   };
 

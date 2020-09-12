@@ -77,4 +77,12 @@ Route::prefix('v1')->middleware(CacheResponse::withTags(CacheTags::LIBRARY))->gr
         Route::get('/reciters', [Controllers\PopularController::class, 'reciters']);
         Route::get('/tracks', [Controllers\PopularController::class, 'tracks']);
     });
+
+    /*
+    |--------------------------------------------------------------------------
+    | Redirect Routes
+    |--------------------------------------------------------------------------
+    */
+    Route::get('/redirect', [Controllers\RedirectController::class, 'redirect']);
+    Route::post('/redirect', [Controllers\RedirectController::class, 'redirect']);
 });
