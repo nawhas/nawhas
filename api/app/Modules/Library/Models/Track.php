@@ -17,7 +17,6 @@ use App\Modules\Library\Models\Aliases\TrackAlias;
 use App\Modules\Library\Models\Traits\Visitable;
 use App\Modules\Library\Models\Visits\TrackStatistic;
 use App\Modules\Lyrics\Documents\Document;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -49,15 +48,15 @@ use Spatie\Sluggable\SlugOptions;
  * @property-read TrackStatistic|null $statistics
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\Library\Models\Visit[] $visits
  * @property-read int|null $visits_count
- * @method static Builder|Track newModelQuery()
- * @method static Builder|Track newQuery()
- * @method static Builder|Track popularAllTime()
- * @method static Builder|Track popularDay()
- * @method static Builder|Track popularLast($days)
- * @method static Builder|Track popularMonth()
- * @method static Builder|Track popularWeek()
- * @method static Builder|Track popularYear()
- * @method static Builder|Track query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Track newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Track newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Track popularAllTime()
+ * @method static \Illuminate\Database\Eloquent\Builder|Track popularDay()
+ * @method static \Illuminate\Database\Eloquent\Builder|Track popularLast($days)
+ * @method static \Illuminate\Database\Eloquent\Builder|Track popularMonth()
+ * @method static \Illuminate\Database\Eloquent\Builder|Track popularWeek()
+ * @method static \Illuminate\Database\Eloquent\Builder|Track popularYear()
+ * @method static \Illuminate\Database\Eloquent\Builder|Track query()
  * @mixin \Eloquent
  */
 class Track extends Model implements TimestampedEntity
@@ -211,10 +210,10 @@ class Track extends Model implements TimestampedEntity
 
     /**
      * Filter by popular in all time
-     * @param $query
+     * @param \Illuminate\Database\Eloquent\Builder $query
      * @return mixed
      */
-    public function scopePopularAllTime(Builder $query)
+    public function scopePopularAllTime($query)
     {
         return $query->join('track_statistics', 'track_statistics.track_id', '=', 'tracks.id')
             ->orderBy('track_statistics.visits_all_time', 'desc');
