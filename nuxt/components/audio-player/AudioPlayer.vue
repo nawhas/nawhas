@@ -992,6 +992,7 @@ $duration: 580ms;
     position: relative;
     height: 100vw;
     width: 100vw;
+    flex: none;
 
     .artwork__image {
       position: absolute;
