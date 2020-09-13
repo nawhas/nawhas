@@ -9,6 +9,7 @@ use App\Modules\Core\Contracts\TimestampedEntity;
 use App\Modules\Core\Models\HasTimestamps;
 use App\Modules\Core\Models\HasUuid;
 use App\Modules\Core\Models\UsesDataConnection;
+use App\Modules\Library\Models\Aliases\ReciterAlias;
 use App\Modules\Library\Events\Reciters\{ReciterAvatarChanged,
     ReciterCreated,
     ReciterDescriptionChanged,
@@ -34,6 +35,8 @@ use Spatie\Sluggable\{HasSlug, SlugOptions};
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\Library\Models\Album[] $albums
  * @property-read int|null $albums_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|ReciterAlias[] $aliases
+ * @property-read int|null $aliases_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\Audit\Models\Revision[] $revisions
  * @property-read int|null $revisions_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\Library\Models\Visit[] $visits
@@ -136,6 +139,11 @@ class Reciter extends Model implements TimestampedEntity
     public function albums(): HasMany
     {
         return $this->hasMany(Album::class);
+    }
+
+    public function aliases(): HasMany
+    {
+        return $this->hasMany(ReciterAlias::class);
     }
 
     public function resolveRouteBinding($value, $field = null)

@@ -1,5 +1,5 @@
 <router>
-  path: /reciters/:reciterId
+  path: /reciters/:reciter
   name: "reciters.show"
 </router>
 
@@ -163,8 +163,8 @@ export default Vue.extend({
     this.length = albums.meta.pagination.total_pages;
   },
 
-  async asyncData({ route, $api, error }) {
-    const { reciterId } = route.params;
+  async asyncData({ route, $api, $errors }) {
+    const { reciter: reciterId } = route.params;
     try {
       const reciter = await $api.reciters.get(reciterId, {
         include: [ReciterIncludes.Related],
@@ -172,7 +172,7 @@ export default Vue.extend({
 
       return { reciter };
     } catch (e) {
-      error({ statusCode: 404, message: 'Reciter not found.' });
+      await $errors.handle404();
     }
   },
 

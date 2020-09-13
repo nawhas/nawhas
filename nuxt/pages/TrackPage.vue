@@ -1,5 +1,5 @@
 <router>
-  path: /reciters/:reciterId/albums/:albumId/tracks/:trackId
+  path: /reciters/:reciter/albums/:album/tracks/:track
   name: "tracks.show"
 </router>
 
@@ -207,8 +207,8 @@ export default Vue.extend({
     LyricsCard,
   },
 
-  async asyncData({ route, $api, error }) {
-    const { reciterId, albumId, trackId } = route.params;
+  async asyncData({ route, $api, $errors }) {
+    const { reciter: reciterId, album: albumId, track: trackId } = route.params;
 
     try {
       const track = await $api.tracks.get(reciterId, albumId, trackId, {
@@ -227,7 +227,7 @@ export default Vue.extend({
 
       return { track };
     } catch (e) {
-      error({ statusCode: 404, message: 'Track not found.' });
+      await $errors.handle404();
     }
   },
 

@@ -10,6 +10,7 @@ use App\Modules\Core\Models\HasTimestamps;
 use App\Modules\Core\Models\HasUuid;
 use App\Modules\Core\Models\UsesDataConnection;
 use App\Modules\Library\Events\Albums\{AlbumArtworkChanged, AlbumCreated, AlbumTitleChanged, AlbumYearChanged};
+use App\Modules\Library\Models\Aliases\AlbumAlias;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -28,6 +29,8 @@ use Ramsey\Uuid\Uuid;
  * @property string|null $artwork
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|AlbumAlias[] $aliases
+ * @property-read int|null $aliases_count
  * @property-read \App\Modules\Library\Models\Reciter $reciter
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\Audit\Models\Revision[] $revisions
  * @property-read int|null $revisions_count
@@ -120,6 +123,11 @@ class Album extends Model implements TimestampedEntity
     public function tracks(): HasMany
     {
         return $this->hasMany(Track::class);
+    }
+
+    public function aliases(): HasMany
+    {
+       return $this->hasMany(AlbumAlias::class);
     }
 
     public function resolveRouteBinding($value, $field = null)

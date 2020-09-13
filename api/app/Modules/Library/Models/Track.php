@@ -13,13 +13,14 @@ use App\Modules\Library\Events\Tracks\TrackAudioChanged;
 use App\Modules\Library\Events\Tracks\TrackCreated;
 use App\Modules\Library\Events\Tracks\TrackLyricsChanged;
 use App\Modules\Library\Events\Tracks\TrackTitleChanged;
+use App\Modules\Library\Models\Aliases\TrackAlias;
 use App\Modules\Library\Models\Traits\Visitable;
 use App\Modules\Library\Models\Visits\TrackStatistic;
 use App\Modules\Lyrics\Documents\Document;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Laravel\Scout\Searchable;
 use Ramsey\Uuid\Uuid;
@@ -39,6 +40,8 @@ use Spatie\Sluggable\SlugOptions;
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Modules\Library\Models\Album $album
+ * @property-read \Illuminate\Database\Eloquent\Collection|TrackAlias[] $aliases
+ * @property-read int|null $aliases_count
  * @property-read \App\Modules\Library\Models\Reciter $reciter
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\Audit\Models\Revision[] $revisions
  * @property-read int|null $revisions_count
@@ -142,6 +145,11 @@ class Track extends Model implements TimestampedEntity
         return $this->hasOne(TrackStatistic::class);
     }
 
+    public function aliases(): HasMany
+    {
+        return $this->hasMany(TrackAlias::class);
+    }
+
     public function getSlugOptions(): SlugOptions
     {
         return SlugOptions::create()
@@ -202,10 +210,10 @@ class Track extends Model implements TimestampedEntity
 
     /**
      * Filter by popular in all time
-     * @param $query
+     * @param \Illuminate\Database\Eloquent\Builder $query
      * @return mixed
      */
-    public function scopePopularAllTime(Builder $query)
+    public function scopePopularAllTime($query)
     {
         return $query->join('track_statistics', 'track_statistics.track_id', '=', 'tracks.id')
             ->orderBy('track_statistics.visits_all_time', 'desc');
