@@ -76,7 +76,7 @@ export default class DiffTable extends Vue {
   overflow-x: auto;
   position: relative;
 }
-.diff-table__table {
+.diff-table__table ::v-deep table {
   table-layout: fixed;
 }
 .diff-table__actions {
