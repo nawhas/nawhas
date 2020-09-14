@@ -15,7 +15,7 @@
       <div class="track-card__album-art">
         <v-expand-x-transition>
           <div v-if="hover" class="track-card__actions" :style="{ 'background-color': background || defaultOverlayColor }">
-            <favorite-track-button :track="track" :color="textColor" />
+            <favorite-track-button :track="track.id" :color="textColor" />
           </div>
         </v-expand-x-transition>
         <div
