@@ -1,32 +1,25 @@
 <template>
-  <v-hover #default="{ hover }">
-    <v-card class="track-card" :style="{ 'background-color': background }" :to="uri">
-      <div class="track-card__text" :style="{ 'color': textColor }">
-        <div class="track-card__name body-2" :title="track.title">
-          {{ track.title }}
-        </div>
-        <div class="track-card__album caption" :title="album.title">
-          {{ album.title }}
-        </div>
-        <div class="track-card__reciter-year caption" :title="reciterYear">
-          {{ reciterYear }}
-        </div>
+  <v-card class="track-card" :style="{ 'background-color': background }" :to="uri">
+    <div class="track-card__text" :style="{ 'color': textColor }">
+      <div class="track-card__name body-2" :title="track.title">
+        {{ track.title }}
       </div>
-      <div class="track-card__album-art">
-        <v-expand-x-transition>
-          <div v-if="hover" class="track-card__actions" :style="{ 'background-color': background || defaultOverlayColor }">
-            <favorite-track-button :track="track.id" :color="textColor" />
-          </div>
-        </v-expand-x-transition>
-        <div
-          v-if="colored && album.artwork"
-          class="track-card__album-art-gradient"
-          :style="{background: gradient}"
-        />
-        <lazy-image ref="artwork" crossorigin :src="artwork" :alt="track.title" />
+      <div class="track-card__album caption" :title="album.title">
+        {{ album.title }}
       </div>
-    </v-card>
-  </v-hover>
+      <div class="track-card__reciter-year caption" :title="reciterYear">
+        {{ reciterYear }}
+      </div>
+    </div>
+    <div class="track-card__album-art">
+      <div
+        v-if="colored && album.artwork"
+        class="track-card__album-art-gradient"
+        :style="{background: gradient}"
+      />
+      <lazy-image ref="artwork" crossorigin :src="artwork" :alt="track.title" />
+    </div>
+  </v-card>
 </template>
 
 <script lang="ts">
@@ -35,11 +28,9 @@ import Vibrant from 'node-vibrant';
 import LazyImage from '@/components/utils/LazyImage.vue';
 import { getTrackUri, Track } from '@/entities/track';
 import { Album, getAlbumArtwork } from '@/entities/album';
-import FavoriteTrackButton from '@/components/tracks/FavoriteTrackButton.vue';
 
 @Component({
   components: {
-    FavoriteTrackButton,
     LazyImage,
   },
 })
