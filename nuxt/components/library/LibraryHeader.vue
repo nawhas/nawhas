@@ -1,7 +1,7 @@
 <template>
   <page-header class="library-header">
     <div class="d-flex align-center justify-center">
-      <div class="header__icon">
+      <div class="header__icon" :style="{ 'border-color': $vuetify.theme.dark ? 'white' : '#333' }">
         <v-icon size="32">
           local_library
         </v-icon>
