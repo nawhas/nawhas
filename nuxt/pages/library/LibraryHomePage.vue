@@ -13,7 +13,7 @@
           favorite
         </v-icon> Recently Saved Nawhas
       </h5>
-      <template v-if="tracks">
+      <template v-if="tracks && tracks.length > 0">
         <v-row :dense="$vuetify.breakpoint.smAndDown">
           <v-col v-for="track in tracks" :key="track.id" cols="12" sm="6" md="4">
             <track-card :track="track" :colored="true" :show-reciter="true" />
@@ -27,10 +27,13 @@
           </v-col>
         </v-row>
       </template>
-      <template v-else>
+      <template v-else-if="$fetchState.pending">
         <skeleton-card-grid>
           <track-card-skeleton />
         </skeleton-card-grid>
+      </template>
+      <template v-else>
+        <saved-tracks-empty-state />
       </template>
     </v-container>
   </div>
@@ -45,6 +48,7 @@ import { Track } from '@/entities/track';
 import { TrackIncludes } from '@/api/tracks';
 import LibraryHeader from '@/components/library/LibraryHeader.vue';
 import { generateMeta } from '@/utils/meta';
+import SavedTracksEmptyState from '@/components/library/SavedTracksEmptyState.vue';
 
 interface Data {
   tracks: Array<Track>|null;
@@ -57,6 +61,7 @@ export default Vue.extend({
     }
   },
   components: {
+    SavedTracksEmptyState,
     TrackCard,
     SkeletonCardGrid,
     TrackCardSkeleton,

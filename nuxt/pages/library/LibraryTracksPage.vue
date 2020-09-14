@@ -7,29 +7,34 @@
   <div>
     <library-header />
     <v-container class="app__section">
-      <h5 class="section__title section__title--with-actions mt-6">
+      <div class="section__title section__title--with-actions mt-6">
         <div class="d-flex align-center justify-start">
           <v-icon class="mr-2">
             favorite
           </v-icon>Saved Nawhas
         </div>
-        <v-btn text @click="playSavedTracks">
+        <v-btn v-if="playable.length > 0" text @click="playSavedTracks">
           Play All
         </v-btn>
-      </h5>
-      <v-card>
-        <track-list :tracks="tracks" metadata :display-avatar="true" />
-      </v-card>
-      <v-pagination
-        v-model="page"
-        color="deep-orange"
-        class="mt-6"
-        :length="length"
-        circle
-        next-icon="navigate_next"
-        prev-icon="navigate_before"
-        @input="onPageChanged"
-      />
+      </div>
+      <template v-if="tracks === null || tracks.length > 0">
+        <v-card>
+          <track-list :tracks="tracks" metadata :display-avatar="true" />
+        </v-card>
+        <v-pagination
+          v-model="page"
+          color="deep-orange"
+          class="mt-6"
+          :length="length"
+          circle
+          next-icon="navigate_next"
+          prev-icon="navigate_before"
+          @input="onPageChanged"
+        />
+      </template>
+      <template v-else>
+        <saved-tracks-empty-state />
+      </template>
     </v-container>
   </div>
 </template>
@@ -42,6 +47,7 @@ import TrackList from '@/components/tracks/TrackList.vue';
 import { getPage } from '@/utils/route';
 import LibraryHeader from '@/components/library/LibraryHeader.vue';
 import { generateMeta } from '@/utils/meta';
+import SavedTracksEmptyState from '@/components/library/SavedTracksEmptyState.vue';
 
 interface Data {
   tracks: Array<Track>|null;
@@ -56,6 +62,7 @@ export default Vue.extend({
     }
   },
   components: {
+    SavedTracksEmptyState,
     TrackList,
     LibraryHeader,
   },

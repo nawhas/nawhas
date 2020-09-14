@@ -4,5 +4,6 @@ export interface AuthPrompt {
 }
 
 export enum AuthReason {
+  General,
   TrackSaved,
 }

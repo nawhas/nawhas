@@ -34,13 +34,13 @@
       </template>
     </v-container>
 
-    <v-container v-if="savedTracks" class="app__section">
-      <h5 class="section__title mt-6">
+    <v-container class="app__section">
+      <div class="section__title mt-6">
         <div>
           <v-icon>favorite</v-icon> Recently Saved Nawhas
         </div>
-      </h5>
-      <template v-if="savedTracks">
+      </div>
+      <template v-if="savedTracks && savedTracks.length > 0">
         <v-row :dense="$vuetify.breakpoint.smAndDown">
           <v-col v-for="track in savedTracks" :key="track.id" cols="12" sm="6" md="4">
             <track-card :track="track" :colored="true" :show-reciter="true" />
@@ -54,10 +54,13 @@
           </v-col>
         </v-row>
       </template>
-      <template v-else>
+      <template v-else-if="savedTracksLoading">
         <skeleton-card-grid>
           <track-card-skeleton />
         </skeleton-card-grid>
+      </template>
+      <template v-else>
+        <saved-tracks-empty-state />
       </template>
     </v-container>
 
@@ -112,6 +115,7 @@ import { Reciter } from '@/entities/reciter';
 import { Track } from '@/entities/track';
 import { ReciterIncludes } from '@/api/reciters';
 import { TrackIncludes } from '@/api/tracks';
+import SavedTracksEmptyState from '@/components/library/SavedTracksEmptyState.vue';
 
 const POPULAR_ENTITIES_LIMIT = 6;
 
@@ -119,10 +123,12 @@ interface Data {
   reciters: Array<Reciter> | null;
   tracks: Array<Track> | null;
   savedTracks: Array<Track> | null;
+  savedTracksLoading: boolean;
 }
 
 export default Vue.extend({
   components: {
+    SavedTracksEmptyState,
     TrackList,
     HeroBanner,
     HeroQuote,
@@ -153,6 +159,7 @@ export default Vue.extend({
     reciters: null,
     tracks: null,
     savedTracks: null,
+    savedTracksLoading: false,
   }),
 
   computed: {
@@ -175,6 +182,7 @@ export default Vue.extend({
       if (!this.$store.getters['auth/user']) {
         return;
       }
+      this.savedTracksLoading = true;
       const response = await this.$api.library.tracks({
         include: [
           TrackIncludes.Reciter,
@@ -188,6 +196,7 @@ export default Vue.extend({
         },
       });
       this.savedTracks = response.data;
+      this.savedTracksLoading = false;
     },
     onAuthChange(value) {
       if (value) {
