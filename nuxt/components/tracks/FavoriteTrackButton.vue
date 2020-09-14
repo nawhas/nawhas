@@ -1,8 +1,12 @@
 <template>
-  <v-btn icon class="track-favorite" @click.prevent.stop="toggleSaveState">
+  <v-btn
+    icon
+    class="track-favorite"
+    @click.prevent.stop="toggleSaveState"
+  >
     <v-icon
       class="track-favorite__icon"
-      :color="saved ? 'primary' : undefined"
+      :color="saved ? 'primary' : color"
     >
       {{ saved ? 'favorite' : 'favorite_border' }}
     </v-icon>
@@ -15,6 +19,7 @@ import { Component, Prop, Vue } from 'nuxt-property-decorator';
 @Component
 export default class FavoriteTrackButton extends Vue {
   @Prop({ type: String, required: true }) private readonly track!: string;
+  @Prop({ type: String, required: false, default: undefined }) private readonly color?: string;
 
   get saved(): boolean {
     return this.$store.getters['library/isTrackSaved'](this.track);
