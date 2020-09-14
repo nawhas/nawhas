@@ -52,9 +52,14 @@ export default class SavedTracksEmptyState extends Vue {
   margin-bottom: 16px;
 }
 
-@include breakpoint('sm-and-down') {
+@include breakpoint('xs-only') {
+  .saved-tracks-empty {
+    flex-direction: column;
+    padding: 12px;
+  }
   .body {
     text-align: center;
+    padding: 12px 0;
   }
   .illustration {
     padding: 24px 0;
