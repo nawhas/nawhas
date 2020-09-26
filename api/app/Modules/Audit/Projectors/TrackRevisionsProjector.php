@@ -13,7 +13,8 @@ use App\Modules\Library\Events\Tracks\{TrackAudioChanged,
     TrackDeleted,
     TrackEvent,
     TrackLyricsChanged,
-    TrackTitleChanged};
+    TrackTitleChanged,
+    TrackVideoChanged};
 use Spatie\EventSourcing\EventHandlers\Projectors\Projector;
 use Spatie\EventSourcing\StoredEvents\StoredEvent;
 
@@ -63,6 +64,15 @@ class TrackRevisionsProjector extends Projector
             $event,
             $storedEvent,
             fn (TrackSnapshot $snapshot) => $snapshot->audio = $event->path
+        );
+    }
+
+    public function onTrackVideoChanged(TrackVideoChanged $event, StoredEvent $storedEvent): void
+    {
+        $this->recordModification(
+            $event,
+            $storedEvent,
+            fn (TrackSnapshot $snapshot) => $snapshot->video = $event->url
         );
     }
 

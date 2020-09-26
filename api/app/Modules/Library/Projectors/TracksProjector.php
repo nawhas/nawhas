@@ -8,7 +8,8 @@ use App\Modules\Library\Events\Tracks\{TrackAudioChanged,
     TrackCreated,
     TrackDeleted,
     TrackLyricsChanged,
-    TrackTitleChanged};
+    TrackTitleChanged,
+    TrackVideoChanged};
 use App\Modules\Library\Models\{Album, Track};
 use Spatie\EventSourcing\EventHandlers\Projectors\Projector;
 
@@ -43,6 +44,13 @@ class TracksProjector extends Projector
     {
         $track = Track::retrieve($event->id);
         $track->audio = $event->path;
+        $track->saveOrFail();
+    }
+
+    public function onTrackVideoChanged(TrackVideoChanged $event): void
+    {
+        $track = Track::retrieve($event->id);
+        $track->video = $event->url;
         $track->saveOrFail();
     }
 

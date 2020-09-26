@@ -97,6 +97,7 @@ return [
         'track.created' => Library\Tracks\TrackCreated::class,
         'track.changed.title' => Library\Tracks\TrackTitleChanged::class,
         'track.changed.audio' => Library\Tracks\TrackAudioChanged::class,
+        'track.changed.video' => Library\Tracks\TrackVideoChanged::class,
         'track.changed.lyrics' => Library\Tracks\TrackLyricsChanged::class,
         'track.deleted' => Library\Tracks\TrackDeleted::class,
         'track.viewed' => Library\Tracks\TrackViewed::class,
