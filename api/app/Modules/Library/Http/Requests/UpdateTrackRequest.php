@@ -34,6 +34,10 @@ class UpdateTrackRequest extends Request
             'format' => [
                 'integer',
             ],
+            'video' => [
+                'string',
+                'nullable',
+            ],
         ];
     }
 }
