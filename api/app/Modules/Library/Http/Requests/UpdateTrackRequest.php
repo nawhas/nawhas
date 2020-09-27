@@ -37,6 +37,7 @@ class UpdateTrackRequest extends Request
             'video' => [
                 'string',
                 'nullable',
+                'size:11'
             ],
         ];
     }
