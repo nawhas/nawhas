@@ -121,6 +121,21 @@
           <lyrics-card :track="track" />
         </v-col>
         <v-col cols="12" md="4">
+          <v-card v-if="video" class="card card--video">
+            <v-card-title
+              class="card__title subtitle-1"
+            >
+              <v-icon class="card__title__icon">
+                ondemand_video
+              </v-icon>
+              <div>Video</div>
+            </v-card-title>
+            <v-card-text class="pa-0">
+              <client-only>
+                <youtube class="v-responsive" :video-id="video" />
+              </client-only>
+            </v-card-text>
+          </v-card>
           <v-card class="card card--album">
             <v-card-title
               class="card__title subtitle-1 card__title--link"
@@ -240,6 +255,13 @@ export default Vue.extend({
 
   computed: {
     ...mapGetters('auth', ['isModerator']),
+    video(): string|null {
+      if (!this.track) {
+        return null;
+      }
+
+      return this.track.video;
+    },
     showExpandedButtonText(): boolean {
       return this.$vuetify.breakpoint.mdAndUp;
     },
@@ -455,6 +477,10 @@ export default Vue.extend({
     display: flex;
     justify-content: space-between;
   }
+}
+
+.card--video {
+  margin-bottom: 24px;
 }
 
 .card--album {

@@ -60,6 +60,12 @@
           label="Name"
           required
         />
+        <v-text-field
+          v-model="form.video"
+          outlined
+          label="YouTube Video"
+          prepend-icon="video_library"
+        />
         <div
           class="file-input"
           @drop.prevent="addFile"
@@ -98,6 +104,7 @@
 
 <script lang="ts">
 import { Component, Prop, Vue, Watch } from 'nuxt-property-decorator';
+import getYouTubeID from 'get-youtube-id';
 import { clone } from '@/utils/clone';
 import { RequestOptions, TrackIncludes } from '@/api/tracks';
 import TimestampedEditor from '@/components/edit/lyrics/TimestampedEditor.vue';
@@ -112,11 +119,13 @@ interface Form {
   title: string|null;
   lyrics: JsonV1Document|null;
   audio: File|null;
+  video: string|null;
 }
 const defaults: Form = {
   title: null,
   lyrics: null,
   audio: null,
+  video: null,
 };
 
 @Component({
@@ -195,10 +204,11 @@ export default class EditTrackDialog extends Vue {
   resetForm() {
     this.form = { ...defaults };
     if (this.track) {
-      const { title } = this.track;
+      const { title, video } = this.track;
       this.form = {
         ...this.form,
         title,
+        video,
         lyrics: this.lyrics,
       };
     }
@@ -219,6 +229,9 @@ export default class EditTrackDialog extends Vue {
     if (this.form.title) {
       data.title = this.form.title;
     }
+    if (this.form.video) {
+      data.video = getYouTubeID(this.form.video);
+    }
     if (this.form.lyrics) {
       data.lyrics = this.prepareLyrics();
     }
@@ -238,6 +251,9 @@ export default class EditTrackDialog extends Vue {
     const data: any = {};
     if (this.track.title !== this.form.title && this.form.title) {
       data.title = this.form.title;
+    }
+    if (this.track.video !== this.form.video && this.form.video) {
+      data.video = getYouTubeID(this.form.video);
     }
     const lyricsString = this.prepareLyrics();
     if (this.track.lyrics?.content !== lyricsString && this.form.lyrics) {

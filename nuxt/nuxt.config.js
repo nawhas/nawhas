@@ -133,6 +133,7 @@ export default {
     '@/plugins/theme.client',
     '@/plugins/service-worker.client',
     '@/plugins/lazy-images.client',
+    '@/plugins/youtube.ts',
   ],
   /*
   ** Auto import components
