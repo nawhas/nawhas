@@ -136,12 +136,20 @@ class Revision extends Model
 
     protected function setValues(array $old, array $new): void
     {
-        $this->old_values = collect($old)->filter(function ($value, $key) use ($new) {
+        foreach ($new as $key => $value) {
+            if (!isset($old[$key])) {
+                $old[$key] = null;
+            }
+        }
+
+        $old = collect($old)->filter(function ($value, $key) use ($new) {
             if (is_array($value)) {
                 return json_encode($value) !== json_encode($new[$key] ?? []);
             }
             return $value !== ($new[$key] ?? null);
         })->all();
+
+        $this->old_values = $old;
         $this->new_values = $new;
     }
 
