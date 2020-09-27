@@ -193,6 +193,7 @@
 /* eslint-disable dot-notation */
 import Vue from 'vue';
 import { mapGetters } from 'vuex';
+import getYouTubeID from 'get-youtube-id';
 import Vibrant from 'node-vibrant';
 import MoreTracksSkeleton from '@/components/loaders/MoreTracksSkeleton.vue';
 import EditTrackDialog from '@/components/edit/EditTrackDialog.vue';
@@ -256,11 +257,11 @@ export default Vue.extend({
   computed: {
     ...mapGetters('auth', ['isModerator']),
     video(): string|null {
-      if (!this.track) {
+      if (!this.track || !this.track.video) {
         return null;
       }
 
-      return this.track.video;
+      return getYouTubeID(this.track.video);
     },
     showExpandedButtonText(): boolean {
       return this.$vuetify.breakpoint.mdAndUp;

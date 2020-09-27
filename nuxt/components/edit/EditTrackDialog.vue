@@ -104,7 +104,6 @@
 
 <script lang="ts">
 import { Component, Prop, Vue, Watch } from 'nuxt-property-decorator';
-import getYouTubeID from 'get-youtube-id';
 import { clone } from '@/utils/clone';
 import { RequestOptions, TrackIncludes } from '@/api/tracks';
 import TimestampedEditor from '@/components/edit/lyrics/TimestampedEditor.vue';
@@ -230,7 +229,7 @@ export default class EditTrackDialog extends Vue {
       data.title = this.form.title;
     }
     if (this.form.video) {
-      data.video = getYouTubeID(this.form.video);
+      data.video = this.form.video;
     }
     if (this.form.lyrics) {
       data.lyrics = this.prepareLyrics();
@@ -253,7 +252,7 @@ export default class EditTrackDialog extends Vue {
       data.title = this.form.title;
     }
     if (this.track.video !== this.form.video && this.form.video) {
-      data.video = getYouTubeID(this.form.video);
+      data.video = this.form.video;
     }
     const lyricsString = this.prepareLyrics();
     if (this.track.lyrics?.content !== lyricsString && this.form.lyrics) {
