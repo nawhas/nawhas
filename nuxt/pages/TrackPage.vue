@@ -132,7 +132,7 @@
             </v-card-title>
             <v-card-text class="pa-0">
               <client-only>
-                <youtube class="v-responsive" :video-id="video" />
+                <youtube class="youtube" :video-id="video" />
               </client-only>
             </v-card-text>
           </v-card>
@@ -539,6 +539,24 @@ export default Vue.extend({
   .hero__artwork {
     background: #1e1e1e;
     border-color: #1e1e1e;
+  }
+}
+
+.youtube {
+  position: relative;
+  padding-bottom: 56.25%;
+  height: 0;
+  overflow: hidden;
+  max-width: 100%;
+
+  ::v-deep iframe,
+  ::v-deep object,
+  ::v-deep embed {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
   }
 }
 
