@@ -5,56 +5,52 @@
     </template>
     <template slot="message">
       <p class="message-line">
-        Let's get you back into your account. Enter the email address you used when creating your account.
+        Welcome back, {{ user.name }}! Choose a new password.
       </p>
     </template>
-
-    <div v-if="success">
-      <v-alert type="success" outlined>
-        If we have an account matching your email address, we'll send you an email with instructions on
-        how to reset your password. Keep an eye on your inbox!
-      </v-alert>
-      <div class="text-center">
-        <v-btn color="primary" @click="close">
-          Close
-        </v-btn>
-      </div>
-    </div>
-    <div v-else>
-      <v-text-field
-        v-model="form.email"
-        outlined
-        autofocus
-        label="Email"
-        type="email"
-        :error-messages="invalid.email"
-      />
-      <div class="actions">
-        <v-spacer />
-        <v-btn text @click="close">
-          Cancel
-        </v-btn>
-        <v-btn
-          type="submit"
-          elevation="0"
-          color="primary"
-          :loading="loading"
-          :disabled="disabled"
-        >
-          Submit
-        </v-btn>
-      </div>
+    <v-text-field
+      :value="user.email"
+      outlined
+      disabled
+      label="Email"
+      type="email"
+    />
+    <v-text-field
+      v-model="form.password"
+      outlined
+      autofocus
+      label="New Password"
+      type="password"
+      :error-messages="invalid.password"
+    />
+    <div class="actions">
+      <v-spacer />
+      <v-btn
+        type="submit"
+        elevation="0"
+        color="primary"
+        :loading="loading"
+        :disabled="disabled"
+      >
+        Submit
+      </v-btn>
     </div>
   </auth-dialog>
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'nuxt-property-decorator';
-import { PasswordResetEmailPayload } from '@/api/auth';
+import { Component, Prop, Vue } from 'nuxt-property-decorator';
 import AuthDialog from '@/components/auth/AuthDialog.vue';
+import { User } from '@/entities/user';
+import { showToast } from '@/events/toaster';
 
-function createForm(): PasswordResetEmailPayload {
-  return { email: '' };
+interface PasswordResetFormData {
+  password: string;
+}
+function createForm(): PasswordResetFormData {
+  return {
+    password: '',
+  };
 }
 
 @Component({
@@ -62,15 +58,16 @@ function createForm(): PasswordResetEmailPayload {
     AuthDialog,
   },
 })
-export default class LoginForm extends Vue {
-  private form: PasswordResetEmailPayload = createForm();
-  private success: boolean = false;
+export default class PasswordResetForm extends Vue {
+  @Prop({ type: Object, required: true }) private readonly user!: User;
+  @Prop({ type: String, required: true }) private readonly token!: string;
+  private form: PasswordResetFormData = createForm();
   private error: string|null = null;
   private invalid: any = {};
   private loading = false;
 
   get disabled() {
-    return !this.form.email;
+    return !this.form.password;
   }
 
   async submit() {
@@ -79,8 +76,16 @@ export default class LoginForm extends Vue {
     this.loading = true;
 
     try {
-      await this.$api.auth.sendResetPasswordEmail(this.form);
-      this.success = true;
+      await this.$api.auth.resetPassword({
+        ...this.form,
+        token: this.token,
+      });
+      await this.$store.dispatch('auth/reinitialize');
+      showToast({
+        text: 'Your password has been changed!',
+        type: 'success',
+      });
+      await this.$router.push('/');
     } catch (e) {
       if (!e.response) {
         throw e;
@@ -96,22 +101,6 @@ export default class LoginForm extends Vue {
     } finally {
       this.loading = false;
     }
-  }
-
-  close() {
-    this.form = createForm();
-    this.invalid = {};
-    this.error = null;
-    this.success = false;
-    this.$emit('close');
-  }
-
-  switchToLoginDialog() {
-    const prompt = this.$store.state.auth.prompt ?? {};
-    this.$store.commit('auth/PROMPT_USER', {
-      ...prompt,
-      type: 'login',
-    });
   }
 }
 </script>

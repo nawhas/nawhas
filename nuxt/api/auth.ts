@@ -19,6 +19,11 @@ export interface PasswordResetEmailPayload {
   email: string;
 }
 
+export interface ResetPasswordPayload {
+  token: string;
+  password: string;
+}
+
 export class AuthApi {
   constructor(
     private axios: NuxtAxiosInstance,
@@ -38,6 +43,14 @@ export class AuthApi {
 
   async sendResetPasswordEmail(payload: PasswordResetEmailPayload): Promise<void> {
     await this.axios.$post('v1/auth/password/email', payload);
+  }
+
+  async validateResetToken(token: string): Promise<User> {
+    return await this.axios.$get(`v1/auth/password/tokens/${token}`);
+  }
+
+  async resetPassword(payload: ResetPasswordPayload): Promise<User> {
+    return await this.axios.$post('v1/auth/password/reset', payload);
   }
 
   async logout(): Promise<void> {

@@ -1,38 +1,44 @@
 <router>
-  path: /library
-  name: "library.landing"
+  path: /auth/password/reset/:token
+  name: "auth.password.reset"
 </router>
 
 <template>
-  <div class="library">
-    <div class="icon outlined">
-      <v-icon size="64">
-        local_library
-      </v-icon>
-    </div>
-    <h1 class="main-heading">
-      Welcome to your library
-    </h1>
-    <h2 class="sub-heading">
-      Add nawhas to your favorites, create playlists, and curate your own collection.
-    </h2>
-    <v-btn x-large color="white" class="black--text" @click="promptRegister">
-      Get Started
-    </v-btn>
+  <div class="centered">
+    <password-reset-form :user="user" :token="token" class="form" />
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
 import { generateMeta } from '@/utils/meta';
-import { AuthReason } from '@/entities/auth';
+import PasswordResetForm from '@/components/auth/PasswordResetForm.vue';
+import { User } from '@/entities/user';
+
+interface Data {
+  user: User | null;
+  token: string | null;
+}
 
 export default Vue.extend({
-  middleware({ store, redirect }) {
-    if (store.state.auth.user) {
-      return redirect('/library/home');
+  components: { PasswordResetForm },
+  async asyncData({ route, $api, error }) {
+    try {
+      const { token } = route.params;
+      const user = await $api.auth.validateResetToken(token);
+
+      return {
+        user,
+        token,
+      };
+    } catch {
+      error({ statusCode: 404, message: 'Not found.' });
     }
   },
+  data: (): Data => ({
+    user: null,
+    token: null,
+  }),
   watch: {
     '$store.state.auth.user': 'onAuthChange',
   },
@@ -42,12 +48,12 @@ export default Vue.extend({
         this.$router.replace('/library/home');
       }
     },
-    promptRegister() {
-      this.$store.commit('auth/PROMPT_USER', { reason: AuthReason.TrackSaved });
+    onSubmit() {
+
     },
   },
   head: () => generateMeta({
-    title: 'Welcome to your library',
+    title: 'Reset Your Password',
   }),
 });
 </script>
@@ -55,56 +61,23 @@ export default Vue.extend({
 <style lang="scss" scoped>
 @import '~assets/theme';
 
-.library {
-  background: linear-gradient(229.64deg, #F19100 -3.22%, #950900 90.48%);
+.centered {
   min-height: calc(100vh - 64px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.reset-password {
+  padding: 32px 64px;
+}
+.form {
   width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  padding: 0px 20px;
+  max-width: 580px;
 }
 
-.icon {
-  width: 128px;
-  height: 128px;
-  border-radius: 128px;
-  margin-bottom: 68px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.outlined {
-  border: solid 1px white;
-}
-
-.main-heading {
-  margin-bottom: 10px;
-  font-size: 64px;
-  font-weight: 200;
-  padding: 0;
-}
-
-.sub-heading {
-  font-size: 32px;
-  font-weight: 200;
-  margin-bottom: 32px;
-}
-
-@include breakpoint('md-and-down') {
-  .library {
-    min-height: calc(100vh - 56px);
-  }
-
-  .main-heading {
-    font-size: 48px;
-  }
-
-  .sub-heading {
-    font-size: 22px;
+@include breakpoint('sm-and-down') {
+  .reset-password {
+    padding: 24px;
   }
 }
 </style>

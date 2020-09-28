@@ -9,6 +9,7 @@ export interface AuthState {
   initialized: boolean;
   prompt: AuthPrompt | null;
 }
+
 type Context = ActionContext<AuthState, RootState>;
 
 const state = (): AuthState => ({
@@ -65,10 +66,13 @@ const actions: ActionTree<AuthState, RootState> = {
     await this.$api.auth.logout();
     dispatch('library/getTrackIds', null, { root: true });
   },
-  async initialize({ commit, state }: Context) {
+  async initialize({ state, dispatch }: Context) {
     if (state.initialized) {
       return;
     }
+    await dispatch('reinitialize');
+  },
+  async reinitialize({ commit }: Context) {
     try {
       const user = await this.$api.auth.user();
       commit('INITIALIZE', user);

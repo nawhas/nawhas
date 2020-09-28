@@ -52,6 +52,8 @@ export default class AuthDialog extends Vue {
 </script>
 
 <style lang="scss" scoped>
+@import '~assets/theme';
+
 .auth-dialog__content {
   padding: 32px 64px;
 }
@@ -93,5 +95,11 @@ export default class AuthDialog extends Vue {
 .auth-dialog__message {
   text-align: center;
   padding: 0 0 16px;
+}
+
+@include breakpoint('sm-and-down') {
+  .auth-dialog__content {
+    padding: 24px;
+  }
 }
 </style>
