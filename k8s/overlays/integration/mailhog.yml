@@ -43,6 +43,3 @@ spec:
               name: ui
             - containerPort: 1025
               name: smtp
-          env:
-            - name: MH_UI_WEB_PATH
-              value: mail

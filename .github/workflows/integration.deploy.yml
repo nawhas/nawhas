@@ -186,12 +186,14 @@ jobs:
           API_DOMAIN="api.pr-$PR_NUM.intg.k8s.nawhas.com"
           APP_DOMAIN="pr-$PR_NUM.intg.k8s.nawhas.com"
           SEARCH_HOST="search.pr-$PR_NUM.intg.k8s.nawhas.com"
+          MAIL_HOST="mail.pr-$PR_NUM.intg.k8s.nawhas.com"
 
           echo "::set-env name=NAMESPACE::$NAMESPACE"
           echo "::set-env name=PR_NUM::$PR_NUM"
           echo "::set-env name=API_DOMAIN::$API_DOMAIN"
           echo "::set-env name=APP_DOMAIN::$APP_DOMAIN"
           echo "::set-env name=SEARCH_HOST::$SEARCH_HOST"
+          echo "::set-env name=MAIL_HOST::$MAIL_HOST"
 
       - name: Prepare Secrets
         working-directory: ./k8s/overlays/integration/secrets
@@ -230,6 +232,7 @@ jobs:
             | sed "s/ING_APP_DOMAIN/$APP_DOMAIN/g" \
             | sed "s/ING_API_DOMAIN/$API_DOMAIN/g" \
             | sed "s/ING_SEARCH_HOST/$SEARCH_HOST/g" \
+            | sed "s/ING_MAIL_HOST/$MAIL_HOST/g" \
             | kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig apply -f -
 
           kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig rollout status --timeout=2m deployment/api -n $NAMESPACE
