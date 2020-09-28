@@ -5,6 +5,7 @@ resources:
   - ./postgres/config.yml
   - ./postgres/postgres.yml
   - ./postgres/volume.yml
+  - ./mailhog.yml
 patchesStrategicMerge:
   - deployments.yml
   - ingress.yml
