@@ -19,6 +19,11 @@ spec:
     - host: ING_APP_DOMAIN
       http:
         paths:
+          - path: /mail
+            pathType: Prefix
+            backend:
+              serviceName: mail
+              servicePort: 1025
           - backend:
               serviceName: web
               servicePort: 3000

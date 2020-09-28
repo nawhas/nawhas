@@ -49,3 +49,29 @@ spec:
           envFrom:
             - secretRef:
                 name: search.integration.env
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mail
+  labels:
+    app: mail
+spec:
+  selector:
+    matchLabels:
+      app: mail
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: mail
+    spec:
+      containers:
+        - name: mail
+          image: mailhog/mailhog:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8025
+              name: ui
+            - containerPort: 1025
+              name: smtp
