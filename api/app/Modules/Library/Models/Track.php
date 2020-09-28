@@ -13,6 +13,7 @@ use App\Modules\Library\Events\Tracks\TrackAudioChanged;
 use App\Modules\Library\Events\Tracks\TrackCreated;
 use App\Modules\Library\Events\Tracks\TrackLyricsChanged;
 use App\Modules\Library\Events\Tracks\TrackTitleChanged;
+use App\Modules\Library\Events\Tracks\TrackVideoChanged;
 use App\Modules\Library\Models\Aliases\TrackAlias;
 use App\Modules\Library\Models\Traits\Visitable;
 use App\Modules\Library\Models\Visits\TrackStatistic;
@@ -39,6 +40,7 @@ use Spatie\Sluggable\SlugOptions;
  * @property \App\Modules\Lyrics\Documents\Document|null|null $lyrics
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property string|null $video
  * @property-read \App\Modules\Library\Models\Album $album
  * @property-read \Illuminate\Database\Eloquent\Collection|TrackAlias[] $aliases
  * @property-read int|null $aliases_count
@@ -117,6 +119,14 @@ class Track extends Model implements TimestampedEntity
     {
         if ($path !== $this->audio) {
             event(new TrackAudioChanged($this->id, $path));
+        }
+    }
+
+
+    public function changeVideo(?string $url): void
+    {
+        if ($url !== $this->video) {
+            event(new TrackVideoChanged($this->id, $url));
         }
     }
 

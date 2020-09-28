@@ -121,6 +121,21 @@
           <lyrics-card :track="track" />
         </v-col>
         <v-col cols="12" md="4">
+          <v-card v-if="video" class="card card--video">
+            <v-card-title
+              class="card__title subtitle-1"
+            >
+              <v-icon class="card__title__icon">
+                ondemand_video
+              </v-icon>
+              <div>Video</div>
+            </v-card-title>
+            <v-card-text class="pa-0">
+              <client-only>
+                <youtube class="youtube" :video-id="video" />
+              </client-only>
+            </v-card-text>
+          </v-card>
           <v-card class="card card--album">
             <v-card-title
               class="card__title subtitle-1 card__title--link"
@@ -178,6 +193,7 @@
 /* eslint-disable dot-notation */
 import Vue from 'vue';
 import { mapGetters } from 'vuex';
+import getYouTubeID from 'get-youtube-id';
 import Vibrant from 'node-vibrant';
 import MoreTracksSkeleton from '@/components/loaders/MoreTracksSkeleton.vue';
 import EditTrackDialog from '@/components/edit/EditTrackDialog.vue';
@@ -240,6 +256,13 @@ export default Vue.extend({
 
   computed: {
     ...mapGetters('auth', ['isModerator']),
+    video(): string|null {
+      if (!this.track || !this.track.video) {
+        return null;
+      }
+
+      return getYouTubeID(this.track.video);
+    },
     showExpandedButtonText(): boolean {
       return this.$vuetify.breakpoint.mdAndUp;
     },
@@ -457,6 +480,10 @@ export default Vue.extend({
   }
 }
 
+.card--video {
+  margin-bottom: 24px;
+}
+
 .card--album {
   padding: 0;
   margin-bottom: 12px;
@@ -512,6 +539,24 @@ export default Vue.extend({
   .hero__artwork {
     background: #1e1e1e;
     border-color: #1e1e1e;
+  }
+}
+
+.youtube {
+  position: relative;
+  padding-bottom: 56.25%;
+  height: 0;
+  overflow: hidden;
+  max-width: 100%;
+
+  ::v-deep iframe,
+  ::v-deep object,
+  ::v-deep embed {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
   }
 }
 

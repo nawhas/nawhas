@@ -24,6 +24,8 @@ class TrackTransformer extends Transformer
             'title' => $track->title,
             'slug' => $track->slug,
             'year' => $track->album->year,
+            'audio' => $track->audio,
+            'video' => $track->video,
             $this->timestamps($track),
         ];
     }
@@ -57,6 +59,7 @@ class TrackTransformer extends Transformer
         return $this->primitive([
             'lyrics' => $track->lyrics !== null,
             'audio' => $track->audio !== null,
+            'video' => $track->video !== null,
         ]);
     }
 }

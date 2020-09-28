@@ -15,24 +15,27 @@ class TrackSnapshot implements Snapshot
     public string $title;
     public ?Document $lyrics;
     public ?string $audio;
+    public ?string $video;
 
     public function __construct(
         string $id,
         string $albumId,
         string $title,
         ?string $audio = null,
+        ?string $video = null,
         ?Document $lyrics = null
     ) {
         $this->id = $id;
         $this->title = $title;
         $this->lyrics = $lyrics;
         $this->audio = $audio;
+        $this->video = $video;
         $this->albumId = $albumId;
     }
 
     public static function fromArray(array $attributes): self
     {
-        $lyrics = $attributes['lyrics'];
+        $lyrics = $attributes['lyrics'] ?? null;
 
         if ($lyrics) {
             $lyrics = Factory::create($lyrics['content'], new Format($lyrics['format']));
@@ -42,7 +45,8 @@ class TrackSnapshot implements Snapshot
             $attributes['id'],
             $attributes['albumId'],
             $attributes['title'],
-            $attributes['audio'],
+            $attributes['audio'] ?? null,
+            $attributes['video'] ?? null,
             $lyrics,
         );
     }
@@ -59,6 +63,7 @@ class TrackSnapshot implements Snapshot
             'albumId' => $this->albumId,
             'title' => $this->title,
             'audio' => $this->audio,
+            'video' => $this->video,
             'lyrics' => optional($this->lyrics)->toArray(),
         ];
     }

@@ -60,6 +60,10 @@ class TracksController extends Controller
             $this->updateLyrics($track, $request);
         }
 
+        if ($request->has('video')) {
+            $track->changeVideo($request->get('video'));
+        }
+
         return $this->respondWithItem($track->fresh());
     }
 
