@@ -10,7 +10,9 @@ use App\Modules\Authentication\Events\UserLoggedIn;
 use App\Modules\Authentication\Events\UserLoggedOut;
 use App\Modules\Authentication\Http\Requests\LoginRequest;
 use App\Modules\Authentication\Http\Requests\RegisterRequest;
+use App\Modules\Authentication\Http\Requests\ResetPasswordRequest;
 use App\Modules\Authentication\Http\Transformers\UserTransformer;
+use App\Modules\Authentication\Jobs\RequestPasswordReset;
 use App\Modules\Authentication\Models\User;
 use Illuminate\Contracts\Auth\{Factory as AuthFactory, StatefulGuard};
 use Illuminate\Auth\AuthenticationException;
@@ -65,6 +67,15 @@ class AuthController extends Controller
         $this->guard->logout();
 
         event(new UserLoggedOut($id));
+
+        return response()->noContent();
+    }
+
+    public function sendResetLinkEmail(ResetPasswordRequest $request): Response
+    {
+        $this->dispatch(
+            new RequestPasswordReset($request->get('email'))
+        );
 
         return response()->noContent();
     }

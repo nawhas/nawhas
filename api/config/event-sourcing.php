@@ -110,6 +110,7 @@ return [
         // Auth Events
         'auth.login' => Authentication\UserLoggedIn::class,
         'auth.logout' => Authentication\UserLoggedOut::class,
+        'auth.password.reset.requested' => Authentication\PasswordResetRequested::class,
         // Social Accounts Events
         'user.social.registered' => Authentication\SocialAccountRegistered::class,
         // Account Events
