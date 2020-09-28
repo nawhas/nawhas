@@ -151,6 +151,14 @@
       <register-form @close="showRegisterDialog = false" />
     </v-dialog>
     <v-dialog
+      v-model="showPasswordResetRequestDialog"
+      width="500"
+      transition="slide-y-reverse-transition"
+      :fullscreen="$vuetify.breakpoint.smAndDown"
+    >
+      <request-password-reset-form @close="showPasswordResetRequestDialog = false" />
+    </v-dialog>
+    <v-dialog
       v-model="showWhatsNewDialog"
       width="500"
       transition="slide-y-reverse-transition"
@@ -178,9 +186,11 @@ import { Role, User } from '@/entities/user';
 import LoginForm from '@/components/auth/LoginForm.vue';
 import RegisterForm from '@/components/auth/RegisterForm.vue';
 import { Feature } from '@/entities/feature';
+import RequestPasswordResetForm from '@/components/auth/RequestPasswordResetForm.vue';
 
 @Component({
   components: {
+    RequestPasswordResetForm,
     BugReportForm,
     AppChangelog,
     LoginForm,
@@ -221,6 +231,20 @@ export default class UserMenu extends Vue {
     } else {
       this.$store.commit('auth/PROMPT_USER', {
         type: 'login',
+      });
+    }
+  }
+
+  get showPasswordResetRequestDialog() {
+    return this.$store.getters['auth/showPasswordResetRequestDialog'];
+  }
+
+  set showPasswordResetRequestDialog(value) {
+    if (!value) {
+      this.$store.commit('auth/REMOVE_PROMPT');
+    } else {
+      this.$store.commit('auth/PROMPT_USER', {
+        type: 'reset.request',
       });
     }
   }

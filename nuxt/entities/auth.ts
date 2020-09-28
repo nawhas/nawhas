@@ -1,5 +1,5 @@
 export interface AuthPrompt {
-  type: 'login'|'register';
+  type: 'login'|'register'|'reset.request'|'reset.change';
   reason?: AuthReason;
 }
 

@@ -86,6 +86,7 @@ const getters: GetterTree<AuthState, RootState> = {
   role: (state) => state.user?.role ?? Role.Guest,
   showLoginDialog: (state) => state.prompt?.type === 'login',
   showRegisterDialog: (state) => state.prompt?.type === 'register',
+  showPasswordResetRequestDialog: (state) => state.prompt?.type === 'reset.request',
 };
 
 export default {
