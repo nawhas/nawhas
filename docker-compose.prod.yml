@@ -136,6 +136,14 @@ services:
       - search:/data.ms
     networks:
       - nawhas
+  mail:
+    image: mailhog/mailhog:latest
+    container_name: nawhas_mail
+    restart: unless-stopped
+    ports:
+      - "8025:8025"
+    networks:
+      - nawhas
 
 
 
