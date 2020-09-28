@@ -13,17 +13,17 @@ spec:
     - host: ING_API_DOMAIN
       http:
         paths:
-          - backend:
+          - path: /mail
+            backend:
+              serviceName: mail
+              servicePort: 1025
+          - path: /
+            backend:
               serviceName: api-nginx
               servicePort: 80
     - host: ING_APP_DOMAIN
       http:
         paths:
-          - path: /mail
-            pathType: Prefix
-            backend:
-              serviceName: mail
-              servicePort: 1025
           - backend:
               serviceName: web
               servicePort: 3000
