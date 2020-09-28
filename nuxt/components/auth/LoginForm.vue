@@ -28,8 +28,10 @@
       :error-messages="invalid.password"
     />
     <div class="actions">
-      <div v-if="false" class="forgot-password">
-        <a class="link body-2" href="#">Forgot password?</a>
+      <div class="forgot-password">
+        <a class="link body-2" href="#" @click.prevent="switchToResetPasswordRequestDialog">
+          Forgot password?
+        </a>
       </div>
       <v-spacer />
       <v-btn text @click="close">
@@ -117,10 +119,18 @@ export default class LoginForm extends Vue {
   }
 
   switchToRegisterDialog() {
+    this.switchAuthDialog('register');
+  }
+
+  switchToResetPasswordRequestDialog() {
+    this.switchAuthDialog('reset.request');
+  }
+
+  switchAuthDialog(type: string) {
     const prompt = this.$store.state.auth.prompt ?? {};
     this.$store.commit('auth/PROMPT_USER', {
       ...prompt,
-      type: 'register',
+      type,
     });
   }
 }

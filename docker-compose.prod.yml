@@ -67,7 +67,6 @@ services:
       context: nuxt
       dockerfile: Dockerfile
       args:
-        SENTRY_PUBLISH_RELEASE: 1
         APP_VERSION: local-0.0.1
     container_name: nawhas_web
     networks:
@@ -135,6 +134,14 @@ services:
       - MEILI_MASTER_KEY=secret
     volumes:
       - search:/data.ms
+    networks:
+      - nawhas
+  mail:
+    image: mailhog/mailhog:latest
+    container_name: nawhas_mail
+    restart: unless-stopped
+    ports:
+      - "8025:8025"
     networks:
       - nawhas
 
