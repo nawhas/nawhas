@@ -25,7 +25,7 @@ spec:
           - path: /mail
             backend:
               serviceName: mail
-              servicePort: 1025
+              servicePort: 8025
     - host: ING_SEARCH_HOST
       http:
         paths:

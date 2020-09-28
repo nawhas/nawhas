@@ -11,7 +11,11 @@ spec:
   ports:
     - port: 8025
       targetPort: 8025
-      name: 'mail'
+      name: 'ui'
+      protocol: TCP
+    - port: 1025
+      targetPort: 1025
+      name: 'smtp'
       protocol: TCP
 ---
 apiVersion: apps/v1
