@@ -8,12 +8,12 @@ use Spatie\EventSourcing\StoredEvents\ShouldBeStored;
 
 class PasswordResetRequested extends ShouldBeStored
 {
-    public string $id;
+    public string $userId;
     public string $token;
 
-    public function __construct(string $id, string $token)
+    public function __construct(string $userId, string $token)
     {
-        $this->id = $id;
+        $this->userId = $userId;
         $this->token = $token;
     }
 }

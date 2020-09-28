@@ -17,6 +17,8 @@ Route::prefix('v1')->group(function () {
         Route::post('login', [Controllers\AuthController::class, 'login']);
 
         Route::post('password/email', [Controllers\AuthController::class, 'sendResetLinkEmail']);
+        Route::get('password/tokens/{token}', [Controllers\AuthController::class, 'validateResetToken']);
+        Route::post('password/reset', [Controllers\AuthController::class, 'resetPassword']);
 
         Route::post('register', [Controllers\AuthController::class, 'register'])
             ->middleware(EnforceFeatureFlags::in([PublicUserRegistration::NAME]));

@@ -15,7 +15,7 @@ class SendPasswordResetEmail extends Reactor
     public function onPasswordResetRequested(PasswordResetRequested $event): void
     {
         /** @var User $user */
-        $user = User::findOrFail($event->id);
+        $user = User::findOrFail($event->userId);
 
         Mail::to($user)
             ->send(new PasswordResetEmail($user, $event->token));

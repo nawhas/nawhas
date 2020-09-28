@@ -6,7 +6,7 @@ namespace App\Modules\Authentication\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class ResetPasswordRequest extends FormRequest
+class SendResetPasswordLinkRequest extends FormRequest
 {
     public function authorize(): bool
     {
@@ -16,8 +16,12 @@ class ResetPasswordRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'password' => ['required', 'string'],
-            'token' => ['required', 'string'],
+            'email' => ['required', 'email'],
         ];
+    }
+
+    public function credentials(): array
+    {
+        return $this->only(['email']);
     }
 }
