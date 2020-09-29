@@ -222,7 +222,7 @@ export default Vue.extend({
             'Maintainer of the open source codebase',
           ],
           links: [
-            { icon: 'mdi-github', text: 'Github', href: 'https://github.com/shea786' },
+            { icon: mdiGithub, text: 'Github', href: 'https://github.com/shea786' },
           ],
         },
       ];
