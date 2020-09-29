@@ -6,7 +6,7 @@
 <template>
   <div class="library">
     <div class="icon outlined">
-      <v-icon size="64">
+      <v-icon size="64" dark>
         local_library
       </v-icon>
     </div>
@@ -65,6 +65,7 @@ export default Vue.extend({
   justify-content: center;
   text-align: center;
   padding: 0px 20px;
+  color: white;
 }
 
 .icon {
