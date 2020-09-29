@@ -42,16 +42,6 @@ export default Vue.extend({
   watch: {
     '$store.state.auth.user': 'onAuthChange',
   },
-  methods: {
-    onAuthChange(value) {
-      if (value) {
-        this.$router.replace('/library/home');
-      }
-    },
-    onSubmit() {
-
-    },
-  },
   head: () => generateMeta({
     title: 'Reset Your Password',
   }),
