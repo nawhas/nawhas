@@ -166,32 +166,23 @@
     >
       <app-changelog @close="showWhatsNewDialog = false" />
     </v-dialog>
-    <v-dialog
-      v-model="showBugReportDialog"
-      persistent
-      width="500"
-      transition="slide-y-reverse-transition"
-      :fullscreen="$vuetify.breakpoint.smAndDown"
-    >
-      <bug-report-form @close="showBugReportDialog = false" />
-    </v-dialog>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'nuxt-property-decorator';
 import AppChangelog from '@/components/notifications/AppChangelog.vue';
-import BugReportForm from '@/components/BugReportForm.vue';
 import { Role, User } from '@/entities/user';
 import LoginForm from '@/components/auth/LoginForm.vue';
 import RegisterForm from '@/components/auth/RegisterForm.vue';
 import { Feature } from '@/entities/feature';
 import RequestPasswordResetForm from '@/components/auth/RequestPasswordResetForm.vue';
+import { EventBus } from '@/events';
+import { SHOW_FEEDBACK } from '@/events/dialogs';
 
 @Component({
   components: {
     RequestPasswordResetForm,
-    BugReportForm,
     AppChangelog,
     LoginForm,
     RegisterForm,
@@ -201,7 +192,6 @@ export default class UserMenu extends Vue {
   private readonly Role = Role;
   private open = false;
   private showWhatsNewDialog = false;
-  private showBugReportDialog = false;
 
   get user(): User|null {
     return this.$store.getters['auth/user'];
@@ -289,8 +279,8 @@ export default class UserMenu extends Vue {
   }
 
   showBugReport() {
+    EventBus.$emit(SHOW_FEEDBACK);
     this.open = false;
-    this.showBugReportDialog = true;
   }
 
   register() {

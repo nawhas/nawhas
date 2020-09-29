@@ -72,12 +72,19 @@
         <nuxt />
       </v-container>
     </v-main>
-    <v-footer app absolute>
-      <span>&copy; {{ new Date().getFullYear() }}</span>
-    </v-footer>
+    <app-footer />
     <audio-player />
     <update-service-worker />
     <toaster />
+    <v-dialog
+      v-model="showBugReportDialog"
+      persistent
+      width="500"
+      transition="slide-y-reverse-transition"
+      :fullscreen="$vuetify.breakpoint.smAndDown"
+    >
+      <bug-report-form @close="showBugReportDialog = false" />
+    </v-dialog>
   </v-app>
 </template>
 
@@ -88,7 +95,11 @@ import AudioPlayer from '@/components/audio-player/AudioPlayer.vue';
 import GlobalSearch from '@/components/search/GlobalSearch.vue';
 import Toaster from '@/components/utils/Toaster.vue';
 import UpdateServiceWorker from '@/components/utils/UpdateServiceWorker.vue';
+import AppFooter from '@/components/AppFooter.vue';
+import BugReportForm from '@/components/BugReportForm.vue';
 import { applyTheme } from '@/services/theme';
+import { EventBus } from '@/events';
+import { SHOW_FEEDBACK } from '@/events/dialogs';
 
 const LogoIcon = require('@/assets/svg/icon.svg?inline');
 const LogoWordmark = require('@/assets/svg/wordmark.svg?inline');
@@ -124,6 +135,7 @@ export default Vue.extend({
   name: 'DefaultLayout',
 
   components: {
+    AppFooter,
     LogoWordmark,
     LogoIcon,
     Toaster,
@@ -131,6 +143,7 @@ export default Vue.extend({
     AudioPlayer,
     GlobalSearch,
     UpdateServiceWorker,
+    BugReportForm,
   },
 
   async fetch() {
@@ -141,6 +154,7 @@ export default Vue.extend({
 
   data: () => ({
     drawer: false,
+    showBugReportDialog: false,
   }),
 
   computed: {
@@ -163,6 +177,13 @@ export default Vue.extend({
 
   mounted() {
     applyTheme(this.$store.state.preferences.theme, this.$vuetify, this.$storage);
+    EventBus.$on(SHOW_FEEDBACK, () => {
+      this.showBugReportDialog = true;
+    });
+  },
+
+  beforeDestroy() {
+    EventBus.$off(SHOW_FEEDBACK);
   },
 });
 </script>
