@@ -214,12 +214,13 @@ export default Vue.extend({
 
 .header {
   width: 100%;
-  background-color: rgba(255, 21, 0, 0.1);
+  background: radial-gradient(100% 100% at 50% 0%, #B10016 0%, #93291E 100%);
   margin-bottom: 48px;
   position: relative;
+  color: white;
 }
 .header--dark {
-  background: linear-gradient(30deg, #340808, #1a0000);
+  background: radial-gradient(100% 100% at 50% 0%, #93291E 0%, #121212 100%);
 }
 .search {
   position: absolute;
