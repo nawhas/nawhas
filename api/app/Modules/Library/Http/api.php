@@ -70,6 +70,17 @@ Route::prefix('v1')->middleware(CacheResponse::withTags(CacheTags::LIBRARY))->gr
 
     /*
     |--------------------------------------------------------------------------
+    | Album Routes
+    |--------------------------------------------------------------------------
+    */
+    Route::prefix('topics')->group(function () {
+        Route::get('/', [Controllers\TopicsController::class, 'index']);
+        Route::post('/', [Controllers\TopicsController::class, 'store']); // TODO - auth
+        Route::get('/{topic}', [Controllers\TopicsController::class, 'show']);
+    });
+
+    /*
+    |--------------------------------------------------------------------------
     | Popular Routes
     |--------------------------------------------------------------------------
     */

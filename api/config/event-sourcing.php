@@ -101,6 +101,8 @@ return [
         'track.changed.lyrics' => Library\Tracks\TrackLyricsChanged::class,
         'track.deleted' => Library\Tracks\TrackDeleted::class,
         'track.viewed' => Library\Tracks\TrackViewed::class,
+        // Topic Events
+        'topic.created' => Library\Topics\TopicCreated::class,
         // User Events
         'user.registered' => Authentication\UserRegistered::class,
         'user.changed.name' => Authentication\UserNameChanged::class,
