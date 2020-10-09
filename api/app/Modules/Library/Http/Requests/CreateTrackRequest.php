@@ -34,6 +34,11 @@ class CreateTrackRequest extends Request
             'format' => [
                 'integer',
             ],
+            'video' => [
+                'string',
+                'nullable',
+                'url'
+            ],
         ];
     }
 }
