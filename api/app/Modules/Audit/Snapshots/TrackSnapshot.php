@@ -33,20 +33,20 @@ class TrackSnapshot implements Snapshot
         $this->albumId = $albumId;
     }
 
-    public static function fromArray(array $attributes): self
+    public static function fromArray(array $data): self
     {
-        $lyrics = $attributes['lyrics'] ?? null;
+        $lyrics = $data['lyrics'] ?? null;
 
         if ($lyrics) {
             $lyrics = Factory::create($lyrics['content'], new Format($lyrics['format']));
         }
 
         return new self(
-            $attributes['id'],
-            $attributes['albumId'],
-            $attributes['title'],
-            $attributes['audio'] ?? null,
-            $attributes['video'] ?? null,
+            $data['id'],
+            $data['albumId'],
+            $data['title'],
+            $data['audio'] ?? null,
+            $data['video'] ?? null,
             $lyrics,
         );
     }

@@ -13,6 +13,7 @@ use App\Modules\Authentication\Http\Transformers\UserTransformer;
 use App\Modules\Core\Transformers\Transformer;
 use App\Modules\Library\Models\Album;
 use App\Modules\Library\Models\Reciter;
+use App\Modules\Library\Models\Topic;
 use App\Modules\Library\Models\Track;
 use App\Modules\Lyrics\Documents\Format;
 use Illuminate\Support\Facades\Storage;
@@ -115,6 +116,13 @@ class RevisionTransformer extends Transformer
                     'album' => $album->title,
                     'year' => $album->year,
                     'link' => optional($track)->getUrlPath(),
+                ];
+            case EntityType::TOPIC:
+                /** @var Topic|null $track */
+                $topic = $revision->entity;
+
+                return [
+                    'link' => null,
                 ];
             default:
                 throw new \InvalidArgumentException('Unknown entity type.');

@@ -6,33 +6,24 @@ namespace App\Modules\Audit\Snapshots;
 
 use App\Modules\Audit\Enum\EntityType;
 use App\Modules\Audit\Models\Revision;
-use Illuminate\Support\Collection;
 
-class ReciterSnapshot implements Snapshot
+class TopicSnapshot implements Snapshot
 {
     public string $id;
     public string $name;
     public ?string $description;
-    public ?string $avatar;
-
-    /**
-     * Collection of Album IDs.
-     * @var Collection|string[]
-     */
-    public Collection $albums;
+    public ?string $image;
 
     public function __construct(
         string $id,
         string $name,
         ?string $description = null,
-        ?string $avatar = null,
-        array $albumIds = []
+        ?string $image = null
     ) {
         $this->id = $id;
         $this->name = $name;
         $this->description = $description;
-        $this->avatar = $avatar;
-        $this->albums = collect($albumIds);
+        $this->image = $image;
     }
 
     public static function fromArray(array $data): self
@@ -41,8 +32,7 @@ class ReciterSnapshot implements Snapshot
             $data['id'],
             $data['name'],
             $data['description'],
-            $data['avatar'],
-            $data['albums'],
+            $data['image'],
         );
     }
 
@@ -57,14 +47,13 @@ class ReciterSnapshot implements Snapshot
             'id' => $this->id,
             'name'  => $this->name,
             'description' => $this->description,
-            'avatar' => $this->avatar,
-            'albums' => $this->albums->all(),
+            'image' => $this->image,
         ];
     }
 
     public function getType(): EntityType
     {
-        return EntityType::RECITER();
+        return EntityType::TOPIC();
     }
 
     public function getId(): string

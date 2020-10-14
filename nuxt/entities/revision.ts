@@ -5,6 +5,7 @@ export enum EntityType {
   Reciter = 'reciter',
   Album = 'album',
   Track = 'track',
+  Topic = 'topic',
 }
 
 export enum ChangeType {
