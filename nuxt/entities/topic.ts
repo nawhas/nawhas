@@ -5,6 +5,9 @@ export interface Topic extends PersistedEntity, TimestampedEntity {
   description: string | null;
   slug: string;
   image: string | null;
+  related?: {
+    tracks: number;
+  }
 }
 
 export function getTopicUri(topic: Topic) {
@@ -12,5 +15,5 @@ export function getTopicUri(topic: Topic) {
 }
 
 export function getTopicImage(topic?: Topic|null) {
-  return topic?.image ?? require('@/assets/img/defaults/default-topic-image.png');
+  return topic?.image ?? require('@/assets/img/defaults/default-topic-icon.png');
 }

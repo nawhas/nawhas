@@ -115,7 +115,7 @@ const links = [
     icon: 'pageview',
     title: 'Browse',
     exact: false,
-    to: '/reciters',
+    to: '/browse',
   },
   {
     icon: 'local_library',

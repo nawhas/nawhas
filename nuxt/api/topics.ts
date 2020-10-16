@@ -23,6 +23,7 @@ interface GetRequestOptions {
 }
 
 interface IndexRequestOptions {
+  include?: Array<TopicIncludes>;
   pagination?: PaginationOptions;
 }
 
@@ -39,6 +40,7 @@ export class TopicsApi {
   async index(options: IndexRequestOptions = {}): Promise<TopicsIndexResponse> {
     const params = createParams();
     usePagination(params, options.pagination);
+    useIncludes(params, options.include);
 
     return await this.axios.$get<TopicsIndexResponse>('v1/topics', { params });
   }
