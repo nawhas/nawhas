@@ -12,7 +12,7 @@ volumes:
 
 services:
   api:
-    image: szainmehdi/php:7.4-dev
+    image: szainmehdi/php:8.0-dev
     container_name: nawhas_api
     working_dir: /var/www/api
     environment:
@@ -31,7 +31,7 @@ services:
       - db
       - cache
   queue:
-    image: szainmehdi/php:7.4-dev
+    image: szainmehdi/php:8.0-dev
     container_name: nawhas_queue
     working_dir: /var/www/api
     environment:

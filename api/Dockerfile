@@ -1,7 +1,7 @@
 # ---------------------------------------------------------------------------
 # Test Image
 # ---------------------------------------------------------------------------
-FROM szainmehdi/php:7.4-dev as test
+FROM szainmehdi/php:8.0-dev as test
 
 WORKDIR /var/www/api
 ENV APP_ENV production
@@ -18,7 +18,7 @@ RUN composer test
 # ---------------------------------------------------------------------------
 # Build Image
 # ---------------------------------------------------------------------------
-FROM szainmehdi/php:7.4-dev as build
+FROM szainmehdi/php:8.0-dev as build
 
 WORKDIR /var/www/api
 ENV APP_ENV production
@@ -35,7 +35,7 @@ RUN composer install -n --no-dev --prefer-dist --no-scripts --no-autoloader \
 # ---------------------------------------------------------------------------
 # Production Image
 # ---------------------------------------------------------------------------
-FROM szainmehdi/php:7.4
+FROM szainmehdi/php:8.0
 
 WORKDIR /var/www/api
 
