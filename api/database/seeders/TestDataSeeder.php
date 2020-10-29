@@ -1,5 +1,7 @@
 <?php
 
+namespace Database\Seeders;
+
 use App\Modules\Authentication\Enum\Role;
 use App\Modules\Authentication\Models\User;
 use App\Modules\Library\Models\Album;
