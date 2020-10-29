@@ -61,21 +61,6 @@ return [
             ]) : [],
         ],
 
-        'pgsql' => [
-            'driver' => 'pgsql',
-            'url' => env('DATABASE_URL'),
-            'host' => env('DB_HOST', 'nawhas_db'),
-            'port' => env('DB_PORT', '5432'),
-            'database' => env('DB_DATABASE', 'nawhas'),
-            'username' => env('DB_USERNAME', 'docker'),
-            'password' => env('DB_PASSWORD', 'secret'),
-            'charset' => 'utf8',
-            'prefix' => '',
-            'prefix_indexes' => true,
-            'schema' => 'public',
-            'sslmode' => 'prefer',
-        ],
-
         'events' => [
             'driver' => 'pgsql',
             'url' => env('DATABASE_URL'),

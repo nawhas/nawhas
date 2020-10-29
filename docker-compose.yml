@@ -4,7 +4,6 @@ networks:
   nawhas:
 
 volumes:
-  postgres:
   pg_events:
   pg_data:
   redis:
@@ -28,7 +27,8 @@ services:
     networks:
       - nawhas
     depends_on:
-      - db
+      - events_db
+      - data_db
       - cache
   queue:
     image: szainmehdi/php:8.0-dev
@@ -43,7 +43,8 @@ services:
     restart: unless-stopped
     command: php artisan horizon
     depends_on:
-      - db
+      - events_db
+      - data_db
       - cache
   nginx:
     image: nginx:stable-alpine
@@ -74,20 +75,6 @@ services:
     container_name: nawhas_web
     command: npx http-server -p 3000
     restart: unless-stopped
-    networks:
-      - nawhas
-  db:
-    image: postgres:11
-    container_name: nawhas_db
-    restart: unless-stopped
-    tty: true
-    ports:
-      - "5432:5432"
-    env_file:
-      - ./docker/postgres/.env
-    volumes:
-      - postgres:/var/lib/postgresql/data:delegated
-      - ./docker/postgres/scripts:/usr/local/sbin
     networks:
       - nawhas
   events_db:
