@@ -10,7 +10,8 @@ ENV COMPOSER_ALLOW_SUPERUSER 1
 COPY . .
 
 ENV TELESCOPE_ENABLED=false
-RUN composer install --no-scripts
+# TODO - Restore check for platform requirements
+RUN composer install --no-scripts --ignore-platform-reqs
 RUN composer run post-root-package-install && php artisan key:generate
 RUN ./docker/scripts/psalm.sh
 RUN composer test
@@ -28,7 +29,8 @@ COPY --from=test /var/www/api/vendor /var/www/api/vendor
 COPY --from=test /tmp/.composer /tmp/.composer
 
 ENV TELESCOPE_ENABLED=false
-RUN composer install -n --no-dev --prefer-dist --no-scripts --no-autoloader \
+# TODO - Restore check for platform requirements
+RUN composer install -n --no-dev --prefer-dist --no-scripts --no-autoloader --ignore-platform-reqs \
     && composer dump-autoload -n -o --no-dev \
     && composer check-platform-reqs
 
