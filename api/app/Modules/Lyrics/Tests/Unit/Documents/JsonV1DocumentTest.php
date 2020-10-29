@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Modules\Lyrics\Documents;
+namespace App\Modules\Lyrics\Tests\Unit\Documents;
 
 use App\Modules\Lyrics\Documents\JsonV1\Document;
-use Tests\TestCase;
+use App\Tests\TestCase;
 
 class JsonV1DocumentTest extends TestCase
 {

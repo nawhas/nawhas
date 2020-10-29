@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Modules\Lyrics\Validation;
+namespace App\Modules\Lyrics\Tests\Unit\Validation;
 
 use App\Modules\Lyrics\Validation\JsonV1Validator;
 use Illuminate\Validation\ValidationException;
 use JsonException;
-use Tests\TestCase;
+use App\Tests\TestCase;
 
 class JsonV1ValidatorTest extends TestCase
 {

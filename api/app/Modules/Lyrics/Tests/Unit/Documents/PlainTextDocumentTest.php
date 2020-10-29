@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Modules\Lyrics\Documents;
+namespace App\Modules\Lyrics\Tests\Unit\Documents;
 
 use App\Modules\Lyrics\Documents\PlainText\Document;
-use Tests\TestCase;
+use App\Tests\TestCase;
 
 class PlainTextDocumentTest extends TestCase
 {
