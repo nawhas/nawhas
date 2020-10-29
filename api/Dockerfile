@@ -31,8 +31,8 @@ COPY --from=test /tmp/.composer /tmp/.composer
 ENV TELESCOPE_ENABLED=false
 # TODO - Restore check for platform requirements
 RUN composer install -n --no-dev --prefer-dist --no-scripts --no-autoloader --ignore-platform-reqs \
-    && composer dump-autoload -n -o --no-dev \
-    && composer check-platform-reqs
+    && composer dump-autoload -n -o --no-dev
+#   && composer check-platform-reqs
 
 # ---------------------------------------------------------------------------
 # Production Image
