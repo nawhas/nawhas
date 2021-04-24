@@ -115,6 +115,12 @@ const links = [
     icon: 'pageview',
     title: 'Browse',
     exact: false,
+    to: '/browse',
+  },
+  {
+    icon: 'pageview',
+    title: 'Reciters',
+    exact: false,
     to: '/reciters',
   },
   {
