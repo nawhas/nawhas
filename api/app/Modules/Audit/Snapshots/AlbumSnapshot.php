@@ -37,15 +37,15 @@ class AlbumSnapshot implements Snapshot
         $this->reciterId = $reciterId;
     }
 
-    public static function fromArray(array $attributes): self
+    public static function fromArray(array $data): self
     {
         return new self(
-            $attributes['id'],
-            $attributes['reciterId'],
-            $attributes['title'],
-            $attributes['year'],
-            $attributes['artwork'],
-            $attributes['tracks'],
+            $data['id'],
+            $data['reciterId'],
+            $data['title'],
+            $data['year'],
+            $data['artwork'],
+            $data['tracks'],
         );
     }
 

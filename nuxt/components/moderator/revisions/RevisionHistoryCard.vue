@@ -63,6 +63,7 @@ const icons = {
   [EntityType.Reciter]: 'record_voice_over',
   [EntityType.Album]: 'album',
   [EntityType.Track]: 'music_note',
+  [EntityType.Topic]: 'folder_special',
 };
 
 @Component({
@@ -95,6 +96,7 @@ export default class RevisionHistoryCard extends Vue {
 
     switch (this.revision.entityType) {
       case EntityType.Reciter:
+      case EntityType.Topic:
         return data.name;
       case EntityType.Album:
       case EntityType.Track:

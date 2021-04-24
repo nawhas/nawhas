@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Modules\Audit\Enum\EntityType;
 use App\Modules\Library\Models\Album;
 use App\Modules\Library\Models\Reciter;
+use App\Modules\Library\Models\Topic;
 use App\Modules\Library\Models\Track;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -44,6 +45,7 @@ class AppServiceProvider extends ServiceProvider
             EntityType::RECITER => Reciter::class,
             EntityType::ALBUM => Album::class,
             EntityType::TRACK => Track::class,
+            EntityType::TOPIC => Topic::class,
         ]);
     }
 
