@@ -16,43 +16,22 @@
         </div>
       </v-col>
       <v-col class="d-flex justify-center align-center flex-column" md="6">
-        <template v-if="browseBy === 'reciter'">
-          <template v-if="popularReciters">
-            <v-row :dense="$vuetify.breakpoint.smAndDown">
-              <v-col v-for="reciter in popularReciters" :key="reciter.id" sm="6" cols="12">
-                <reciter-card featured v-bind="reciter" />
-              </v-col>
-            </v-row>
-            <v-row>
-              <v-col cols="12">
-                <v-btn @click="$router.push({ name: 'reciters.index' })">
-                  View All
-                </v-btn>
-              </v-col>
-            </v-row>
-          </template>
-          <template v-else>
-            <skeleton-card-grid />
-          </template>
+        <template v-if="dataItem !== null">
+          <v-row :dense="$vuetify.breakpoint.smAndDown">
+            <v-col v-for="reciter in dataItem" :key="reciter.id" sm="6" cols="12">
+              <reciter-card featured v-bind="reciter" />
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col cols="12">
+              <v-btn @click="$router.push({ name: 'reciters.index' })">
+                View All
+              </v-btn>
+            </v-col>
+          </v-row>
         </template>
-        <template v-else-if="browseBy === 'topic'">
-          <template v-if="topics">
-            <v-row :dense="$vuetify.breakpoint.smAndDown">
-              <v-col v-for="topic in topics" :key="topic.id" sm="6" cols="12">
-                <reciter-card featured v-bind="topic" />
-              </v-col>
-            </v-row>
-            <v-row>
-              <v-col cols="12">
-                <v-btn @click="$router.push({ name: 'reciters.index' })">
-                  View All
-                </v-btn>
-              </v-col>
-            </v-row>
-          </template>
-          <template v-else>
-            <skeleton-card-grid />
-          </template>
+        <template v-else>
+          <skeleton-card-grid />
         </template>
       </v-col>
       <v-col md="1" cols="12" />
@@ -80,17 +59,31 @@ export default class BrowseByCard extends Vue {
 
   @Prop({ required: false })
   readonly topics!: Array<any> | null
+
+  get dataItem(): Array<any> | null {
+    if (this.browseBy === 'topic') {
+      if (this.browseBy === 'topic' && this.topics !== null) {
+        return this.topics;
+      }
+    }
+    if (this.browseBy === 'reciter') {
+      if (this.browseBy === 'reciter' && this.popularReciters !== null) {
+        return this.popularReciters;
+      }
+    }
+    return null;
+  }
 }
 </script>
 
 <style lang="scss" scoped>
 .topic-box-reciter {
-  min-height:50vh;
+  min-height: 50vh;
   background: linear-gradient(90deg, rgba(0, 0, 0, 0.73) 3.27%, #172C17 44.77%);
 }
 
 .topic-box-topic {
-  min-height:50vh;
+  min-height: 50vh;
   background: linear-gradient(90deg, rgba(0, 0, 0, 0.73) 3.27%, #171B2C 44.77%);
 }
 
@@ -114,5 +107,6 @@ export default class BrowseByCard extends Vue {
   font-weight: 300;
   font-size: 72px;
   line-height: 84px;
+  text-transform: capitalize;
 }
 </style>
