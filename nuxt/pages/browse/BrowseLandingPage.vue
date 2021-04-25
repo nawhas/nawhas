@@ -20,6 +20,11 @@
                 <reciter-card featured v-bind="reciter" />
               </v-col>
             </v-row>
+            <v-row>
+              <v-col cols="12">
+                <v-btn @click="$router.push({ name: 'reciters.index' })">View All</v-btn>
+              </v-col>
+            </v-row>
           </template>
           <template v-else>
             <skeleton-card-grid />
@@ -42,6 +47,11 @@
             <v-row :dense="$vuetify.breakpoint.smAndDown">
               <v-col v-for="reciter in popularReciters" :key="reciter.id" sm="6" cols="12">
                 <reciter-card featured v-bind="reciter" />
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col cols="12">
+                <v-btn>View All</v-btn>
               </v-col>
             </v-row>
           </template>
