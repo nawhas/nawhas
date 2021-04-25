@@ -24,7 +24,7 @@
           </v-row>
           <v-row>
             <v-col cols="12">
-              <v-btn @click="$router.push({ name: 'reciters.index' })">
+              <v-btn @click="goToViewAllPage()">
                 View All
               </v-btn>
             </v-col>
@@ -72,6 +72,14 @@ export default class BrowseByCard extends Vue {
       }
     }
     return null;
+  }
+
+  goToViewAllPage() {
+    if (this.browseBy === 'topic') {
+      this.$router.push({ name: 'reciters.index' });
+    } else if (this.browseBy === 'reciter') {
+      this.$router.push({ name: 'reciters.index' });
+    }
   }
 }
 </script>
