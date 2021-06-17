@@ -1,29 +1,13 @@
 <router>
-  path: /reciters
+  path: /browse/reciters
   name: "reciters.index"
 </router>
 
 <template>
   <div class="view-wrapper">
     <v-container class="app__section">
-      <h5 class="section__title">
-        Top Reciters
-      </h5>
-      <template v-if="popularReciters">
-        <v-row :dense="$vuetify.breakpoint.smAndDown">
-          <v-col v-for="reciter in popularReciters" :key="reciter.id" md="4" sm="6" cols="12">
-            <reciter-card featured v-bind="reciter" />
-          </v-col>
-        </v-row>
-      </template>
-      <template v-else>
-        <skeleton-card-grid />
-      </template>
-    </v-container>
-
-    <v-container class="app__section">
       <div class="section__title section__title--with-actions">
-        <div>All Reciters</div>
+        <div>Reciters</div>
         <v-btn icon @click="focusSearch">
           <v-icon>search</v-icon>
         </v-btn>
@@ -65,7 +49,6 @@ import { generateMeta } from '@/utils/meta';
 interface Data {
   page: number;
   reciters: Array<Reciter> | null;
-  popularReciters: Array<any> | null;
   length: number;
 }
 
@@ -76,19 +59,12 @@ export default Vue.extend({
   },
 
   async fetch() {
-    const [reciters, popular] = await Promise.all([
-      this.$api.reciters.index({
-        include: [ReciterIncludes.Related],
-        pagination: { limit: 30, page: this.page },
-      }),
-      this.$api.reciters.popular({
-        include: [ReciterIncludes.Related],
-        pagination: { limit: 6 },
-      }),
-    ]);
+    const reciters = await this.$api.reciters.index({
+      include: [ReciterIncludes.Related],
+      pagination: { limit: 30, page: this.page },
+    });
 
     this.setReciters(reciters);
-    this.popularReciters = popular.data;
   },
 
   data(): Data {
@@ -98,7 +74,6 @@ export default Vue.extend({
       page: Number(page),
       length: 1,
       reciters: null,
-      popularReciters: null,
     };
   },
 

@@ -10,6 +10,7 @@ use App\Modules\Core\Models\HasUuid;
 use App\Modules\Library\Events\Topics\TopicCreated;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Ramsey\Uuid\Uuid;
 use Spatie\Sluggable\HasSlug;
 use Spatie\Sluggable\SlugOptions;
@@ -82,5 +83,10 @@ class Topic extends Model implements TimestampedEntity
         }
 
         return $this->where($field ?? 'slug', $value)->firstOrFail();
+    }
+
+    public function tracks(): BelongsToMany
+    {
+        return $this->belongsToMany(Track::class);
     }
 }

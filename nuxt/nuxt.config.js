@@ -244,6 +244,11 @@ export default {
           path: '/moderator',
           redirect: { path: '/moderator/revisions' },
         },
+        {
+          name: 'reciters.redirect',
+          path: '/reciters',
+          redirect: { path: '/browse/reciters' },
+        },
       ]);
     },
   },
