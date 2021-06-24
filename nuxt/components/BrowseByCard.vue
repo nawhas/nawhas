@@ -1,5 +1,5 @@
 <template>
-  <div :class="`topic-box-${browseBy} d-flex align-center justify-center`">
+  <div :class="`topic-box-${browseBy} d-flex align-center justify-center white--text`">
     <v-row>
       <v-col class="d-flex justify-center align-center flex-column" md="5" cols="12">
         <div>
