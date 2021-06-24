@@ -45,12 +45,13 @@ export class TopicsApi {
     return await this.axios.$get<TopicsIndexResponse>('v1/topics', { params });
   }
 
-  // async popular(options: IndexRequestOptions = {}): Promise<TopicsIndexResponse> {
-  //   const params = createParams();
-  //   usePagination(params, options.pagination);
-  //
-  //   return await this.axios.$get<TopicsIndexResponse>('v1/popular/topics', { params });
-  // }
+  // TODO - Make the popular request hit the correct endpoint
+  async popular(options: IndexRequestOptions = {}): Promise<TopicsIndexResponse> {
+    const params = createParams();
+    usePagination(params, options.pagination);
+
+    return await this.axios.$get<TopicsIndexResponse>('v1/topics', { params });
+  }
 
   async get(id: string, options: GetRequestOptions = {}): Promise<Topic> {
     const params = createParams();

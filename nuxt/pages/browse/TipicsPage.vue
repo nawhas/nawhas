@@ -62,11 +62,10 @@ export default Vue.extend({
   },
 
   async fetch() {
-    // TODO - make this a popular topics route
-    // const featuredTopics = await this.$api.topics.index({
-    //   include: [TopicIncludes.related],
-    //   pagination: { limit: 30, page: 1 },
-    // });
+    const featuredTopics = await this.$api.topics.popular({
+      include: [TopicIncludes.Related],
+      pagination: { limit: 6 },
+    });
 
     // TODO - include proper pagination once endpoint supports it
     const topics = await this.$api.topics.index({
@@ -74,7 +73,7 @@ export default Vue.extend({
       pagination: { limit: 30 },
     });
 
-    // this.setTopics(featuredTopics, true);
+    this.setTopics(featuredTopics, true);
     this.setTopics(topics, false);
   },
 

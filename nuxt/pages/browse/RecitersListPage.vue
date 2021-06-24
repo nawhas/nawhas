@@ -6,6 +6,22 @@
 <template>
   <div class="view-wrapper">
     <v-container class="app__section">
+      <div class="section__title">
+        <div>Popular Reciters</div>
+      </div>
+      <template v-if="popularReciters">
+        <v-row :dense="$vuetify.breakpoint.smAndDown">
+          <v-col v-for="reciter in popularReciters" :key="reciter.id" md="4" sm="6" cols="12">
+            <reciter-card v-bind="reciter" :featured="true" />
+          </v-col>
+        </v-row>
+      </template>
+      <template v-else>
+        <skeleton-card-grid :limit="6" />
+      </template>
+    </v-container>
+
+    <v-container class="app__section">
       <div class="section__title section__title--with-actions">
         <div>Reciters</div>
         <v-btn icon @click="focusSearch">
@@ -49,6 +65,7 @@ import { generateMeta } from '@/utils/meta';
 interface Data {
   page: number;
   reciters: Array<Reciter> | null;
+  popularReciters: Array<Reciter> | null;
   length: number;
 }
 
@@ -59,12 +76,19 @@ export default Vue.extend({
   },
 
   async fetch() {
-    const reciters = await this.$api.reciters.index({
-      include: [ReciterIncludes.Related],
-      pagination: { limit: 30, page: this.page },
-    });
+    const [popularReciters, reciters] = await Promise.all([
+      this.$api.reciters.popular({
+        include: [ReciterIncludes.Related],
+        pagination: { limit: 6 },
+      }),
+      this.$api.reciters.index({
+        include: [ReciterIncludes.Related],
+        pagination: { limit: 30, page: this.page },
+      }),
+    ]);
 
-    this.setReciters(reciters);
+    this.setReciters(popularReciters, true);
+    this.setReciters(reciters, false);
   },
 
   data(): Data {
@@ -74,6 +98,7 @@ export default Vue.extend({
       page: Number(page),
       length: 1,
       reciters: null,
+      popularReciters: null,
     };
   },
 
@@ -82,9 +107,13 @@ export default Vue.extend({
   },
 
   methods: {
-    setReciters(data: RecitersIndexResponse) {
-      this.reciters = data.data;
-      this.length = data.meta.pagination.total_pages;
+    setReciters(data: RecitersIndexResponse, featured: boolean) {
+      if (featured) {
+        this.popularReciters = data.data;
+      } else {
+        this.reciters = data.data;
+        this.length = data.meta.pagination.total_pages;
+      }
     },
 
     focusSearch() {

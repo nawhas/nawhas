@@ -41,8 +41,7 @@ export default Vue.extend({
         include: [ReciterIncludes.Related],
         pagination: { limit: 6 },
       }),
-      // TODO - make this a popular topics route
-      this.$api.topics.index({
+      this.$api.topics.popular({
         include: [TopicIncludes.Related],
         pagination: { limit: 6 },
       }),
