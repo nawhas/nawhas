@@ -52,6 +52,7 @@ jobs:
 
       - name: Prepare Environment
         run: |
+          ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
           PR_NUM=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
           NAMESPACE="intg-$PR_NUM"
           API_DOMAIN="api.pr-$PR_NUM.intg.k8s.nawhas.com"
@@ -115,6 +116,7 @@ jobs:
 
       - name: Prepare Environment
         run: |
+          ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
           PR_NUM=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
           NAMESPACE="intg-$PR_NUM"
           API_DOMAIN="api.pr-$PR_NUM.intg.k8s.nawhas.com"
@@ -181,6 +183,7 @@ jobs:
 
       - name: Prepare Environment
         run: |
+          ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
           PR_NUM=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
           NAMESPACE="intg-$PR_NUM"
           API_DOMAIN="api.pr-$PR_NUM.intg.k8s.nawhas.com"
