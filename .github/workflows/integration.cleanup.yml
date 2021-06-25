@@ -24,7 +24,7 @@ jobs:
           access_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Save DigitalOcean kubeconfig
-        uses: digitalocean/action-doctl@v1.7.0
+        uses: digitalocean/action-doctl@v2
         env:
           DIGITALOCEAN_ACCESS_TOKEN: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
         with:
