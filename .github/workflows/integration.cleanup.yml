@@ -35,9 +35,6 @@ jobs:
           PR_NUM=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
           NAMESPACE="intg-$PR_NUM"
 
-          echo "::set-env name=NAMESPACE::$NAMESPACE"
-          echo "::set-env name=PR_NUM::$PR_NUM"
-
       - name: Delete Namespace
         working-directory: ./k8s/overlays/integration
         run: |
