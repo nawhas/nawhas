@@ -27,6 +27,7 @@ jobs:
         uses: digitalocean/action-doctl@v2
         env:
           DIGITALOCEAN_ACCESS_TOKEN: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+          ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
         with:
           args: kubernetes cluster kubeconfig show k8s-nawhas > $GITHUB_WORKSPACE/.kubeconfig
 
@@ -37,13 +38,6 @@ jobs:
 
           echo "::set-env name=NAMESPACE::$NAMESPACE"
           echo "::set-env name=PR_NUM::$PR_NUM"
-        env:
-          NAMESPACE: $(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
-          PR_NUM: "intg-${{ env.PR_NUM }}"
-          API_DOMAIN: "api.pr-${{ env.PR_NUM }}.intg.k8s.nawhas.com"
-          APP_DOMAIN: "pr-${{ PR_NUM }}.intg.k8s.nawhas.com"
-          SEARCH_HOST: "search.pr-${{ env.PR_NUM }}.intg.k8s.nawhas.com"
-          MAIL_HOST: "mail.pr-${{ PR_NUM }}.intg.k8s.nawhas.com"
 
       - name: Delete Namespace
         working-directory: ./k8s/overlays/integration
