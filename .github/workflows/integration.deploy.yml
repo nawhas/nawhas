@@ -33,41 +33,44 @@ jobs:
           color: warning
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
-          ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
   ################################################################
   # Build & Test API Image
   ################################################################
   build_api:
     name: Build & Test API Image
     runs-on: ubuntu-latest
+    env:
+      NAMESPACE: $(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
+      PR_NUM: "intg-${{ env.PR_NUM }}"
+      API_DOMAIN: "api.pr-${{ env.PR_NUM }}.intg.k8s.nawhas.com"
+      APP_DOMAIN: "pr-${{ PR_NUM }}.intg.k8s.nawhas.com"
+      SEARCH_HOST: "search.pr-${{ env.PR_NUM }}.intg.k8s.nawhas.com"
+      MAIL_HOST: "mail.pr-${{ PR_NUM }}.intg.k8s.nawhas.com"
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-        env:
-          ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
 
       - name: Docker Login
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-          ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
         run: |
           docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
 
       - name: Prepare Environment
         run: |
-          PR_NUM=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
-          NAMESPACE="intg-$PR_NUM"
-          API_DOMAIN="api.pr-$PR_NUM.intg.k8s.nawhas.com"
-          APP_DOMAIN="pr-$PR_NUM.intg.k8s.nawhas.com"
-
-          echo "::set-env name=NAMESPACE::$NAMESPACE"
-          echo "::set-env name=PR_NUM::$PR_NUM"
-          echo "::set-env name=API_DOMAIN::$API_DOMAIN"
-          echo "::set-env name=APP_DOMAIN::$APP_DOMAIN"
+          PR_NUM=${{ env.PR_NUM }}
+          NAMESPACE=${{ env.NAMESPACE }}
+          API_DOMAIN=${{ env.API_DOMAIN }}
+          APP_DOMAIN=${{ env.APP_DOMAIN }}
 
       - name: Build API
         run: |
+          PR_NUM=${{ env.PR_NUM }}
+          NAMESPACE=${{ env.NAMESPACE }}
+          API_DOMAIN=${{ env.API_DOMAIN }}
+          APP_DOMAIN=${{ env.APP_DOMAIN }}
+
           docker build --file ./api/Dockerfile \
             -t $API_IMAGE:$NAMESPACE-${GITHUB_SHA::8} \
             --build-arg GITHUB_SHA="$GITHUB_SHA" \
@@ -114,23 +117,15 @@ jobs:
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-          ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
         run: |
           docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
 
       - name: Prepare Environment
         run: |
-          PR_NUM=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
-          NAMESPACE="intg-$PR_NUM"
-          API_DOMAIN="api.pr-$PR_NUM.intg.k8s.nawhas.com"
-          APP_DOMAIN="pr-$PR_NUM.intg.k8s.nawhas.com"
-          SEARCH_HOST="search.pr-$PR_NUM.intg.k8s.nawhas.com"
-
-          echo "::set-env name=NAMESPACE::$NAMESPACE"
-          echo "::set-env name=PR_NUM::$PR_NUM"
-          echo "::set-env name=API_DOMAIN::$API_DOMAIN"
-          echo "::set-env name=APP_DOMAIN::$APP_DOMAIN"
-          echo "::set-env name=SEARCH_HOST::$SEARCH_HOST"
+          PR_NUM=${{ env.PR_NUM }}
+          NAMESPACE=${{ env.NAMESPACE }}
+          API_DOMAIN=${{ env.API_DOMAIN }}
+          APP_DOMAIN=${{ env.APP_DOMAIN }}
 
       - name: Decrypt Web secrets
         working-directory: ./k8s/overlays/integration/secrets
@@ -141,6 +136,11 @@ jobs:
 
       - name: Build Web
         run: |
+          PR_NUM=${{ env.PR_NUM }}
+          NAMESPACE=${{ env.NAMESPACE }}
+          API_DOMAIN=${{ env.API_DOMAIN }}
+          APP_DOMAIN=${{ env.APP_DOMAIN }}
+
           cp ./k8s/overlays/integration/secrets/web.integration.env ./nuxt/.env.docker
 
           printf "\nAPI_BASE_URL=https://$API_DOMAIN/" >> ./nuxt/.env.docker
@@ -185,22 +185,13 @@ jobs:
           GPG_KEY: ${{ secrets.GPG_KEY }}
 
       - name: Prepare Environment
-        env:
-          ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
         run: |
-          PR_NUM=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
-          NAMESPACE="intg-$PR_NUM"
-          API_DOMAIN="api.pr-$PR_NUM.intg.k8s.nawhas.com"
-          APP_DOMAIN="pr-$PR_NUM.intg.k8s.nawhas.com"
-          SEARCH_HOST="search.pr-$PR_NUM.intg.k8s.nawhas.com"
-          MAIL_HOST="mail.pr-$PR_NUM.intg.k8s.nawhas.com"
-
-          echo "::set-env name=NAMESPACE::$NAMESPACE"
-          echo "::set-env name=PR_NUM::$PR_NUM"
-          echo "::set-env name=API_DOMAIN::$API_DOMAIN"
-          echo "::set-env name=APP_DOMAIN::$APP_DOMAIN"
-          echo "::set-env name=SEARCH_HOST::$SEARCH_HOST"
-          echo "::set-env name=MAIL_HOST::$MAIL_HOST"
+          PR_NUM=${{ env.PR_NUM }}
+          NAMESPACE=${{ env.NAMESPACE }}
+          API_DOMAIN=${{ env.API_DOMAIN }}
+          APP_DOMAIN=${{ env.APP_DOMAIN }}
+          SEARCH_HOST=${{ env.SEARCH_HOST }}
+          MAIL_HOST=${{ env.MAIL_HOST }}
 
       - name: Prepare Secrets
         working-directory: ./k8s/overlays/integration/secrets

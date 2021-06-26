@@ -14,6 +14,13 @@ jobs:
   clean:
     name: Clean Up Integration Branch
     runs-on: ubuntu-latest
+    env:
+      NAMESPACE: $(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
+      PR_NUM: "intg-${{ env.PR_NUM }}"
+      API_DOMAIN: "api.pr-${{ env.PR_NUM }}.intg.k8s.nawhas.com"
+      APP_DOMAIN: "pr-${{ PR_NUM }}.intg.k8s.nawhas.com"
+      SEARCH_HOST: "search.pr-${{ env.PR_NUM }}.intg.k8s.nawhas.com"
+      MAIL_HOST: "mail.pr-${{ PR_NUM }}.intg.k8s.nawhas.com"
     steps:
       - name: Checkout
         uses: actions/checkout@v2
