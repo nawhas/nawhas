@@ -247,6 +247,9 @@ export default class EditTrackDialog extends Vue {
     if (this.form.lyrics) {
       data.lyrics = this.prepareLyrics();
     }
+    if (this.form.topics && this.form.topics.length > 0) {
+      data.topics = this.form.topics;
+    }
     const { reciterId } = this.album;
     const albumId = this.album.id;
     let response = await this.$api.tracks.store(
