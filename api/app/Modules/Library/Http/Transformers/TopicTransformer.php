@@ -7,11 +7,12 @@ namespace App\Modules\Library\Http\Transformers;
 use App\Modules\Core\Transformers\Transformer;
 use App\Modules\Library\Models\Topic;
 use Illuminate\Support\Facades\Storage;
+use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\Primitive;
 
 class TopicTransformer extends Transformer
 {
-    protected $availableIncludes = ['related'];
+    protected $availableIncludes = ['tracks', 'related'];
 
     public function toArray(Topic $topic): array
     {
@@ -30,5 +31,10 @@ class TopicTransformer extends Transformer
         return $this->primitive([
             'tracks' => $topic->tracks()->count(),
         ]);
+    }
+
+    public function includeTracks(Topic $topic): Collection
+    {
+        return $this->collection($topic->tracks()->get(), new TrackTransformer());
     }
 }
