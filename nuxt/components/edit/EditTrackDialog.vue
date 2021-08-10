@@ -66,6 +66,15 @@
           label="YouTube Video"
           prepend-icon="video_library"
         />
+        <v-select
+          v-model="form.topics"
+          :items="availableTopics"
+          item-value="slug"
+          item-text="name"
+          label="Select Topics"
+          multiple
+          outlined
+        ></v-select>
         <div
           class="file-input"
           @drop.prevent="addFile"
@@ -110,6 +119,7 @@ import TimestampedEditor from '@/components/edit/lyrics/TimestampedEditor.vue';
 import { Documents, Format } from '@/entities/lyrics';
 import { getTrackUri } from '@/entities/track';
 import { getReciterUri } from '@/entities/reciter';
+import { Topic } from '@/entities/topic';
 import JsonV1Document = Documents.JsonV1.Document;
 import GroupType = Documents.JsonV1.LineGroupType;
 import LyricsData = Documents.JsonV1.LyricsData;
@@ -119,12 +129,14 @@ interface Form {
   lyrics: JsonV1Document|null;
   audio: File|null;
   video: string|null;
+  topics: Array<Topic>|null;
 }
 const defaults: Form = {
   title: null,
   lyrics: null,
   audio: null,
   video: null,
+  topics: null,
 };
 
 @Component({
@@ -133,6 +145,7 @@ const defaults: Form = {
 export default class EditTrackDialog extends Vue {
   @Prop({ type: Object }) private track;
   @Prop({ type: Object }) private album;
+  @Prop({ type: Array }) private availableTopics;
   private dialog = false;
   private form: Form = { ...defaults };
   private loading = false;
