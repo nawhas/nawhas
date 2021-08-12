@@ -160,6 +160,7 @@ export default {
     '@nuxtjs/axios',
     '@nuxtjs/pwa',
     '@nuxtjs/sentry',
+    '@nuxtjs/gtm',
   ],
   /*
   ** Axios module configuration
@@ -207,6 +208,13 @@ export default {
       'Material Icons': true,
       'Material Icons Outlined': true,
     },
+  },
+  /*
+   ** Google Tag Manager
+   ** See https://github.com/nuxt-community/gtm-module#runtime-config
+   */
+  gtm: {
+    id: 'GTM-5DF2SQB',
   },
   /*
   ** Build configuration

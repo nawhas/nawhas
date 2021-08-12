@@ -24,6 +24,10 @@
           single-line
           hide-details
           background-color="transparent"
+          autocomplete="off"
+          autocorrect="off"
+          autocapitalize="off"
+          spellcheck="false"
           :prepend-inner-icon="mobile ? undefined : 'search'"
           :dense="false"
           :full-width="mobile"
