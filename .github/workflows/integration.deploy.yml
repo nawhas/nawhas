@@ -48,34 +48,23 @@ jobs:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
         run: |
-          docker login -u ${{ env.DOCKER_USERNAME }} -p ${{ env.DOCKER_PASSWORD }}
+          docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
 
       - name: Prepare Environment
         run: |
-          pr_num=$(jq --raw-output .pull_request.number "${{ env.GITHUB_EVENT_PATH }}")
-          namespace="intg-${pr_num}"
-          api_domain="api.pr-${pr_num}.intg.k8s.nawhas.com"
-          app_domain="pr-${pr_num}.intg.k8s.nawhas.com"
-          sha="${{ env.GITHUB_SHA }}"
-          api_image_tag="${{ env.API_IMAGE }}:${namespace}-${sha::8}"
-
-          echo "NAMESPACE=$namespace" >> $GITHUB_ENV
-          echo "PR_NUM=$pr_num" >> $GITHUB_ENV
-          echo "API_DOMAIN=$api_domain" >> $GITHUB_ENV
-          echo "APP_DOMAIN=$app_domain" >> $GITHUB_ENV
-          echo "API_IMAGE_TAG=$api_image_tag" >> $GITHUB_ENV
+          ./scripts/github/prepare-integration-environment.sh
 
       - name: Build API
         run: |
           docker build --file ./api/Dockerfile \
-            -t "${{ env.API_IMAGE_TAG }} \
-            --build-arg GITHUB_SHA="{{ env.GITHUB_SHA }}" \
-            --build-arg GITHUB_REF="${{ env.NAMESPACE }}" \
+            -t "$API_IMAGE_TAG" \
+            --build-arg GITHUB_SHA="$GITHUB_SHA" \
+            --build-arg GITHUB_REF="$NAMESPACE" \
             ./api
 
       - name: Publish API
         run: |
-          docker push "${{ env.API_IMAGE_TAG }}"
+          docker push "$API_IMAGE_TAG"
   ################################################################
   # Test & Lint Web App
   ################################################################
@@ -114,26 +103,11 @@ jobs:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
         run: |
-          docker login -u ${{ env.DOCKER_USERNAME }} -p ${{ env.DOCKER_PASSWORD }}
+          docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
 
       - name: Prepare Environment
         run: |
-          pr_num=$(jq --raw-output .pull_request.number "${{ env.GITHUB_EVENT_PATH }}")
-          namespace="intg-${pr_num}"
-          api_domain="api.pr-${pr_num}.intg.k8s.nawhas.com"
-          app_domain="pr-${pr_num}.intg.k8s.nawhas.com"
-          search_host="search.pr-${pr_num}.intg.k8s.nawhas.com"
-          sha="${{ env.GITHUB_SHA }}"
-          web_app_version="$namespace-${sha::8}"
-          web_image_tag="${{ env.WEB_IMAGE }}:$web_app_version"
-
-          echo "NAMESPACE=$namespace" >> $GITHUB_ENV
-          echo "PR_NUM=$pr_num" >> $GITHUB_ENV
-          echo "API_DOMAIN=$api_domain" >> $GITHUB_ENV
-          echo "APP_DOMAIN=$app_domain" >> $GITHUB_ENV
-          echo "SEARCH_HOST=$search_host" >> $GITHUB_ENV
-          echo "WEB_IMAGE_TAG=$web_image_tag" >> $GITHUB_ENV
-          echo "WEB_APP_VERSION=$web_app_version" >> $GITHUB_ENV
+          ./scripts/github/prepare-integration-environment.sh
 
       - name: Decrypt Web secrets
         working-directory: ./k8s/overlays/integration/secrets
@@ -146,18 +120,18 @@ jobs:
         run: |
           cp ./k8s/overlays/integration/secrets/web.integration.env ./nuxt/.env.docker
 
-          printf "\nAPI_BASE_URL=https://${{ env.API_DOMAIN }}/" >> ./nuxt/.env.docker
-          printf "\nAPP_DOMAIN=https://${{ env.APP_DOMAIN }}" >> ./nuxt/.env.docker
-          printf "\nSEARCH_HOST=https://${{ env.SEARCH_HOST }}" >> ./nuxt/.env.docker
+          printf "\nAPI_BASE_URL=https://${API_DOMAIN}/" >> ./nuxt/.env.docker
+          printf "\nAPP_DOMAIN=https://${APP_DOMAIN}" >> ./nuxt/.env.docker
+          printf "\nSEARCH_HOST=https://${SEARCH_HOST}" >> ./nuxt/.env.docker
 
           docker build --file ./nuxt/Dockerfile \
-            -t "${{ env.WEB_IMAGE_TAG }}" \
-            --build-arg APP_VERSION="${{ env.WEB_APP_VERSION }}" \
+            -t "$WEB_IMAGE_TAG" \
+            --build-arg APP_VERSION="$APP_VERSION" \
             ./nuxt
 
       - name: Publish Web
         run: |
-          docker push "${{ env.WEB_IMAGE_TAG }}"
+          docker push "$WEB_IMAGE_TAG"
 
   ################################################################
   # Deploy Integration Environment
@@ -189,26 +163,14 @@ jobs:
 
       - name: Prepare Environment
         run: |
-          pr_num=$(jq --raw-output .pull_request.number "${{ env.GITHUB_EVENT_PATH }}")
-          namespace="intg-${pr_num}"
-          api_domain="api.pr-${pr_num}.intg.k8s.nawhas.com"
-          app_domain="pr-${pr_num}.intg.k8s.nawhas.com"
-          search_host="search.pr-${pr_num}.intg.k8s.nawhas.com"
-          mail_host="mail.pr-${pr_num}.intg.k8s.nawhas.com"
-
-          echo "NAMESPACE=$namespace" >> $GITHUB_ENV
-          echo "PR_NUM=$pr_num" >> $GITHUB_ENV
-          echo "API_DOMAIN=$api_domain" >> $GITHUB_ENV
-          echo "APP_DOMAIN=$app_domain" >> $GITHUB_ENV
-          echo "SEARCH_HOST=$search_host" >> $GITHUB_ENV
-          echo "MAIL_HOST=$mail_host" >> $GITHUB_ENV
+          ./scripts/github/prepare-integration-environment.sh
 
       - name: Prepare Secrets
         working-directory: ./k8s/overlays/integration/secrets
         run: |
-          printf "\nAPP_DOMAIN=${{ env.APP_DOMAIN }}" >> api.integration.env
-          printf "\nALGOLIA_PREFIX=intg_${{ env.PR_NUM }}_" >> api.integration.env
-          printf "\nSESSION_COOKIE_PREFIX=intg_${{ env.PR_NUM }}_" >> api.integration.env
+          printf "\nAPP_DOMAIN=${APP_DOMAIN}" >> api.integration.env
+          printf "\nALGOLIA_PREFIX=${ALGOLIA_PREFIX}" >> api.integration.env
+          printf "\nSESSION_COOKIE_PREFIX=${SESSION_COOKIE_PREFIX}" >> api.integration.env
 
       # Set up kustomize
       - name: Set up Kustomize
@@ -220,16 +182,16 @@ jobs:
       - name: Prepare Kustomization
         working-directory: ./k8s/overlays/integration
         run: |
-          ./kustomize edit set image "IMAGE:TAG=${{ env.API_IMAGE }}:${{ env.API_IMAGE_TAG }}"
-          ./kustomize edit set image "WEB:TAG=${{ env.WEB_IMAGE }}:${{ env.WEB_IMAGE_TAG }}"
-          ./kustomize edit set namespace "${{ env.NAMESPACE }}"
+          ./kustomize edit set image "IMAGE:TAG=${API_IMAGE}:${API_IMAGE_TAG}"
+          ./kustomize edit set image "WEB:TAG=${WEB_IMAGE}:${WEB_IMAGE_TAG}"
+          ./kustomize edit set namespace "${NAMESPACE}"
 
       - name: Create Namespace
         working-directory: ./k8s/overlays/integration
         run: |
-          if [[ $(kubectl --kubeconfig=${{ env.GITHUB_WORKSPACE }}/.kubeconfig get namespace | grep "${{ env.NAMESPACE }}") == "" ]]; then
+          if [[ $(kubectl --kubeconfig=${GITHUB_WORKSPACE}/.kubeconfig get namespace | grep "${NAMESPACE}") == "" ]]; then
             echo "Namespace does not exist!";
-            kubectl --kubeconfig=${{ env.GITHUB_WORKSPACE }}/.kubeconfig create namespace "${{ env.NAMESPACE }}"
+            kubectl --kubeconfig=${GITHUB_WORKSPACE}/.kubeconfig create namespace "${NAMESPACE}"
           fi
 
       # Deploy the Docker image to the GKE cluster
@@ -237,15 +199,15 @@ jobs:
         working-directory: ./k8s/overlays/integration
         run: |
           ./kustomize build . \
-            | sed "s/ING_APP_DOMAIN/${{ env.APP_DOMAIN }}/g" \
-            | sed "s/ING_API_DOMAIN/${{ env.API_DOMAIN }}/g" \
-            | sed "s/ING_SEARCH_HOST/${{ env.SEARCH_HOST }}/g" \
-            | sed "s/ING_MAIL_HOST/${{ env.MAIL_HOST }}/g" \
-            | kubectl --kubeconfig=${{ env.GITHUB_WORKSPACE }}/.kubeconfig apply -f -
+            | sed "s/ING_APP_DOMAIN/${APP_DOMAIN}/g" \
+            | sed "s/ING_API_DOMAIN/${API_DOMAIN}/g" \
+            | sed "s/ING_SEARCH_HOST/${SEARCH_HOST}/g" \
+            | sed "s/ING_MAIL_HOST/${MAIL_HOST}/g" \
+            | kubectl --kubeconfig=${GITHUB_WORKSPACE}/.kubeconfig apply -f -
 
-          kubectl --kubeconfig=${{ env.GITHUB_WORKSPACE }}/.kubeconfig rollout status --timeout=2m deployment/api -n ${{ env.NAMESPACE }}
-          kubectl --kubeconfig=${{ env.GITHUB_WORKSPACE }}/.kubeconfig rollout status --timeout=2m deployment/web -n ${{ env.NAMESPACE }}
-          kubectl --kubeconfig=${{ env.GITHUB_WORKSPACE }}/.kubeconfig get services -o wide -n ${{ env.NAMESPACE }}
+          kubectl --kubeconfig=${GITHUB_WORKSPACE}/.kubeconfig rollout status --timeout=2m deployment/api -n ${NAMESPACE}
+          kubectl --kubeconfig=${GITHUB_WORKSPACE}/.kubeconfig rollout status --timeout=2m deployment/web -n ${NAMESPACE}
+          kubectl --kubeconfig=${GITHUB_WORKSPACE}/.kubeconfig get services -o wide -n ${NAMESPACE}
 
       - name: Post Link on PR
         if: success()
