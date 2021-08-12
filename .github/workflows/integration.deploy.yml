@@ -182,8 +182,8 @@ jobs:
       - name: Prepare Kustomization
         working-directory: ./k8s/overlays/integration
         run: |
-          ./kustomize edit set image "IMAGE:TAG=${API_IMAGE}:${API_IMAGE_TAG}"
-          ./kustomize edit set image "WEB:TAG=${WEB_IMAGE}:${WEB_IMAGE_TAG}"
+          ./kustomize edit set image "IMAGE:TAG=${API_IMAGE_TAG}"
+          ./kustomize edit set image "WEB:TAG=${WEB_IMAGE_TAG}"
           ./kustomize edit set namespace "${NAMESPACE}"
 
       - name: Create Namespace
