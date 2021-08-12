@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-COMPOSE="docker-compose"
+COMPOSE="docker compose"
 
 function run {
   set -x && $COMPOSE exec "$@"
