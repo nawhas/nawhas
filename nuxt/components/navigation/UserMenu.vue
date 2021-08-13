@@ -113,6 +113,14 @@
                     <v-icon>fiber_new</v-icon> <div class="user-menu__action__text">
                       What's new?
                     </div>
+                    <v-chip
+                      class="ml-2"
+                      small
+                      disabled
+                      outlined
+                    >
+                      {{ appVersion }}
+                    </v-chip>
                   </v-list-item-title>
                 </v-list-item-content>
               </v-list-item>
@@ -213,6 +221,10 @@ export default class UserMenu extends Vue {
 
   get showLoginDialog() {
     return this.$store.getters['auth/showLoginDialog'];
+  }
+
+  get appVersion() {
+    return this.$store.state.app.version;
   }
 
   set showLoginDialog(value) {
