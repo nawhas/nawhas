@@ -12,15 +12,15 @@ volumes:
 
 services:
   api:
-    image: szainmehdi/php:7.4-dev
+    image: szainmehdi/php:7.4-dev-20210813
     container_name: nawhas_api
     working_dir: /var/www/api
     environment:
       - APP_ENV=local
-      - XDEBUG_ENABLE=true
-      - XDEBUG_REMOTE_PORT=9001
+      - XDEBUG_MODE=debug
+      - XDEBUG_CLIENT_PORT=9003
       - XDEBUG_IDE_KEY=PHPSTORM
-      - XDEBUG_REMOTE_HOST=host.docker.internal
+      - XDEBUG_CLIENT_HOST=host.docker.internal
     volumes:
       - ./api:/var/www/api:delegated
     ports:
@@ -31,7 +31,7 @@ services:
       - db
       - cache
   queue:
-    image: szainmehdi/php:7.4-dev
+    image: szainmehdi/php:7.4-dev-20210813
     container_name: nawhas_queue
     working_dir: /var/www/api
     environment:
