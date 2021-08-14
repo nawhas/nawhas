@@ -3,7 +3,7 @@ name: Staging Deploy
 on:
   push:
     branches:
-      - develop
+      - master
 
 env:
   API_IMAGE: nawhas/api
@@ -56,15 +56,15 @@ jobs:
         run: |
           docker build --file ./api/Dockerfile \
             -t $API_IMAGE:dev-${GITHUB_SHA::8} \
-            -t $API_IMAGE:develop \
+            -t $API_IMAGE:staging \
             --build-arg GITHUB_SHA="$GITHUB_SHA" \
-            --build-arg GITHUB_REF=develop \
+            --build-arg GITHUB_REF=master \
             ./api
 
       - name: Publish API
         run: |
           docker push $API_IMAGE:dev-${GITHUB_SHA::8}
-          docker push $API_IMAGE:develop
+          docker push $API_IMAGE:staging
   ################################################################
   # Build & Test Web Image
   ################################################################
@@ -95,7 +95,7 @@ jobs:
           set +a
           docker build --file ./nuxt/Dockerfile \
             -t $WEB_IMAGE:dev-${GITHUB_SHA::8} \
-            -t $WEB_IMAGE:develop \
+            -t $WEB_IMAGE:staging \
             --build-arg APP_VERSION=dev-${GITHUB_SHA::8} \
             --build-arg SENTRY_PUBLISH_RELEASE=1 \
             --build-arg SENTRY_AUTH_TOKEN=$SENTRY_AUTH_TOKEN \
@@ -106,7 +106,7 @@ jobs:
       - name: Publish Web
         run: |
           docker push $WEB_IMAGE:dev-${GITHUB_SHA::8}
-          docker push $WEB_IMAGE:develop
+          docker push $WEB_IMAGE:staging
   ################################################################
   # Deploy Staging Environment
   ################################################################
