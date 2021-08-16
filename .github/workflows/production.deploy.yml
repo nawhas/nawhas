@@ -58,8 +58,10 @@ jobs:
       - name: Build API
         run: |
           docker build --file ./api/Dockerfile \
+            -t $API_IMAGE:latest \
             -t $API_IMAGE:${GITHUB_SHA::8} \
             -t $API_IMAGE:${GITHUB_REF##*/} \
+            -t $GH_API_IMAGE:latest \
             -t $GH_API_IMAGE:${GITHUB_SHA::8} \
             -t $GH_API_IMAGE:${GITHUB_REF##*/} \
             --build-arg GITHUB_SHA="$GITHUB_SHA" \
@@ -68,8 +70,10 @@ jobs:
 
       - name: Publish API
         run: |
+          docker push $API_IMAGE:latest
           docker push $API_IMAGE:${GITHUB_SHA::8}
           docker push $API_IMAGE:${GITHUB_REF##*/}
+          docker push $GH_API_IMAGE:latest
           docker push $GH_API_IMAGE:${GITHUB_SHA::8}
           docker push $GH_API_IMAGE:${GITHUB_REF##*/}
         env:
@@ -105,8 +109,10 @@ jobs:
           cp ./k8s/overlays/production/secrets/web.env ./nuxt/.env.docker
 
           docker build --file ./nuxt/Dockerfile \
+          -t $WEB_IMAGE:latest \
           -t $WEB_IMAGE:${GITHUB_SHA::8} \
           -t $WEB_IMAGE:${GITHUB_REF##*/} \
+          -t $GH_WEB_IMAGE:latest \
           -t $GH_WEB_IMAGE:${GITHUB_SHA::8} \
           -t $GH_WEB_IMAGE:${GITHUB_REF##*/} \
           --build-arg APP_VERSION=${GITHUB_REF##*/} \
@@ -118,8 +124,10 @@ jobs:
 
       - name: Publish Web
         run: |
+          docker push $WEB_IMAGE:latest
           docker push $WEB_IMAGE:${GITHUB_SHA::8}
           docker push $WEB_IMAGE:${GITHUB_REF##*/}
+          docker push $GH_WEB_IMAGE:latest
           docker push $GH_WEB_IMAGE:${GITHUB_SHA::8}
           docker push $GH_WEB_IMAGE:${GITHUB_REF##*/}
   ################################################################
