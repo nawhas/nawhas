@@ -12,36 +12,20 @@ volumes:
 
 services:
   api:
-    image: szainmehdi/php:7.4-dev-20210813
+    image: nawhas/api:latest
     container_name: nawhas_api
-    working_dir: /var/www/api
-    environment:
-      - APP_ENV=local
-      - XDEBUG_MODE=debug
-      - XDEBUG_CLIENT_PORT=9003
-      - XDEBUG_IDE_KEY=PHPSTORM
-      - XDEBUG_CLIENT_HOST=host.docker.internal
-    volumes:
-      - ./api:/var/www/api:delegated
-    ports:
-      - "9000:9000"
     networks:
       - nawhas
     depends_on:
       - db
       - cache
   queue:
-    image: szainmehdi/php:7.4-dev-20210813
+    image: nawhas/api:latest
     container_name: nawhas_queue
-    working_dir: /var/www/api
-    environment:
-      - APP_ENV=local
-    volumes:
-      - ./api:/var/www/api:delegated
+    command: php artisan horizon
+    restart: unless-stopped
     networks:
       - nawhas
-    restart: unless-stopped
-    command: php artisan horizon
     depends_on:
       - db
       - cache
@@ -68,12 +52,9 @@ services:
       - web
     networks:
       - nawhas
-  # This container just exists to keep make the ingress continue to work.
   web:
-    image: szainmehdi/node:13
+    image: nawhas/web:latest
     container_name: nawhas_web
-    command: npx http-server -p 3000
-    restart: unless-stopped
     networks:
       - nawhas
   db:

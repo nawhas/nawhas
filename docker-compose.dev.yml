@@ -1,0 +1,28 @@
+version: '3'
+
+services:
+  api:
+    image: szainmehdi/php:7.4-dev-20210813
+    working_dir: /var/www/api
+    environment:
+      - APP_ENV=local
+      - XDEBUG_MODE=debug
+      - XDEBUG_CLIENT_PORT=9003
+      - XDEBUG_IDE_KEY=PHPSTORM
+      - XDEBUG_CLIENT_HOST=host.docker.internal
+    volumes:
+      - ./api:/var/www/api:delegated
+    ports:
+      - "9000:9000"
+  queue:
+    image: szainmehdi/php:7.4-dev-20210813
+    working_dir: /var/www/api
+    environment:
+      - APP_ENV=local
+    volumes:
+      - ./api:/var/www/api:delegated
+  # This container just exists to keep make the ingress continue to work.
+  web:
+    image: szainmehdi/node:13
+    command: npx http-server -p 3000
+    restart: unless-stopped

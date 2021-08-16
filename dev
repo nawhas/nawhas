@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-COMPOSE="docker compose"
+COMPOSE="docker compose -f docker-compose.yml"
 
 function run {
   set -x && $COMPOSE exec "$@"
@@ -10,8 +10,10 @@ function start {
 }
 
 if [ "$1" == "prod" ]; then
-  COMPOSE="$COMPOSE -f docker-compose.prod.yml"
+  COMPOSE="$COMPOSE -f docker-compose.yml -f docker-compose.prod.yml"
   shift 1
+else
+   COMPOSE="$COMPOSE -f docker-compose.dev.yml"
 fi
 
 # If we pass any arguments...
