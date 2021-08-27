@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "nuxt-ts",
     "dev:proxy": "cross-env PROXY_API=1 SERVER_API_BASE_URL=https://api.nawhas.test/ API_BASE_URL=/api/ nuxt-ts",
+    "dev:docker": "yarn install --prefer-offline --frozen-lockfile && cross-env HOST=0.0.0.0 APP_ENV=docker SERVER_API_BASE_URL=http://nginx:80 nuxt-ts",
     "serve": "yarn dev",
     "build": "nuxt-ts build",
     "start": "nuxt-ts start",

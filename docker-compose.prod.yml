@@ -2,7 +2,6 @@ version: '3'
 
 services:
   api:
-    image: ''
     build:
       context: api
       dockerfile: Dockerfile
@@ -15,15 +14,14 @@ services:
       - cache
       - search
   queue:
-    image: ''
     build:
       context: api
       dockerfile: Dockerfile
+    command: php artisan horizon
     env_file:
       - api/.env.production
     restart: unless-stopped
   web:
-    image: ''
     build:
       context: nuxt
       dockerfile: Dockerfile

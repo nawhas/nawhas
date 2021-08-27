@@ -12,7 +12,6 @@ volumes:
 
 services:
   api:
-    image: nawhas/api:latest
     container_name: nawhas_api
     networks:
       - nawhas
@@ -20,9 +19,7 @@ services:
       - db
       - cache
   queue:
-    image: nawhas/api:latest
     container_name: nawhas_queue
-    command: php artisan horizon
     restart: unless-stopped
     networks:
       - nawhas
@@ -53,7 +50,6 @@ services:
     networks:
       - nawhas
   web:
-    image: nawhas/web:latest
     container_name: nawhas_web
     networks:
       - nawhas

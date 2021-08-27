@@ -1,5 +1,8 @@
 version: '3'
 
+volumes:
+  web_docker_node_modules:
+
 services:
   api:
     image: szainmehdi/php:7.4-dev-20210813
@@ -17,6 +20,7 @@ services:
   queue:
     image: szainmehdi/php:7.4-dev-20210813
     working_dir: /var/www/api
+    command: php artisan horizon
     environment:
       - APP_ENV=local
     volumes:
@@ -24,5 +28,9 @@ services:
   # This container just exists to keep make the ingress continue to work.
   web:
     image: szainmehdi/node:13
-    command: npx http-server -p 3000
+    working_dir: /opt
+    volumes:
+      - ./nuxt:/opt:delegated
+      - web_docker_node_modules:/opt/node_modules
+    command: yarn dev:docker
     restart: unless-stopped
