@@ -38,8 +38,6 @@ services:
     container_name: nawhas_dusk
     depends_on:
       - ingress
-    extra_hosts:
-      - nawhas.test:
     links:
       - "ingress:nawhas.test"
     volumes:
