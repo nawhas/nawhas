@@ -25,7 +25,6 @@ services:
       - APP_ENV=local
     volumes:
       - ./api:/var/www/api:delegated
-  # This container just exists to keep make the ingress continue to work.
   web:
     image: szainmehdi/node:13
     working_dir: /opt
@@ -34,3 +33,16 @@ services:
       - web_docker_node_modules:/opt/node_modules
     command: yarn dev:docker
     restart: unless-stopped
+  dusk:
+    image: selenium/standalone-chrome:latest
+    container_name: nawhas_dusk
+    depends_on:
+      - ingress
+    extra_hosts:
+      - nawhas.test:
+    links:
+      - "ingress:nawhas.test"
+    volumes:
+      - /dev/shm:/dev/shm
+    networks:
+      - nawhas
