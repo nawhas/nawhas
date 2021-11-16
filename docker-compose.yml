@@ -26,7 +26,9 @@ services:
     ports:
       - "9000:9000"
     networks:
-      - nawhas
+      nawhas:
+        aliases:
+          - api-fpm
     depends_on:
       - db
       - cache
@@ -51,7 +53,10 @@ services:
     volumes:
       - ./docker/nginx/api.conf:/etc/nginx/conf.d/default.conf:ro
     networks:
-      - nawhas
+      nawhas:
+        aliases:
+          - api.nawhas.test
+          - api-nginx
     depends_on:
       - api
   ingress:
@@ -75,7 +80,10 @@ services:
     command: npx http-server -p 3000
     restart: unless-stopped
     networks:
-      - nawhas
+      nawhas:
+        aliases:
+          - nawhas.test
+          - web
   db:
     image: postgres:11
     container_name: nawhas_db
@@ -89,7 +97,9 @@ services:
       - postgres:/var/lib/postgresql/data:delegated
       - ./docker/postgres/scripts:/usr/local/sbin
     networks:
-      - nawhas
+      nawhas:
+        aliases:
+          - nawhas_db
   events_db:
     image: postgres:11
     container_name: nawhas_events_db
@@ -104,7 +114,9 @@ services:
     volumes:
       - pg_events:/var/lib/postgresql/data:delegated
     networks:
-      - nawhas
+      nawhas:
+        aliases:
+          - nawhas_events_db
   data_db:
     image: postgres:11
     container_name: nawhas_data_db
@@ -119,7 +131,9 @@ services:
     volumes:
       - pg_data:/var/lib/postgresql/data:delegated
     networks:
-      - nawhas
+      nawhas:
+        aliases:
+          - nawhas_data_db
   cache:
     image: redis:5
     container_name: nawhas_cache
@@ -139,7 +153,10 @@ services:
     volumes:
       - search:/data.ms:delegated
     networks:
-      - nawhas
+      nawhas:
+        aliases:
+          - search
+          - nawhas_search
   mail:
     image: mailhog/mailhog:latest
     container_name: nawhas_mail
