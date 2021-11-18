@@ -20,8 +20,15 @@ RUN apk --no-cache add shadow \
     file \
     pkgconf
 
-COPY . .
-COPY .env.docker .env
+COPY package.json package.json
+COPY yarn.lock yarn.lock
+
+RUN yarn install \
+  --prefer-offline \
+  --frozen-lockfile \
+  --non-interactive \
+  --production=false
+
 
 ARG APP_VERSION
 ARG SENTRY_PUBLISH_RELEASE
@@ -32,13 +39,10 @@ ENV SENTRY_PUBLISH_RELEASE $SENTRY_PUBLISH_RELEASE
 ENV SENTRY_ORG nawhas
 ENV SENTRY_PROJECT web
 
-RUN printf "[defaults]\norg = $SENTRY_ORG\nproject = $SENTRY_PROJECT\n[auth]\ntoken = $SENTRY_AUTH_TOKEN" > .sentryclirc
+COPY . .
+COPY .env.docker .env
 
-RUN yarn install \
-  --prefer-offline \
-  --frozen-lockfile \
-  --non-interactive \
-  --production=false
+RUN printf "[defaults]\norg = $SENTRY_ORG\nproject = $SENTRY_PROJECT\n[auth]\ntoken = $SENTRY_AUTH_TOKEN" > .sentryclirc
 
 RUN yarn build
 
