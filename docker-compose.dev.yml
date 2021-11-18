@@ -32,8 +32,6 @@ services:
       - web_node_modules:/opt/node_modules
       - web_nuxt_built:/opt/.nuxt
     environment:
-      - HOST=0.0.0.0
-      - APP_ENV=test
       - CHOKIDAR_USEPOLLING=true
       - SERVER_API_BASE_URL=http://api.nawhas.test
   mail:

@@ -58,6 +58,13 @@ services:
   web:
     expose:
       - 3000
+    environment:
+      - BUILD_APP_ENV=development
+      - API_BASE_URL=https://api.nawhas.test/
+      - SERVER_API_BASE_URL=http://api.nawhas.test/
+      - SEARCH_HOST=https://search.nawhas.test
+      - APP_DOMAIN=https://nawhas.test
+      - HOST=0.0.0.0
     networks:
       nawhas:
         aliases:
