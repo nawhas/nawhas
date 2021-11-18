@@ -48,6 +48,11 @@ if [ $# -gt 0 ];then
       start dusk \
         php artisan dusk:wait
 
+    # If "down" is used, take down everything
+    elif [ "$1" == "down" ]; then
+      shift 1
+      $COMPOSE --profile dusk down
+
     # Else, pass-thru args to docker-compose
     else
         $COMPOSE "$@"
