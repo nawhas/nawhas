@@ -34,5 +34,5 @@ jobs:
           build-args: |
             APP_VERSION=${{ env.APP_VERSION }}
           tags: nawhas/web:${{ env.APP_VERSION }}
-          cache-from: type=registry,ref=nawhas/web:latest
-          cache-to: type=inline
+          cache-from: type=registry,ref=nawhas/web:buildcache
+          cache-to: type=registry,ref=nawhas/web:buildcache,mode=max
