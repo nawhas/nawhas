@@ -7,10 +7,15 @@ WORKDIR /var/www/api
 ENV APP_ENV production
 ENV COMPOSER_ALLOW_SUPERUSER 1
 
-COPY . .
+COPY composer.json composer.json
+COPY composer.lock composer.lock
+COPY database/seeds database/seeds
+COPY database/factories database/factories
 
 ENV TELESCOPE_ENABLED=false
 RUN composer install --no-scripts
+
+COPY . .
 RUN composer run post-root-package-install && php artisan key:generate
 RUN ./docker/scripts/psalm.sh
 RUN composer test

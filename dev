@@ -1,6 +1,15 @@
 #!/usr/bin/env bash
 
-COMPOSE="docker compose"
+MODE="dev"
+
+while [[ "$1" =~ ^- && ! "$1" == "--" ]]; do case $1 in
+  -B | --built )
+    MODE="built"
+    ;;
+esac; shift; done
+if [[ "$1" == '--' ]]; then shift; fi
+
+COMPOSE="docker compose -f docker-compose.yml"
 
 function run {
   set -x && $COMPOSE exec "$@"
@@ -9,9 +18,12 @@ function start {
   set -x && $COMPOSE run --rm "$@"
 }
 
-if [ "$1" == "prod" ]; then
-  COMPOSE="$COMPOSE -f docker-compose.prod.yml"
-  shift 1
+if [ "$MODE" == "built" ]; then
+  echo "> Using docker-compose.built.yml";
+  COMPOSE="$COMPOSE -f docker-compose.built.yml"
+else
+  echo "> Using docker-compose.dev.yml";
+  COMPOSE="$COMPOSE -f docker-compose.dev.yml"
 fi
 
 # If we pass any arguments...
@@ -47,6 +59,16 @@ if [ $# -gt 0 ];then
       shift 1
       start dusk \
         php artisan dusk:wait
+
+    # If "down" is used, take down everything
+    elif [ "$1" == "down" ]; then
+      shift 1
+      $COMPOSE --profile dusk down
+
+    # If "build" is used, rebuild using the built docker-compose
+    elif [ "$1" == "build" ]; then
+      shift 1
+      $COMPOSE -f docker-compose.built.yml up -d --build
 
     # Else, pass-thru args to docker-compose
     else

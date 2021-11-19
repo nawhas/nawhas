@@ -1,0 +1,78 @@
+version: '3.9'
+
+volumes:
+  web_node_modules:
+  web_nuxt_built:
+
+services:
+  api:
+    image: szainmehdi/php:7.4-dev-20210813
+    working_dir: /var/www/api
+    environment:
+      - APP_ENV=local
+      - XDEBUG_MODE=debug
+      - XDEBUG_CLIENT_PORT=9003
+      - XDEBUG_IDE_KEY=PHPSTORM
+      - XDEBUG_CLIENT_HOST=host.docker.internal
+    volumes:
+      - ./api:/var/www/api:delegated
+  queue:
+    image: szainmehdi/php:7.4-dev-20210813
+    working_dir: /var/www/api
+    environment:
+      - APP_ENV=local
+    volumes:
+      - ./api:/var/www/api:delegated
+  web:
+    command: ['yarn', 'watcher']
+    working_dir: /opt
+    image: szainmehdi/node:13
+    volumes:
+      - ./nuxt:/opt:delegated
+      - web_node_modules:/opt/node_modules
+      - web_nuxt_built:/opt/.nuxt
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+      - SERVER_API_BASE_URL=http://api.nawhas.test
+  mail:
+    image: mailhog/mailhog:latest
+    restart: unless-stopped
+    ports:
+      - "8025:8025"
+    networks:
+      nawhas:
+        aliases:
+          - mail
+  # Dusk Profile
+  dusk:
+    image: szainmehdi/php:7.4-dev-20210813
+    working_dir: /var/www/api
+    restart: 'no'
+    profiles:
+      - dusk
+    environment:
+      - APP_ENV=test
+      - XDEBUG_MODE=debug
+      - XDEBUG_CLIENT_PORT=9003
+      - XDEBUG_IDE_KEY=PHPSTORM
+      - XDEBUG_CLIENT_HOST=host.docker.internal
+      - APP_URL=http://nawhas.test:3000
+    volumes:
+      - ./api:/var/www/api:delegated
+    networks:
+      - nawhas
+    depends_on:
+      - events_db
+      - data_db
+      - nginx
+      - web
+      - search
+      - selenium
+  selenium:
+    profiles:
+      - dusk
+    image: 'selenium/standalone-chrome'
+    volumes:
+      - '/dev/shm:/dev/shm'
+    networks:
+      - nawhas

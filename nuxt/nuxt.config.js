@@ -1,18 +1,11 @@
-import fs from 'fs';
 import path from 'path';
-require('dotenv').config();
 
 const TITLE_SUFFIX = 'Nawhas.com';
 const TITLE_TEMPLATE = '%s | ' + TITLE_SUFFIX;
 const DEFAULT_DESCRIPTION = 'Welcome to Nawhas.com, the most advanced library of nawhas online. ' +
   'Browse thousands of nawhas from hundreds of reciters, including thousands of nawha write-ups (lyrics).';
 
-const https = process.env.APP_ENV === 'development' ? {
-  key: fs.readFileSync(path.resolve(__dirname, '../docker/nginx/certs/nawhas.test.key')),
-  cert: fs.readFileSync(path.resolve(__dirname, '../docker/nginx/certs/nawhas.test.crt')),
-} : false;
-
-const proxy = process.env.PROXY_API ? {
+const proxy = process.env.BUILD_PROXY_API ? {
   // For local dev only
   '/api': {
     target: 'https://api.nawhas.test/',
@@ -22,24 +15,24 @@ const proxy = process.env.PROXY_API ? {
 } : {};
 
 export default {
-  debug: process.env.APP_ENV !== 'production',
+  debug: process.env.BUILD_APP_ENV !== 'production',
   /*
   ** Nuxt runtime config
   ** See https://nuxtjs.org/api/configuration-runtime-config
   ** See https://axios.nuxtjs.org/options.html#runtime-config
   */
   publicRuntimeConfig: {
-    release: process.env.APP_VERSION || 'unreleased',
-    apiUrl: process.env.API_BASE_URL || 'https://api.nawhas.test/',
-    searchHost: process.env.SEARCH_HOST || 'https://search.nawhas.test',
+    release: process.env.BUILD_APP_VERSION || 'unreleased',
+    apiUrl: process.env.API_BASE_URL,
+    searchHost: process.env.SEARCH_HOST,
 
     axios: {
-      browserBaseURL: process.env.API_BASE_URL || 'https://api.nawhas.test/',
+      browserBaseURL: process.env.API_BASE_URL,
     },
   },
 
   privateRuntimeConfig: {
-    ignoreSslErrors: process.env.APP_ENV === 'development',
+    ignoreSslErrors: process.env.BUILD_APP_ENV === 'development',
 
     axios: {
       baseURL: process.env.SERVER_API_BASE_URL || process.env.API_BASE_URL,
@@ -99,7 +92,7 @@ export default {
       ogDescription: false,
     },
     workbox: {
-      config: { debug: process.env.APP_ENV === 'development' },
+      config: { debug: process.env.BUILD_APP_ENV === 'development' },
       workboxExtensions: [
         '@/static/sw-extensions/skip-waiting.js',
       ],
@@ -256,10 +249,6 @@ export default {
     },
   },
 
-  server: {
-    https,
-  },
-
   /*
   ** Google Fonts
   ** See https://github.com/nuxt-community/universal-storage-module#usage
@@ -291,12 +280,12 @@ export default {
    ** See https://github.com/nuxt-community/sentry-module
    */
   sentry: {
-    dsn: process.env.SENTRY_DSN || '',
-    publishRelease: process.env.SENTRY_PUBLISH_RELEASE || false,
+    dsn: process.env.BUILD_SENTRY_DSN || '',
+    publishRelease: process.env.BUILD_SENTRY_PUBLISH_RELEASE || false,
     sourceMapStyle: 'hidden-source-map',
     config: {
-      environment: process.env.APP_ENV,
-      release: process.env.APP_VERSION,
+      environment: process.env.BUILD_APP_ENV,
+      release: process.env.BUILD_APP_VERSION,
     },
   },
 

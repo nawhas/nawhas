@@ -11,7 +11,7 @@ class MigrateEventsDatabase extends Command
      *
      * @var string
      */
-    protected $signature = 'migrate:events';
+    protected $signature = 'migrate:events {--fresh}';
 
     /**
      * The console command description.
@@ -27,10 +27,16 @@ class MigrateEventsDatabase extends Command
      */
     public function handle(): int
     {
-        return $this->call('migrate', [
+        $args = [
             '--database' => 'events',
             '--path' => 'database/migrations/events',
             '--force' => true,
-        ]);
+        ];
+
+        if ($this->option('fresh')) {
+            $this->call('migrate:reset', $args);
+        }
+
+        return $this->call('migrate', $args);
     }
 }

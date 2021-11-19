@@ -4,26 +4,13 @@ networks:
   nawhas:
 
 volumes:
-  postgres:
   pg_events:
   pg_data:
   redis:
   search:
-  web_node_modules:
-  web_nuxt_built:
 
 services:
   api:
-    image: szainmehdi/php:7.4-dev-20210813
-    working_dir: /var/www/api
-    environment:
-      - APP_ENV=local
-      - XDEBUG_MODE=debug
-      - XDEBUG_CLIENT_PORT=9003
-      - XDEBUG_IDE_KEY=PHPSTORM
-      - XDEBUG_CLIENT_HOST=host.docker.internal
-    volumes:
-      - ./api:/var/www/api:delegated
     ports:
       - "9000:9000"
     networks:
@@ -31,23 +18,15 @@ services:
         aliases:
           - api-fpm
     depends_on:
-      - db
       - events_db
       - data_db
       - cache
   queue:
-    image: szainmehdi/php:7.4-dev-20210813
-    working_dir: /var/www/api
-    environment:
-      - APP_ENV=local
-    volumes:
-      - ./api:/var/www/api:delegated
     networks:
       - nawhas
     restart: unless-stopped
     command: php artisan horizon
     depends_on:
-      - db
       - events_db
       - data_db
       - cache
@@ -76,42 +55,21 @@ services:
       - web
     networks:
       - nawhas
-  # This container just exists to keep make the ingress continue to work.
   web:
-    command: ['yarn', 'watcher']
-    working_dir: /opt
-    image: szainmehdi/node:13
     expose:
       - 3000
-    volumes:
-      - ./nuxt:/opt:delegated
-      - web_node_modules:/opt/node_modules
-      - web_nuxt_built:/opt/.nuxt
     environment:
+      - BUILD_APP_ENV=development
+      - API_BASE_URL=https://api.nawhas.test/
+      - SERVER_API_BASE_URL=http://api.nawhas.test/
+      - SEARCH_HOST=https://search.nawhas.test
+      - APP_DOMAIN=https://nawhas.test
       - HOST=0.0.0.0
-      - APP_ENV=test
-      - CHOKIDAR_USEPOLLING=true
-      - SERVER_API_BASE_URL=http://api.nawhas.test
     networks:
       nawhas:
         aliases:
           - nawhas.test
           - nawhas_web
-  db:
-    image: postgres:11
-    restart: unless-stopped
-    tty: true
-    ports:
-      - "5432:5432"
-    env_file:
-      - ./docker/postgres/.env
-    volumes:
-      - postgres:/var/lib/postgresql/data:delegated
-      - ./docker/postgres/scripts:/usr/local/sbin
-    networks:
-      nawhas:
-        aliases:
-          - nawhas_db
   events_db:
     image: postgres:11
     restart: unless-stopped
@@ -174,37 +132,3 @@ services:
       nawhas:
         aliases:
           - mail
-  # Dusk Profile
-  dusk:
-    image: szainmehdi/php:7.4-dev-20210813
-    working_dir: /var/www/api
-    restart: 'no'
-    profiles:
-      - dusk
-    environment:
-      - APP_ENV=test
-      - XDEBUG_MODE=debug
-      - XDEBUG_CLIENT_PORT=9003
-      - XDEBUG_IDE_KEY=PHPSTORM
-      - XDEBUG_CLIENT_HOST=host.docker.internal
-      - APP_URL=http://nawhas.test:3000
-    volumes:
-      - ./api:/var/www/api:delegated
-    networks:
-      - nawhas
-    depends_on:
-      - db
-      - events_db
-      - data_db
-      - nginx
-      - web
-      - search
-      - selenium
-  selenium:
-    profiles:
-      - dusk
-    image: 'selenium/standalone-chrome'
-    volumes:
-      - '/dev/shm:/dev/shm'
-    networks:
-      - nawhas
