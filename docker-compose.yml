@@ -1,4 +1,4 @@
-version: '3'
+version: '3.9'
 
 networks:
   nawhas:
@@ -9,11 +9,12 @@ volumes:
   pg_data:
   redis:
   search:
+  web_node_modules:
+  web_nuxt_built:
 
 services:
   api:
     image: szainmehdi/php:7.4-dev-20210813
-    container_name: nawhas_api
     working_dir: /var/www/api
     environment:
       - APP_ENV=local
@@ -26,13 +27,16 @@ services:
     ports:
       - "9000:9000"
     networks:
-      - nawhas
+      nawhas:
+        aliases:
+          - api-fpm
     depends_on:
       - db
+      - events_db
+      - data_db
       - cache
   queue:
     image: szainmehdi/php:7.4-dev-20210813
-    container_name: nawhas_queue
     working_dir: /var/www/api
     environment:
       - APP_ENV=local
@@ -44,19 +48,23 @@ services:
     command: php artisan horizon
     depends_on:
       - db
+      - events_db
+      - data_db
       - cache
   nginx:
     image: nginx:stable-alpine
-    container_name: nawhas_api_nginx
     volumes:
       - ./docker/nginx/api.conf:/etc/nginx/conf.d/default.conf:ro
     networks:
-      - nawhas
+      nawhas:
+        aliases:
+          - api.nawhas.test
+          - api-nginx
+          - nawhas_api_nginx
     depends_on:
       - api
   ingress:
     image: nginx:stable-alpine
-    container_name: nawhas_ingress
     ports:
       - "80:80"
       - "443:443"
@@ -70,15 +78,27 @@ services:
       - nawhas
   # This container just exists to keep make the ingress continue to work.
   web:
+    command: ['yarn', 'watcher']
+    working_dir: /opt
     image: szainmehdi/node:13
-    container_name: nawhas_web
-    command: npx http-server -p 3000
-    restart: unless-stopped
+    expose:
+      - 3000
+    volumes:
+      - ./nuxt:/opt:delegated
+      - web_node_modules:/opt/node_modules
+      - web_nuxt_built:/opt/.nuxt
+    environment:
+      - HOST=0.0.0.0
+      - APP_ENV=test
+      - CHOKIDAR_USEPOLLING=true
+      - SERVER_API_BASE_URL=http://api.nawhas.test
     networks:
-      - nawhas
+      nawhas:
+        aliases:
+          - nawhas.test
+          - nawhas_web
   db:
     image: postgres:11
-    container_name: nawhas_db
     restart: unless-stopped
     tty: true
     ports:
@@ -89,10 +109,11 @@ services:
       - postgres:/var/lib/postgresql/data:delegated
       - ./docker/postgres/scripts:/usr/local/sbin
     networks:
-      - nawhas
+      nawhas:
+        aliases:
+          - nawhas_db
   events_db:
     image: postgres:11
-    container_name: nawhas_events_db
     restart: unless-stopped
     tty: true
     ports:
@@ -104,10 +125,11 @@ services:
     volumes:
       - pg_events:/var/lib/postgresql/data:delegated
     networks:
-      - nawhas
+      nawhas:
+        aliases:
+          - nawhas_events_db
   data_db:
     image: postgres:11
-    container_name: nawhas_data_db
     restart: unless-stopped
     tty: true
     ports:
@@ -119,17 +141,17 @@ services:
     volumes:
       - pg_data:/var/lib/postgresql/data:delegated
     networks:
-      - nawhas
+      nawhas:
+        aliases:
+          - nawhas_data_db
   cache:
     image: redis:5
-    container_name: nawhas_cache
     networks:
       - nawhas
     volumes:
       - redis:/data
   search:
     image: getmeili/meilisearch:v0.13.0
-    container_name: nawhas_search
     restart: unless-stopped
     tty: true
     ports:
@@ -139,12 +161,50 @@ services:
     volumes:
       - search:/data.ms:delegated
     networks:
-      - nawhas
+      nawhas:
+        aliases:
+          - search
+          - nawhas_search
   mail:
     image: mailhog/mailhog:latest
-    container_name: nawhas_mail
     restart: unless-stopped
     ports:
       - "8025:8025"
+    networks:
+      nawhas:
+        aliases:
+          - mail
+  # Dusk Profile
+  dusk:
+    image: szainmehdi/php:7.4-dev-20210813
+    working_dir: /var/www/api
+    restart: 'no'
+    profiles:
+      - dusk
+    environment:
+      - APP_ENV=test
+      - XDEBUG_MODE=debug
+      - XDEBUG_CLIENT_PORT=9003
+      - XDEBUG_IDE_KEY=PHPSTORM
+      - XDEBUG_CLIENT_HOST=host.docker.internal
+      - APP_URL=http://nawhas.test:3000
+    volumes:
+      - ./api:/var/www/api:delegated
+    networks:
+      - nawhas
+    depends_on:
+      - db
+      - events_db
+      - data_db
+      - nginx
+      - web
+      - search
+      - selenium
+  selenium:
+    profiles:
+      - dusk
+    image: 'selenium/standalone-chrome'
+    volumes:
+      - '/dev/shm:/dev/shm'
     networks:
       - nawhas

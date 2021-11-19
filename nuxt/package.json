@@ -11,6 +11,7 @@
     "generate": "nuxt-ts generate",
     "lint:js": "eslint --ext .js,.vue,.ts --ignore-path .gitignore .",
     "lint": "yarn lint:js",
+    "watcher": "yarn && yarn dev",
     "test": "jest"
   },
   "lint-staged": {
