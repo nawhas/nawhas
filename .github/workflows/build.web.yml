@@ -24,7 +24,6 @@ jobs:
 
       - name: Lint Codebase
         run: NODE_ENV=production yarn lint --no-fix --format stylish
-
   build:
     name: Build Web Image
     runs-on: ubuntu-latest
@@ -46,7 +45,7 @@ jobs:
         id: environment
         run: |
           version="dev-${SHA::8}"
-          echo "::set-output name=version::dev-${version}"
+          echo "::set-output name=version::${version}"
         env:
           SHA: ${{ github.sha }}
           EVENT_PATH: ${{ github.event_path }}
