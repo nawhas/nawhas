@@ -31,23 +31,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Prepare Environment Variables
-        id: environment
-        run: |
-          version="dev-${SHA::8}"
-          echo "::set-output name=version::${version}"
-          echo "Version: ${version}"
-        env:
-          SHA: ${{ github.sha }}
-          EVENT_PATH: ${{ github.event_path }}
-
-      - name: Build Image
-        uses: ./.github/actions/docker-build-and-push
+      - name: Build
+        uses: ./.github/actions/build-web
         with:
           docker-username: ${{ secrets.DOCKER_USERNAME }}
           docker-password: ${{ secrets.DOCKER_PASSWORD }}
-          build-args: |
-            APP_VERSION=${{ steps.environment.outputs.version }}
-          context: ./nuxt
-          image: nawhas/web
-          tags: nawhas/web:${{ steps.environment.outputs.version }}
