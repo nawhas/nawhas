@@ -3,27 +3,6 @@ name: Build Web Image
 on: [pull_request]
 
 jobs:
-  lint:
-    name: Lint Web App
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: nuxt
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-
-      - uses: actions/setup-node@v2
-        with:
-          node-version: '13.x'
-          cache: yarn
-          cache-dependency-path: nuxt/yarn.lock
-
-      - name: Install Dependencies
-        run: yarn install --frozen-lockfile
-
-      - name: Lint Codebase
-        run: NODE_ENV=production yarn lint --no-fix --format stylish
   build:
     name: Build Web Image
     runs-on: ubuntu-latest
