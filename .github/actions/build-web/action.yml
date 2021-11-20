@@ -24,8 +24,8 @@ runs:
     - name: Build Image
       uses: ./.github/actions/docker-build-and-push
       with:
-        docker-username: ${{ secrets.DOCKER_USERNAME }}
-        docker-password: ${{ secrets.DOCKER_PASSWORD }}
+        docker-username: ${{ inputs.docker-username }}
+        docker-password: ${{ inputs.docker-password }}
         build-args: |
           APP_VERSION=${{ steps.environment.outputs.version }}
         context: ./nuxt
