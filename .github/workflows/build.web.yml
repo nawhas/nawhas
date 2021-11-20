@@ -43,7 +43,7 @@ jobs:
           EVENT_PATH: ${{ github.event_path }}
 
       - name: Build Image
-        uses: ./github/actions/docker-build-and-push@workflows-update-integration
+        uses: .github/actions/docker-build-and-push@workflows-update-integration
         with:
           docker-username: ${{ secrets.DOCKER_USERNAME }}
           docker-password: ${{ secrets.DOCKER_PASSWORD }}
