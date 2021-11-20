@@ -45,9 +45,7 @@ FROM szainmehdi/php:7.4-20210813 as production
 WORKDIR /var/www/api
 
 ARG GITHUB_SHA
-ARG GITHUB_REF
 ENV GIT_SHA $GITHUB_SHA
-ENV GIT_BRANCH $GITHUB_REF
 
 COPY --from=build /var/www/api /var/www/api
 

@@ -46,6 +46,7 @@ jobs:
         run: |
           version="dev-${SHA::8}"
           echo "::set-output name=version::${version}"
+          echo "Version: ${version}"
         env:
           SHA: ${{ github.sha }}
           EVENT_PATH: ${{ github.event_path }}
