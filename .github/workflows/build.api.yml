@@ -22,7 +22,7 @@ jobs:
       - name: Prepare Environment Variables
         id: environment
         run: |
-          name="dev-${SHA::8}"
+          version="dev-${SHA::8}"
           echo "::set-output name=version::${version}"
           echo "Version: ${version}"
         env:
