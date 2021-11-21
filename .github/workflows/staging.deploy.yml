@@ -5,24 +5,12 @@ on:
     branches:
       - master
 
-env:
-  API_IMAGE: nawhas/api
-  WEB_IMAGE: nawhas/web
+concurrency:
+  group: staging
+  cancel-in-progress: true
 
 jobs:
-  ################################################################
-  # Cancel Previous Builds
-  ################################################################
-  cleanup:
-    name: Cancel Previous Runs
-    runs-on: ubuntu-latest
-    steps:
-      - uses: n1hility/cancel-previous-runs@v2
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-  ################################################################
   # Notify Build Started
-  ################################################################
   notify_start:
     name: Notify Build Started
     runs-on: ubuntu-latest
@@ -35,85 +23,49 @@ jobs:
           color: warning
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
-  ################################################################
-  # Build & Test API Image
-  ################################################################
+  # Build API Image
   build_api:
-    name: Build & Test API Image
+    name: Build Staging API Image
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Docker Login
-        env:
-          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-        run: |
-          docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+      - name: Build
+        uses: ./.github/actions/api-build
+        with:
+          docker-username: ${{ secrets.DOCKER_USERNAME }}
+          docker-password: ${{ secrets.DOCKER_PASSWORD }}
+          extra-tags: nawhas/api:staging
+  # Lint Web App
+  lint_web:
+    name: Lint Web App for Staging
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
 
-      - name: Build API
-        run: |
-          docker build --file ./api/Dockerfile \
-            -t $API_IMAGE:dev-${GITHUB_SHA::8} \
-            -t $API_IMAGE:staging \
-            --build-arg GITHUB_SHA="$GITHUB_SHA" \
-            --build-arg GITHUB_REF=master \
-            ./api
-
-      - name: Publish API
-        run: |
-          docker push $API_IMAGE:dev-${GITHUB_SHA::8}
-          docker push $API_IMAGE:staging
-  ################################################################
-  # Build & Test Web Image
-  ################################################################
+      - name: Lint
+        uses: ./.github/actions/web-lint
+  # Build Web Image
   build_web:
-    name: Build & Test Web Image
+    name: Build Web Image for Staging
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Docker Login
-        env:
-          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-        run: |
-          docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-
-      - name: Decrypt Web secrets
-        working-directory: ./k8s/overlays/staging/secrets
-        run: |
-          gpg --quiet --batch --yes --decrypt --passphrase="$GPG_KEY" --output web.staging.env web.staging.env.gpg
-        env:
-          GPG_KEY: ${{ secrets.GPG_KEY }}
-
-      - name: Build Web
-        run: |
-          cp ./k8s/overlays/staging/secrets/web.staging.env ./nuxt/.env.docker
-          set +a
-          docker build --file ./nuxt/Dockerfile \
-            -t $WEB_IMAGE:dev-${GITHUB_SHA::8} \
-            -t $WEB_IMAGE:staging \
-            --build-arg APP_VERSION=dev-${GITHUB_SHA::8} \
-            --build-arg SENTRY_PUBLISH_RELEASE=1 \
-            --build-arg SENTRY_AUTH_TOKEN=$SENTRY_AUTH_TOKEN \
-            ./nuxt
-        env:
-          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-
-      - name: Publish Web
-        run: |
-          docker push $WEB_IMAGE:dev-${GITHUB_SHA::8}
-          docker push $WEB_IMAGE:staging
-  ################################################################
+      - name: Build
+        uses: ./.github/actions/web-build
+        with:
+          docker-username: ${{ secrets.DOCKER_USERNAME }}
+          docker-password: ${{ secrets.DOCKER_PASSWORD }}
+          extra-tags: nawhas/web:staging
   # Deploy Staging Environment
-  ################################################################
   deploy:
     name: Deploy Staging Environment
     runs-on: ubuntu-latest
-    needs: [build_api, build_web]
+    needs: [build_api, lint_web, build_web]
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -134,14 +86,12 @@ jobs:
         env:
           GPG_KEY: ${{ secrets.GPG_KEY }}
 
-      # Set up kustomize
       - name: Set up Kustomize
         working-directory: ./k8s/overlays/staging
         run: |
           curl -o kustomize --location https://github.com/kubernetes-sigs/kustomize/releases/download/v3.1.0/kustomize_3.1.0_linux_amd64
           chmod u+x ./kustomize
 
-      # Deploy the Docker image to the GKE cluster
       - name: Deploy
         working-directory: ./k8s/overlays/staging
         run: |
@@ -151,9 +101,7 @@ jobs:
           kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig rollout status --timeout=3m deployment/api -n stg
           kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig rollout status --timeout=3m deployment/web -n stg
           kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig get services -o wide -n stg
-  ################################################################
   # Notify Build Status
-  ################################################################
   notify_failure:
     name: Notify Build Status
     runs-on: ubuntu-latest

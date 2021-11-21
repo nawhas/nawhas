@@ -1,0 +1,39 @@
+name: 'Build API Image'
+description: 'Build a Docker image for the Laravel backend'
+inputs:
+  docker-username:
+    description: 'Docker username'
+    required: true
+  docker-password:
+    description: 'Docker password'
+    required: true
+  extra-tags:
+    description: 'Additional tags (e.g. nawhas/api:staging)'
+    required: false
+    default: ''
+runs:
+  using: "composite"
+  steps:
+    - name: Prepare Environment Variables
+      id: environment
+      shell: bash
+      run: |
+        version="dev-${SHA::8}"
+        echo "::set-output name=version::${version}"
+        echo "Version: ${version}"
+      env:
+        SHA: ${{ github.sha }}
+        EVENT_PATH: ${{ github.event_path }}
+
+    - name: Build Image
+      uses: ./.github/actions/docker-build-and-push
+      with:
+        docker-username: ${{ inputs.docker-username }}
+        docker-password: ${{ inputs.docker-password }}
+        build-args: |
+          GITHUB_SHA=${{ github.sha }}
+        context: ./api
+        image: nawhas/api
+        tags: |
+          nawhas/api:${{ steps.environment.outputs.version }}
+          ${{ inputs.extra-tags }}

@@ -14,7 +14,7 @@ function prepare_environment() {
   algolia_prefix="intg_${pr_num}_"
   session_cookie_prefix="intg_${pr_num}_"
 
-  app_version="${namespace}-${sha::8}"
+  app_version="dev-${sha::8}"
   api_image_tag="${API_IMAGE}:${app_version}"
   web_image_tag="${WEB_IMAGE}:${app_version}"
 
