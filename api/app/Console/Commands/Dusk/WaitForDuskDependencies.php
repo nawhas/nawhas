@@ -42,11 +42,13 @@ class WaitForDuskDependencies extends Command
                 $exceptions++;
                 $this->output->write('<error>E</error>');
 
+                $response = optional($e->getResponse());
+
                 logger()->debug('ResponseException caught.', [
                     'class' => get_class($e),
                     'message' => $e->getMessage(),
-                    'status_code' => $e->getResponse()->getStatusCode(),
-                    'body' => (string)$e->getResponse()->getBody(),
+                    'status_code' => $response->getStatusCode(),
+                    'body' => (string)$response->getBody(),
                 ]);
             } finally {
                 if ($exceptions > self::MAX_EXCEPTIONS) {
