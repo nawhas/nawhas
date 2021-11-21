@@ -20,6 +20,18 @@ inputs:
     description: 'Build context for docker'
     required: false
     default: '.'
+  push:
+    description: 'Push to DockerHub.'
+    required: false
+    default: 'true'
+  load:
+    description: 'Load Image to Docker'
+    required: false
+    default: 'false'
+  target:
+    description: 'Build target'
+    required: false
+    default: ''
 runs:
   using: "composite"
   steps:
@@ -36,10 +48,10 @@ runs:
       uses: docker/build-push-action@v2
       with:
         context: ${{ inputs.context }}
-        push: true
+        push: ${{ inputs.push }}
+        load: ${{ inputs.load }}
         build-args: ${{ inputs.build-args }}
         tags: ${{ inputs.tags }}
+        target: ${{ inputs.target }}
         cache-from: type=registry,ref=${{ inputs.image }}:buildcache
-        cache-to: |
-          type=registry,ref=${{ inputs.image }}:buildcache,mode=max
-          type=local,dest=.docker/build-cache/${{ inputs.image }},mode=max
+        cache-to: type=registry,ref=${{ inputs.image }}:buildcache,mode=max

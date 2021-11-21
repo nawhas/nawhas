@@ -25,6 +25,19 @@ runs:
         SHA: ${{ github.sha }}
         EVENT_PATH: ${{ github.event_path }}
 
+    - name: Build Test Image
+      uses: ./.github/actions/docker-build-and-push
+      with:
+        docker-username: ${{ inputs.docker-username }}
+        docker-password: ${{ inputs.docker-password }}
+        context: ./api
+        image: nawhas/api
+        target: test
+        push: false
+        load: true
+        tags: |
+          nawhas/api:test-${{ steps.environment.outputs.version }}
+
     - name: Build Image
       uses: ./.github/actions/docker-build-and-push
       with:
