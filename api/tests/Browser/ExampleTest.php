@@ -13,7 +13,7 @@ class ExampleTest extends DuskTestCase
     {
         $this->browse(function (Browser $browser) {
             $browser->visit('/')
-                    ->assertSee('Explore the most advanced library of nawhas online.');
+                    ->assertSee('Explore the most advanced library of nawhas anywhere.');
         });
     }
 
