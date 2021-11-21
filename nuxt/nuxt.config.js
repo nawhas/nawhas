@@ -1,4 +1,15 @@
 import path from 'path';
+import fs from 'fs';
+
+const APP_VERSION = (() => {
+  try {
+    return fs.readFileSync('.version', 'utf8');
+  } catch (e) {
+    // eslint-disable-next-line no-console
+    console.log('No version file found.');
+    return 'unreleased';
+  }
+})();
 
 const TITLE_SUFFIX = 'Nawhas.com';
 const TITLE_TEMPLATE = '%s | ' + TITLE_SUFFIX;
@@ -22,7 +33,7 @@ export default {
   ** See https://axios.nuxtjs.org/options.html#runtime-config
   */
   publicRuntimeConfig: {
-    release: process.env.BUILD_APP_VERSION || 'unreleased',
+    release: APP_VERSION || 'unreleased',
     apiUrl: process.env.API_BASE_URL,
     searchHost: process.env.SEARCH_HOST,
 
@@ -32,7 +43,7 @@ export default {
   },
 
   privateRuntimeConfig: {
-    ignoreSslErrors: process.env.BUILD_APP_ENV === 'development',
+    ignoreSslErrors: process.env.IGNORE_SSL_ERRORS || process.env.BUILD_APP_ENV === 'development',
 
     axios: {
       baseURL: process.env.SERVER_API_BASE_URL || process.env.API_BASE_URL,
@@ -160,6 +171,7 @@ export default {
   ** See https://axios.nuxtjs.org/options
   */
   axios: {
+    debug: !!process.env.BUILD_AXIOS_DEBUG,
     credentials: true,
     headers: {
       common: {
@@ -285,7 +297,7 @@ export default {
     sourceMapStyle: 'hidden-source-map',
     config: {
       environment: process.env.BUILD_APP_ENV,
-      release: process.env.BUILD_APP_VERSION,
+      release: APP_VERSION,
     },
   },
 

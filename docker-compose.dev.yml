@@ -32,6 +32,7 @@ services:
       - web_node_modules:/opt/node_modules
       - web_nuxt_built:/opt/.nuxt
     environment:
+      - BUILD_AXIOS_DEBUG=
       - CHOKIDAR_USEPOLLING=true
       - SERVER_API_BASE_URL=http://api.nawhas.test
   mail:
