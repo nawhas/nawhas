@@ -33,11 +33,21 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
+      - name: Setup Environment
+        id: environment
+        run: |
+          pr_num=$(jq --raw-output .pull_request.number "$EVENT_PATH")
+          namespace="intg-${pr_num}"
+          echo "::set-output name=namespace::${namespace}"
+        env:
+          EVENT_PATH: ${{ github.event_path }}
+
       - name: Build
         uses: ./.github/actions/api-build
         with:
           docker-username: ${{ secrets.DOCKER_USERNAME }}
           docker-password: ${{ secrets.DOCKER_PASSWORD }}
+          extra-tags: nawhas/api:${{ steps.environment.outputs.namespace }}
   # Lint Web App
   lint_web:
     name: Lint Web App
