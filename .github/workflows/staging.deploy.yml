@@ -49,7 +49,7 @@ jobs:
         uses: ./.github/actions/web-lint
   # Build Web Image
   build_web:
-    name: Build Web Image for Staging
+    name: Build Staging Web Image
     runs-on: ubuntu-latest
     steps:
       - name: Checkout

@@ -111,10 +111,8 @@ jobs:
         run: |
           cp api/.env.ci.example api/.env.ci
 
-      - name: Start Services
+      - name: Run Dusk Tests
         run: |
-          ./dev --ci up -d
-          echo "Services up, starting test runner."
           ./dev --ci dusk
         env:
           API_IMAGE_TAG: dev-${{ needs.setup.outputs.short_sha }}
