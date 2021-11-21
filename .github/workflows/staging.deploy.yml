@@ -5,15 +5,11 @@ on:
     branches:
       - master
 
+concurrency:
+  group: staging
+  cancel-in-progress: true
+
 jobs:
-  # Cancel Previous Builds
-  cleanup:
-    name: Cancel Previous Runs
-    runs-on: ubuntu-latest
-    steps:
-      - uses: n1hility/cancel-previous-runs@v2
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
   # Notify Build Started
   notify_start:
     name: Notify Build Started
