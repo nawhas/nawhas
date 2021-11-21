@@ -1,5 +1,5 @@
-name: 'Build Web Image'
-description: 'Build a Docker image for the Nuxt frontend.'
+name: 'Build API Image'
+description: 'Build a Docker image for the Laravel backend'
 inputs:
   docker-username:
     description: 'Docker username'
@@ -27,7 +27,7 @@ runs:
         docker-username: ${{ inputs.docker-username }}
         docker-password: ${{ inputs.docker-password }}
         build-args: |
-          APP_VERSION=${{ steps.environment.outputs.version }}
-        context: ./nuxt
-        image: nawhas/web
-        tags: nawhas/web:${{ steps.environment.outputs.version }}
+          GITHUB_SHA=${{ github.sha }}
+        context: ./api
+        image: nawhas/api
+        tags: nawhas/api:${{ steps.environment.outputs.version }}
