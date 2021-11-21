@@ -10,9 +10,7 @@ env:
   WEB_IMAGE: nawhas/web
 
 jobs:
-  ################################################################
   # Cancel Previous Builds
-  ################################################################
   cleanup:
     name: Cancel Previous Runs
     runs-on: ubuntu-latest
@@ -20,9 +18,7 @@ jobs:
       - uses: n1hility/cancel-previous-runs@v2
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-  ################################################################
   # Notify Build Started
-  ################################################################
   notify_start:
     name: Notify Build Started
     runs-on: ubuntu-latest
@@ -35,27 +31,22 @@ jobs:
           color: warning
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
-  ################################################################
-  # Build & Test API Image
-  ################################################################
   build_api:
-    name: Build & Test API Image
+    name: Build Staging API Image
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Docker Login
-        env:
-          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-        run: |
-          docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+      - name: Build
+        uses: ./.github/actions/api-build
+        with:
+          docker-username: ${{ secrets.DOCKER_USERNAME }}
+          docker-password: ${{ secrets.DOCKER_PASSWORD }}
+          extra-tags: nawhas/api:staging
 
       - name: Build API
         run: |
-          docker build --file ./api/Dockerfile \
-            -t $API_IMAGE:dev-${GITHUB_SHA::8} \
             -t $API_IMAGE:staging \
             --build-arg GITHUB_SHA="$GITHUB_SHA" \
             --build-arg GITHUB_REF=master \
