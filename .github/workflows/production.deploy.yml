@@ -109,8 +109,8 @@ jobs:
       - name: Deploy
         working-directory: ./k8s/overlays/production
         run: |
-          ./kustomize edit set image IMAGE:TAG=$API_IMAGE:${GITHUB_REF##*/}
-          ./kustomize edit set image WEB:TAG=$WEB_IMAGE:${GITHUB_REF##*/}
+          ./kustomize edit set image IMAGE:TAG=nawhas/api:${GITHUB_REF##*/}
+          ./kustomize edit set image WEB:TAG=nawhas/web:${GITHUB_REF##*/}
           ./kustomize build . | kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig apply -f -
           kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig rollout status --timeout=3m deployment/api
           kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig rollout status --timeout=3m deployment/web
