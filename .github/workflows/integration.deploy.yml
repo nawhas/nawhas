@@ -37,7 +37,7 @@ jobs:
         id: environment
         run: |
           pr_num=$(jq --raw-output .pull_request.number "$EVENT_PATH")
-          short_sha="$SHA::8"
+          short_sha="${SHA::8}"
           echo "::set-output name=pr_num::${pr_num}"
           echo "::set-output name=short_sha::${short_sha}"
         env:
