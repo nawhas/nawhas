@@ -113,7 +113,7 @@ jobs:
 
       - name: Pull Services
         run: |
-          ./dev --ci pull -q api web nginx mail selenium events_db data_db
+          ./dev --ci pull -q api web nginx mail selenium events_db data_db search cache
         env:
           API_IMAGE_TAG: dev-${{ needs.setup.outputs.short_sha }}
           WEB_IMAGE_TAG: dev-${{ needs.setup.outputs.short_sha }}
