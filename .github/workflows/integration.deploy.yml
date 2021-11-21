@@ -105,7 +105,7 @@ jobs:
           load: true
           target: test
           tags: nawhas/api:test
-          cache-from: type=registry,ref=${{ nawhas/api }}:buildcache
+          cache-from: type=registry,ref=nawhas/api:buildcache
 
       - name: Prepare .env.ci
         run: |
