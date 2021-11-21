@@ -111,6 +111,14 @@ jobs:
         run: |
           cp api/.env.ci.example api/.env.ci
 
+      - name: Pull Services
+        run: |
+          ./dev --ci pull
+        env:
+          API_IMAGE_TAG: dev-${{ needs.setup.outputs.short_sha }}
+          WEB_IMAGE_TAG: dev-${{ needs.setup.outputs.short_sha }}
+          API_TEST_IMAGE_TAG: test
+
       - name: Run Dusk Tests
         run: |
           ./dev --ci dusk
