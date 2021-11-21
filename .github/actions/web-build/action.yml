@@ -7,6 +7,10 @@ inputs:
   docker-password:
     description: 'Docker password'
     required: true
+  extra-tags:
+    description: 'Additional tags (e.g. nawhas/web:staging)'
+    required: false
+    default: ''
 runs:
   using: "composite"
   steps:
@@ -30,4 +34,6 @@ runs:
           APP_VERSION=${{ steps.environment.outputs.version }}
         context: ./nuxt
         image: nawhas/web
-        tags: nawhas/web:${{ steps.environment.outputs.version }}
+        tags: |
+          nawhas/web:${{ steps.environment.outputs.version }}
+          ${{ inputs.extra-tags }}

@@ -8,7 +8,7 @@ inputs:
     description: 'Docker password'
     required: true
   extra-tags:
-    description: 'Additional tags (e.g. nawhas/web:staging)'
+    description: 'Additional tags (e.g. nawhas/api:staging)'
     required: false
     default: ''
 runs:
