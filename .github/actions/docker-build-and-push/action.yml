@@ -37,7 +37,6 @@ runs:
       with:
         context: ${{ inputs.context }}
         push: true
-        load: true
         build-args: ${{ inputs.build-args }}
         tags: ${{ inputs.tags }}
         cache-from: type=registry,ref=${{ inputs.image }}:buildcache
