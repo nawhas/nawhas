@@ -113,7 +113,7 @@ jobs:
 
       - name: Pull Services
         run: |
-          ./dev --ci pull
+          ./dev --ci pull -q
         env:
           API_IMAGE_TAG: dev-${{ needs.setup.outputs.short_sha }}
           WEB_IMAGE_TAG: dev-${{ needs.setup.outputs.short_sha }}
