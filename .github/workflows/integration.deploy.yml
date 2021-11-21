@@ -120,6 +120,10 @@ jobs:
           API_IMAGE_TAG: dev-${{ needs.setup.outputs.short_sha }}
           WEB_IMAGE_TAG: dev-${{ needs.setup.outputs.short_sha }}
           API_TEST_IMAGE_TAG: test
+
+      - name: Dump docker logs on failure
+        if: failure()
+        uses: jwalton/gh-docker-logs@v1
   ################################################################
   # Deploy Integration Environment
   ################################################################
