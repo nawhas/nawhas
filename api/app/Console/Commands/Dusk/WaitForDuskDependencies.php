@@ -65,7 +65,7 @@ class WaitForDuskDependencies extends Command
         $this->output->writeln('<info>R</info>');
         $this->output->success('Ready after ' . $tries . ' tries! Starting tests now.');
 
-        return Artisan::call('dusk');
+        return $this->call('dusk');
     }
 
     private function getBaseUrl(): string
