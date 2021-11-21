@@ -86,6 +86,38 @@ jobs:
           extra-tags: |
             nawhas/web:pr-${{ needs.setup.outputs.namespace }}
             nawhas/web:pr-${{ needs.setup.outputs.namespace }}-${{ needs.setup.outputs.short_sha }}
+  dusk:
+    name: Run Dusk Tests
+    runs-on: ubuntu-latest
+    needs: [setup, build_api, build_web]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Build Test API Image
+        uses: docker/build-push-action@v2
+        with:
+          context: ./api
+          push: false
+          load: true
+          target: test
+          tags: nawhas/api:test
+
+      - name: Prepare .env.ci
+        run: |
+          cp api/.env.ci.example api/.env.ci
+
+      - name: Start Dusk Tests
+        run: |
+          ./dev --ci up -d
+          ./dev --ci dusk
+        env:
+          API_IMAGE_TAG: dev-${{ needs.setup.outputs.short_sha }}
+          WEB_IMAGE_TAG: dev-${{ needs.setup.outputs.short_sha }}
+          API_TEST_IMAGE_TAG: test
   ################################################################
   # Deploy Integration Environment
   ################################################################

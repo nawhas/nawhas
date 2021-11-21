@@ -6,6 +6,9 @@ while [[ "$1" =~ ^- && ! "$1" == "--" ]]; do case $1 in
   -B | --built )
     MODE="built"
     ;;
+  -C | --ci )
+    MODE="ci"
+    ;;
 esac; shift; done
 if [[ "$1" == '--' ]]; then shift; fi
 
@@ -21,6 +24,9 @@ function start {
 if [ "$MODE" == "built" ]; then
   echo "> Using docker-compose.built.yml";
   COMPOSE="$COMPOSE -f docker-compose.built.yml"
+elif [ "$MODE" == "ci" ]; then
+  echo "> Using docker-compose.ci.yml";
+  COMPOSE="$COMPOSE -f docker-compose.ci.yml"
 else
   echo "> Using docker-compose.dev.yml";
   COMPOSE="$COMPOSE -f docker-compose.dev.yml"
