@@ -39,7 +39,7 @@ jobs:
           extra-tags: nawhas/api:staging
   # Lint Web App
   lint_web:
-    name: Lint Web App
+    name: Lint Web App for Staging
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -49,7 +49,7 @@ jobs:
         uses: ./.github/actions/web-lint
   # Build Web Image
   build_web:
-    name: Build Web Image
+    name: Build Web Image for Staging
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
