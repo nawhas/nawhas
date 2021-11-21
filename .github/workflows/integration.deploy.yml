@@ -57,8 +57,8 @@ jobs:
           docker-username: ${{ secrets.DOCKER_USERNAME }}
           docker-password: ${{ secrets.DOCKER_PASSWORD }}
           extra-tags: |
-            nawhas/api:pr-${{ needs.setup.outputs.namespace }}
-            nawhas/api:pr-${{ needs.setup.outputs.namespace }}-${{ needs.setup.outputs.short_sha }}
+            nawhas/api:pr-${{ needs.setup.outputs.pr_num }}
+            nawhas/api:pr-${{ needs.setup.outputs.pr_num }}-${{ needs.setup.outputs.short_sha }}
   # Lint Web App
   lint_web:
     name: Lint Web App
@@ -84,8 +84,8 @@ jobs:
           docker-username: ${{ secrets.DOCKER_USERNAME }}
           docker-password: ${{ secrets.DOCKER_PASSWORD }}
           extra-tags: |
-            nawhas/web:pr-${{ needs.setup.outputs.namespace }}
-            nawhas/web:pr-${{ needs.setup.outputs.namespace }}-${{ needs.setup.outputs.short_sha }}
+            nawhas/web:pr-${{ needs.setup.outputs.pr_num }}
+            nawhas/web:pr-${{ needs.setup.outputs.pr_num }}-${{ needs.setup.outputs.short_sha }}
   dusk:
     name: Run Dusk Tests
     runs-on: ubuntu-latest
