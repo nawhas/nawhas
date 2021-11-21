@@ -40,4 +40,6 @@ runs:
         build-args: ${{ inputs.build-args }}
         tags: ${{ inputs.tags }}
         cache-from: type=registry,ref=${{ inputs.image }}:buildcache
-        cache-to: type=registry,ref=${{ inputs.image }}:buildcache,mode=max
+        cache-to: |
+          type=registry,ref=${{ inputs.image }}:buildcache,mode=max
+          type=local,dest=.docker/build-cache/${{ inputs.image }},mode=max

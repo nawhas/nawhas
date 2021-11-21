@@ -71,11 +71,6 @@ if [ $# -gt 0 ];then
       shift 1
       $COMPOSE --profile dusk down
 
-    # If "build" is used, rebuild using the built docker-compose
-    elif [ "$1" == "build" ]; then
-      shift 1
-      $COMPOSE -f docker-compose.built.yml up -d --build
-
     # Else, pass-thru args to docker-compose
     else
         $COMPOSE "$@"
