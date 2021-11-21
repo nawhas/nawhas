@@ -29,6 +29,9 @@ services:
       - web
       - search
       - selenium
+    volumes:
+      - ./api/tests/Browser/screenshots:tests/Browser/screenshots
+      - ./api/tests/Browser/console:tests/Browser/console
   selenium:
     image: 'selenium/standalone-chrome'
     volumes:
