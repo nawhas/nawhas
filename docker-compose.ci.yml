@@ -30,8 +30,8 @@ services:
       - search
       - selenium
     volumes:
-      - ./api/tests/Browser/screenshots:tests/Browser/screenshots
-      - ./api/tests/Browser/console:tests/Browser/console
+      - ./api/tests/Browser/screenshots:/var/www/api/tests/Browser/screenshots
+      - ./api/tests/Browser/console:/var/www/api/tests/Browser/console
   selenium:
     image: 'selenium/standalone-chrome'
     volumes:
