@@ -42,11 +42,13 @@ class WaitForDuskDependencies extends Command
                 $exceptions++;
                 $this->output->write('<error>E</error>');
 
+                $response = optional($e->getResponse());
+
                 logger()->debug('ResponseException caught.', [
                     'class' => get_class($e),
                     'message' => $e->getMessage(),
-                    'status_code' => $e->getResponse()->getStatusCode(),
-                    'body' => (string)$e->getResponse()->getBody(),
+                    'status_code' => $response->getStatusCode(),
+                    'body' => (string)$response->getBody(),
                 ]);
             } finally {
                 if ($exceptions > self::MAX_EXCEPTIONS) {
@@ -63,7 +65,7 @@ class WaitForDuskDependencies extends Command
         $this->output->writeln('<info>R</info>');
         $this->output->success('Ready after ' . $tries . ' tries! Starting tests now.');
 
-        return Artisan::call('dusk');
+        return $this->call('dusk');
     }
 
     private function getBaseUrl(): string

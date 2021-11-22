@@ -32,12 +32,12 @@ jobs:
       - name: Determine PR Number
         id: environment
         run: |
-          pr_num=$(jq --raw-output .pull_request.number "$EVENT_PATH")
+          pr_num="$EVENT_NUMBER"
           short_sha="${SHA::8}"
           echo "::set-output name=pr_num::${pr_num}"
           echo "::set-output name=short_sha::${short_sha}"
         env:
-          EVENT_PATH: ${{ github.event_path }}
+          EVENT_NUMBER: ${{github.event.number}}
           SHA: ${{ github.sha }}
     outputs:
       pr_num: ${{ steps.environment.outputs.pr_num }}
@@ -57,8 +57,8 @@ jobs:
           docker-username: ${{ secrets.DOCKER_USERNAME }}
           docker-password: ${{ secrets.DOCKER_PASSWORD }}
           extra-tags: |
-            nawhas/api:pr-${{ needs.setup.outputs.namespace }}
-            nawhas/api:pr-${{ needs.setup.outputs.namespace }}-${{ needs.setup.outputs.short_sha }}
+            nawhas/api:pr-${{ needs.setup.outputs.pr_num }}
+            nawhas/api:pr-${{ needs.setup.outputs.pr_num }}-${{ needs.setup.outputs.short_sha }}
   # Lint Web App
   lint_web:
     name: Lint Web App
@@ -84,8 +84,66 @@ jobs:
           docker-username: ${{ secrets.DOCKER_USERNAME }}
           docker-password: ${{ secrets.DOCKER_PASSWORD }}
           extra-tags: |
-            nawhas/web:pr-${{ needs.setup.outputs.namespace }}
-            nawhas/web:pr-${{ needs.setup.outputs.namespace }}-${{ needs.setup.outputs.short_sha }}
+            nawhas/web:pr-${{ needs.setup.outputs.pr_num }}
+            nawhas/web:pr-${{ needs.setup.outputs.pr_num }}-${{ needs.setup.outputs.short_sha }}
+  dusk:
+    name: Run Dusk Tests
+    runs-on: ubuntu-latest
+    needs: [setup, build_api, build_web]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Build Test API Image
+        uses: docker/build-push-action@v2
+        with:
+          context: ./api
+          push: false
+          load: true
+          target: test
+          tags: nawhas/api:test
+          cache-from: type=registry,ref=nawhas/api:buildcache
+
+      - name: Prepare .env.ci
+        run: |
+          cp api/.env.ci.example api/.env.ci
+
+      - name: Pull Services
+        run: |
+          ./dev --ci pull -q api web nginx mail selenium events_db data_db search cache
+        env:
+          API_IMAGE_TAG: dev-${{ needs.setup.outputs.short_sha }}
+          WEB_IMAGE_TAG: dev-${{ needs.setup.outputs.short_sha }}
+          API_TEST_IMAGE_TAG: test
+
+      - name: Run Dusk Tests
+        run: |
+          ./dev --ci dusk
+        env:
+          API_IMAGE_TAG: dev-${{ needs.setup.outputs.short_sha }}
+          WEB_IMAGE_TAG: dev-${{ needs.setup.outputs.short_sha }}
+          API_TEST_IMAGE_TAG: test
+
+      - name: Dump docker logs on failure
+        if: failure()
+        uses: jwalton/gh-docker-logs@v1
+
+      - name: Upload Screenshots
+        if: failure()
+        uses: actions/upload-artifact@v2
+        with:
+          name: screenshots
+          path: api/tests/Browser/screenshots
+
+      - name: Upload Console Logs
+        if: failure()
+        uses: actions/upload-artifact@v2
+        with:
+          name: console
+          path: api/tests/Browser/console
   ################################################################
   # Deploy Integration Environment
   ################################################################
@@ -180,7 +238,7 @@ jobs:
     name: Notify Build Status
     runs-on: ubuntu-latest
     needs: [build_api, build_web, deploy]
-    if: always()
+    if: endsWith(github.head_ref, '-integration')
     steps:
       - name: Notify Build Success
         uses: voxmedia/github-action-slack-notify-build@v1

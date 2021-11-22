@@ -6,6 +6,9 @@ while [[ "$1" =~ ^- && ! "$1" == "--" ]]; do case $1 in
   -B | --built )
     MODE="built"
     ;;
+  -C | --ci )
+    MODE="ci"
+    ;;
 esac; shift; done
 if [[ "$1" == '--' ]]; then shift; fi
 
@@ -21,6 +24,9 @@ function start {
 if [ "$MODE" == "built" ]; then
   echo "> Using docker-compose.built.yml";
   COMPOSE="$COMPOSE -f docker-compose.built.yml"
+elif [ "$MODE" == "ci" ]; then
+  echo "> Using docker-compose.ci.yml";
+  COMPOSE="$COMPOSE -f docker-compose.ci.yml"
 else
   echo "> Using docker-compose.dev.yml";
   COMPOSE="$COMPOSE -f docker-compose.dev.yml"
@@ -64,11 +70,6 @@ if [ $# -gt 0 ];then
     elif [ "$1" == "down" ]; then
       shift 1
       $COMPOSE --profile dusk down
-
-    # If "build" is used, rebuild using the built docker-compose
-    elif [ "$1" == "build" ]; then
-      shift 1
-      $COMPOSE -f docker-compose.built.yml up -d --build
 
     # Else, pass-thru args to docker-compose
     else
