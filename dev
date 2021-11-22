@@ -40,11 +40,16 @@ if [ $# -gt 0 ];then
       run api \
         php artisan "$@"
 
-    # If "bash" is used, pass-thru to "artisan"
-    elif [ "$1" == "bash" ]; then
+    # If "tinker" is used, start a tinker session in the API container
+    elif [ "$1" == "tinker" ]; then
       shift 1
       run api \
-        bash "$@"
+        php artisan tinker "$@"
+
+    # If "bash" is used, bash into a container
+    elif [ "$1" == "bash" ]; then
+      shift 1
+      run "$@" bash
 
     # If "composer" is used, pass-thru to "composer"
     elif [ "$1" == "composer" ]; then
