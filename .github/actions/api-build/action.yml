@@ -43,7 +43,14 @@ runs:
         push: false
         target: test
         load: true
+        outputs: type=docker,dest=/tmp/api-test-image.tar
         cache-from: type=registry,ref=nawhas/api:buildcache
+
+    - name: Upload Test Image
+      uses: actions/upload-artifact@v2
+      with:
+        name: api-test-image
+        path: /tmp/api-test-image.tar
 
     - name: Run Psalm
       shell: bash
