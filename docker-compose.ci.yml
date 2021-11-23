@@ -23,8 +23,7 @@ services:
     networks:
       - nawhas
     depends_on:
-      - events_db
-      - data_db
+      - db
       - nginx
       - web
       - search
