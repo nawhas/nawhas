@@ -8,7 +8,7 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class RegisterRequest extends FormRequest
 {
-    public function rules(): array
+    public function rules(): void
     {
         return [
             'name' => ['required', 'string'],
