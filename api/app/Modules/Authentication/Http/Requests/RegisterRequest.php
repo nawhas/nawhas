@@ -10,11 +10,11 @@ class RegisterRequest extends FormRequest
 {
     public function rules(): array
     {
-        return [
+        return collect([
             'name' => ['required', 'string'],
             'email' => ['required', 'string', 'email', 'unique:users,email'],
             'password' => ['required', 'string'],
             'nickname' => ['sometimes', 'string', 'nullable', 'unique:users,nickname']
-        ];
+        ]);
     }
 }
