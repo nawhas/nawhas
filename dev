@@ -52,12 +52,24 @@ if [ $# -gt 0 ];then
       run api \
         composer "$@"
 
-    # If "test" is used, run unit tests,
+    # If "test:feature" is used, run feature tests,
     # pass-thru any extra arguments to php-unit
-    elif [ "$1" == "test" ]; then
+    elif [ "$1" == "test:feature" ]; then
+      shift 1
+      # Run database migrations for the first time
+      start -e DB_HOST=test_db api \
+        php artisan migrate:all
+      # Start the tests
+      run api \
+        ./vendor/bin/phpunit --testsuite Feature "$@"
+
+
+    # If "test:unit" is used, run unit tests,
+    # pass-thru any extra arguments to php-unit
+    elif [ "$1" == "test:unit" ]; then
       shift 1
       run api \
-        ./vendor/bin/phpunit "$@"
+        ./vendor/bin/phpunit --testsuite Unit "$@"
 
     # If "dusk" is used, run Dusk browser-tests,
     # pass-thru any extra arguments
