@@ -44,7 +44,6 @@ runs:
         target: test
         load: true
         cache-from: type=registry,ref=nawhas/api:buildcache
-        cache-to: type=registry,ref=nawhas/api:buildcache,mode=max
 
     - name: Run Psalm
       shell: bash
