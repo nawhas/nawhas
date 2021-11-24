@@ -7,16 +7,17 @@ patchesStrategicMerge:
   - ingress.yml
 commonLabels:
   env: production
+namespace: default
 secretGenerator:
   - name: api.env
     envs:
-      - secrets/api.env
+      - env/api.env
   - name: web.env
     envs:
-      - secrets/web.env
+      - env/web.env
   - name: api-secrets
     files:
       - secrets/github.pem
   - name: search.env
     envs:
-      - secrets/search.env
+      - env/search.env
