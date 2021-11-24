@@ -36,17 +36,22 @@ runs:
       working-directory: ./k8s/overlays/${{ inputs.environment }}/env
       shell: bash
       run: |
-        find . -name '*.gpg' -exec gpg --quiet --batch --yes --passphrase="$GPG_KEY" --decrypt {} \;
+        gpg --quiet --batch --yes --passphrase="$GPG_KEY" --output api.secret.env api.secret.env.gpg
+        gpg --quiet --batch --yes --passphrase="$GPG_KEY" --output web.secret.env web.secret.env.gpg
+        gpg --quiet --batch --yes --passphrase="$GPG_KEY" --output search.secret.env search.secret.env.gpg
       env:
         GPG_KEY: ${{ inputs.secret-key }}
 
     - name: Decrypt additional secrets
       working-directory: ./k8s/overlays/${{ inputs.environment }}/secrets
+      if: ${{ inputs.environment == 'production' }}
       shell: bash
       run: |
-        find . -name '*.gpg' -exec gpg --quiet --batch --yes --passphrase="$GPG_KEY" --decrypt {} \;
+        gpg --quiet --batch --yes --passphrase="$GPG_KEY" --output github.pem github.pem.gpg
       env:
         GPG_KEY: ${{ inputs.secret-key }}
+
+    # TODO - Figure out how to prepare env files for integration environment
 
     - name: Set up Kustomize
       working-directory: ./k8s/overlays/${{ inputs.environment }}
