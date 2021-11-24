@@ -216,7 +216,7 @@ jobs:
           environment: integration
           secret-key: ${{ secrets.GPG_KEY }}
           namespace: ${{ env.NAMESPACE }}
-          tag: ${{ env.NAMESPACE }}
+          tag: ${{ env.APP_VERSION }}
 
       - name: Post Link on PR
         if: success()
