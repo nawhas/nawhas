@@ -9,7 +9,7 @@ spec:
         - name: api
           envFrom:
             - secretRef:
-                name: api.integration.env
+                name: api.env
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -22,7 +22,7 @@ spec:
         - name: queue
           envFrom:
             - secretRef:
-                name: api.integration.env
+                name: api.env
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -35,7 +35,7 @@ spec:
         - name: web
           envFrom:
             - secretRef:
-                name: web.integration.env
+                name: web.env
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -48,4 +48,4 @@ spec:
         - name: search
           envFrom:
             - secretRef:
-                name: search.integration.env
+                name: search.env
