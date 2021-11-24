@@ -68,6 +68,7 @@ runs:
       run: |
         ./kustomize edit set image IMAGE:TAG=nawhas/api:${TAG}
         ./kustomize edit set image WEB:TAG=nawhas/web:${TAG}
+        ./kustomize edit set namespace $NAMESPACE
         ./kustomize build . | kubectl apply -f -
         
         kubectl rollout status --timeout=3m deployment/api -n "$NAMESPACE"
