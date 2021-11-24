@@ -76,45 +76,19 @@ jobs:
   deploy:
     name: Deploy Production Environment
     runs-on: ubuntu-latest
-    needs: [build_api, build_web]
+    needs: [build_api, build_web, setup]
     steps:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Save DigitalOcean kubeconfig
-        uses: digitalocean/action-doctl@v1.7.0
-        env:
-          DIGITALOCEAN_ACCESS_TOKEN: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
-        with:
-          args: kubernetes cluster kubeconfig show k8s-nawhas > $GITHUB_WORKSPACE/.kubeconfig
-
-      - name: Decrypt secrets
-        working-directory: ./k8s/overlays/production/secrets
-        run: |
-          gpg --quiet --batch --yes --decrypt --passphrase="$GPG_KEY" --output api.env api.env.gpg
-          gpg --quiet --batch --yes --decrypt --passphrase="$GPG_KEY" --output web.env web.env.gpg
-          gpg --quiet --batch --yes --decrypt --passphrase="$GPG_KEY" --output search.env search.env.gpg
-          gpg --quiet --batch --yes --decrypt --passphrase="$GPG_KEY" --output github.pem github.pem.gpg
-        env:
-          GPG_KEY: ${{ secrets.GPG_KEY }}
-
-      # Set up kustomize
-      - name: Set up Kustomize
-        working-directory: ./k8s/overlays/production
-        run: |
-          curl -o kustomize --location https://github.com/kubernetes-sigs/kustomize/releases/download/v3.1.0/kustomize_3.1.0_linux_amd64
-          chmod u+x ./kustomize
-
-      # Deploy the Docker image to the GKE cluster
       - name: Deploy
-        working-directory: ./k8s/overlays/production
-        run: |
-          ./kustomize edit set image IMAGE:TAG=nawhas/api:${GITHUB_REF##*/}
-          ./kustomize edit set image WEB:TAG=nawhas/web:${GITHUB_REF##*/}
-          ./kustomize build . | kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig apply -f -
-          kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig rollout status --timeout=3m deployment/api
-          kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig rollout status --timeout=3m deployment/web
-          kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig get services -o wide
+        uses: ./.github/actions/deploy
+        with:
+          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+          environment: production
+          secret-key: ${{ secrets.GPG_KEY }}
+          namespace: default
+          tag: ${{ needs.setup.outputs.tag }}
   # Notify Build Status
   notify_failure:
     name: Notify Build Status

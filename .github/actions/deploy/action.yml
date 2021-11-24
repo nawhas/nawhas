@@ -32,17 +32,21 @@ runs:
       shell: bash
       run: doctl kubernetes cluster kubeconfig save ${{ inputs.cluster }}
 
-    - name: Decrypt secrets
+    - name: Decrypt environment secrets
       working-directory: ./k8s/overlays/${{ inputs.environment }}/env
       shell: bash
       run: |
-        gpg --quiet --batch --yes --decrypt --passphrase="$GPG_KEY" --output api.secret.env api.secret.env.gpg
-        gpg --quiet --batch --yes --decrypt --passphrase="$GPG_KEY" --output web.secret.env web.secret.env.gpg
-        gpg --quiet --batch --yes --decrypt --passphrase="$GPG_KEY" --output search.secret.env search.secret.env.gpg
+        gpg --quiet --batch --yes --passphrase="$GPG_KEY" --decrypt-files *.gpg
       env:
         GPG_KEY: ${{ inputs.secret-key }}
 
-    # TODO - Figure out how to prepare env files for integration environment
+    - name: Decrypt additional secrets
+      working-directory: ./k8s/overlays/${{ inputs.environment }}/secrets
+      shell: bash
+      run: |
+        gpg --quiet --batch --yes --passphrase="$GPG_KEY" --decrypt-files *.gpg
+      env:
+        GPG_KEY: ${{ inputs.secret-key }}
 
     - name: Set up Kustomize
       working-directory: ./k8s/overlays/${{ inputs.environment }}
