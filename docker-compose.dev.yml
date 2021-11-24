@@ -61,7 +61,7 @@ services:
         aliases:
           - mail
   # Dusk Profile
-  dusk:
+  test:
     image: szainmehdi/php:7.4-dev-20210813
     working_dir: /var/www/api
     restart: 'no'

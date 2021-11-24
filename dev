@@ -75,7 +75,7 @@ if [ $# -gt 0 ];then
     # pass-thru any extra arguments
     elif [ "$1" == "dusk" ]; then
       shift 1
-      start dusk \
+      start test \
         php artisan dusk:wait
 
     # If "down" is used, take down everything
