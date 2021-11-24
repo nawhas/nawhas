@@ -97,6 +97,10 @@ jobs:
       - name: Build Test API Image
         uses: ./.github/actions/api-build-test
 
+      - name: Prepare .env.ci
+        run: |
+          cp api/.env.ci.example api/.env.ci
+
       - name: Pull Services
         run: |
           ./dev --ci pull db cache
