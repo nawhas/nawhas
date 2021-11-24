@@ -186,73 +186,39 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Save DigitalOcean kubeconfig
-        uses: digitalocean/action-doctl@v1.7.0
-        env:
-          DIGITALOCEAN_ACCESS_TOKEN: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
-        with:
-          args: kubernetes cluster kubeconfig show k8s-nawhas > $GITHUB_WORKSPACE/.kubeconfig
-
-      - name: Decrypt secrets
-        working-directory: ./k8s/overlays/integration/secrets
-        run: |
-          gpg --quiet --batch --yes --decrypt --passphrase="$GPG_KEY" --output api.integration.env api.integration.env.gpg
-          gpg --quiet --batch --yes --decrypt --passphrase="$GPG_KEY" --output web.integration.env web.integration.env.gpg
-          gpg --quiet --batch --yes --decrypt --passphrase="$GPG_KEY" --output search.integration.env search.integration.env.gpg
-        env:
-          GPG_KEY: ${{ secrets.GPG_KEY }}
-
       - name: Prepare Environment
         run: |
           ./scripts/github/prepare-integration-environment.sh
 
-      - name: Prepare Secrets
-        working-directory: ./k8s/overlays/integration/secrets
+      - name: Substitute Deployment Variables
         run: |
-          printf "\nAPP_DOMAIN=${APP_DOMAIN}" >> api.integration.env
-          printf "\nALGOLIA_PREFIX=${ALGOLIA_PREFIX}" >> api.integration.env
-          printf "\nSESSION_COOKIE_PREFIX=${SESSION_COOKIE_PREFIX}" >> api.integration.env
-      
-          printf "\nAPI_BASE_URL=https://${API_DOMAIN}/" >> web.integration.env
-          printf "\nAPP_DOMAIN=https://${APP_DOMAIN}" >> web.integration.env
-          printf "\nSEARCH_HOST=https://${SEARCH_HOST}" >> web.integration.env
+          {
+            echo "APP_DOMAIN=${APP_DOMAIN}"
+            echo "ALGOLIA_PREFIX=${ALGOLIA_PREFIX}"
+            echo "SESSION_COOKIE_PREFIX=${SESSION_COOKIE_PREFIX}"
+          } >> ./k8s/overlays/integration/env/api.env
+          
+          {
+            echo "API_BASE_URL=https://${API_DOMAIN}/"
+            echo "APP_DOMAIN=https://${APP_DOMAIN}"
+            echo "SEARCH_HOST=https://${SEARCH_HOST}"
+          } >> ./k8s/overlays/integration/env/web.env
+          
+          cat ./k8s/overlays/integration/ingress.yml \
+            | sed "s/<INTG_APP_DOMAIN>/${APP_DOMAIN}/g" \
+            | sed "s/<INTG_API_DOMAIN>/${API_DOMAIN}/g" \
+            | sed "s/<INTG_SEARCH_HOST>/${SEARCH_HOST}/g" \
+            | sed "s/<INTG_MAIL_HOST>/${MAIL_HOST}/g" \
+          > ./k8s/overlays/integration/ingress.yml
 
-      # Set up kustomize
-      - name: Set up Kustomize
-        working-directory: ./k8s/overlays/integration
-        run: |
-          curl -o kustomize --location https://github.com/kubernetes-sigs/kustomize/releases/download/v3.1.0/kustomize_3.1.0_linux_amd64
-          chmod u+x ./kustomize
-
-      - name: Prepare Kustomization
-        working-directory: ./k8s/overlays/integration
-        run: |
-          ./kustomize edit set image "IMAGE:TAG=${API_IMAGE_TAG}"
-          ./kustomize edit set image "WEB:TAG=${WEB_IMAGE_TAG}"
-          ./kustomize edit set namespace "${NAMESPACE}"
-
-      - name: Create Namespace
-        working-directory: ./k8s/overlays/integration
-        run: |
-          if [[ $(kubectl --kubeconfig=${GITHUB_WORKSPACE}/.kubeconfig get namespace | grep "${NAMESPACE}") == "" ]]; then
-            echo "Namespace does not exist!";
-            kubectl --kubeconfig=${GITHUB_WORKSPACE}/.kubeconfig create namespace "${NAMESPACE}"
-          fi
-
-      # Deploy the Docker image to the GKE cluster
       - name: Deploy
-        working-directory: ./k8s/overlays/integration
-        run: |
-          ./kustomize build . \
-            | sed "s/ING_APP_DOMAIN/${APP_DOMAIN}/g" \
-            | sed "s/ING_API_DOMAIN/${API_DOMAIN}/g" \
-            | sed "s/ING_SEARCH_HOST/${SEARCH_HOST}/g" \
-            | sed "s/ING_MAIL_HOST/${MAIL_HOST}/g" \
-            | kubectl --kubeconfig=${GITHUB_WORKSPACE}/.kubeconfig apply -f -
-
-          kubectl --kubeconfig=${GITHUB_WORKSPACE}/.kubeconfig rollout status --timeout=2m deployment/api -n ${NAMESPACE}
-          kubectl --kubeconfig=${GITHUB_WORKSPACE}/.kubeconfig rollout status --timeout=2m deployment/web -n ${NAMESPACE}
-          kubectl --kubeconfig=${GITHUB_WORKSPACE}/.kubeconfig get services -o wide -n ${NAMESPACE}
+        uses: ./.github/actions/deploy
+        with:
+          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+          environment: integration
+          secret-key: ${{ secrets.GPG_KEY }}
+          namespace: ${{ env.NAMESPACE }}
+          tag: ${{ env.APP_VERSION }}
 
       - name: Post Link on PR
         if: success()
