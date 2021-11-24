@@ -202,12 +202,12 @@ jobs:
             echo "SEARCH_HOST=https://${SEARCH_HOST}"
           } >> ./k8s/overlays/integration/env/web.env
           
-          cat ingress.yml \
+          cat ./k8s/overlays/integration/ingress.yml \
             | sed "s/<INTG_APP_DOMAIN>/${APP_DOMAIN}/g" \
             | sed "s/<INTG_API_DOMAIN>/${API_DOMAIN}/g" \
             | sed "s/<INTG_SEARCH_HOST>/${SEARCH_HOST}/g" \
             | sed "s/<INTG_MAIL_HOST>/${MAIL_HOST}/g" \
-          > ingress.yml
+          > ./k8s/overlays/integration/ingress.yml
 
       - name: Deploy
         uses: ./.github/actions/deploy
