@@ -70,37 +70,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Save DigitalOcean kubeconfig
-        uses: digitalocean/action-doctl@v1.7.0
-        env:
-          DIGITALOCEAN_ACCESS_TOKEN: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
-        with:
-          args: kubernetes cluster kubeconfig show k8s-nawhas > $GITHUB_WORKSPACE/.kubeconfig
-
-      - name: Decrypt secrets
-        working-directory: ./k8s/overlays/staging/secrets
-        run: |
-          gpg --quiet --batch --yes --decrypt --passphrase="$GPG_KEY" --output api.staging.env api.staging.env.gpg
-          gpg --quiet --batch --yes --decrypt --passphrase="$GPG_KEY" --output web.staging.env web.staging.env.gpg
-          gpg --quiet --batch --yes --decrypt --passphrase="$GPG_KEY" --output search.staging.env search.staging.env.gpg
-        env:
-          GPG_KEY: ${{ secrets.GPG_KEY }}
-
-      - name: Set up Kustomize
-        working-directory: ./k8s/overlays/staging
-        run: |
-          curl -o kustomize --location https://github.com/kubernetes-sigs/kustomize/releases/download/v3.1.0/kustomize_3.1.0_linux_amd64
-          chmod u+x ./kustomize
-
       - name: Deploy
-        working-directory: ./k8s/overlays/staging
-        run: |
-          ./kustomize edit set image IMAGE:TAG=nawhas/api:dev-${GITHUB_SHA::8}
-          ./kustomize edit set image WEB:TAG=nawhas/web:dev-${GITHUB_SHA::8}
-          ./kustomize build . | kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig apply -f -
-          kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig rollout status --timeout=3m deployment/api -n stg
-          kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig rollout status --timeout=3m deployment/web -n stg
-          kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig get services -o wide -n stg
+        uses: ./.github/actions/deploy
+        with:
+          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+          environment: staging
+          secret-key: ${{ secrets.GPG_KEY }}
+          namespace: stg
+          tag: ${{ env.APP_VERSION }}
   # Notify Build Status
   notify_failure:
     name: Notify Build Status
