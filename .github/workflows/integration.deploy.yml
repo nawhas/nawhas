@@ -89,7 +89,7 @@ jobs:
   test_api:
     name: Test API Image
     runs-on: ubuntu-latest
-    needs: [setup, build_api, build_web]
+    needs: [setup, build_api]
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -121,7 +121,9 @@ jobs:
 
       - name: Run Feature Tests
         run: |
-          ./dev --ci up -d api test_db && ./dev --ci test:feature
+          ./dev --ci up -d api test_db
+          ./dev --ci art wait:database
+          ./dev --ci test:feature
         env:
           API_IMAGE_TAG: test
   dusk:
@@ -178,7 +180,7 @@ jobs:
   deploy:
     name: Deploy Integration Environment
     runs-on: ubuntu-latest
-    needs: [lint_web, build_web, build_api]
+    needs: [lint_web, build_web, build_api, test_api]
     if: endsWith(github.head_ref, '-integration')
     steps:
       - name: Checkout
