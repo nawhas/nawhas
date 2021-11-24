@@ -189,7 +189,9 @@ jobs:
       - name: Prepare Environment
         run: |
           ./scripts/github/prepare-integration-environment.sh
-          
+
+      - name: Substitute Deployment Variables
+        run: |
           {
             echo "APP_DOMAIN=${APP_DOMAIN}"
             echo "ALGOLIA_PREFIX=${ALGOLIA_PREFIX}"
