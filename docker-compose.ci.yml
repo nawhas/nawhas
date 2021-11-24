@@ -1,5 +1,8 @@
 version: '3.9'
 
+volumes:
+  test_db:
+
 services:
   api:
     image: nawhas/api:${API_IMAGE_TAG}
@@ -13,8 +16,23 @@ services:
     image: nawhas/web:${WEB_IMAGE_TAG}
     environment:
       - IGNORE_SSL_ERRORS=true
+  test_db:
+    image: postgres:11
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "5433:5432"
+    environment:
+      - POSTGRES_MULTIPLE_DATABASES=nawhas_data,nawhas_events
+      - POSTGRES_USER=docker
+      - POSTGRES_PASSWORD=secret
+    volumes:
+      - test_db:/var/lib/postgresql/data:delegated
+      - ./docker/postgres/init:/docker-entrypoint-initdb.d
+    networks:
+      - nawhas
   # Dusk Profile
-  dusk:
+  test:
     image: nawhas/api:${API_TEST_IMAGE_TAG}
     restart: 'no'
     environment:
@@ -23,8 +41,7 @@ services:
     networks:
       - nawhas
     depends_on:
-      - events_db
-      - data_db
+      - db
       - nginx
       - web
       - search

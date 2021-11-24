@@ -3,6 +3,7 @@ version: '3.9'
 volumes:
   web_node_modules:
   web_nuxt_built:
+  test_db:
 
 services:
   api:
@@ -35,6 +36,21 @@ services:
       - BUILD_AXIOS_DEBUG=
       - CHOKIDAR_USEPOLLING=true
       - SERVER_API_BASE_URL=http://api.nawhas.test
+  test_db:
+    image: postgres:11
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "5433:5432"
+    environment:
+      - POSTGRES_MULTIPLE_DATABASES=nawhas_data,nawhas_events
+      - POSTGRES_USER=docker
+      - POSTGRES_PASSWORD=secret
+    volumes:
+      - test_db:/var/lib/postgresql/data:delegated
+      - ./docker/postgres/init:/docker-entrypoint-initdb.d
+    networks:
+      - nawhas
   mail:
     image: mailhog/mailhog:latest
     restart: unless-stopped
@@ -45,7 +61,7 @@ services:
         aliases:
           - mail
   # Dusk Profile
-  dusk:
+  test:
     image: szainmehdi/php:7.4-dev-20210813
     working_dir: /var/www/api
     restart: 'no'
@@ -63,8 +79,7 @@ services:
     networks:
       - nawhas
     depends_on:
-      - events_db
-      - data_db
+      - db
       - nginx
       - web
       - search

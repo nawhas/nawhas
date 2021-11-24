@@ -79,7 +79,7 @@ return [
         'events' => [
             'driver' => 'pgsql',
             'url' => env('DATABASE_URL'),
-            'host' => env('EVENTS_DB_HOST', env('DB_HOST', 'nawhas_events_db')),
+            'host' => env('EVENTS_DB_HOST', env('DB_HOST', 'db')),
             'port' => env('EVENTS_DB_PORT', env('DB_PORT', '5432')),
             'database' => env('EVENTS_DB_DATABASE', env('DB_DATABASE', 'nawhas_events')),
             'username' => env('EVENTS_DB_USERNAME', env('DB_USERNAME', 'docker')),
@@ -94,7 +94,7 @@ return [
         'data' => [
             'driver' => 'pgsql',
             'url' => env('DATABASE_URL'),
-            'host' => env('DATA_DB_HOST', env('DB_HOST', 'nawhas_data_db')),
+            'host' => env('DATA_DB_HOST', env('DB_HOST', 'db')),
             'port' => env('DATA_DB_PORT', env('DB_PORT', '5432')),
             'database' => env('DATA_DB_DATABASE', env('DB_DATABASE', 'nawhas_data')),
             'username' => env('DATA_DB_USERNAME', env('DB_USERNAME', 'docker')),

@@ -17,8 +17,6 @@ RUN composer install --no-scripts
 
 COPY . .
 RUN composer run post-root-package-install && php artisan key:generate
-RUN ./docker/scripts/psalm.sh
-RUN composer test
 
 # ---------------------------------------------------------------------------
 # Build Image

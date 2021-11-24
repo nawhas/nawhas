@@ -4,8 +4,7 @@ networks:
   nawhas:
 
 volumes:
-  pg_events:
-  pg_data:
+  db:
   redis:
   search:
 
@@ -18,8 +17,7 @@ services:
         aliases:
           - api-fpm
     depends_on:
-      - events_db
-      - data_db
+      - db
       - cache
   queue:
     networks:
@@ -27,8 +25,7 @@ services:
     restart: unless-stopped
     command: php artisan horizon
     depends_on:
-      - events_db
-      - data_db
+      - db
       - cache
   nginx:
     image: nginx:stable-alpine
@@ -70,37 +67,23 @@ services:
         aliases:
           - nawhas.test
           - nawhas_web
-  events_db:
+  db:
     image: postgres:11
     restart: unless-stopped
     tty: true
     ports:
-      - "5433:5432"
+      - "5432:5432"
     environment:
-      - POSTGRES_DB=nawhas_events
+      - POSTGRES_MULTIPLE_DATABASES=nawhas_data,nawhas_events
       - POSTGRES_USER=docker
       - POSTGRES_PASSWORD=secret
     volumes:
-      - pg_events:/var/lib/postgresql/data:delegated
+      - db:/var/lib/postgresql/data:delegated
+      - ./docker/postgres/init:/docker-entrypoint-initdb.d
     networks:
       nawhas:
         aliases:
           - nawhas_events_db
-  data_db:
-    image: postgres:11
-    restart: unless-stopped
-    tty: true
-    ports:
-      - "5434:5432"
-    environment:
-      - POSTGRES_DB=nawhas_data
-      - POSTGRES_USER=docker
-      - POSTGRES_PASSWORD=secret
-    volumes:
-      - pg_data:/var/lib/postgresql/data:delegated
-    networks:
-      nawhas:
-        aliases:
           - nawhas_data_db
   cache:
     image: redis:5
