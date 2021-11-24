@@ -1,0 +1,78 @@
+name: 'Deploy'
+description: 'Deploy to DigitalOcean'
+inputs:
+  token:
+    description: 'DigitalOcean access token'
+    required: true
+  cluster:
+    description: 'Kubernetes cluster to deploy to'
+    required: false
+    default: k8s-nawhas
+  environment:
+    description: 'Environment Name (staging, integration, production)'
+    required: true
+  secret-key:
+    description: 'GPG key to decode secrets'
+    required: true
+  namespace:
+    description: 'Namespace for k8s'
+    required: true
+  tag:
+    description: 'Image tag'
+    required: true
+runs:
+  using: "composite"
+  steps:
+    - name: Install doctl
+      uses: digitalocean/action-doctl@v2
+      with:
+        token: ${{ inputs.token }}
+
+    - name: Save DigitalOcean kubeconfig
+      shell: bash
+      run: doctl kubernetes cluster kubeconfig save ${{ inputs.cluster }}
+
+    - name: Decrypt secrets
+      working-directory: ./k8s/overlays/${{ inputs.environment }}/env
+      shell: bash
+      run: |
+        gpg --quiet --batch --yes --decrypt --passphrase="$GPG_KEY" --output api.secret.env api.secret.env.gpg
+        gpg --quiet --batch --yes --decrypt --passphrase="$GPG_KEY" --output web.secret.env web.secret.env.gpg
+        gpg --quiet --batch --yes --decrypt --passphrase="$GPG_KEY" --output search.secret.env search.secret.env.gpg
+      env:
+        GPG_KEY: ${{ inputs.secret-key }}
+
+    # TODO - Figure out how to prepare env files for integration environment
+
+    - name: Set up Kustomize
+      working-directory: ./k8s/overlays/${{ inputs.environment }}
+      shell: bash
+      run: |
+        curl -o kustomize --location https://github.com/kubernetes-sigs/kustomize/releases/download/v3.1.0/kustomize_3.1.0_linux_amd64
+        chmod u+x ./kustomize
+
+    - name: Create Namespace
+      working-directory: ./k8s/overlays/${{ inputs.environment }}
+      shell: bash
+      run: |
+        if [[ $(kubectl get namespace | grep "${NAMESPACE}") == "" ]]; then
+          echo "Namespace does not exist!";
+          kubectl create namespace "${NAMESPACE}"
+        fi
+      env:
+        NAMESPACE: ${{ inputs.namespace }}
+
+    - name: Deploy
+      shell: bash
+      working-directory: ./k8s/overlays/${{ inputs.environment }}
+      run: |
+        ./kustomize edit set image IMAGE:TAG=nawhas/api:${TAG}
+        ./kustomize edit set image WEB:TAG=nawhas/web:${TAG}
+        ./kustomize build . | kubectl apply -f -
+        
+        kubectl rollout status --timeout=3m deployment/api -n "$NAMESPACE"
+        kubectl rollout status --timeout=3m deployment/web -n "$NAMESPACE"
+        kubectl get services -o wide -n "$NAMESPACE"
+      env:
+        TAG: ${{ inputs.tag }}
+        NAMESPACE: ${{ inputs.namespace }}
