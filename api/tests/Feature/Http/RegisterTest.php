@@ -40,6 +40,8 @@ class RegisterTest extends FeatureTest
             ->assertJsonPath('name', $request['name'])
             ->assertJsonPath('email', $request['email'])
             ->assertJsonMissing(['password' => $request['password']]);
+
+        $this->assertAuthenticated();
     }
 
     /**
@@ -58,6 +60,8 @@ class RegisterTest extends FeatureTest
 
         $this->postJson(self::ROUTE_REGISTER, $request)
             ->assertJsonValidationErrors(['email' => 'taken']);
+
+        $this->assertGuest();
     }
 
     /**
@@ -68,6 +72,8 @@ class RegisterTest extends FeatureTest
     {
         $this->postJson(self::ROUTE_REGISTER, $request->all())
             ->assertJsonValidationErrors($errors);
+
+        $this->assertGuest();
     }
 
     public function provideInvalidRequests(): array
