@@ -6,13 +6,11 @@ namespace Tests\Feature\Http;
 
 use Illuminate\Support\Collection;
 use Tests\Feature\FeatureTest;
-use Tests\WithSearchIndex;
 use Tests\WithSimpleFaker;
 
 class RegisterTest extends FeatureTest
 {
     use WithSimpleFaker;
-    use WithSearchIndex;
 
     private const ROUTE_REGISTER = 'v1/auth/register';
 

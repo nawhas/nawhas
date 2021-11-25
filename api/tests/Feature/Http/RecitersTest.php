@@ -7,10 +7,14 @@ namespace Tests\Feature\Http;
 use Tests\Feature\FeatureTest;
 use Tests\Feature\Http\Responses\PaginatedCollectionResponse;
 
+use Tests\WithSearchIndex;
+
 use function App\Support\times;
 
 class RecitersTest extends FeatureTest
 {
+    use WithSearchIndex;
+
     private const ROUTE_GET_RECITERS = 'v1/reciters';
 
     /**
