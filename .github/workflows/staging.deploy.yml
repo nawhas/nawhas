@@ -34,7 +34,7 @@ jobs:
       - name: Meta
         id: meta
         run: |
-          tag="dev-${sha::8}"
+          tag="dev-${SHA::8}"
           echo "::set-output name=tag::${tag}"
         env:
           SHA: ${{ github.sha }}
