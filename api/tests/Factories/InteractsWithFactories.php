@@ -10,4 +10,9 @@ trait InteractsWithFactories
     {
         return app(UserFactory::class);
     }
+
+    protected function getReciterFactory(): ReciterFactory
+    {
+        return app(ReciterFactory::class);
+    }
 }

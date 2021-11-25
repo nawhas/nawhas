@@ -9,6 +9,7 @@ ENV COMPOSER_ALLOW_SUPERUSER 1
 
 COPY composer.json composer.json
 COPY composer.lock composer.lock
+COPY app/Support/helpers.php app/Support/helpers.php
 COPY database/seeds database/seeds
 COPY database/factories database/factories
 

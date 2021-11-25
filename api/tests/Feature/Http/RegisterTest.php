@@ -4,14 +4,11 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Http;
 
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Collection;
 use Tests\Feature\FeatureTest;
 
 class RegisterTest extends FeatureTest
 {
-    use DatabaseTransactions;
-
     private const ROUTE_REGISTER = 'v1/auth/register';
 
     /**
