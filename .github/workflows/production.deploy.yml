@@ -57,7 +57,7 @@ jobs:
             nawhas/api:latest
             nawhas/api:${{ needs.setup.outputs.tag }}
   build_web:
-    name: Build Web Image for Production
+    name: Build Production Web Image
     runs-on: ubuntu-latest
     needs: [setup]
     steps:

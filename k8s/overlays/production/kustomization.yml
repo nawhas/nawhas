@@ -12,12 +12,14 @@ secretGenerator:
   - name: api.env
     envs:
       - env/api.env
+      - env/api.secret.env
   - name: web.env
     envs:
       - env/web.env
+      - env/web.secret.env
   - name: api-secrets
     files:
       - secrets/github.pem
   - name: search.env
     envs:
-      - env/search.env
+      - env/search.secret.env
