@@ -29,7 +29,10 @@ class LoginTest extends FeatureTest
         UserResponse::from($this->postJson(self::ROUTE_LOGIN, $credentials))
             ->assertSuccessful()
             ->assertUserIdMatches($user->id)
-            ->assertNameMatches($user->name);
+            ->assertNameMatches($user->name)
+            ->getTestResponse();
+
+        $this->assertAuthenticatedAs($user);
     }
 
     /**
@@ -48,23 +51,7 @@ class LoginTest extends FeatureTest
 
         $this->postJson(self::ROUTE_LOGIN, $credentials)
             ->assertUnauthorized();
-    }
 
-    /**
-     * @test
-     */
-    public function it_responds_with_unauthorized_when_incorrect_password_provided(): void
-    {
-        $credentials = [
-            'email' => 'someone@nawhas.com',
-            'password' => 'secret'
-        ];
-
-        $this->getUserFactory()->contributor($credentials);
-
-        $credentials['password'] = 'wrong';
-
-        $this->postJson(self::ROUTE_LOGIN, $credentials)
-            ->assertUnauthorized();
+        $this->assertGuest();
     }
 }
