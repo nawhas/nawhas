@@ -56,20 +56,25 @@ if [ $# -gt 0 ];then
     # pass-thru any extra arguments to php-unit
     elif [ "$1" == "test:feature" ]; then
       shift 1
+      args=$(echo "$@" | sed 's/api\///g')
+
       # Run database migrations for the first time
       start -e DB_HOST=test_db api \
         php artisan migrate:all
+
       # Start the tests
       run api \
-        ./vendor/bin/phpunit --testsuite Feature "$@"
+        ./vendor/bin/phpunit --testsuite Feature "$args"
 
 
     # If "test:unit" is used, run unit tests,
     # pass-thru any extra arguments to php-unit
     elif [ "$1" == "test:unit" ]; then
       shift 1
+      args=$(echo "$@" | sed 's/api\///g')
+
       run api \
-        ./vendor/bin/phpunit --testsuite Unit "$@"
+        ./vendor/bin/phpunit --testsuite Unit "$args"
 
     # If "dusk" is used, run Dusk browser-tests,
     # pass-thru any extra arguments
