@@ -17,7 +17,6 @@ abstract class Response
 
     /**
      * TODO:PHP8 - Replace return type hint with static
-     * @param TestResponse $response
      * @return static
      */
     public static function from(TestResponse $response): self
@@ -30,7 +29,10 @@ abstract class Response
         return $this->response;
     }
 
-    // TODO:PHP8 - Replace return type hint with static
+    /**
+     * TODO:PHP8 - Replace return type hint with static
+     * @return static
+     */
     public function assertSuccessful(): self
     {
         $this->response->assertSuccessful();
