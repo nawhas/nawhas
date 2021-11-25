@@ -21,11 +21,11 @@ abstract class FeatureTest extends TestCase
     {
         $uses = parent::setUpTraits();
 
-        if (isset($uses[WithSearchIndex::class])) {
+        if (isset($uses[WithSearchIndex::class]) && method_exists($this, 'setUpSearchIndex')) {
             $this->setUpSearchIndex();
         }
 
-        if (isset($uses[WithSimpleFaker::class])) {
+        if (isset($uses[WithSimpleFaker::class]) && method_exists($this, 'setUpFaker')) {
             $this->setUpFaker();
         }
 
