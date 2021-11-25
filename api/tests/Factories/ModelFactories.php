@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Factories;
 
-trait InteractsWithFactories
+trait ModelFactories
 {
     protected function getUserFactory(): UserFactory
     {

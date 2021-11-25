@@ -7,14 +7,14 @@ namespace Tests\Feature;
 use Faker\Factory;
 use Faker\Generator;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use Tests\Factories\InteractsWithFactories;
+use Tests\Factories\ModelFactories;
 use Tests\TestCase;
 use Tests\WithSearchIndex;
 use Tests\WithSimpleFaker;
 
 abstract class FeatureTest extends TestCase
 {
-    use InteractsWithFactories;
+    use ModelFactories;
     use DatabaseTransactions;
 
     protected function setUpTraits()
