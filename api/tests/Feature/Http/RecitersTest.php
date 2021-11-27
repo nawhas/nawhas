@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Http;
 
+use App\Modules\Library\Models\Reciter;
 use Tests\Feature\FeatureTest;
 use Tests\Feature\Http\Responses\PaginatedCollectionResponse;
 
+use Tests\Feature\Http\Responses\ReciterResponse;
 use Tests\WithSearchIndex;
 
 use function App\Support\times;
@@ -36,12 +38,18 @@ class RecitersTest extends FeatureTest
         $factory = $this->getReciterFactory();
 
         // Create two reciters
-        times(2, fn () => $factory->create());
+        /** @var Reciter[] $reciters */
+        $reciters = times(2, fn () => $factory->create())->all();
+        [$r1, $r2] = $reciters;
 
         PaginatedCollectionResponse::from($this->getJson(self::ROUTE_GET_RECITERS))
+            ->withItemFactory(ReciterResponse::getItemFactory())
             ->assertSuccessful()
             ->assertPage(1)
             ->assertTotal(2)
-            ->assertTotalPages(1);
+            ->assertTotalPages(1)
+            ->items(fn (ReciterResponse $item) => $item->assertSuccessful())
+            ->item($r1->id, fn (ReciterResponse $reciter) => $reciter->assertName($r1->name))
+            ->item($r2->id, fn (ReciterResponse $reciter) => $reciter->assertName($r2->name));
     }
 }
