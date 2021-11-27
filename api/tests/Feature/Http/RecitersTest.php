@@ -17,14 +17,15 @@ class RecitersTest extends FeatureTest
 {
     use WithSearchIndex;
 
-    private const ROUTE_GET_RECITERS = 'v1/reciters';
+    private const ROUTE_LIST_RECITERS = 'v1/reciters';
+    private const ROUTE_SHOW_RECITER = 'v1/reciters';
 
     /**
      * @test
      */
     public function it_retrieves_empty_list_of_reciters_when_no_reciters_exist(): void
     {
-        PaginatedCollectionResponse::from($this->getJson(self::ROUTE_GET_RECITERS))
+        PaginatedCollectionResponse::from($this->getJson(self::ROUTE_LIST_RECITERS))
             ->assertSuccessful()
             ->assertPage(1)
             ->assertTotal(0);
@@ -42,14 +43,14 @@ class RecitersTest extends FeatureTest
         $reciters = times(2, fn () => $factory->create())->all();
         [$r1, $r2] = $reciters;
 
-        PaginatedCollectionResponse::from($this->getJson(self::ROUTE_GET_RECITERS))
+        PaginatedCollectionResponse::from($this->getJson(self::ROUTE_LIST_RECITERS))
             ->withItemFactory(ReciterResponse::getItemFactory())
             ->assertSuccessful()
             ->assertPage(1)
             ->assertTotal(2)
             ->assertTotalPages(1)
             ->items(fn (ReciterResponse $item) => $item->assertSuccessful())
-            ->item($r1->id, fn (ReciterResponse $reciter) => $reciter->assertName($r1->name))
-            ->item($r2->id, fn (ReciterResponse $reciter) => $reciter->assertName($r2->name));
+            ->item($r1->id, fn (ReciterResponse $reciter) => $reciter->assertMatches($r1))
+            ->item($r2->id, fn (ReciterResponse $reciter) => $reciter->assertMatches($r2));
     }
 }
