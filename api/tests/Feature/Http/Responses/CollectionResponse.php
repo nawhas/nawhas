@@ -12,6 +12,10 @@ class CollectionResponse extends Response
 {
     private ?Closure $itemFactory = null;
 
+    /**
+     * TODO:PHP8 - Replace self with static
+     * @return static
+     */
     public function withItemFactory(callable $itemFactory): self
     {
         $this->itemFactory = Closure::fromCallable($itemFactory);
@@ -27,6 +31,7 @@ class CollectionResponse extends Response
     }
 
     /**
+     * TODO:PHP8 - Replace self with static
      * @return static
      */
     public function items(callable $callable): self
@@ -38,6 +43,10 @@ class CollectionResponse extends Response
         return $this;
     }
 
+    /**
+     * TODO:PHP8 - Replace self with static
+     * @return static
+     */
     public function where(callable $finder, callable $assertions, ?int $count = null): self
     {
         $items = $this->getData()->filter($finder);
@@ -54,6 +63,10 @@ class CollectionResponse extends Response
         return $this;
     }
 
+    /**
+     * TODO:PHP8 - Replace self with static
+     * @return static
+     */
     public function item(string $id, callable $assertions): self
     {
         $this->where(fn ($d) => $d['id'] === $id, $assertions, 1);

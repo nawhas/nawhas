@@ -6,7 +6,6 @@ namespace Tests\Feature\Http\Responses;
 
 use Illuminate\Http\Response as HttpResponse;
 use Illuminate\Testing\TestResponse;
-use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
 abstract class Response
 {
@@ -45,9 +44,6 @@ abstract class Response
 
     abstract protected function getJsonStructure(): array;
 
-    /**
-     * TODO:PHP8 replace self with static
-     */
     public static function getItemFactory(): callable
     {
         return static function (array $item, TestResponse $original): self {

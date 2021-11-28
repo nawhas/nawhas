@@ -23,6 +23,10 @@ class PaginatedCollectionResponse extends CollectionResponse
         ];
     }
 
+    /**
+     * TODO:PHP8 - Replace self with static
+     * @return static
+     */
     public function assertPage(int $page): self
     {
         $this->response->assertJsonPath('meta.pagination.current_page', $page);
@@ -30,6 +34,10 @@ class PaginatedCollectionResponse extends CollectionResponse
         return $this;
     }
 
+    /**
+     * TODO:PHP8 - Replace self with static
+     * @return static
+     */
     public function assertTotalPages(int $pages): self
     {
         $this->response->assertJsonPath('meta.pagination.total_pages', $pages);
@@ -37,6 +45,10 @@ class PaginatedCollectionResponse extends CollectionResponse
         return $this;
     }
 
+    /**
+     * TODO:PHP8 - Replace self with static
+     * @return static
+     */
     public function assertTotal(int $total): self
     {
         $this->response->assertJsonPath('meta.pagination.total', $total);
