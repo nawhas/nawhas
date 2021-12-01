@@ -18,7 +18,7 @@ class RecitersTest extends FeatureTest
     use WithSearchIndex;
 
     private const ROUTE_LIST_RECITERS = 'v1/reciters';
-    private const ROUTE_SHOW_RECITER = 'v1/reciters';
+    private const ROUTE_SHOW_RECITER = 'v1/reciters/%s';
 
     /**
      * @test
@@ -52,5 +52,21 @@ class RecitersTest extends FeatureTest
             ->items(fn (ReciterResponse $item) => $item->assertSuccessful())
             ->item($r1->id, fn (ReciterResponse $reciter) => $reciter->assertMatches($r1))
             ->item($r2->id, fn (ReciterResponse $reciter) => $reciter->assertMatches($r2));
+    }
+
+    /**
+     * @test
+     */
+    public function it_retrieves_a_single_reciter_by_id_or_slug(): void
+    {
+        $reciter = $this->getReciterFactory()->create();
+
+        ReciterResponse::from($this->get(sprintf(self::ROUTE_SHOW_RECITER, $reciter->id)))
+            ->assertSuccessful()
+            ->assertMatches($reciter);
+
+        ReciterResponse::from($this->get(sprintf(self::ROUTE_SHOW_RECITER, $reciter->slug)))
+            ->assertSuccessful()
+            ->assertMatches($reciter);
     }
 }
