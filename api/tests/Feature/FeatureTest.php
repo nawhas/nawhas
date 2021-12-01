@@ -44,7 +44,7 @@ abstract class FeatureTest extends TestCase
         return $builder;
     }
 
-    protected function url(string $url, ...$args): RequestBuilder
+    protected function url(string $url, string ...$args): RequestBuilder
     {
         return $this->request($url, ...$args);
     }

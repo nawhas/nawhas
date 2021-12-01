@@ -20,4 +20,9 @@ trait ModelFactories
     {
         return app(AlbumFactory::class);
     }
+
+    protected function getTrackFactory(): TrackFactory
+    {
+        return app(TrackFactory::class);
+    }
 }

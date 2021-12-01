@@ -22,6 +22,13 @@ class AlbumsTest extends FeatureTest
 
     private Reciter $reciter;
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->reciter = $this->getReciterFactory()->create();
+    }
+
     /**
      * @test
      */
@@ -77,12 +84,5 @@ class AlbumsTest extends FeatureTest
         AlbumResponse::from($response)
             ->assertSuccessful()
             ->assertMatches($album);
-    }
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $this->reciter = $this->getReciterFactory()->create();
     }
 }
