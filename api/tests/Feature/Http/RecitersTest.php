@@ -7,7 +7,6 @@ namespace Tests\Feature\Http;
 use App\Modules\Library\Models\Reciter;
 use Tests\Feature\FeatureTest;
 use Tests\Feature\Http\Responses\PaginatedCollectionResponse;
-
 use Tests\Feature\Http\Responses\ReciterResponse;
 use Tests\WithSearchIndex;
 
@@ -25,7 +24,9 @@ class RecitersTest extends FeatureTest
      */
     public function it_retrieves_empty_list_of_reciters_when_no_reciters_exist(): void
     {
-        PaginatedCollectionResponse::from($this->getJson(self::ROUTE_LIST_RECITERS))
+        $response = $this->url(self::ROUTE_LIST_RECITERS)->get();
+
+        PaginatedCollectionResponse::from($response)
             ->assertSuccessful()
             ->assertPage(1)
             ->assertTotal(0);
@@ -40,18 +41,20 @@ class RecitersTest extends FeatureTest
 
         // Create two reciters
         /** @var Reciter[] $reciters */
-        $reciters = times(2, fn () => $factory->create())->all();
+        $reciters = times(2, fn() => $factory->create())->all();
         [$r1, $r2] = $reciters;
 
-        PaginatedCollectionResponse::from($this->getJson(self::ROUTE_LIST_RECITERS))
+        $response = $this->url(self::ROUTE_LIST_RECITERS)->get();
+
+        PaginatedCollectionResponse::from($response)
             ->withItemFactory(ReciterResponse::getItemFactory())
             ->assertSuccessful()
             ->assertPage(1)
             ->assertTotal(2)
             ->assertTotalPages(1)
-            ->items(fn (ReciterResponse $item) => $item->assertSuccessful())
-            ->item($r1->id, fn (ReciterResponse $reciter) => $reciter->assertMatches($r1))
-            ->item($r2->id, fn (ReciterResponse $reciter) => $reciter->assertMatches($r2));
+            ->items(fn(ReciterResponse $item) => $item->assertSuccessful())
+            ->item($r1->id, fn(ReciterResponse $reciter) => $reciter->assertMatches($r1))
+            ->item($r2->id, fn(ReciterResponse $reciter) => $reciter->assertMatches($r2));
     }
 
     /**
@@ -61,11 +64,13 @@ class RecitersTest extends FeatureTest
     {
         $reciter = $this->getReciterFactory()->create();
 
-        ReciterResponse::from($this->get(sprintf(self::ROUTE_SHOW_RECITER, $reciter->id)))
+        $response = $this->url(self::ROUTE_SHOW_RECITER, $reciter->id)->get();
+        ReciterResponse::from($response)
             ->assertSuccessful()
             ->assertMatches($reciter);
 
-        ReciterResponse::from($this->get(sprintf(self::ROUTE_SHOW_RECITER, $reciter->slug)))
+        $response = $this->url(self::ROUTE_SHOW_RECITER, $reciter->slug)->get();
+        ReciterResponse::from($response)
             ->assertSuccessful()
             ->assertMatches($reciter);
     }

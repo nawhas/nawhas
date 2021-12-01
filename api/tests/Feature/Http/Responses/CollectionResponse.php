@@ -22,12 +22,27 @@ class CollectionResponse extends Response
 
         return $this;
     }
-    protected function getJsonStructure(): array
+
+    /**
+     * TODO:PHP8 - Replace self with static
+     * @return static
+     */
+    public function assertNotEmpty(): self
     {
-        return [
-            'data',
-            'meta'
-        ];
+        PHPUnit::assertNotEmpty($this->getData());
+
+        return $this;
+    }
+
+    /**
+     * TODO:PHP8 - Replace self with static
+     * @return static
+     */
+    public function assertEmpty(): self
+    {
+        PHPUnit::assertCount(0, $this->getData());
+
+        return $this;
     }
 
     /**
@@ -74,11 +89,40 @@ class CollectionResponse extends Response
         return $this;
     }
 
+    /**
+     * TODO:PHP8 - Replace self with static
+     * @return static
+     */
+    public function assertHasItem(string $id): self
+    {
+        $this->where(fn ($d) => $d['id'] === $id, fn () => null, 1);
+
+        return $this;
+    }
+
+    /**
+     * TODO:PHP8 - Replace self with static
+     * @return static
+     */
+    public function assertDoesNotHaveItem(string $id): self
+    {
+        $this->where(fn ($d) => $d['id'] === $id, fn () => null, 0);
+
+        return $this;
+    }
+
     public function getData(): Collection
     {
         $data = $this->response->json('data');
-        PHPUnit::assertNotEmpty($data);
 
         return collect($data);
+    }
+
+    protected function getJsonStructure(): array
+    {
+        return [
+            'data',
+            'meta'
+        ];
     }
 }

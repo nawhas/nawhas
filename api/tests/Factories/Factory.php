@@ -6,11 +6,12 @@ namespace Tests\Factories;
 
 use Faker\Generator;
 use Faker\Factory as Faker;
-use Illuminate\Support\Collection;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
 abstract class Factory
 {
+    use ModelFactories;
+
     protected Generator $faker;
 
     public function __construct()

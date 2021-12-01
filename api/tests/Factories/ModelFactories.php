@@ -15,4 +15,9 @@ trait ModelFactories
     {
         return app(ReciterFactory::class);
     }
+
+    protected function getAlbumFactory(): AlbumFactory
+    {
+        return app(AlbumFactory::class);
+    }
 }
