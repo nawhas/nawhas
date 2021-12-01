@@ -1,7 +1,7 @@
 # ---------------------------------------------------------------------------
 # Test Image
 # ---------------------------------------------------------------------------
-FROM szainmehdi/php:7.4-dev-20210813 as test
+FROM szainmehdi/php:8.1-dev-20211201 as test
 
 WORKDIR /var/www/api
 ENV APP_ENV production
@@ -22,7 +22,7 @@ RUN composer run post-root-package-install && php artisan key:generate
 # ---------------------------------------------------------------------------
 # Build Image
 # ---------------------------------------------------------------------------
-FROM szainmehdi/php:7.4-dev-20210813 as build
+FROM szainmehdi/php:8.1-dev-20211201 as build
 
 WORKDIR /var/www/api
 ENV APP_ENV production

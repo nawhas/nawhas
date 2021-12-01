@@ -1,5 +1,7 @@
 <?php
 
+namespace Database\Seeders;
+
 use App\Modules\Authentication\Enum\Role;
 use App\Modules\Authentication\Models\User;
 use App\Modules\Library\Models\Album;
@@ -8,6 +10,8 @@ use App\Modules\Library\Models\Track;
 use App\Modules\Lyrics\Documents\Factory;
 use App\Modules\Lyrics\Documents\Format;
 use Illuminate\Database\Seeder;
+
+use function logger;
 
 class TestDataSeeder extends Seeder
 {
@@ -18,7 +22,7 @@ class TestDataSeeder extends Seeder
             return;
         }
 
-        $data = json_decode(file_get_contents(database_path('seeds/seed.json')), true);
+        $data = json_decode(file_get_contents(__DIR__ . '/seed.json'), true);
 
         User::create(Role::MODERATOR(), 'Moderator', 'moderator@nawhas.com', 'secret');
         User::create(Role::CONTRIBUTOR(), 'Contributor', 'contributor@nawhas.com', 'secret');
