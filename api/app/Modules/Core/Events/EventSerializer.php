@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Modules\Core\Events;
 
-use App\Modules\Library\Events\Tracks\TrackLyricsChanged;
 use Spatie\EventSourcing\EventSerializers\EventSerializer as SpatieEventSerializer;
 use Spatie\EventSourcing\EventSerializers\JsonEventSerializer;
 use Spatie\EventSourcing\StoredEvents\ShouldBeStored;
@@ -35,8 +34,12 @@ class EventSerializer implements SpatieEventSerializer
         return $payload;
     }
 
-    public function deserialize(string $eventClass, string $json, string $metadata = null): ShouldBeStored
-    {
+    public function deserialize(
+        string $eventClass,
+        string $json,
+        int $version,
+        string $metadata = null
+    ): ShouldBeStored {
         if (is_subclass_of($eventClass, SerializableEvent::class)) {
             $payload = json_decode($json, true);
             $event = $eventClass::fromPayload($payload);
@@ -52,6 +55,6 @@ class EventSerializer implements SpatieEventSerializer
             return $event;
         }
 
-        return $this->serializer->deserialize($eventClass, $json, $metadata);
+        return $this->serializer->deserialize($eventClass, $json, $version, $metadata);
     }
 }
