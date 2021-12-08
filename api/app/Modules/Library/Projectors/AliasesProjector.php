@@ -13,38 +13,38 @@ use App\Modules\Library\Events\{
     Tracks\TrackTitleChanged
 };
 use App\Modules\Library\Models\Aliases\{AlbumAlias, ReciterAlias, TrackAlias};
+use DateTimeInterface;
 use Illuminate\Support\Str;
 use Spatie\EventSourcing\EventHandlers\Projectors\Projector;
-use Spatie\EventSourcing\StoredEvents\StoredEvent;
 
 class AliasesProjector extends Projector
 {
-    public function onReciterCreated(ReciterCreated $event, StoredEvent $storedEvent): void
+    public function onReciterCreated(ReciterCreated $event): void
     {
-        $this->createReciterAlias($event->id, $event->attributes['name'], $storedEvent);
+        $this->createReciterAlias($event->id, $event->attributes['name'], $event->createdAt());
     }
 
-    public function onReciterNameChanged(ReciterNameChanged $event, StoredEvent $storedEvent): void
+    public function onReciterNameChanged(ReciterNameChanged $event): void
     {
-        $this->createReciterAlias($event->id, $event->name, $storedEvent);
+        $this->createReciterAlias($event->id, $event->name, $event->createdAt());
     }
 
-    public function onAlbumCreated(AlbumCreated $event, StoredEvent $storedEvent): void
+    public function onAlbumCreated(AlbumCreated $event): void
     {
-        $this->createAlbumAlias($event->reciterId, $event->id, $event->attributes['year'], $storedEvent);
+        $this->createAlbumAlias($event->reciterId, $event->id, $event->attributes['year'], $event->createdAt());
     }
 
-    public function onAlbumYearChanged(AlbumYearChanged $event, StoredEvent $storedEvent): void
+    public function onAlbumYearChanged(AlbumYearChanged $event): void
     {
         $this->createAlbumAlias(
             $this->getPreviousAlbumAlias($event->id)->reciter_id,
             $event->id,
             $event->year,
-            $storedEvent
+            $event->createdAt()
         );
     }
 
-    public function onTrackCreated(TrackCreated $event, StoredEvent $storedEvent): void
+    public function onTrackCreated(TrackCreated $event): void
     {
         $albumAlias = $this->getPreviousAlbumAlias($event->albumId);
         $this->createTrackAlias(
@@ -52,11 +52,11 @@ class AliasesProjector extends Projector
             $event->albumId,
             $event->id,
             $event->attributes['title'],
-            $storedEvent
+            $event->createdAt()
         );
     }
 
-    public function onTrackTitleChanged(TrackTitleChanged $event, StoredEvent $storedEvent): void
+    public function onTrackTitleChanged(TrackTitleChanged $event): void
     {
         $trackAlias = $this->getPreviousTrackAlias($event->id);
 
@@ -65,30 +65,30 @@ class AliasesProjector extends Projector
             $trackAlias->album_id,
             $event->id,
             $event->title,
-            $storedEvent
+            $event->createdAt()
         );
     }
 
-    private function createReciterAlias(string $reciterId, string $alias, StoredEvent $event): ReciterAlias
+    private function createReciterAlias(string $reciterId, string $alias, DateTimeInterface $timestamp): ReciterAlias
     {
         return ReciterAlias::updateOrCreate([
             'alias' => Str::slug($alias),
         ], [
             'reciter_id' => $reciterId,
-            'created_at' => $event->created_at,
-            'updated_at' => $event->created_at,
+            'created_at' => $timestamp,
+            'updated_at' => $timestamp,
         ]);
     }
 
-    private function createAlbumAlias(string $reciterId, string $albumId, string $alias, StoredEvent $event): AlbumAlias
+    private function createAlbumAlias(string $reciterId, string $albumId, string $alias, DateTimeInterface $timestamp): AlbumAlias
     {
         return AlbumAlias::updateOrCreate([
             'reciter_id' => $reciterId,
             'alias' => $alias, // Album years are not slugged right now.
         ], [
             'album_id' => $albumId,
-            'created_at' => $event->created_at,
-            'updated_at' => $event->created_at,
+            'created_at' => $timestamp,
+            'updated_at' => $timestamp,
         ]);
     }
 
@@ -97,7 +97,7 @@ class AliasesProjector extends Projector
         string $albumId,
         string $trackId,
         string $alias,
-        StoredEvent $event
+        DateTimeInterface $timestamp
     ): TrackAlias {
         return TrackAlias::updateOrCreate([
             'reciter_id' => $reciterId,
@@ -105,8 +105,8 @@ class AliasesProjector extends Projector
             'alias' => Str::slug($alias),
         ], [
             'track_id' => $trackId,
-            'created_at' => $event->created_at,
-            'updated_at' => $event->created_at,
+            'created_at' => $timestamp,
+            'updated_at' => $timestamp,
         ]);
     }
 

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Audit\Projectors;
 
+use App\Modules\Core\Events\InteractsWithStoredEvents;
 use App\Modules\Audit\Enum\{ChangeType, EntityType};
 use App\Modules\Audit\Exceptions\RevisionNotFoundException;
 use App\Modules\Audit\Models\Revision;
@@ -20,7 +21,9 @@ use Spatie\EventSourcing\StoredEvents\StoredEvent;
 
 class TrackRevisionsProjector extends Projector
 {
-    public function onTrackCreated(TrackCreated $event, StoredEvent $storedEvent): void
+    use InteractsWithStoredEvents;
+
+    public function onTrackCreated(TrackCreated $event): void
     {
         $data = collect($event->attributes);
         $snapshot = new TrackSnapshot(
@@ -34,55 +37,55 @@ class TrackRevisionsProjector extends Projector
             $snapshot,
             ChangeType::CREATED(),
             $event->getUserId(),
-            $storedEvent
+            $this->getStoredEvent($event)
         );
 
         $revision->save();
     }
 
-    public function onTrackTitleChanged(TrackTitleChanged $event, StoredEvent $storedEvent): void
+    public function onTrackTitleChanged(TrackTitleChanged $event): void
     {
         $this->recordModification(
             $event,
-            $storedEvent,
+            $this->getStoredEvent($event),
             fn (TrackSnapshot $snapshot) => $snapshot->title = $event->title
         );
     }
 
-    public function onTrackLyricsChanged(TrackLyricsChanged $event, StoredEvent $storedEvent): void
+    public function onTrackLyricsChanged(TrackLyricsChanged $event): void
     {
         $this->recordModification(
             $event,
-            $storedEvent,
+            $this->getStoredEvent($event),
             fn (TrackSnapshot $snapshot) => $snapshot->lyrics = $event->document
         );
     }
 
-    public function onTrackAudioChanged(TrackAudioChanged $event, StoredEvent $storedEvent): void
+    public function onTrackAudioChanged(TrackAudioChanged $event): void
     {
         $this->recordModification(
             $event,
-            $storedEvent,
+            $this->getStoredEvent($event),
             fn (TrackSnapshot $snapshot) => $snapshot->audio = $event->path
         );
     }
 
-    public function onTrackVideoChanged(TrackVideoChanged $event, StoredEvent $storedEvent): void
+    public function onTrackVideoChanged(TrackVideoChanged $event): void
     {
         $this->recordModification(
             $event,
-            $storedEvent,
+            $this->getStoredEvent($event),
             fn (TrackSnapshot $snapshot) => $snapshot->video = $event->url
         );
     }
 
-    public function onTrackDeleted(TrackDeleted $event, StoredEvent $storedEvent): void
+    public function onTrackDeleted(TrackDeleted $event): void
     {
         $last = $this->getLastRevision($event->id);
 
         $last->reviseForDeletion(
             $event->getUserId(),
-            $storedEvent
+            $this->getStoredEvent($event)
         )->save();
     }
 
