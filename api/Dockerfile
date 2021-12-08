@@ -1,7 +1,7 @@
 # ---------------------------------------------------------------------------
 # Test Image
 # ---------------------------------------------------------------------------
-FROM szainmehdi/php:8.1-dev-20211201 as test
+FROM szainmehdi/php:8.1-dev-20211203 as test
 
 WORKDIR /var/www/api
 ENV APP_ENV production
@@ -10,8 +10,6 @@ ENV COMPOSER_ALLOW_SUPERUSER 1
 COPY composer.json composer.json
 COPY composer.lock composer.lock
 COPY app/Support/helpers.php app/Support/helpers.php
-COPY database/seeds database/seeds
-COPY database/factories database/factories
 
 ENV TELESCOPE_ENABLED=false
 RUN composer install --no-scripts
@@ -22,7 +20,7 @@ RUN composer run post-root-package-install && php artisan key:generate
 # ---------------------------------------------------------------------------
 # Build Image
 # ---------------------------------------------------------------------------
-FROM szainmehdi/php:8.1-dev-20211201 as build
+FROM szainmehdi/php:8.1-dev-20211203 as build
 
 WORKDIR /var/www/api
 ENV APP_ENV production
