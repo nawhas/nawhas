@@ -18,6 +18,9 @@ use App\Modules\Lyrics\Documents\Format;
 use Illuminate\Support\Facades\Storage;
 use App\Modules\Lyrics\Documents\Factory as DocumentFactory;
 use App\Modules\Lyrics\Documents\JsonV1\Document as JsonDocument;
+use JetBrains\PhpStorm\ArrayShape;
+use League\Fractal\Resource\Item;
+use League\Fractal\Resource\Primitive;
 
 class RevisionTransformer extends Transformer
 {
@@ -39,7 +42,7 @@ class RevisionTransformer extends Transformer
         ];
     }
 
-    public function includeUser(Revision $revision)
+    public function includeUser(Revision $revision): Primitive|Item
     {
         if ($revision->user_id === null) {
             return $this->null();
@@ -128,7 +131,6 @@ class RevisionTransformer extends Transformer
 
     /**
      * Get the last snapshot of the reciter associated with the entity.
-     * @return ReciterSnapshot
      */
     private function getReciterSnapshot(Revision $revision): ReciterSnapshot
     {
@@ -158,10 +160,7 @@ class RevisionTransformer extends Transformer
         );
     }
 
-    /**
-     * @return Album|AlbumSnapshot
-     */
-    private function getAlbumSnapshot(Revision $revision)
+    private function getAlbumSnapshot(Revision $revision): AlbumSnapshot
     {
         if ($revision->entity_type === EntityType::ALBUM) {
             return AlbumSnapshot::fromRevision($revision);

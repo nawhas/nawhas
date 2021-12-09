@@ -18,6 +18,6 @@ class SendPasswordResetEmail extends Reactor
         $user = User::findOrFail($event->userId);
 
         Mail::to($user)
-            ->send(new PasswordResetEmail($user, $event->token));
+            ->send(new PasswordResetEmail($event->token));
     }
 }

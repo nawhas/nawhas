@@ -12,6 +12,7 @@ trait InteractsWithStoredEvents
 {
     protected function getStoredEvent(ShouldBeStored $event): StoredEvent
     {
+        /** @var StoredEventModel $stored */
         $stored = StoredEventModel::findOrFail($event->storedEventId());
 
         return $stored->toStoredEvent();

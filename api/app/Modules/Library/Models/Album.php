@@ -27,8 +27,8 @@ use Ramsey\Uuid\Uuid;
  * @property string $title
  * @property string $year
  * @property string|null $artwork
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property \Carbon\Carbon|null $created_at
+ * @property \Carbon\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|AlbumAlias[] $aliases
  * @property-read int|null $aliases_count
  * @property-read \App\Modules\Library\Models\Reciter $reciter

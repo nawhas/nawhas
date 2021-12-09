@@ -53,7 +53,7 @@ class LibraryController extends Controller
     public function removeSavedTracks(RemoveSavedTracksRequest $request)
     {
         $this->prepareIds($request->get('ids'))
-            ->each(fn (string $id) => event(new SavedTrackRemoved($id)));
+            ->each(fn (string $id) => (bool)event(new SavedTrackRemoved($id)));
 
         return response()->noContent();
     }

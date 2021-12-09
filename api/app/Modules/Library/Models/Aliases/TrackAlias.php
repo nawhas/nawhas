@@ -15,8 +15,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string $album_id
  * @property string $track_id
  * @property string $alias
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property \Carbon\Carbon|null $created_at
+ * @property \Carbon\Carbon|null $updated_at
  * @property-read Track $track
  * @method static \Illuminate\Database\Eloquent\Builder|TrackAlias newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|TrackAlias newQuery()

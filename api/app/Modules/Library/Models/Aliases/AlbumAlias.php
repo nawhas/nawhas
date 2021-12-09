@@ -14,8 +14,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string $reciter_id
  * @property string $album_id
  * @property string $alias
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property \Carbon\Carbon|null $created_at
+ * @property \Carbon\Carbon|null $updated_at
  * @property-read Album $album
  * @method static \Illuminate\Database\Eloquent\Builder|AlbumAlias newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|AlbumAlias newQuery()
