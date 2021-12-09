@@ -109,10 +109,10 @@ jobs:
           # API_TEST_IMAGE_TAG: test
           # WEB_IMAGE_TAG: dev-${{ needs.setup.outputs.short_sha }}
 
-      - name: Run Psalm
+      - name: Run PHPStan
         shell: bash
         run: |
-          docker run --rm nawhas/api:test ./docker/scripts/psalm.sh
+          docker run --rm nawhas/api:test ./ci/phpstan.sh
 
       - name: Run Unit Tests
         shell: bash
