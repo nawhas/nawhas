@@ -15,17 +15,19 @@ class SetUpSearch extends Command
 
     public function handle(Meilisearch $client): int
     {
-        $indices = config('meilisearch.indices');
+        $prefix = config('scout.prefix');
+        $indices = config('scout.indices');
 
         foreach ($indices as $index => $config) {
+            $index = $prefix . $index;
+
             if ($this->option('reset')) {
                 $client->deleteIndex($index);
-                $this->comment("Index \"$index\" deleted. 🗑");
+                $this->comment(">> 🗑  Index \"$index\" deleted.");
             }
 
-
             $client->getOrCreateIndex($index)->updateSettings($config['settings']);
-            $this->comment("Index \"$index\" created 🎉");
+            $this->comment(">> ✅ Index \"$index\" created");
 
             if ($this->option('import')) {
                 $this->call('scout:import', [
