@@ -69,7 +69,7 @@ class AliasesProjector extends Projector
         );
     }
 
-    private function createReciterAlias(string $reciterId, string $alias, DateTimeInterface $timestamp): ReciterAlias
+    private function createReciterAlias(string $reciterId, string $alias, ?DateTimeInterface $timestamp): ReciterAlias
     {
         return ReciterAlias::updateOrCreate([
             'alias' => Str::slug($alias),
@@ -80,7 +80,7 @@ class AliasesProjector extends Projector
         ]);
     }
 
-    private function createAlbumAlias(string $reciterId, string $albumId, string $alias, DateTimeInterface $timestamp): AlbumAlias
+    private function createAlbumAlias(string $reciterId, string $albumId, string $alias, ?DateTimeInterface $timestamp): AlbumAlias
     {
         return AlbumAlias::updateOrCreate([
             'reciter_id' => $reciterId,
@@ -97,7 +97,7 @@ class AliasesProjector extends Projector
         string $albumId,
         string $trackId,
         string $alias,
-        DateTimeInterface $timestamp
+        ?DateTimeInterface $timestamp
     ): TrackAlias {
         return TrackAlias::updateOrCreate([
             'reciter_id' => $reciterId,
