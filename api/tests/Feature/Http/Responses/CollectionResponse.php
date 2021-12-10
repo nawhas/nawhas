@@ -14,7 +14,7 @@ class CollectionResponse extends Response
 
     public function withItemFactory(callable $itemFactory): static
     {
-        $this->itemFactory = Closure::fromCallable($itemFactory);
+        $this->itemFactory = $itemFactory(...);
 
         return $this;
     }
