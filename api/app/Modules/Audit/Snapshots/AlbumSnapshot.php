@@ -37,7 +37,7 @@ class AlbumSnapshot implements Snapshot
         $this->reciterId = $reciterId;
     }
 
-    public static function fromArray(array $attributes): self
+    public static function fromArray(array $attributes): static
     {
         return new self(
             $attributes['id'],
@@ -49,7 +49,7 @@ class AlbumSnapshot implements Snapshot
         );
     }
 
-    public static function fromRevision(Revision $revision): self
+    public static function fromRevision(Revision $revision): static
     {
         return self::fromArray($revision->new_values);
     }

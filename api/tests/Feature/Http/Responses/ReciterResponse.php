@@ -21,22 +21,14 @@ class ReciterResponse extends Response
         ];
     }
 
-    /**
-     * TODO:PHP8 - Replace self with static
-     * @return static
-     */
-    public function assertName(string $name): self
+    public function assertName(string $name): static
     {
         $this->response->assertJsonPath('name', $name);
 
         return $this;
     }
 
-    /**
-     * TODO:PHP8 - Replace self with static
-     * @return static
-     */
-    public function assertMatches(Reciter $reciter): self
+    public function assertMatches(Reciter $reciter): static
     {
         $this->response->assertJsonFragment([
             'id' => $reciter->id,

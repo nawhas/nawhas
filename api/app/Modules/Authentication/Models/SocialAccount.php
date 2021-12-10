@@ -35,7 +35,7 @@ class SocialAccount extends Model implements TimestampedEntity
     use HasUuid;
     use UsesDataConnection;
 
-    public static function create(string $userId, string $provider, string $providerId): self
+    public static function create(string $userId, string $provider, string $providerId): static
     {
         $id = Uuid::uuid1()->toString();
 
@@ -51,7 +51,7 @@ class SocialAccount extends Model implements TimestampedEntity
     /**
      * @throws ModelNotFoundException
      */
-    public static function retrieve(string $identifier): self
+    public static function retrieve(string $identifier): static
     {
         /** @var self $model */
         $model = self::query()->findOrFail($identifier);
@@ -61,7 +61,7 @@ class SocialAccount extends Model implements TimestampedEntity
     /**
      * @throws ModelNotFoundException
      */
-    public static function findByProviderId(string $provider, string $providerId): self
+    public static function findByProviderId(string $provider, string $providerId): static
     {
         /** @var self $model */
         $model = self::query()->where('provider', $provider)->where('provider_id', $providerId)->firstOrFail();

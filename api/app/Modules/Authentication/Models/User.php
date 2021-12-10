@@ -47,7 +47,7 @@ class User extends Authenticatable implements TimestampedEntity
 
     protected $guarded = [];
 
-    public static function create(Role $role, string $name, string $email, ?string $password = null, ?bool $rememberToken = null, ?string $nickname = null ): self
+    public static function create(Role $role, string $name, string $email, ?string $password = null, ?bool $rememberToken = null, ?string $nickname = null ): static
     {
         $id = Uuid::uuid1()->toString();
 
@@ -66,14 +66,14 @@ class User extends Authenticatable implements TimestampedEntity
     /**
      * @throws ModelNotFoundException
      */
-    public static function retrieve(string $identifier): self
+    public static function retrieve(string $identifier): static
     {
         /** @var self $model */
         $model = self::query()->findOrFail($identifier);
         return $model;
     }
 
-    public static function findByEmail(string $email): self
+    public static function findByEmail(string $email): static
     {
         /** @var self $model */
         $model = self::query()->where('email', $email)->firstOrFail();

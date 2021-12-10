@@ -22,7 +22,7 @@ class PasswordReset extends Mailable implements ShouldQueue
      *
      * @return $this
      */
-    public function build(): self
+    public function build(): static
     {
         $domain = config('app.url');
 

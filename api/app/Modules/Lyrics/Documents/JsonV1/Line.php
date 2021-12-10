@@ -15,7 +15,7 @@ class Line
         $this->repeat = $repeat;
     }
 
-    public function repeat(int $repeat = 2): self
+    public function repeat(int $repeat = 2): static
     {
         $this->repeat = $repeat;
 

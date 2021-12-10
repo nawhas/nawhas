@@ -22,7 +22,7 @@ class Group
         $this->lines = collect();
     }
 
-    public function addLine(Line $line): self
+    public function addLine(Line $line): static
     {
         $this->lines->add($line);
 

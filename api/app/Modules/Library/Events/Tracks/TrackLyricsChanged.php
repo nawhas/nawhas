@@ -25,7 +25,7 @@ class TrackLyricsChanged extends TrackEvent implements SerializableEvent
         ];
     }
 
-    public static function fromPayload(array $payload): self
+    public static function fromPayload(array $payload): static
     {
         $document = $payload['document'] ? Factory::create(
             $payload['document']['content'],

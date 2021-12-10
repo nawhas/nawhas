@@ -18,7 +18,7 @@ class Metadata
         return $this->timestamps;
     }
 
-    public function timestamps(bool $timestamps): self
+    public function timestamps(bool $timestamps): static
     {
         $this->timestamps = $timestamps;
 

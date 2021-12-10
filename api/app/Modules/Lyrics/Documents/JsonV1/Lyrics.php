@@ -15,7 +15,7 @@ class Lyrics
         $this->groups = collect();
     }
 
-    public function addGroup(Group $group): self
+    public function addGroup(Group $group): static
     {
         $this->groups->add($group);
 

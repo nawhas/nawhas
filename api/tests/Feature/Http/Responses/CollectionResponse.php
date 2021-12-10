@@ -12,44 +12,28 @@ class CollectionResponse extends Response
 {
     private ?Closure $itemFactory = null;
 
-    /**
-     * TODO:PHP8 - Replace self with static
-     * @return static
-     */
-    public function withItemFactory(callable $itemFactory): self
+    public function withItemFactory(callable $itemFactory): static
     {
         $this->itemFactory = Closure::fromCallable($itemFactory);
 
         return $this;
     }
 
-    /**
-     * TODO:PHP8 - Replace self with static
-     * @return static
-     */
-    public function assertNotEmpty(): self
+    public function assertNotEmpty(): static
     {
         PHPUnit::assertNotEmpty($this->getData());
 
         return $this;
     }
 
-    /**
-     * TODO:PHP8 - Replace self with static
-     * @return static
-     */
-    public function assertEmpty(): self
+    public function assertEmpty(): static
     {
         PHPUnit::assertCount(0, $this->getData());
 
         return $this;
     }
 
-    /**
-     * TODO:PHP8 - Replace self with static
-     * @return static
-     */
-    public function items(callable $callable): self
+    public function items(callable $callable): static
     {
         $this->getData()
             ->map(fn (array $item) => ($this->itemFactory)($item, $this->response))
@@ -58,11 +42,7 @@ class CollectionResponse extends Response
         return $this;
     }
 
-    /**
-     * TODO:PHP8 - Replace self with static
-     * @return static
-     */
-    public function where(callable $finder, callable $assertions, ?int $count = null): self
+    public function where(callable $finder, callable $assertions, ?int $count = null): static
     {
         $items = $this->getData()->filter($finder);
 
@@ -78,33 +58,21 @@ class CollectionResponse extends Response
         return $this;
     }
 
-    /**
-     * TODO:PHP8 - Replace self with static
-     * @return static
-     */
-    public function item(string $id, callable $assertions): self
+    public function item(string $id, callable $assertions): static
     {
         $this->where(fn ($d) => $d['id'] === $id, $assertions, 1);
 
         return $this;
     }
 
-    /**
-     * TODO:PHP8 - Replace self with static
-     * @return static
-     */
-    public function assertHasItem(string $id): self
+    public function assertHasItem(string $id): static
     {
         $this->where(fn ($d) => $d['id'] === $id, fn () => null, 1);
 
         return $this;
     }
 
-    /**
-     * TODO:PHP8 - Replace self with static
-     * @return static
-     */
-    public function assertDoesNotHaveItem(string $id): self
+    public function assertDoesNotHaveItem(string $id): static
     {
         $this->where(fn ($d) => $d['id'] === $id, fn () => null, 0);
 

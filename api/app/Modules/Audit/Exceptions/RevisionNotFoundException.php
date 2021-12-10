@@ -8,7 +8,7 @@ use RuntimeException;
 
 class RevisionNotFoundException extends RuntimeException
 {
-    public static function forEntity(string $type, string $id): self
+    public static function forEntity(string $type, string $id): static
     {
         return new self(
             "No existing revision found for {$type} with id {$id}"

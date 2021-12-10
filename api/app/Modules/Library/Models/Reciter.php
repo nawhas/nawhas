@@ -76,7 +76,7 @@ class Reciter extends Model implements TimestampedEntity
             ->saveSlugsTo('slug');
     }
 
-    public static function create(string $name, ?string $description = null, ?string $avatar = null): self
+    public static function create(string $name, ?string $description = null, ?string $avatar = null): static
     {
         $id = Uuid::uuid1()->toString();
 
@@ -94,7 +94,7 @@ class Reciter extends Model implements TimestampedEntity
      * @throws ModelNotFoundException
      * @return Reciter
      */
-    public static function retrieve(string $identifier): self
+    public static function retrieve(string $identifier): static
     {
         if (Uuid::isValid($identifier)) {
             /** @var self $model */

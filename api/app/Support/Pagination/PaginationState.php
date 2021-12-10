@@ -19,12 +19,12 @@ class PaginationState
         $this->limit = $limit;
     }
 
-    public static function make(int $page = 1, ?int $limit = null): self
+    public static function make(int $page = 1, ?int $limit = null): static
     {
         return new self($page, $limit);
     }
 
-    public static function fromRequest(Request $request): self
+    public static function fromRequest(Request $request): static
     {
         $perPage = $request->get('per_page') ? (int)$request->get('per_page') : null;
         return new self((int)$request->get('page', 1), $perPage);

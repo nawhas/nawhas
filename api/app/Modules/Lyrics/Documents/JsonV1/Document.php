@@ -21,12 +21,12 @@ class Document implements DocumentContract, Jsonable
         $this->data = $data;
     }
 
-    public static function make(Metadata $meta = null, Lyrics $data = null): self
+    public static function make(Metadata $meta = null, Lyrics $data = null): static
     {
         return new self($meta ?? new Metadata(), $data ?? new Lyrics());
     }
 
-    public static function fromJson(string $content): self
+    public static function fromJson(string $content): static
     {
         $source = json_decode($content, true, 512, JSON_THROW_ON_ERROR);
 

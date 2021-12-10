@@ -78,7 +78,7 @@ class Track extends Model implements TimestampedEntity
         'lyrics' => Casts\Lyrics::class,
     ];
 
-    public static function create(Album $album, string $title): self
+    public static function create(Album $album, string $title): static
     {
         $id = Uuid::uuid1()->toString();
 
@@ -92,7 +92,7 @@ class Track extends Model implements TimestampedEntity
     /**
      * @throws ModelNotFoundException
      */
-    public static function retrieve(string $identifier, ?string $albumId = null): self
+    public static function retrieve(string $identifier, ?string $albumId = null): static
     {
         if (Uuid::isValid($identifier)) {
             /** @var self $model */

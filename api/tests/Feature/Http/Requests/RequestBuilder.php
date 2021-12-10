@@ -18,12 +18,7 @@ class RequestBuilder
         $this->test = $test;
     }
 
-    /**
-     * TODO:PHP8 - Replace self with static
-     * TODO:PHP8 - Add mixed type hint
-     * @return static
-     */
-    public function url(string $url, ...$params): self
+    public function url(string $url, mixed ...$params): static
     {
         $this->url = sprintf($url, ...$params);
 
@@ -41,21 +36,21 @@ class RequestBuilder
     {
         assert($this->url !== null, 'A url must be provided before calling RequestBuilder::post().');
 
-        return $this->test->postJson($this->url);
+        return $this->test->postJson($this->url, $data);
     }
 
     public function put(array $data = []): TestResponse
     {
         assert($this->url !== null, 'A url must be provided before calling RequestBuilder::put().');
 
-        return $this->test->putJson($this->url);
+        return $this->test->putJson($this->url, $data);
     }
 
     public function patch(array $data = []): TestResponse
     {
         assert($this->url !== null, 'A url must be provided before calling RequestBuilder::patch().');
 
-        return $this->test->patchJson($this->url);
+        return $this->test->patchJson($this->url, $data);
     }
 
     public function delete(): TestResponse
