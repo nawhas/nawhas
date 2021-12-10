@@ -38,8 +38,6 @@ class AppServiceProvider extends ServiceProvider
             return $fractal;
         });
 
-        $this->app->bind(Search::class, fn () => new Search(config('meilisearch.host'), config('meilisearch.key')));
-
         Relation::morphMap([
             EntityType::RECITER => Reciter::class,
             EntityType::ALBUM => Album::class,
