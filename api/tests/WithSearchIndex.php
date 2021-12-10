@@ -8,6 +8,6 @@ trait WithSearchIndex
 {
     public function setUpSearchIndex(): void
     {
-        $this->artisan('meilisearch:setup', ['--reset' => true]);
+        $this->artisan('search:setup', ['--reset' => true]);
     }
 }

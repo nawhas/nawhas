@@ -14,7 +14,7 @@
         "laravel/framework": "^8.0",
         "laravel/horizon": "^5.0",
         "laravel/sanctum": "^2.0",
-        "laravel/scout": "^8.1",
+        "laravel/scout": "^9.3.2",
         "laravel/socialite": "^5.0",
         "laravel/telescope": "^4.0",
         "laravel/tinker": "^2.0",
