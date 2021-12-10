@@ -8,6 +8,7 @@ use Illuminate\Support\Collection;
 
 class Lyrics
 {
+    /** @var \Illuminate\Support\Collection<Group> */
     private Collection $groups;
 
     public function __construct()

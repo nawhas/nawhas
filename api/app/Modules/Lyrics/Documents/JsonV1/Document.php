@@ -12,14 +12,10 @@ use Illuminate\Support\Stringable;
 
 class Document implements DocumentContract, Jsonable
 {
-    private Metadata $meta;
-    private Lyrics $data;
-
-    public function __construct(Metadata $meta, Lyrics $data)
-    {
-        $this->meta = $meta;
-        $this->data = $data;
-    }
+    public function __construct(
+        private Metadata $meta,
+        private Lyrics $data
+    ) {}
 
     public static function make(Metadata $meta = null, Lyrics $data = null): static
     {

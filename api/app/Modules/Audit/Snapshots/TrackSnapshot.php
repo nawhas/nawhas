@@ -10,43 +10,29 @@ use App\Modules\Lyrics\Documents\{Document, Factory, Format};
 
 class TrackSnapshot implements Snapshot
 {
-    public string $id;
-    public string $albumId;
-    public string $title;
-    public ?Document $lyrics;
-    public ?string $audio;
-    public ?string $video;
-
     public function __construct(
-        string $id,
-        string $albumId,
-        string $title,
-        ?string $audio = null,
-        ?string $video = null,
-        ?Document $lyrics = null
-    ) {
-        $this->id = $id;
-        $this->title = $title;
-        $this->lyrics = $lyrics;
-        $this->audio = $audio;
-        $this->video = $video;
-        $this->albumId = $albumId;
-    }
+        public string $id,
+        public string $albumId,
+        public string $title,
+        public ?string $audio = null,
+        public ?string $video = null,
+        public ?Document $lyrics = null
+    ) {}
 
-    public static function fromArray(array $attributes): static
+    public static function fromArray(array $data): static
     {
-        $lyrics = $attributes['lyrics'] ?? null;
+        $lyrics = $data['lyrics'] ?? null;
 
         if ($lyrics) {
             $lyrics = Factory::create($lyrics['content'], new Format($lyrics['format']));
         }
 
         return new self(
-            $attributes['id'],
-            $attributes['albumId'],
-            $attributes['title'],
-            $attributes['audio'] ?? null,
-            $attributes['video'] ?? null,
+            $data['id'],
+            $data['albumId'],
+            $data['title'],
+            $data['audio'] ?? null,
+            $data['video'] ?? null,
             $lyrics,
         );
     }

@@ -10,11 +10,6 @@ use Illuminate\Support\Collection;
 
 class ReciterSnapshot implements Snapshot
 {
-    public string $id;
-    public string $name;
-    public ?string $description;
-    public ?string $avatar;
-
     /**
      * Collection of Album IDs.
      * @var Collection|string[]
@@ -22,27 +17,23 @@ class ReciterSnapshot implements Snapshot
     public Collection $albums;
 
     public function __construct(
-        string $id,
-        string $name,
-        ?string $description = null,
-        ?string $avatar = null,
+        public string $id,
+        public string $name,
+        public ?string $description = null,
+        public ?string $avatar = null,
         array $albumIds = []
     ) {
-        $this->id = $id;
-        $this->name = $name;
-        $this->description = $description;
-        $this->avatar = $avatar;
         $this->albums = collect($albumIds);
     }
 
-    public static function fromArray(array $attributes): static
+    public static function fromArray(array $data): static
     {
         return new self(
-            $attributes['id'],
-            $attributes['name'],
-            $attributes['description'],
-            $attributes['avatar'],
-            $attributes['albums'],
+            $data['id'],
+            $data['name'],
+            $data['description'],
+            $data['avatar'],
+            $data['albums'],
         );
     }
 

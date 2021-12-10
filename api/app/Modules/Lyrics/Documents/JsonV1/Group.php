@@ -11,14 +11,13 @@ class Group
     public const TYPE_NORMAL = 'normal';
     public const TYPE_SPACER = 'spacer';
 
-    private ?float $timestamp;
+    /** @var \Illuminate\Support\Collection<Line> */
     private Collection $lines;
-    private string $type;
 
-    public function __construct(?float $timestamp, string $type = self::TYPE_NORMAL)
-    {
-        $this->timestamp = $timestamp;
-        $this->type = $type;
+    public function __construct(
+        private ?float $timestamp,
+        private string $type = self::TYPE_NORMAL,
+    ) {
         $this->lines = collect();
     }
 

@@ -10,14 +10,10 @@ class PaginationState
 {
     public const DEFAULT_LIMIT = 10;
 
-    private int $page;
-    private ?int $limit;
-
-    protected function __construct(int $page, ?int $limit)
-    {
-        $this->page = $page;
-        $this->limit = $limit;
-    }
+    protected function __construct(
+        private int $page,
+        private ?int $limit,
+    ) {}
 
     public static function make(int $page = 1, ?int $limit = null): static
     {
@@ -32,7 +28,7 @@ class PaginationState
 
     public function getLimit(int $default = self::DEFAULT_LIMIT): int
     {
-        return $this->limit ?? self::DEFAULT_LIMIT;
+        return $this->limit ?? $default;
     }
 
     public function getPage(): int

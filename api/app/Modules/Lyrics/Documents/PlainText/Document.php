@@ -10,12 +10,9 @@ use Illuminate\Support\Stringable;
 
 class Document implements DocumentContract
 {
-    private string $content;
-
-    public function __construct(string $content)
-    {
-        $this->content = $content;
-    }
+    public function __construct(
+        private string $content
+    ) {}
 
     public function getFormat(): Format
     {

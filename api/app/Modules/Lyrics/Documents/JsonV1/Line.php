@@ -6,14 +6,10 @@ namespace App\Modules\Lyrics\Documents\JsonV1;
 
 class Line
 {
-    private string $text;
-    private int $repeat;
-
-    public function __construct(string $text, int $repeat = 0)
-    {
-        $this->text = $text;
-        $this->repeat = $repeat;
-    }
+    public function __construct(
+        private string $text,
+        private int $repeat = 0
+    ) {}
 
     public function repeat(int $repeat = 2): static
     {
