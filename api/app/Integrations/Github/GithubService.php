@@ -12,15 +12,12 @@ class GithubService
 {
     private const REPO_NAME = 'nawhas';
     private const REPO_OWNER = 'nawhas';
+    private const CACHE_TTL = 45;
 
-    private GitHubManager $manager;
-    private Cache $cache;
-
-    public function __construct(GitHubManager $manager, Cache $cache)
-    {
-        $this->manager = $manager;
-        $this->cache = $cache;
-    }
+    public function __construct(
+        private GitHubManager $manager,
+        private Cache $cache
+    ) {}
 
     public function createIssue(Issue $issue): void
     {
@@ -44,7 +41,7 @@ class GithubService
     {
         $token = $this->cache->remember(
             'github.token',
-            now()->addMinutes(45), // cache for 45 minutes
+            now()->addMinutes(self::CACHE_TTL), // cache for 45 minutes
             function () {
                 $installation = config('github.connections.private.installation');
                 $token = $this->manager->connection()->apps()->createInstallationToken($installation);

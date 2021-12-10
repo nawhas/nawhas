@@ -6,26 +6,14 @@ namespace App\Integrations\Github;
 
 class Issue
 {
-    private string $title;
-    private string $body;
-
     /**
-     * @var array|string[]
+     * @param array<string> $labels
      */
-    private array $labels;
-
-    /**
-     * Issue constructor.
-     * @param string $title
-     * @param string $body
-     * @param array|string[] $labels
-     */
-    public function __construct(string $title, string $body, array $labels = [])
-    {
-        $this->title = $title;
-        $this->body = $body;
-        $this->labels = $labels;
-    }
+    public function __construct(
+        private readonly string $title,
+        private readonly string $body,
+        private readonly array $labels = []
+    ) {}
 
     public function getTitle(): string
     {

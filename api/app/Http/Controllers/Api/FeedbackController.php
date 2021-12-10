@@ -8,19 +8,14 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\FeedbackRequest;
 use App\Integrations\Github\GithubService;
 use App\Integrations\Github\Issue;
-use Github\Client;
-use GrahamCampbell\GitHub\GitHubManager;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
 class FeedbackController extends Controller
 {
-    private GithubService $github;
-
-    public function __construct(GithubService $github)
-    {
-        $this->github = $github;
-    }
+    public function __construct(
+        private GithubService $github
+    ) {}
 
     public function submit(FeedbackRequest $request): Response
     {

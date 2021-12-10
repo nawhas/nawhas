@@ -14,12 +14,9 @@ class CacheResponse
 {
     use HasParameters;
 
-    private BaseCacheResponse $wrapped;
-
-    public function __construct(BaseCacheResponse $wrapped)
-    {
-        $this->wrapped = $wrapped;
-    }
+    public function __construct(
+        private BaseCacheResponse $wrapped
+    ) {}
 
     public function handle(Request $request, Closure $next, string ...$tags): Response
     {
