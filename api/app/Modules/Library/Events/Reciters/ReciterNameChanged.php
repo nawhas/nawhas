@@ -6,11 +6,8 @@ namespace App\Modules\Library\Events\Reciters;
 
 class ReciterNameChanged extends ReciterEvent
 {
-    public string $name;
-
-    public function __construct(string $id, string $name)
-    {
-        $this->id = $id;
-        $this->name = $name;
-    }
+    public function __construct(
+        public string $id,
+        public string $name
+    ) {}
 }

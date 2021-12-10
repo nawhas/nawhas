@@ -10,12 +10,9 @@ use Illuminate\Http\JsonResponse;
 
 class FeaturesController extends Controller
 {
-    private FeatureManager $features;
-
-    public function __construct(FeatureManager $features)
-    {
-        $this->features = $features;
-    }
+    public function __construct(
+        private FeatureManager $features
+    ) {}
 
     public function index(): JsonResponse
     {

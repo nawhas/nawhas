@@ -13,12 +13,9 @@ class PasswordReset extends Mailable implements ShouldQueue
     use Queueable;
     use SerializesModels;
 
-    private string $token;
-
-    public function __construct(string $token)
-    {
-        $this->token = $token;
-    }
+    public function __construct(
+        private string $token
+    ) {}
 
     /**
      * Build the message.

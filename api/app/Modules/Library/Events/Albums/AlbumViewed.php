@@ -8,10 +8,7 @@ use App\Modules\Core\Events\UserAction;
 
 class AlbumViewed extends UserAction
 {
-    public string $id;
-
-    public function __construct(string $id)
-    {
-        $this->id = $id;
-    }
+    public function __construct(
+        public string $id
+    ) {}
 }

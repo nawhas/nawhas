@@ -17,13 +17,13 @@ use Spatie\EventSourcing\StoredEvents\Models\EloquentStoredEvent;
  * @property \Spatie\SchemalessAttributes\SchemalessAttributes $meta_data
  * @property string $created_at
  * @property-read \Spatie\EventSourcing\StoredEvents\ShouldBeStored|null $event
- * @method static Builder|EloquentStoredEvent afterVersion($version)
+ * @method static \Illuminate\Database\Eloquent\Builder|EloquentStoredEvent afterVersion($version)
  * @method static \Illuminate\Database\Eloquent\Builder|StoredEvent newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|StoredEvent newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|StoredEvent query()
- * @method static Builder|EloquentStoredEvent startingFrom($storedEventId)
- * @method static Builder|EloquentStoredEvent uuid($uuid)
- * @method static Builder|EloquentStoredEvent withMetaDataAttributes()
+ * @method static \Illuminate\Database\Eloquent\Builder|EloquentStoredEvent startingFrom($storedEventId)
+ * @method static \Illuminate\Database\Eloquent\Builder|EloquentStoredEvent uuid($uuid)
+ * @method static \Illuminate\Database\Eloquent\Builder|EloquentStoredEvent withMetaDataAttributes()
  * @mixin \Eloquent
  */
 class StoredEvent extends EloquentStoredEvent
