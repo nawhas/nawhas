@@ -23,9 +23,12 @@ class ClearResponseCache
         return self::with(['tags' => $tags]);
     }
 
-    public function handle(Request $request, Closure $next, string ...$tags)
+    /**
+     * TODO - Unsure if mixed return type is accurate
+     */
+    public function handle(Request $request, Closure $next, string ...$tags): mixed
     {
-        /** @var Response $response */
+        /** @var mixed|Response $response */
         $response = $next($request);
 
         if ($response->isSuccessful()) {

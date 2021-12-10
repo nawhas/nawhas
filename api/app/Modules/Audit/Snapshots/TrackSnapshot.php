@@ -24,7 +24,7 @@ class TrackSnapshot implements Snapshot
         $lyrics = $data['lyrics'] ?? null;
 
         if ($lyrics) {
-            $lyrics = Factory::create($lyrics['content'], new Format($lyrics['format']));
+            $lyrics = Factory::create($lyrics['content'], Format::tryFrom((int)$lyrics['format']));
         }
 
         return new self(
@@ -56,7 +56,7 @@ class TrackSnapshot implements Snapshot
 
     public function getType(): EntityType
     {
-        return EntityType::TRACK();
+        return EntityType::TRACK;
     }
 
     public function getId(): string

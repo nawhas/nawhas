@@ -12,7 +12,7 @@ class ReciterSnapshot implements Snapshot
 {
     /**
      * Collection of Album IDs.
-     * @var Collection|string[]
+     * @var Collection<string>
      */
     public Collection $albums;
 
@@ -55,7 +55,7 @@ class ReciterSnapshot implements Snapshot
 
     public function getType(): EntityType
     {
-        return EntityType::RECITER();
+        return EntityType::RECITER;
     }
 
     public function getId(): string

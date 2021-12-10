@@ -24,7 +24,7 @@ class Handler extends ExceptionHandler
         'password_confirmation',
     ];
 
-    protected function prepareException(Throwable $e)
+    protected function prepareException(Throwable $e): Throwable
     {
         $e = parent::prepareException($e);
 
@@ -37,17 +37,12 @@ class Handler extends ExceptionHandler
         return $e;
     }
 
-    public function report(Throwable $e)
+    public function report(Throwable $e): void
     {
         if (app()->bound('sentry') && $this->shouldReport($e)) {
             app('sentry')->captureException($e);
         }
 
         parent::report($e);
-    }
-
-    public function render($request, Throwable $e)
-    {
-        return parent::render($request, $e);
     }
 }

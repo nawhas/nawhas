@@ -36,7 +36,7 @@ class ReciterRevisionsProjector extends Projector
 
         $revision = Revision::makeInitial(
             $snapshot,
-            ChangeType::CREATED(),
+            ChangeType::CREATED,
             $event->getUserId(),
             $this->getStoredEvent($event),
         );
@@ -89,7 +89,7 @@ class ReciterRevisionsProjector extends Projector
 
         $last->revise(
             $snapshot,
-            ChangeType::MODIFIED(),
+            ChangeType::MODIFIED,
             $event->getUserId(),
             $this->getStoredEvent($event),
         )->save();
@@ -97,7 +97,7 @@ class ReciterRevisionsProjector extends Projector
 
     public function onAlbumDeleted(AlbumDeleted $event): void
     {
-        $albumRevision = Revision::getLast(EntityType::ALBUM(), $event->id);
+        $albumRevision = Revision::getLast(EntityType::ALBUM, $event->id);
         $albumSnapshot = AlbumSnapshot::fromRevision($albumRevision);
 
         $last = $this->getLastRevision($albumSnapshot->reciterId);
@@ -106,7 +106,7 @@ class ReciterRevisionsProjector extends Projector
 
         $last->revise(
             $snapshot,
-            ChangeType::MODIFIED(),
+            ChangeType::MODIFIED,
             $event->getUserId(),
             $this->getStoredEvent($event),
         );
@@ -119,7 +119,7 @@ class ReciterRevisionsProjector extends Projector
 
     private function getLastRevision(string $id): Revision
     {
-        $last = Revision::getLast(EntityType::RECITER(), $id);
+        $last = Revision::getLast(EntityType::RECITER, $id);
 
         if ($last === null) {
             throw RevisionNotFoundException::forEntity(EntityType::RECITER, $id);
@@ -137,7 +137,7 @@ class ReciterRevisionsProjector extends Projector
 
         $last->revise(
             $snapshot,
-            ChangeType::MODIFIED(),
+            ChangeType::MODIFIED,
             $event->getUserId(),
             $storedEvent
         )->save();

@@ -18,12 +18,12 @@ class RemoveSavedTracksRequest extends Request
                 'string',
                 Rule::exists('tracks', 'id'),
                 Rule::exists('saveables', 'saveable_id')
-                    ->where('saveable_type', EntityType::TRACK)
+                    ->where('saveable_type', EntityType::TRACK->value)
             ],
         ];
     }
 
-    public function attributes()
+    public function attributes(): array
     {
         return [
             'ids.*' => 'track ID',

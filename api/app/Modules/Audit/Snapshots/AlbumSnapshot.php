@@ -57,7 +57,7 @@ class AlbumSnapshot implements Snapshot
 
     public function getType(): EntityType
     {
-        return EntityType::ALBUM();
+        return EntityType::ALBUM;
     }
 
     public function getId(): string

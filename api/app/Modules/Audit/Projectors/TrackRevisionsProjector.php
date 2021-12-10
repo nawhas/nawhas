@@ -35,7 +35,7 @@ class TrackRevisionsProjector extends Projector
 
         $revision = Revision::makeInitial(
             $snapshot,
-            ChangeType::CREATED(),
+            ChangeType::CREATED,
             $event->getUserId(),
             $this->getStoredEvent($event)
         );
@@ -103,7 +103,7 @@ class TrackRevisionsProjector extends Projector
 
         $last->revise(
             $snapshot,
-            ChangeType::MODIFIED(),
+            ChangeType::MODIFIED,
             $event->getUserId(),
             $storedEvent
         )->save();
@@ -111,7 +111,7 @@ class TrackRevisionsProjector extends Projector
 
     private function getLastRevision(string $id): Revision
     {
-        $last = Revision::getLast(EntityType::TRACK(), $id);
+        $last = Revision::getLast(EntityType::TRACK, $id);
 
         if ($last === null) {
             throw RevisionNotFoundException::forEntity(EntityType::TRACK, $id);

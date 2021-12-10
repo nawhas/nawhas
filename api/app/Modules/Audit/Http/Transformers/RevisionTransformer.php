@@ -18,7 +18,6 @@ use App\Modules\Lyrics\Documents\Format;
 use Illuminate\Support\Facades\Storage;
 use App\Modules\Lyrics\Documents\Factory as DocumentFactory;
 use App\Modules\Lyrics\Documents\JsonV1\Document as JsonDocument;
-use JetBrains\PhpStorm\ArrayShape;
 use League\Fractal\Resource\Item;
 use League\Fractal\Resource\Primitive;
 
@@ -35,8 +34,8 @@ class RevisionTransformer extends Transformer
             'entityType' => $revision->entity_type,
             'entityId' => $revision->entity_id,
             'changeType' => $revision->change_type,
-            'previous' => $this->prepareSnapshot($revision->old_values, new EntityType($revision->entity_type)),
-            'snapshot' => $this->prepareSnapshot($revision->new_values, new EntityType($revision->entity_type)),
+            'previous' => $this->prepareSnapshot($revision->old_values, EntityType::from($revision->entity_type)),
+            'snapshot' => $this->prepareSnapshot($revision->new_values, EntityType::from($revision->entity_type)),
             'meta' => $this->getMeta($revision),
             'createdAt' => $this->dateTime($revision->created_at),
         ];
@@ -57,19 +56,19 @@ class RevisionTransformer extends Transformer
             return null;
         }
 
-        if ($type->equals(EntityType::RECITER())) {
+        if ($type === EntityType::RECITER) {
             if (isset($data['avatar'])) {
                 $data['avatar'] = $this->qualifyAssetPath($data['avatar']);
             }
         }
 
-        if ($type->equals(EntityType::ALBUM())) {
+        if ($type === EntityType::ALBUM) {
             if (isset($data['artwork'])) {
                 $data['artwork'] = $this->qualifyAssetPath($data['artwork']);
             }
         }
 
-        if ($type->equals(EntityType::TRACK())) {
+        if ($type === EntityType::TRACK) {
             if (isset($data['audio'])) {
                 $data['audio'] = $this->qualifyAssetPath($data['audio']);
             }
@@ -77,7 +76,7 @@ class RevisionTransformer extends Transformer
             if (isset($data['lyrics'])) {
                 $document = DocumentFactory::create(
                     $data['lyrics']['content'],
-                    new Format($data['lyrics']['format'])
+                    Format::tryFrom((int)$data['lyrics']['format'])
                 );
                 $data['lyrics'] = $document->render();
                 $data['timestamps'] = 'No';
@@ -147,7 +146,7 @@ class RevisionTransformer extends Transformer
             if ($revision->entity_type === EntityType::TRACK) {
                 $track = TrackSnapshot::fromRevision($revision);
                 $album = AlbumSnapshot::fromRevision(
-                    Revision::getLast(EntityType::ALBUM(), $track->albumId)
+                    Revision::getLast(EntityType::ALBUM, $track->albumId)
                 );
                 return $album->reciterId;
             }
@@ -156,7 +155,7 @@ class RevisionTransformer extends Transformer
         })($revision);
 
         return ReciterSnapshot::fromRevision(
-            Revision::getLast(EntityType::RECITER(), $id)
+            Revision::getLast(EntityType::RECITER, $id)
         );
     }
 
@@ -170,7 +169,7 @@ class RevisionTransformer extends Transformer
             $track = TrackSnapshot::fromRevision($revision);
             logger()->debug('Track Snapshot', ['track' => $track->toArray()]);
             return AlbumSnapshot::fromRevision(
-                Revision::getLast(EntityType::ALBUM(), $track->albumId)
+                Revision::getLast(EntityType::ALBUM, $track->albumId)
             );
         }
 

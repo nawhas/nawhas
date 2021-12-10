@@ -27,7 +27,7 @@ class FeedbackController extends Controller
 
         $this->github->createIssue($issue);
 
-        return response()->make('', Response::HTTP_CREATED);
+        return new Response(status: Response::HTTP_CREATED);
     }
 
     private function generateTitle(Request $request): string
@@ -35,7 +35,7 @@ class FeedbackController extends Controller
         $type = $request->get('type');
         $summary = $request->get('summary');
 
-        return "[{$type}] {$summary}";
+        return "[$type] $summary";
     }
 
     private function generateBody(Request $request): string
@@ -55,7 +55,7 @@ class FeedbackController extends Controller
     }
 
     /**
-     * @return array|string[]
+     * @return array<string>
      */
     private function generateLabels(Request $request): array
     {

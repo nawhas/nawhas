@@ -27,33 +27,32 @@ class LibraryController extends Controller
         return $this->respondWithPaginator($tracks, new TrackTransformer());
     }
 
-    public function getTrackIds()
+    public function getTrackIds(): JsonResponse
     {
-        $tracks = $this->getUser()->savedTracks()->get(['saveable_id'])->map(function ($result) {
-            return $result->saveable_id;
-        })->unique()->values();
+        $tracks = $this->getUser()->savedTracks()
+            ->get(['saveable_id'])
+            ->map(fn(object $result): string => $result->saveable_id)
+            ->unique()
+            ->values();
+
         return $this->respondWithArray($tracks->all());
     }
 
     public function saveTracks(SaveTracksRequest $request): Response
     {
-        /** @var User $user */
         $user = $request->user();
+
         $this->prepareIds($request->get('ids'))
-            ->each(function (string $id) use ($user) {
-                if ($user->hasSavedTrack($id)) {
-                    return;
-                }
-                event(new TrackSaved($id));
-            });
+            ->filter(fn (string $id) => !$user->hasSavedTrack($id))
+            ->each(fn (string $id) => event(new TrackSaved($id)));
 
         return response()->noContent();
     }
 
-    public function removeSavedTracks(RemoveSavedTracksRequest $request)
+    public function removeSavedTracks(RemoveSavedTracksRequest $request): Response
     {
         $this->prepareIds($request->get('ids'))
-            ->each(fn (string $id) => (bool)event(new SavedTrackRemoved($id)));
+            ->each(fn (string $id) => event(new SavedTrackRemoved($id)));
 
         return response()->noContent();
     }

@@ -26,9 +26,9 @@ class Issue
     }
 
     /**
-     * @return array|string[]
+     * @return array<string>
      */
-    public function getLabels()
+    public function getLabels(): array
     {
         return $this->labels;
     }

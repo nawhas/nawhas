@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use JetBrains\PhpStorm\ArrayShape;
 
 class FeedbackRequest extends FormRequest
 {
@@ -11,7 +12,7 @@ class FeedbackRequest extends FormRequest
         return true;
     }
 
-    public function rules()
+    public function rules(): array
     {
         return [
             'type' => ['required', 'in:bug,feature,general'],

@@ -10,7 +10,6 @@ use App\Modules\Audit\Snapshots\Snapshot;
 use App\Modules\Authentication\Models\User;
 use App\Modules\Core\Models\HasUuid;
 use Carbon\Carbon;
-use DateTimeInterface;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
@@ -66,10 +65,15 @@ class Revision extends Model
         string $entityId
     ): ?Revision {
         return self::query()
-            ->where('entity_type', $entityType->getValue())
+            ->where('entity_type', $entityType->value)
             ->where('entity_id', $entityId)
             ->orderByDesc('version')
             ->first();
+    }
+
+    public function getEntityType(): EntityType
+    {
+        return EntityType::from($this->entity_type);
     }
 
     public static function makeInitial(
@@ -79,16 +83,16 @@ class Revision extends Model
         ?StoredEvent $event = null
     ): static {
         $revision = new self();
-        $revision->entity_type = $snapshot->getType()->getValue();
+        $revision->entity_type = $snapshot->getType()->value;
         $revision->entity_id = $snapshot->getId();
         $revision->version = 1;
         $revision->user_id = $userId;
-        $revision->change_type = $changeType->getValue();
+        $revision->change_type = $changeType->value;
         $revision->event_id = $event->id;
         $revision->created_at = Carbon::make($event ? $event->created_at : 'now');
         $revision->setValues(
-            $old = [],
-            $new = $snapshot->toArray()
+            old: [],
+            new: $snapshot->toArray()
         );
 
         return $revision;
@@ -103,13 +107,13 @@ class Revision extends Model
         $revision = $this->replicate();
 
         $revision->user_id = $userId;
-        $revision->change_type = $changeType->getValue();
+        $revision->change_type = $changeType->value;
         $revision->version = $this->version + 1;
         $revision->created_at = Carbon::make($event ? $event->created_at : 'now');
         $revision->event_id = $event->id;
         $revision->setValues(
-            $old = $this->new_values,
-            $snapshot->toArray(),
+            old: $this->new_values,
+            new: $snapshot->toArray(),
         );
 
         return $revision;
@@ -127,8 +131,8 @@ class Revision extends Model
         $revision->created_at = Carbon::make($event ? $event->created_at : 'now');
         $revision->event_id = $event->id;
         $revision->setValues(
-            $old = [],
-            $new = $this->new_values,
+            old: [],
+            new: $this->new_values,
         );
 
         return $revision;
@@ -153,9 +157,9 @@ class Revision extends Model
         $this->new_values = $new;
     }
 
-    public function save(array $options = [])
+    public function save(array $options = []): bool
     {
-        if ($this->change_type === ChangeType::MODIFIED && empty($this->old_values)) {
+        if ($this->change_type === ChangeType::MODIFIED->value && empty($this->old_values)) {
             return false;
         }
 

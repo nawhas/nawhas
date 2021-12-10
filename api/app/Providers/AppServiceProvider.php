@@ -12,7 +12,6 @@ use Illuminate\Support\ServiceProvider;
 use Laravel\Sanctum\Sanctum;
 use League\Fractal\Manager as Fractal;
 use League\Fractal\Serializer\ArraySerializer;
-use MeiliSearch\Client as Search;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -39,9 +38,9 @@ class AppServiceProvider extends ServiceProvider
         });
 
         Relation::morphMap([
-            EntityType::RECITER => Reciter::class,
-            EntityType::ALBUM => Album::class,
-            EntityType::TRACK => Track::class,
+            EntityType::RECITER->value => Reciter::class,
+            EntityType::ALBUM->value => Album::class,
+            EntityType::TRACK->value => Track::class,
         ]);
     }
 

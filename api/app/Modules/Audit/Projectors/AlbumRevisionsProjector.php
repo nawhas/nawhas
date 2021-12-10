@@ -36,7 +36,7 @@ class AlbumRevisionsProjector extends Projector
 
         $revision = Revision::makeInitial(
             $snapshot,
-            ChangeType::CREATED(),
+            ChangeType::CREATED,
             $event->getUserId(),
             $this->getStoredEvent($event)
         );
@@ -89,7 +89,7 @@ class AlbumRevisionsProjector extends Projector
 
         $last->revise(
             $snapshot,
-            ChangeType::MODIFIED(),
+            ChangeType::MODIFIED,
             $event->getUserId(),
             $this->getStoredEvent($event),
         )->save();
@@ -97,7 +97,7 @@ class AlbumRevisionsProjector extends Projector
 
     public function onTrackDeleted(TrackDeleted $event): void
     {
-        $trackRevision = Revision::getLast(EntityType::TRACK(), $event->id);
+        $trackRevision = Revision::getLast(EntityType::TRACK, $event->id);
         $trackSnapshot = TrackSnapshot::fromRevision($trackRevision);
 
         $last = $this->getLastRevision($trackSnapshot->albumId);
@@ -106,7 +106,7 @@ class AlbumRevisionsProjector extends Projector
 
         $last->revise(
             $snapshot,
-            ChangeType::MODIFIED(),
+            ChangeType::MODIFIED,
             $event->getUserId(),
             $this->getStoredEvent($event),
         );
@@ -126,7 +126,7 @@ class AlbumRevisionsProjector extends Projector
 
         $last->revise(
             $snapshot,
-            ChangeType::MODIFIED(),
+            ChangeType::MODIFIED,
             $event->getUserId(),
             $storedEvent
         )->save();
@@ -134,7 +134,7 @@ class AlbumRevisionsProjector extends Projector
 
     private function getLastRevision(string $id): Revision
     {
-        $last = Revision::getLast(EntityType::ALBUM(), $id);
+        $last = Revision::getLast(EntityType::ALBUM, $id);
 
         if ($last === null) {
             throw RevisionNotFoundException::forEntity(EntityType::ALBUM, $id);
