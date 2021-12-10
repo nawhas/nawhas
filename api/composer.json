@@ -32,6 +32,7 @@
         "barryvdh/laravel-ide-helper": "^2.7",
         "facade/ignition": "^2.3.6",
         "fakerphp/faker": "^1.9.1",
+        "jetbrains/phpstorm-attributes": "^1.0",
         "laravel/dusk": "^6.19",
         "mockery/mockery": "^1.4.4",
         "nunomaduro/collision": "^5.10",
