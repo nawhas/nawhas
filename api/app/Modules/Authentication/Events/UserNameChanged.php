@@ -8,12 +8,8 @@ use Spatie\EventSourcing\StoredEvents\ShouldBeStored;
 
 class UserNameChanged extends ShouldBeStored
 {
-    public string $id;
-    public string $name;
-
-    public function __construct(string $id, string $name)
-    {
-        $this->id = $id;
-        $this->name = $name;
-    }
+    public function __construct(
+        public string $id,
+        public string $name,
+    ) {}
 }

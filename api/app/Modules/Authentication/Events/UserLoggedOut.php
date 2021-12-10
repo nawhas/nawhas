@@ -8,10 +8,7 @@ use Spatie\EventSourcing\StoredEvents\ShouldBeStored;
 
 class UserLoggedOut extends ShouldBeStored
 {
-    public string $id;
-
-    public function __construct(string $id)
-    {
-        $this->id = $id;
-    }
+    public function __construct(
+        public string $id
+    ) {}
 }
