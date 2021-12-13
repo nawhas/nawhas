@@ -4,11 +4,8 @@ declare(strict_types=1);
 
 namespace App\Console\Commands\Dusk;
 
-use Artisan;
 use GuzzleHttp\Client;
-use GuzzleHttp\Exception\BadResponseException;
 use GuzzleHttp\Exception\RequestException;
-use GuzzleHttp\Exception\ServerException;
 use Illuminate\Console\Command;
 
 class WaitForDuskDependencies extends Command
