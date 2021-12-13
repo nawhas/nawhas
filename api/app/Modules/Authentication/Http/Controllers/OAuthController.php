@@ -8,7 +8,6 @@ use App\Http\Controllers\Controller;
 use App\Modules\Authentication\Enum\Role;
 use App\Modules\Authentication\Models\SocialAccount;
 use App\Modules\Authentication\Models\User;
-use Illuminate\Auth\AuthenticationException;
 use Illuminate\Contracts\Auth\Factory as AuthFactory;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Contracts\Auth\StatefulGuard;
@@ -16,7 +15,6 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\RedirectResponse;
 use Laravel\Socialite\Contracts\Factory as Socialite;
 use Laravel\Socialite\Contracts\User as SocialiteUser;
-use OAuthException;
 use Symfony\Component\HttpFoundation\RedirectResponse as SymfonyRedirectResponse;
 
 class OAuthController extends Controller
@@ -38,16 +36,13 @@ class OAuthController extends Controller
     }
 
     /**
-     * @return array|string[]
+     * @return array<string>
      */
     private function getSupportedProviders(): array
     {
         return config('services.oauth.enabled', []);
     }
 
-    /**
-     * @throws AuthenticationException
-     */
     public function callback(string $provider): RedirectResponse
     {
         $socialiteUser = $this->socialite->driver($provider)->user();
@@ -56,7 +51,7 @@ class OAuthController extends Controller
         try {
             $socialAccount = SocialAccount::findByProviderId($provider, $socialiteUser->getId());
             $user = $socialAccount->user;
-        } catch (ModelNotFoundException $e) {
+        } catch (ModelNotFoundException) {
             $user = $this->persistUser($provider, $socialiteUser);
         }
 
@@ -78,7 +73,7 @@ class OAuthController extends Controller
         }
 
         $user = User::create(
-            Role::CONTRIBUTOR(),
+            Role::CONTRIBUTOR,
             $socialiteUser->getName(),
             $socialiteUser->getEmail(),
         );

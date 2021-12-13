@@ -133,17 +133,17 @@ class RevisionTransformer extends Transformer
      */
     private function getReciterSnapshot(Revision $revision): ReciterSnapshot
     {
-        if ($revision->entity_type === EntityType::RECITER) {
+        if ($revision->entity_type === EntityType::RECITER->value) {
             return ReciterSnapshot::fromRevision($revision);
         }
 
         $id = (function (Revision $revision) {
-            if ($revision->entity_type === EntityType::ALBUM) {
+            if ($revision->entity_type === EntityType::ALBUM->value) {
                 $album = AlbumSnapshot::fromRevision($revision);
                 return $album->reciterId;
             }
 
-            if ($revision->entity_type === EntityType::TRACK) {
+            if ($revision->entity_type === EntityType::TRACK->value) {
                 $track = TrackSnapshot::fromRevision($revision);
                 $album = AlbumSnapshot::fromRevision(
                     Revision::getLast(EntityType::ALBUM, $track->albumId)
@@ -161,11 +161,11 @@ class RevisionTransformer extends Transformer
 
     private function getAlbumSnapshot(Revision $revision): AlbumSnapshot
     {
-        if ($revision->entity_type === EntityType::ALBUM) {
+        if ($revision->entity_type === EntityType::ALBUM->value) {
             return AlbumSnapshot::fromRevision($revision);
         }
 
-        if ($revision->entity_type === EntityType::TRACK) {
+        if ($revision->entity_type === EntityType::TRACK->value) {
             $track = TrackSnapshot::fromRevision($revision);
             logger()->debug('Track Snapshot', ['track' => $track->toArray()]);
             return AlbumSnapshot::fromRevision(

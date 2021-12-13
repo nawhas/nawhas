@@ -35,11 +35,11 @@ class UserFactory extends Factory
 
     public function moderator(array $attributes = []): User
     {
-        return $this->create(Role::MODERATOR(), $attributes);
+        return $this->create(Role::MODERATOR, $attributes);
     }
 
     public function contributor(array $attributes = []): User
     {
-        return $this->create(Role::CONTRIBUTOR(), $attributes);
+        return $this->create(Role::CONTRIBUTOR, $attributes);
     }
 }

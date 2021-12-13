@@ -47,7 +47,6 @@ class AuthController extends Controller
 
     public function register(RegisterRequest $request): JsonResponse
     {
-        $role = Role::CONTRIBUTOR();
         $name = $request->get('name');
         $email = $request->get('email');
         $password = $request->get('password');
@@ -57,7 +56,7 @@ class AuthController extends Controller
             $nickname = $request->get('nickname');
         }
 
-        $user = User::create($role, $name, $email, $password, null, $nickname);
+        $user = User::create(Role::CONTRIBUTOR, $name, $email, $password, null, $nickname);
 
         $this->guard->login($user, false);
 

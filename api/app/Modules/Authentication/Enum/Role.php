@@ -6,6 +6,6 @@ namespace App\Modules\Authentication\Enum;
 
 enum Role: string
 {
-    public const MODERATOR = 'moderator';
-    public const CONTRIBUTOR = 'contributor';
+    case MODERATOR = 'moderator';
+    case CONTRIBUTOR = 'contributor';
 }

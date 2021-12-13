@@ -10,7 +10,7 @@ enum Format: int
      * Format 1:
      * @see
      */
-    public const PLAIN_TEXT = 1;
+    case PLAIN_TEXT = 1;
 
     /**
      * Version 2:
@@ -24,5 +24,5 @@ enum Format: int
      *   }
      * ]
      */
-    public const JSON_V1 = 2;
+    case JSON_V1 = 2;
 }

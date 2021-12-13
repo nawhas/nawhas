@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\Factories;
 
-use App\Modules\Authentication\Enum\Role;
-use App\Modules\Authentication\Models\User;
 use App\Modules\Library\Models\Reciter;
 
 class ReciterFactory extends Factory

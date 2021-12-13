@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Modules\Authentication\Models;
 
 use App\Modules\Authentication\Enum\Role;
-use App\Modules\Library\Models\Track;
 use App\Modules\Authentication\Events\{UserEmailChanged,
     UserNameChanged,
     UserNicknameChanged,
@@ -15,6 +14,7 @@ use App\Modules\Authentication\Events\{UserEmailChanged,
     UserRoleChanged};
 use App\Modules\Core\Contracts\TimestampedEntity;
 use App\Modules\Core\Models\{HasTimestamps, HasUuid, UsesDataConnection};
+use App\Modules\Library\Models\Track;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Ramsey\Uuid\Uuid;
@@ -47,12 +47,18 @@ class User extends Authenticatable implements TimestampedEntity
 
     protected $guarded = [];
 
-    public static function create(Role $role, string $name, string $email, ?string $password = null, ?bool $rememberToken = null, ?string $nickname = null ): static
-    {
+    public static function create(
+        Role $role,
+        string $name,
+        string $email,
+        ?string $password = null,
+        ?bool $rememberToken = null,
+        ?string $nickname = null
+    ): static {
         $id = Uuid::uuid1()->toString();
 
         event(new UserRegistered($id, [
-            'role' => $role->getValue(),
+            'role' => $role->value,
             'name' => $name,
             'email' => $email,
             'password' => bcrypt($password),
@@ -89,7 +95,7 @@ class User extends Authenticatable implements TimestampedEntity
 
     public function changeRole(Role $role): void
     {
-        if ($role->getValue() === $this->role) {
+        if ($role->value === $this->role) {
             event(new UserRoleChanged($this->id, $role));
         }
     }
