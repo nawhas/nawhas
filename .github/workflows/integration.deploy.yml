@@ -123,6 +123,7 @@ jobs:
         run: |
           ./dev --ci up -d api test_db search
           ./dev --ci art wait:database
+          ./dev --ci art search:setup --reset
           ./dev --ci test:feature
         env:
           API_IMAGE_TAG: test
