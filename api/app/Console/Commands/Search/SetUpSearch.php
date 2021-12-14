@@ -22,7 +22,7 @@ class SetUpSearch extends Command
             $index = $prefix . $index;
 
             if ($this->option('reset')) {
-                $client->deleteIndex($index);
+                $client->deleteIndexIfExists($index);
                 $this->comment(">> 🗑  Index \"$index\" deleted.");
             }
 
