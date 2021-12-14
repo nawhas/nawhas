@@ -29,7 +29,6 @@ COPY . .
 COPY --from=test /var/www/api/vendor /var/www/api/vendor
 COPY --from=test /tmp/.composer /tmp/.composer
 
-ENV TELESCOPE_ENABLED=false
 RUN composer install -n --no-dev --prefer-dist --no-scripts --no-autoloader \
     && composer dump-autoload -n -o --no-dev \
     && composer check-platform-reqs
@@ -37,7 +36,7 @@ RUN composer install -n --no-dev --prefer-dist --no-scripts --no-autoloader \
 # ---------------------------------------------------------------------------
 # Production Image
 # ---------------------------------------------------------------------------
-FROM szainmehdi/php:7.4-20210813 as production
+FROM szainmehdi/php:8.1-20211203 as production
 
 WORKDIR /var/www/api
 
@@ -50,6 +49,12 @@ RUN chown -R www-data: /var/www/api
 
 COPY docker/entrypoint.sh /usr/bin/docker-nawhas-api-entrypoint
 RUN chmod +x /usr/bin/docker-nawhas-api-entrypoint
+
+RUN php artisan package:discover \
+ && php artisan horizon:publish \
+ && php artisan telescope:publish \
+ && php artisan route:cache \
+ && php artisan event-sourcing:cache-event-handlers
 
 HEALTHCHECK --interval=1m --timeout=3s CMD php artisan healthcheck
 ENTRYPOINT [ "docker-nawhas-api-entrypoint" ]

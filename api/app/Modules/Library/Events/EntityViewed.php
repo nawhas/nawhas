@@ -24,7 +24,7 @@ abstract class EntityViewed extends UserAction implements SerializableEvent
         ];
     }
 
-    public static function fromPayload(array $payload): SerializableEvent
+    public static function fromPayload(array $payload): static
     {
         return new static($payload['id'], Carbon::parse($payload['visited_at']));
     }
