@@ -77,7 +77,7 @@ class Revision extends Model
         ChangeType $changeType,
         ?string $userId = null,
         ?StoredEvent $event = null
-    ): static {
+    ): self {
         $revision = new self();
         $revision->entity_type = $snapshot->getType()->getValue();
         $revision->entity_id = $snapshot->getId();

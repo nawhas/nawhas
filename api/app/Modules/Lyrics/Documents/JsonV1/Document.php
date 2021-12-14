@@ -19,14 +19,14 @@ class Document implements DocumentContract, Jsonable
 
     public static function make(Metadata $meta = null, Lyrics $data = null): static
     {
-        return new self($meta ?? new Metadata(), $data ?? new Lyrics());
+        return new static($meta ?? new Metadata(), $data ?? new Lyrics());
     }
 
     public static function fromJson(string $content): static
     {
         $source = json_decode($content, true, 512, JSON_THROW_ON_ERROR);
 
-        $document = self::make(new Metadata(Arr::get($source, 'meta.timestamps', true)));
+        $document = static::make(new Metadata(Arr::get($source, 'meta.timestamps', true)));
 
         foreach (Arr::get($source, 'data', []) as $data) {
             $group = new Group(

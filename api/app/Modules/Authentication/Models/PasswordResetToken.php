@@ -45,7 +45,7 @@ class PasswordResetToken extends Model
         return $this->belongsTo(User::class);
     }
 
-    public static function retrieve(string $token): static
+    public static function retrieve(string $token): self
     {
         /** @var self $model */
         $model = self::query()

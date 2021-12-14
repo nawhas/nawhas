@@ -56,7 +56,7 @@ class Album extends Model implements TimestampedEntity
         return $this->artwork ? Storage::url($this->artwork) : null;
     }
 
-    public static function create(Reciter $reciter, string $title, string $year, ?string $artwork = null): static
+    public static function create(Reciter $reciter, string $title, string $year, ?string $artwork = null): self
     {
         $id = Uuid::uuid1()->toString();
 
@@ -72,7 +72,7 @@ class Album extends Model implements TimestampedEntity
     /**
      * @throws ModelNotFoundException
      */
-    public static function retrieve(string $identifier, ?string $reciterId = null): static
+    public static function retrieve(string $identifier, ?string $reciterId = null): self
     {
         if (Uuid::isValid($identifier)) {
             /** @var self $model */

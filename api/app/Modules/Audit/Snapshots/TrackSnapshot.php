@@ -27,7 +27,7 @@ class TrackSnapshot implements Snapshot
             $lyrics = Factory::create($lyrics['content'], new Format($lyrics['format']));
         }
 
-        return new self(
+        return new static(
             $data['id'],
             $data['albumId'],
             $data['title'],
@@ -39,7 +39,7 @@ class TrackSnapshot implements Snapshot
 
     public static function fromRevision(Revision $revision): static
     {
-        return self::fromArray($revision->new_values);
+        return static::fromArray($revision->new_values);
     }
 
     public function toArray(): array

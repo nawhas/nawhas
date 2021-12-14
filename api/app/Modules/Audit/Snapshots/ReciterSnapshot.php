@@ -28,7 +28,7 @@ class ReciterSnapshot implements Snapshot
 
     public static function fromArray(array $data): static
     {
-        return new self(
+        return new static(
             $data['id'],
             $data['name'],
             $data['description'],
@@ -39,7 +39,7 @@ class ReciterSnapshot implements Snapshot
 
     public static function fromRevision(Revision $revision): static
     {
-        return self::fromArray($revision->new_values);
+        return static::fromArray($revision->new_values);
     }
 
     public function toArray(): array

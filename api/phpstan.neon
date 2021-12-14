@@ -7,6 +7,3 @@ parameters:
     level: 5
     ignoreErrors:
         - '#Unsafe usage of new static#'
-        # TODO - this should be removed when PHPStan supports Enums
-        - '#Access to undefined constant [a-zA-Z0-9\\_]+Enum[a-zA-Z0-9\\_]+#'
-        - '#Parameter \#1 \$callback of method Illuminate\\Support\\Collection<.+>::each\(\) expects callable\(.+\): bool\|void, Closure\(.*\): .* given.#'
