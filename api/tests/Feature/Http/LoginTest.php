@@ -4,14 +4,11 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Http;
 
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\Feature\FeatureTest;
 use Tests\Feature\Http\Responses\UserResponse;
 
 class LoginTest extends FeatureTest
 {
-    use DatabaseTransactions;
-
     private const ROUTE_LOGIN = 'v1/auth/login';
 
     /**

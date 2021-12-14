@@ -103,7 +103,7 @@ jobs:
 
       - name: Pull Services
         run: |
-          ./dev --ci pull db cache
+          ./dev --ci pull db cache search
         env:
           API_IMAGE_TAG: test
           # API_TEST_IMAGE_TAG: test
@@ -121,7 +121,7 @@ jobs:
 
       - name: Run Feature Tests
         run: |
-          ./dev --ci up -d api test_db
+          ./dev --ci up -d api test_db search
           ./dev --ci art wait:database
           ./dev --ci test:feature
         env:

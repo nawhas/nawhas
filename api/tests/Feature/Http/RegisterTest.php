@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Http;
 
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Collection;
 use Tests\Feature\FeatureTest;
+use Tests\WithSimpleFaker;
 
 class RegisterTest extends FeatureTest
 {
-    use DatabaseTransactions;
+    use WithSimpleFaker;
 
     private const ROUTE_REGISTER = 'v1/auth/register';
 

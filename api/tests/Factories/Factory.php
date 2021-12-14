@@ -10,6 +10,8 @@ use Symfony\Component\HttpFoundation\ParameterBag;
 
 abstract class Factory
 {
+    use ModelFactories;
+
     protected Generator $faker;
 
     public function __construct()
