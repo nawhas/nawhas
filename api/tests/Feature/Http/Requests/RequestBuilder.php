@@ -9,14 +9,10 @@ use Tests\Feature\FeatureTest;
 
 class RequestBuilder
 {
-    private ?string $url = null;
-
-    private FeatureTest $test;
-
-    public function __construct(FeatureTest $test)
-    {
-        $this->test = $test;
-    }
+    public function __construct(
+        private FeatureTest $test,
+        private ?string $url = null,
+    ) {}
 
     public function url(string $url, mixed ...$params): static
     {
