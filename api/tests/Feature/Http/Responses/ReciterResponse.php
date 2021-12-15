@@ -28,6 +28,20 @@ class ReciterResponse extends Response
         return $this;
     }
 
+    public function assertDescription(?string $description): static
+    {
+        $this->response->assertJsonPath('description', $description);
+
+        return $this;
+    }
+
+    public function assertId(string $id): static
+    {
+        $this->response->assertJsonPath('id', $id);
+
+        return $this;
+    }
+
     public function assertMatches(Reciter $reciter): static
     {
         $this->response->assertJsonFragment([
