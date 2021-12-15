@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3a04632ae6335bd914aba013c077682b",
+    "content-hash": "37414140a797f600f031665649059db6",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -14497,6 +14497,36 @@
             "time": "2021-12-07T11:25:29+00:00"
         },
         {
+            "name": "vishnubob/wait-for-it",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/vishnubob/wait-for-it.git",
+                "reference": "81b1373f17855a4dc21156cfe1694c31d7d1792e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/vishnubob/wait-for-it/zipball/81b1373f17855a4dc21156cfe1694c31d7d1792e",
+                "reference": "81b1373f17855a4dc21156cfe1694c31d7d1792e",
+                "shasum": ""
+            },
+            "default-branch": true,
+            "bin": [
+                "wait-for-it.sh"
+            ],
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Pure bash script to test and wait on the availability of a TCP host and port",
+            "support": {
+                "issues": "https://github.com/vishnubob/wait-for-it/issues",
+                "source": "https://github.com/vishnubob/wait-for-it/tree/master"
+            },
+            "time": "2020-08-22T23:18:37+00:00"
+        },
+        {
             "name": "webmozart/path-util",
             "version": "2.3.0",
             "source": {
@@ -14751,7 +14781,9 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": [],
+    "stability-flags": {
+        "vishnubob/wait-for-it": 20
+    },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
