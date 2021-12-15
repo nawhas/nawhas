@@ -31,8 +31,8 @@ use Spatie\Sluggable\{HasSlug, SlugOptions};
  * @property string $slug
  * @property string|null $description
  * @property string|null $avatar
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property \Carbon\Carbon|null $created_at
+ * @property \Carbon\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\Library\Models\Album[] $albums
  * @property-read int|null $albums_count
  * @property-read \Illuminate\Database\Eloquent\Collection|ReciterAlias[] $aliases

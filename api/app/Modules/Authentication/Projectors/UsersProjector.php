@@ -56,7 +56,7 @@ class UsersProjector extends Projector
     public function onUserRoleChanged(UserRoleChanged $event): void
     {
         $user = User::retrieve($event->id);
-        $user->role = $event->role;
+        $user->role = $event->role->getValue();
         $user->saveOrFail();
     }
 

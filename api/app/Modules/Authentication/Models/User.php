@@ -30,8 +30,8 @@ use Ramsey\Uuid\Uuid;
  * @property string $role
  * @property string|null $nickname
  * @property string|null $remember_token
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property \Carbon\Carbon|null $created_at
+ * @property \Carbon\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|Track[] $savedTracks
  * @property-read int|null $saved_tracks_count
  * @method static \Illuminate\Database\Eloquent\Builder|User newModelQuery()

@@ -10,6 +10,7 @@ trait HasTrackRouteParameter
 {
     public function track(): Track
     {
-        return $this->route()->parameter('track');
+        /** @var Track */
+        return $this->route('track');
     }
 }

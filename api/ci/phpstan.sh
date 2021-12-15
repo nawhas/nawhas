@@ -1,6 +1,6 @@
 #!/bin/sh
 
-OUTPUT=$(vendor/bin/psalm --no-progress --output-format=github);
+OUTPUT=$(vendor/bin/phpstan analyze --no-progress --error-format=github);
 STATUS=$?;
 echo "$OUTPUT" | sed "s/file=app/file=api\/app/g";
 

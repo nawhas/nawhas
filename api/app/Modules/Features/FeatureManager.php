@@ -13,15 +13,13 @@ use Illuminate\Support\Collection;
 class FeatureManager
 {
     private Guard $guard;
-    private Container $container;
 
-    /** @var array<string,Feature>|Collection|Feature[] */
+    /** @var Collection<string,Feature> */
     private Collection $features;
 
-    public function __construct(Guard $guard, Container $container)
+    public function __construct(Guard $guard)
     {
         $this->guard = $guard;
-        $this->container = $container;
         $this->features = new Collection();
     }
 

@@ -28,7 +28,7 @@ use Spatie\EventSourcing\StoredEvents\StoredEvent;
  * @property string|null $user_id
  * @property int $version
  * @property int $event_id
- * @property \Illuminate\Support\Carbon $created_at
+ * @property \Carbon\Carbon $created_at
  * @property-read Model|\Eloquent $entity
  * @property-read User|null $user
  * @method static \Illuminate\Database\Eloquent\Builder|Revision newModelQuery()

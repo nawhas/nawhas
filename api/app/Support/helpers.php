@@ -2,6 +2,8 @@
 
 namespace App\Support;
 
+use App\Modules\Library\Models\Album;
+use Illuminate\Routing\Route;
 use Illuminate\Support\Collection;
 
 function times(int $count, callable $callable): Collection

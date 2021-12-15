@@ -19,7 +19,12 @@ class Guard
 
     public function __construct(AuthFactory $auth)
     {
-        $this->guard = $auth->guard();
+        $guard = $auth->guard();
+        if ($guard instanceof StatefulGuard) {
+            $this->guard = $guard;
+        } else {
+            throw new \UnexpectedValueException('This only works with StatefulGuard.');
+        }
     }
 
     public function user(): ?User
@@ -34,8 +39,6 @@ class Guard
 
     public function id(): ?string
     {
-        $id = $this->guard->id();
-
-        return $id ? (string)$id : null;
+        return $this->guard->id();
     }
 }

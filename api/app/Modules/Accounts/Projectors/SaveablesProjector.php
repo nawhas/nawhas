@@ -8,11 +8,10 @@ use App\Modules\Accounts\Events\Saves\SavedTrackRemoved;
 use App\Modules\Accounts\Events\Saves\TrackSaved;
 use App\Modules\Authentication\Models\User;
 use Spatie\EventSourcing\EventHandlers\Projectors\Projector;
-use Spatie\EventSourcing\StoredEvents\StoredEvent;
 
 class SaveablesProjector extends Projector
 {
-    public function onTrackSaved(TrackSaved $event, StoredEvent $storedEvent): void
+    public function onTrackSaved(TrackSaved $event): void
     {
         $userId = $event->getUserId();
 
@@ -27,7 +26,7 @@ class SaveablesProjector extends Projector
         }
 
         $user->savedTracks()->attach($event->trackId, [
-            'created_at' => $storedEvent->created_at,
+            'created_at' => $event->createdAt(),
         ]);
     }
 

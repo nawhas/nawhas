@@ -41,7 +41,7 @@ return [
     |
     */
 
-    'queue' => env('SCOUT_QUEUE', true),
+    'queue' => true,
 
     /*
     |--------------------------------------------------------------------------
@@ -89,4 +89,33 @@ return [
         'settings_path' => config_path('algolia')
     ],
 
+    'meilisearch' => [
+        'host' => env('MEILISEARCH_HOST', 'http://nawhas_search:7700'),
+        'key' => env('MEILISEARCH_KEY', 'secret'),
+    ],
+
+    'indices' => [
+        'reciters' => [
+            'model' => App\Modules\Library\Models\Reciter::class,
+            'settings' => [
+                'searchableAttributes' => ['name', 'description']
+            ],
+        ],
+        'albums' => [
+            'model' => App\Modules\Library\Models\Album::class,
+            'settings' => [
+                'searchableAttributes' => ['title', 'year', 'reciter'],
+                'rankingRules' => ['typo', 'words', 'proximity', 'attribute', 'wordsPosition', 'exactness', 'desc(year)']
+            ],
+        ],
+        'tracks' => [
+            'model' => App\Modules\Library\Models\Track::class,
+            'settings' => [
+                'searchableAttributes' => [
+                    'title', 'lyrics', 'year', 'reciter', 'album',
+                ],
+                'rankingRules' => ['typo', 'words', 'proximity', 'attribute', 'wordsPosition', 'exactness', 'desc(year)']
+            ],
+        ],
+    ],
 ];

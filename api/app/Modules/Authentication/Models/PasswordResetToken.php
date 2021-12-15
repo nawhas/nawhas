@@ -15,7 +15,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string $id
  * @property string $user_id
  * @property string $token
- * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Carbon\Carbon|null $created_at
  * @property-read \App\Modules\Authentication\Models\User $user
  * @method static \Illuminate\Database\Eloquent\Builder|PasswordResetToken newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|PasswordResetToken newQuery()

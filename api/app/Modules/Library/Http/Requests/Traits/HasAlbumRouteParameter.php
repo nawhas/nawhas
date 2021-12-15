@@ -10,6 +10,7 @@ trait HasAlbumRouteParameter
 {
     public function album(): Album
     {
-        return $this->route()->parameter('album');
+        /** @var Album */
+        return $this->route('album');
     }
 }

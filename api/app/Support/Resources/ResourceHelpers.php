@@ -7,8 +7,8 @@ namespace App\Support\Resources;
 use Illuminate\Http\Resources\MergeValue;
 
 /**
- * @property-read string created_at
- * @property-read string updated_at
+ * @property-read string $created_at
+ * @property-read string $updated_at
  */
 trait ResourceHelpers
 {

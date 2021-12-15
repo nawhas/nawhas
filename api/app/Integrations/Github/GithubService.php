@@ -47,12 +47,12 @@ class GithubService
             now()->addMinutes(45), // cache for 45 minutes
             function () {
                 $installation = config('github.connections.private.installation');
-                $token = $this->manager->api('apps')->createInstallationToken($installation);
+                $token = $this->manager->connection()->apps()->createInstallationToken($installation);
                 return $token['token'];
             }
         );
 
-        $this->manager->authenticate($token, null,  Client::AUTH_HTTP_TOKEN);
+        $this->manager->authenticate($token, null,  Client::AUTH_ACCESS_TOKEN);
 
         return $this->manager;
     }

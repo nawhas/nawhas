@@ -4,11 +4,8 @@ declare(strict_types=1);
 
 namespace App\Console\Commands\Dusk;
 
-use Artisan;
 use GuzzleHttp\Client;
-use GuzzleHttp\Exception\BadResponseException;
 use GuzzleHttp\Exception\RequestException;
-use GuzzleHttp\Exception\ServerException;
 use Illuminate\Console\Command;
 
 class WaitForDuskDependencies extends Command
@@ -50,16 +47,16 @@ class WaitForDuskDependencies extends Command
                     'status_code' => $response->getStatusCode(),
                     'body' => (string)$response->getBody(),
                 ]);
-            } finally {
+
                 if ($exceptions > self::MAX_EXCEPTIONS) {
                     $this->output->newLine();
                     $this->error('Something\'s not right. Check the logs.');
                     return 1;
                 }
-
-                $tries++;
-                sleep(4);
             }
+
+            $tries++;
+            sleep(4);
         }
 
         $this->output->writeln('<info>R</info>');

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Audit\Projectors;
 
+use App\Modules\Core\Events\InteractsWithStoredEvents;
 use App\Modules\Audit\Enum\{ChangeType, EntityType};
 use App\Modules\Audit\Exceptions\RevisionNotFoundException;
 use App\Modules\Audit\Models\Revision;
@@ -14,13 +15,15 @@ use App\Modules\Library\Events\Albums\{AlbumArtworkChanged,
     AlbumEvent,
     AlbumTitleChanged,
     AlbumYearChanged};
+use Spatie\EventSourcing\StoredEvents\StoredEvent;
 use App\Modules\Library\Events\Tracks\{TrackCreated, TrackDeleted};
 use Spatie\EventSourcing\EventHandlers\Projectors\Projector;
-use Spatie\EventSourcing\StoredEvents\StoredEvent;
 
 class AlbumRevisionsProjector extends Projector
 {
-    public function onAlbumCreated(AlbumCreated $event, StoredEvent $storedEvent): void
+    use InteractsWithStoredEvents;
+
+    public function onAlbumCreated(AlbumCreated $event): void
     {
         $data = collect($event->attributes);
         $snapshot = new AlbumSnapshot(
@@ -35,50 +38,50 @@ class AlbumRevisionsProjector extends Projector
             $snapshot,
             ChangeType::CREATED(),
             $event->getUserId(),
-            $storedEvent,
+            $this->getStoredEvent($event)
         );
 
         $revision->save();
     }
 
-    public function onAlbumTitleChanged(AlbumTitleChanged $event, StoredEvent $storedEvent): void
+    public function onAlbumTitleChanged(AlbumTitleChanged $event): void
     {
         $this->recordModification(
             $event,
-            $storedEvent,
+            $this->getStoredEvent($event),
             fn (AlbumSnapshot $snapshot) => $snapshot->title = $event->title
         );
     }
 
-    public function onAlbumYearChanged(AlbumYearChanged $event, StoredEvent $storedEvent): void
+    public function onAlbumYearChanged(AlbumYearChanged $event): void
     {
         $this->recordModification(
             $event,
-            $storedEvent,
+            $this->getStoredEvent($event),
             fn (AlbumSnapshot $snapshot) => $snapshot->year = $event->year
         );
     }
 
-    public function onAlbumArtworkChanged(AlbumArtworkChanged $event, StoredEvent $storedEvent): void
+    public function onAlbumArtworkChanged(AlbumArtworkChanged $event): void
     {
         $this->recordModification(
             $event,
-            $storedEvent,
+            $this->getStoredEvent($event),
             fn (AlbumSnapshot $snapshot) => $snapshot->artwork = $event->artwork
         );
     }
 
-    public function onAlbumDeleted(AlbumDeleted $event, StoredEvent $storedEvent): void
+    public function onAlbumDeleted(AlbumDeleted $event): void
     {
         $last = $this->getLastRevision($event->id);
 
         $last->reviseForDeletion(
             $event->getUserId(),
-            $storedEvent,
+            $this->getStoredEvent($event),
         )->save();
     }
 
-    public function onTrackCreated(TrackCreated $event, StoredEvent $storedEvent): void
+    public function onTrackCreated(TrackCreated $event): void
     {
         $last = $this->getLastRevision($event->albumId);
         $snapshot = AlbumSnapshot::fromRevision($last);
@@ -88,11 +91,11 @@ class AlbumRevisionsProjector extends Projector
             $snapshot,
             ChangeType::MODIFIED(),
             $event->getUserId(),
-            $storedEvent,
+            $this->getStoredEvent($event),
         )->save();
     }
 
-    public function onTrackDeleted(TrackDeleted $event, StoredEvent $storedEvent): void
+    public function onTrackDeleted(TrackDeleted $event): void
     {
         $trackRevision = Revision::getLast(EntityType::TRACK(), $event->id);
         $trackSnapshot = TrackSnapshot::fromRevision($trackRevision);
@@ -105,7 +108,7 @@ class AlbumRevisionsProjector extends Projector
             $snapshot,
             ChangeType::MODIFIED(),
             $event->getUserId(),
-            $storedEvent,
+            $this->getStoredEvent($event),
         );
     }
 
