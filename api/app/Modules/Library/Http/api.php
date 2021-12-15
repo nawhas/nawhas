@@ -5,6 +5,7 @@ use App\Infrastructure\Cache\Middleware\ClearResponseCache;
 use App\Modules\Accounts\Http\CacheTags as AccountsCacheTags;
 use App\Modules\Library\Http\CacheTags;
 use App\Modules\Library\Http\Controllers;
+use App\Modules\Library\Models\Reciter;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('v1')->middleware(CacheResponse::withTags(CacheTags::LIBRARY))->group(function () {

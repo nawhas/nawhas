@@ -134,4 +134,9 @@ class User extends Authenticatable implements TimestampedEntity
     {
         return $this->savedTracks()->where('saveable_id', $id)->exists();
     }
+
+    public function isModerator(): bool
+    {
+        return $this->role === Role::MODERATOR;
+    }
 }
