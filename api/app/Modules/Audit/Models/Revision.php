@@ -99,7 +99,7 @@ class Revision extends Model
         ChangeType $changeType,
         ?string $userId = null,
         ?StoredEvent $event = null
-    ): self {
+    ): static {
         $revision = $this->replicate();
 
         $revision->user_id = $userId;
@@ -118,7 +118,7 @@ class Revision extends Model
     public function reviseForDeletion(
         ?string $userId = null,
         ?StoredEvent $event = null
-    ): self  {
+    ): static  {
         $revision = $this->replicate();
 
         $revision->user_id = $userId;

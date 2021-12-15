@@ -6,33 +6,21 @@ namespace Tests\Feature\Http\Responses;
 
 class UserResponse extends Response
 {
-    /**
-     * TODO:PHP8 - Replace self with static
-     * @return static
-     */
-    public function assertUserIdMatches(string $id): self
+    public function assertUserIdMatches(string $id): static
     {
         $this->response->assertJsonPath('id', $id);
 
         return $this;
     }
 
-    /**
-     * TODO:PHP8 - Replace self with static
-     * @return static
-     */
-    public function assertNameMatches(string $name): self
+    public function assertNameMatches(string $name): static
     {
         $this->response->assertJsonPath('name', $name);
 
         return $this;
     }
 
-    /**
-     * TODO:PHP8 - Replace self with static
-     * @return static
-     */
-    public function assertEmailMatches(string $email): self
+    public function assertEmailMatches(string $email): static
     {
         $this->response->assertJsonPath('email', $email);
 

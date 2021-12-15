@@ -8,7 +8,7 @@ use App\Modules\Audit\Enum\EntityType;
 
 interface Snapshot
 {
-    public static function fromArray(array $data): self;
+    public static function fromArray(array $data): static;
     public function toArray(): array;
     public function getType(): EntityType;
     public function getId(): string;

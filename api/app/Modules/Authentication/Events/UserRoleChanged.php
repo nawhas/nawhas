@@ -9,12 +9,8 @@ use Spatie\EventSourcing\StoredEvents\ShouldBeStored;
 
 class UserRoleChanged extends ShouldBeStored
 {
-    public string $id;
-    public Role $role;
-
-    public function __construct(string $id, Role $role)
-    {
-        $this->id = $id;
-        $this->role = $role;
-    }
+    public function __construct(
+        public string $id,
+        public Role $role
+    ) {}
 }

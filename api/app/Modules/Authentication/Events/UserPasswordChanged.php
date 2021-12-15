@@ -8,12 +8,8 @@ use Spatie\EventSourcing\StoredEvents\ShouldBeStored;
 
 class UserPasswordChanged extends ShouldBeStored
 {
-    public string $id;
-    public string $password;
-
-    public function __construct(string $id, string $password)
-    {
-        $this->id = $id;
-        $this->password = $password;
-    }
+    public function __construct(
+        public string $id,
+        public string $password,
+    ) {}
 }

@@ -7,19 +7,16 @@ namespace App\Modules\Features;
 use App\Modules\Authentication\Guard;
 use App\Modules\Features\Definitions\Feature;
 use App\Modules\Features\Exceptions\FeatureNotRegisteredException;
-use Illuminate\Contracts\Container\Container;
 use Illuminate\Support\Collection;
 
 class FeatureManager
 {
-    private Guard $guard;
-
     /** @var Collection<string,Feature> */
     private Collection $features;
 
-    public function __construct(Guard $guard)
-    {
-        $this->guard = $guard;
+    public function __construct(
+        private Guard $guard
+    ) {
         $this->features = new Collection();
     }
 

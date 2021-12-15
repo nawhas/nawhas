@@ -12,25 +12,21 @@ use Illuminate\Support\Stringable;
 
 class Document implements DocumentContract, Jsonable
 {
-    private Metadata $meta;
-    private Lyrics $data;
+    public function __construct(
+        private Metadata $meta,
+        private Lyrics $data
+    ) {}
 
-    public function __construct(Metadata $meta, Lyrics $data)
+    public static function make(Metadata $meta = null, Lyrics $data = null): static
     {
-        $this->meta = $meta;
-        $this->data = $data;
+        return new static($meta ?? new Metadata(), $data ?? new Lyrics());
     }
 
-    public static function make(Metadata $meta = null, Lyrics $data = null): self
-    {
-        return new self($meta ?? new Metadata(), $data ?? new Lyrics());
-    }
-
-    public static function fromJson(string $content): self
+    public static function fromJson(string $content): static
     {
         $source = json_decode($content, true, 512, JSON_THROW_ON_ERROR);
 
-        $document = self::make(new Metadata(Arr::get($source, 'meta.timestamps', true)));
+        $document = static::make(new Metadata(Arr::get($source, 'meta.timestamps', true)));
 
         foreach (Arr::get($source, 'data', []) as $data) {
             $group = new Group(

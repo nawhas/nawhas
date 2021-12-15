@@ -26,66 +26,42 @@ class TrackResponse extends Response
         ];
     }
 
-    /**
-     * TODO:PHP8 - Replace self with static
-     * @return static
-     */
-    public function assertTitle(string $title): self
+    public function assertTitle(string $title): static
     {
         $this->response->assertJsonPath('title', $title);
 
         return $this;
     }
 
-    /**
-     * TODO:PHP8 - Replace self with static
-     * @return static
-     */
-    public function assertSlug(string $slug): self
+    public function assertSlug(string $slug): static
     {
         $this->response->assertJsonPath('slug', $slug);
 
         return $this;
     }
 
-    /**
-     * TODO:PHP8 - Replace self with static
-     * @return static
-     */
-    public function assertYear(string $year): self
+    public function assertYear(string $year): static
     {
         $this->response->assertJsonPath('year', $year);
 
         return $this;
     }
 
-    /**
-     * TODO:PHP8 - Replace self with static
-     * @return static
-     */
-    public function assertOwnedBy(Reciter $reciter): self
+    public function assertOwnedBy(Reciter $reciter): static
     {
         $this->response->assertJsonPath('reciterId', $reciter->id);
 
         return $this;
     }
 
-    /**
-     * TODO:PHP8 - Replace self with static
-     * @return static
-     */
-    public function assertAlbum(Album $album): self
+    public function assertAlbum(Album $album): static
     {
         $this->response->assertJsonPath('albumId', $album->id);
 
         return $this;
     }
 
-    /**
-     * TODO:PHP8 - Replace self with static
-     * @return static
-     */
-    public function assertMatches(Track $track): self
+    public function assertMatches(Track $track): static
     {
         $this->response->assertJsonFragment([
             'id' => $track->id,

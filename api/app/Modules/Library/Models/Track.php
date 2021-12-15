@@ -123,7 +123,6 @@ class Track extends Model implements TimestampedEntity
         }
     }
 
-
     public function changeVideo(?string $url): void
     {
         if ($url !== $this->video) {

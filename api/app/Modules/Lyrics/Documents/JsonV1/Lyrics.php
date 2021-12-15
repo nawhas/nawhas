@@ -8,6 +8,7 @@ use Illuminate\Support\Collection;
 
 class Lyrics
 {
+    /** @var \Illuminate\Support\Collection<Group> */
     private Collection $groups;
 
     public function __construct()
@@ -15,7 +16,7 @@ class Lyrics
         $this->groups = collect();
     }
 
-    public function addGroup(Group $group): self
+    public function addGroup(Group $group): static
     {
         $this->groups->add($group);
 

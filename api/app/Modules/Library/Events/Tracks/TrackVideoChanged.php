@@ -8,12 +8,9 @@ use App\Enum\MediaProvider;
 
 class TrackVideoChanged extends TrackEvent
 {
-    public ?string $url;
-    public string $provider = MediaProvider::YOUTUBE;
-
-    public function __construct(string $id, ?string $url)
-    {
-        $this->id = $id;
-        $this->url = $url;
-    }
+    public function __construct(
+        public string $id,
+        public ?string $url,
+        public string $provider = MediaProvider::YOUTUBE,
+    ) {}
 }

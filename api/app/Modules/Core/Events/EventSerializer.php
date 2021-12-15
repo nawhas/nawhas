@@ -10,12 +10,9 @@ use Spatie\EventSourcing\StoredEvents\ShouldBeStored;
 
 class EventSerializer implements SpatieEventSerializer
 {
-    private JsonEventSerializer $serializer;
-
-    public function __construct(JsonEventSerializer $serializer)
-    {
-        $this->serializer = $serializer;
-    }
+    public function __construct(
+        private JsonEventSerializer $serializer
+    ) {}
 
     public function serialize(ShouldBeStored $event): string
     {

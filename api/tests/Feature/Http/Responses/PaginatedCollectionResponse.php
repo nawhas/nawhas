@@ -23,33 +23,21 @@ class PaginatedCollectionResponse extends CollectionResponse
         ];
     }
 
-    /**
-     * TODO:PHP8 - Replace self with static
-     * @return static
-     */
-    public function assertPage(int $page): self
+    public function assertPage(int $page): static
     {
         $this->response->assertJsonPath('meta.pagination.current_page', $page);
 
         return $this;
     }
 
-    /**
-     * TODO:PHP8 - Replace self with static
-     * @return static
-     */
-    public function assertTotalPages(int $pages): self
+    public function assertTotalPages(int $pages): static
     {
         $this->response->assertJsonPath('meta.pagination.total_pages', $pages);
 
         return $this;
     }
 
-    /**
-     * TODO:PHP8 - Replace self with static
-     * @return static
-     */
-    public function assertTotal(int $total): self
+    public function assertTotal(int $total): static
     {
         $this->response->assertJsonPath('meta.pagination.total', $total);
 

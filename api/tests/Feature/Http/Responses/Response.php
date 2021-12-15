@@ -16,11 +16,7 @@ abstract class Response
         $this->response = $response;
     }
 
-    /**
-     * TODO:PHP8 - Replace return type hint with static
-     * @return static
-     */
-    public static function from(TestResponse $response): self
+    public static function from(TestResponse $response): static
     {
         return new static($response);
     }
@@ -30,11 +26,7 @@ abstract class Response
         return $this->response;
     }
 
-    /**
-     * TODO:PHP8 - Replace return type hint with static
-     * @return static
-     */
-    public function assertSuccessful(): self
+    public function assertSuccessful(): static
     {
         $this->response->assertSuccessful();
         $this->response->assertJsonStructure($this->getJsonStructure());
@@ -46,7 +38,7 @@ abstract class Response
 
     public static function getItemFactory(): callable
     {
-        return static function (array $item, TestResponse $original): self {
+        return static function (array $item, TestResponse $original): static {
             $body = json_encode($item);
             $status = $original->status();
             $headers = $original->headers->all();

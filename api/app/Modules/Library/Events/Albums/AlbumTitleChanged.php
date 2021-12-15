@@ -6,11 +6,8 @@ namespace App\Modules\Library\Events\Albums;
 
 class AlbumTitleChanged extends AlbumEvent
 {
-    public string $title;
-
-    public function __construct(string $id, string $title)
-    {
-        $this->id = $id;
-        $this->title = $title;
-    }
+    public function __construct(
+        public string $id,
+        public string $title
+    ) {}
 }

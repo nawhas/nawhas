@@ -12,13 +12,10 @@ use App\Modules\Lyrics\Documents\Format;
 
 class TrackLyricsChanged extends TrackEvent implements SerializableEvent
 {
-    public ?Document $document;
-
-    public function __construct(string $id, ?Document $document)
-    {
-        $this->id = $id;
-        $this->document = $document;
-    }
+    public function __construct(
+        public string $id,
+        public ?Document $document
+    ) {}
 
     public function toPayload(): array
     {
@@ -28,7 +25,7 @@ class TrackLyricsChanged extends TrackEvent implements SerializableEvent
         ];
     }
 
-    public static function fromPayload(array $payload): self
+    public static function fromPayload(array $payload): static
     {
         $document = $payload['document'] ? Factory::create(
             $payload['document']['content'],

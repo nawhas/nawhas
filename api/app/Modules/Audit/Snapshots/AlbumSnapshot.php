@@ -10,48 +10,37 @@ use Illuminate\Support\Collection;
 
 class AlbumSnapshot implements Snapshot
 {
-    public string $id;
-    public string $reciterId;
-    public string $title;
-    public string $year;
-    public ?string $artwork;
-
     /**
-     * @var Collection|string[]
+     * @var Collection<string>
      */
     public Collection $tracks;
 
     public function __construct(
-        string $id,
-        string $reciterId,
-        string $title,
-        string $year,
-        ?string $artwork = null,
+        public string $id,
+        public string $reciterId,
+        public string $title,
+        public string $year,
+        public ?string $artwork = null,
         array $trackIds = []
     ) {
-        $this->id = $id;
-        $this->title = $title;
-        $this->year = $year;
-        $this->artwork = $artwork;
         $this->tracks = collect($trackIds);
-        $this->reciterId = $reciterId;
     }
 
-    public static function fromArray(array $attributes): self
+    public static function fromArray(array $data): static
     {
-        return new self(
-            $attributes['id'],
-            $attributes['reciterId'],
-            $attributes['title'],
-            $attributes['year'],
-            $attributes['artwork'],
-            $attributes['tracks'],
+        return new static(
+            $data['id'],
+            $data['reciterId'],
+            $data['title'],
+            $data['year'],
+            $data['artwork'],
+            $data['tracks'],
         );
     }
 
-    public static function fromRevision(Revision $revision): self
+    public static function fromRevision(Revision $revision): static
     {
-        return self::fromArray($revision->new_values);
+        return static::fromArray($revision->new_values);
     }
 
     public function toArray(): array
