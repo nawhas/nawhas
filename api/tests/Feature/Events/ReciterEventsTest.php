@@ -13,6 +13,7 @@ class ReciterEventsTest extends EventsTest
     /**
      * @test
      */
+    #[CoversEvent('reciter.created')]
     public function it_can_replay_reciter_created_event(): void
     {
         $id = uuid();
@@ -40,6 +41,7 @@ class ReciterEventsTest extends EventsTest
     /**
      * @test
      */
+    #[CoversEvent('reciter.changed.name')]
     public function it_can_replay_reciter_name_changed_event(): void
     {
         $reciter = $this->getReciterFactory()->create();
@@ -61,6 +63,29 @@ class ReciterEventsTest extends EventsTest
     /**
      * @test
      */
+    #[CoversEvent('reciter.changed.description')]
+    public function it_can_replay_reciter_description_changed_event(): void
+    {
+        $reciter = $this->getReciterFactory()->create();
+        $description = $this->faker->text;
+
+        $this->assertNotEquals($reciter->description, $description);
+
+        $this->event('reciter.changed.description', [
+            'id' => $reciter->id,
+            'description' => $description,
+        ]);
+
+        $this->replay();
+
+        $reciter->refresh();
+        $this->assertEquals($description, $reciter->description);
+    }
+
+    /**
+     * @test
+     */
+    #[CoversEvent('reciter.changed.avatar')]
     public function it_can_replay_reciter_avatar_changed_event(): void
     {
         $reciter = $this->getReciterFactory()->create();
@@ -94,6 +119,7 @@ class ReciterEventsTest extends EventsTest
     /**
      * @test
      */
+    #[CoversEvent('reciter.viewed')]
     public function it_can_replay_reciter_viewed_event(): void
     {
         $reciter = $this->getReciterFactory()->create();
@@ -109,5 +135,22 @@ class ReciterEventsTest extends EventsTest
         $reciter->refresh();
 
         $this->assertEquals(1, $reciter->visitsForever());
+    }
+
+    /**
+     * @test
+     */
+    #[CoversEvent('reciter.deleted')]
+    public function it_can_replay_reciter_deleted_event(): void
+    {
+        $reciter = $this->getReciterFactory()->create();
+
+        $this->event('reciter.deleted', [
+            'id' => $reciter->id,
+        ]);
+
+        $this->replay();
+
+        $this->assertNull(Reciter::find($reciter->id));
     }
 }

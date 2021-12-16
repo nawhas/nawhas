@@ -14,6 +14,7 @@ class UserEventsTest extends EventsTest
     /**
      * @test
      */
+    #[CoversEvent('user.registered')]
     public function it_can_replay_user_registered_event(): void
     {
         $properties = [
@@ -47,6 +48,7 @@ class UserEventsTest extends EventsTest
     /**
      * @test
      */
+    #[CoversEvent('user.changed.password')]
     public function it_can_replay_user_password_changed_event(): void
     {
         $hasher = app(Hasher::class);
@@ -64,8 +66,72 @@ class UserEventsTest extends EventsTest
         $this->replay();
 
         $user->refresh();
-        $this->assertNotNull($user);
-
         $this->assertTrue($hasher->check($newPassword, $user->password));
+    }
+
+    /**
+     * @test
+     */
+    #[CoversEvent('user.changed.name')]
+    public function it_can_replay_user_name_changed_event(): void
+    {
+        $user = $this->getUserFactory()->moderator();
+        $name = $this->faker->name;
+
+        $this->assertNotEquals($name, $user->name);
+
+        $this->event('user.changed.name', [
+            'id' => $user->id,
+            'name' => $name,
+        ]);
+
+        $this->replay();
+
+        $user->refresh();
+        $this->assertEquals($name, $user->name);
+    }
+
+    /**
+     * @test
+     */
+    #[CoversEvent('user.changed.email')]
+    public function it_can_replay_user_email_changed_event(): void
+    {
+        $user = $this->getUserFactory()->moderator();
+        $email = $this->faker->email;
+
+        $this->assertNotEquals($email, $user->email);
+
+        $this->event('user.changed.email', [
+            'id' => $user->id,
+            'email' => $email,
+        ]);
+
+        $this->replay();
+
+        $user->refresh();
+        $this->assertEquals($email, $user->email);
+    }
+
+    /**
+     * @test
+     */
+    #[CoversEvent('user.changed.nickname')]
+    public function it_can_replay_user_nickname_changed_event(): void
+    {
+        $user = $this->getUserFactory()->moderator();
+        $nickname = $this->faker->userName;
+
+        $this->assertNotEquals($nickname, $user->nickname);
+
+        $this->event('user.changed.nickname', [
+            'id' => $user->id,
+            'nickname' => $nickname,
+        ]);
+
+        $this->replay();
+
+        $user->refresh();
+        $this->assertEquals($nickname, $user->nickname);
     }
 }

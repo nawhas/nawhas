@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Events;
 
+use App\Support\ReflectionHelper;
 use Illuminate\Support\Str;
 use ReflectionClass;
 use Spatie\EventSourcing\StoredEvents\ShouldBeStored;
@@ -22,7 +23,7 @@ class EventRegistrationTest extends TestCase
 
         collect($files)
             ->reject(fn (SplFileInfo $file) => in_array($file->getPathname(), $this->getIgnoredFiles()))
-            ->map(fn (SplFileInfo $file) => $this->fullQualifiedClassNameFromFile($file))
+            ->map(fn (SplFileInfo $file) => ReflectionHelper::fqnFromFilePath($file->getRealPath()))
             ->filter(fn (string $class) => is_subclass_of($class, ShouldBeStored::class))
             ->filter(fn (string $class) => $this->isInstantiable($class))
             ->each(fn (string $class) => $this->assertMappingExists($class));
@@ -33,19 +34,6 @@ class EventRegistrationTest extends TestCase
         $reflection = new ReflectionClass($class);
 
         return $reflection->isInstantiable();
-    }
-
-    private function fullQualifiedClassNameFromFile(SplFileInfo $file): string
-    {
-        $class = trim(Str::replaceFirst(app()->path(), '', $file->getRealPath()), DIRECTORY_SEPARATOR);
-
-        $class = str_replace(
-            [DIRECTORY_SEPARATOR, 'App\\'],
-            ['\\', app()->getNamespace()],
-            ucfirst(Str::replaceLast('.php', '', $class))
-        );
-
-        return app()->getNamespace() . $class;
     }
 
     private function assertMappingExists(string $class): void

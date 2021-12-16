@@ -9,9 +9,7 @@ use App\Modules\Authentication\Events\{UserEmailChanged,
     UserNameChanged,
     UserNicknameChanged,
     UserPasswordChanged,
-    UserRegistered,
-    UserRememberTokenChanged,
-    UserRoleChanged};
+    UserRegistered};
 use App\Modules\Core\Contracts\TimestampedEntity;
 use App\Modules\Core\Models\{HasTimestamps, HasUuid, UsesDataConnection};
 use App\Modules\Library\Models\Track;
@@ -93,13 +91,6 @@ class User extends Authenticatable implements TimestampedEntity
         }
     }
 
-    public function changeRole(Role $role): void
-    {
-        if ($role->getValue() === $this->role) {
-            event(new UserRoleChanged($this->id, $role));
-        }
-    }
-
     public function changeEmail(string $email): void
     {
         if ($email !== $this->email) {
@@ -110,11 +101,6 @@ class User extends Authenticatable implements TimestampedEntity
     public function changePassword(string $password):void
     {
         event(new UserPasswordChanged($this->id, bcrypt($password)));
-    }
-
-    public function changeRememberToken(string $rememberToken): void
-    {
-        event(new UserRememberTokenChanged($this->id, $rememberToken));
     }
 
     public function changeNickname(?string $nickname):void

@@ -107,14 +107,10 @@ return [
         'user.changed.email' => Authentication\UserEmailChanged::class,
         'user.changed.nickname' => Authentication\UserNicknameChanged::class,
         'user.changed.password' => Authentication\UserPasswordChanged::class,
-        'user.changed.remember.token' => Authentication\UserRememberTokenChanged::class,
-        'user.changed.role' => Authentication\UserRoleChanged::class,
         // Auth Events
         'auth.login' => Authentication\UserLoggedIn::class,
         'auth.logout' => Authentication\UserLoggedOut::class,
         'auth.password.reset.requested' => Authentication\PasswordResetRequested::class,
-        // Social Accounts Events
-        'user.social.registered' => Authentication\SocialAccountRegistered::class,
         // Account Events
         'accounts.saves.track.added' => Accounts\Saves\TrackSaved::class,
         'accounts.saves.track.removed' => Accounts\Saves\SavedTrackRemoved::class,

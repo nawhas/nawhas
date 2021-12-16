@@ -23,6 +23,7 @@ class AccountEventsTest extends EventsTest
     /**
      * @test
      */
+    #[CoversEvent('accounts.saves.track.added')]
     public function it_can_replay_track_saved_event(): void
     {
         $this->assertFalse($this->user->hasSavedTrack($this->track->id));
@@ -39,6 +40,7 @@ class AccountEventsTest extends EventsTest
     /**
      * @test
      */
+    #[CoversEvent('accounts.saves.track.removed')]
     public function it_can_replay_saved_track_removed_event(): void
     {
         event((new TrackSaved($this->track->id))->setUserId($this->user->id));

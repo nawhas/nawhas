@@ -25,6 +25,7 @@ class TrackEventsTest extends EventsTest
     /**
      * @test
      */
+    #[CoversEvent('track.created')]
     public function it_can_replay_track_created_event(): void
     {
         $id = uuid();
@@ -49,6 +50,7 @@ class TrackEventsTest extends EventsTest
     /**
      * @test
      */
+    #[CoversEvent('track.changed.title')]
     public function it_can_replay_track_title_changed_event(): void
     {
         $track = $this->getTrackFactory()->create($this->album);
@@ -68,6 +70,7 @@ class TrackEventsTest extends EventsTest
     /**
      * @test
      */
+    #[CoversEvent('track.changed.audio')]
     public function it_can_replay_track_audio_changed_event(): void
     {
         $track = $this->getTrackFactory()->create($this->album);
@@ -97,6 +100,7 @@ class TrackEventsTest extends EventsTest
     /**
      * @test
      */
+    #[CoversEvent('track.changed.video')]
     public function it_can_replay_track_video_changed_event(): void
     {
         $track = $this->getTrackFactory()->create($this->album);
@@ -128,6 +132,7 @@ class TrackEventsTest extends EventsTest
     /**
      * @test
      */
+    #[CoversEvent('track.changed.lyrics')]
     public function it_can_replay_track_lyrics_changed_event(): void
     {
         $track = $this->getTrackFactory()->create($this->album);
@@ -187,6 +192,7 @@ class TrackEventsTest extends EventsTest
     /**
      * @test
      */
+    #[CoversEvent('track.deleted')]
     public function it_can_replay_track_deleted_event(): void
     {
         $track = $this->getTrackFactory()->create($this->album);
@@ -201,6 +207,7 @@ class TrackEventsTest extends EventsTest
     /**
      * @test
      */
+    #[CoversEvent('track.viewed')]
     public function it_can_replay_track_viewed_event(): void
     {
         $track = $this->getTrackFactory()->create();

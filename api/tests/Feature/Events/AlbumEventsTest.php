@@ -22,6 +22,7 @@ class AlbumEventsTest extends EventsTest
     /**
      * @test
      */
+    #[CoversEvent('album.created')]
     public function it_can_replay_album_created_event(): void
     {
         // With no artwork
@@ -71,6 +72,7 @@ class AlbumEventsTest extends EventsTest
     /**
      * @test
      */
+    #[CoversEvent('album.changed.title')]
     public function it_can_replay_album_title_changed_event(): void
     {
         $album = $this->getAlbumFactory()->create($this->reciter);
@@ -92,6 +94,7 @@ class AlbumEventsTest extends EventsTest
     /**
      * @test
      */
+    #[CoversEvent('album.changed.year')]
     public function it_can_replay_album_year_changed_event(): void
     {
         $album = $this->getAlbumFactory()->create($this->reciter);
@@ -113,6 +116,7 @@ class AlbumEventsTest extends EventsTest
     /**
      * @test
      */
+    #[CoversEvent('album.changed.artwork')]
     public function it_can_replay_album_artwork_changed_event(): void
     {
         $album = $this->getAlbumFactory()->create($this->reciter);
@@ -134,6 +138,7 @@ class AlbumEventsTest extends EventsTest
     /**
      * @test
      */
+    #[CoversEvent('album.deleted')]
     public function it_can_replay_album_deleted_event(): void
     {
         $album = $this->getAlbumFactory()->create($this->reciter);
@@ -148,6 +153,7 @@ class AlbumEventsTest extends EventsTest
     /**
      * @test
      */
+    #[CoversEvent('album.viewed')]
     public function it_can_replay_album_viewed_event(): void
     {
         $album = $this->getReciterFactory()->create();
