@@ -25,7 +25,7 @@ use Ramsey\Uuid\Uuid;
  * @property string $email
  * @property string|null $email_verified_at
  * @property string $password
- * @property string $role
+ * @property \App\Modules\Authentication\Enum\Role $role
  * @property string|null $nickname
  * @property string|null $remember_token
  * @property \Carbon\Carbon|null $created_at
@@ -45,6 +45,10 @@ class User extends Authenticatable implements TimestampedEntity
 
     protected $guarded = [];
 
+    protected $casts = [
+        'role' => Role::class,
+    ];
+
     public static function create(
         Role $role,
         string $name,
@@ -56,7 +60,7 @@ class User extends Authenticatable implements TimestampedEntity
         $id = Uuid::uuid1()->toString();
 
         event(new UserRegistered($id, [
-            'role' => $role->getValue(),
+            'role' => $role->value,
             'name' => $name,
             'email' => $email,
             'password' => bcrypt($password),
@@ -129,6 +133,6 @@ class User extends Authenticatable implements TimestampedEntity
 
     public function isModerator(): bool
     {
-        return $this->role === Role::MODERATOR;
+        return $this->role === Role::Moderator;
     }
 }

@@ -78,7 +78,7 @@ class OAuthController extends Controller
         }
 
         $user = User::create(
-            Role::CONTRIBUTOR(),
+            Role::Contributor,
             $socialiteUser->getName(),
             $socialiteUser->getEmail(),
         );

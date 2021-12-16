@@ -24,8 +24,8 @@ class TestDataSeeder extends Seeder
 
         $data = json_decode(file_get_contents(__DIR__ . '/seed.json'), true);
 
-        User::create(Role::MODERATOR(), 'Moderator', 'moderator@nawhas.com', 'secret');
-        User::create(Role::CONTRIBUTOR(), 'Contributor', 'contributor@nawhas.com', 'secret');
+        User::create(Role::Moderator, 'Moderator', 'moderator@nawhas.com', 'secret');
+        User::create(Role::Contributor, 'Contributor', 'contributor@nawhas.com', 'secret');
 
         foreach ($data as $r) {
             $reciter = Reciter::create($r['name'], $r['description'], $r['avatar']);

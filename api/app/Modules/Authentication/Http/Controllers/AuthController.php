@@ -47,7 +47,7 @@ class AuthController extends Controller
 
     public function register(RegisterRequest $request): JsonResponse
     {
-        $role = Role::CONTRIBUTOR();
+        $role = Role::Contributor;
         $name = $request->get('name');
         $email = $request->get('email');
         $password = $request->get('password');
