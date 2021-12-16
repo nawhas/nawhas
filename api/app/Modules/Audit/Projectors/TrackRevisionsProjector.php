@@ -35,7 +35,7 @@ class TrackRevisionsProjector extends Projector
 
         $revision = Revision::makeInitial(
             $snapshot,
-            ChangeType::CREATED(),
+            ChangeType::Created,
             $event->getUserId(),
             $this->getStoredEvent($event)
         );
@@ -103,7 +103,7 @@ class TrackRevisionsProjector extends Projector
 
         $last->revise(
             $snapshot,
-            ChangeType::MODIFIED(),
+            ChangeType::Modified,
             $event->getUserId(),
             $storedEvent
         )->save();

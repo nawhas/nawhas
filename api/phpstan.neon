@@ -8,4 +8,8 @@ parameters:
     ignoreErrors:
         - '#Unsafe usage of new static#'
         - '#Access to undefined constant [A-Za-z0-9\\]+Enum[A-Za-z0-9\\:]+#'
+        - '#Access to undefined constant App\\Modules\\Lyrics\\Documents\\Format::[A-Za-z0-9]#'
         - '#Access to an undefined property [A-Za-z0-9\\]+Enum[A-Za-z0-9\\:]+\$value#'
+        - '#Access to an undefined property App\\Modules\\Lyrics\\Documents\\Format::\$value#'
+        - '#Call to an undefined static method App\\Modules\\Lyrics\\Documents\\Format::from\(\)#'
+        - '#Match expression does not handle remaining value: App\\Modules\\Lyrics\\Documents\\Format#'

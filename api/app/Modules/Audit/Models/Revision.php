@@ -24,7 +24,7 @@ use Spatie\EventSourcing\StoredEvents\StoredEvent;
  * @property string $entity_id
  * @property array|null $old_values
  * @property array|null $new_values
- * @property string $change_type
+ * @property \App\Modules\Audit\Enum\ChangeType $change_type
  * @property string|null $user_id
  * @property int $version
  * @property int $event_id
@@ -49,6 +49,7 @@ class Revision extends Model
     protected $casts = [
         'old_values' => 'array',
         'new_values' => 'array',
+        'change_type' => ChangeType::class,
     ];
 
     public function user(): BelongsTo
@@ -83,7 +84,7 @@ class Revision extends Model
         $revision->entity_id = $snapshot->getId();
         $revision->version = 1;
         $revision->user_id = $userId;
-        $revision->change_type = $changeType->getValue();
+        $revision->change_type = $changeType;
         $revision->event_id = $event->id;
         $revision->created_at = Carbon::make($event ? $event->created_at : 'now');
         $revision->setValues(
@@ -103,7 +104,7 @@ class Revision extends Model
         $revision = $this->replicate();
 
         $revision->user_id = $userId;
-        $revision->change_type = $changeType->getValue();
+        $revision->change_type = $changeType;
         $revision->version = $this->version + 1;
         $revision->created_at = Carbon::make($event ? $event->created_at : 'now');
         $revision->event_id = $event->id;
@@ -122,7 +123,7 @@ class Revision extends Model
         $revision = $this->replicate();
 
         $revision->user_id = $userId;
-        $revision->change_type = ChangeType::DELETED;
+        $revision->change_type = ChangeType::Deleted;
         $revision->version = $this->version + 1;
         $revision->created_at = Carbon::make($event ? $event->created_at : 'now');
         $revision->event_id = $event->id;
@@ -155,7 +156,7 @@ class Revision extends Model
 
     public function save(array $options = [])
     {
-        if ($this->change_type === ChangeType::MODIFIED && empty($this->old_values)) {
+        if ($this->change_type === ChangeType::Modified && empty($this->old_values)) {
             return false;
         }
 

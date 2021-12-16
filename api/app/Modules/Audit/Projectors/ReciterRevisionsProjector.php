@@ -36,7 +36,7 @@ class ReciterRevisionsProjector extends Projector
 
         $revision = Revision::makeInitial(
             $snapshot,
-            ChangeType::CREATED(),
+            ChangeType::Created,
             $event->getUserId(),
             $this->getStoredEvent($event),
         );
@@ -89,7 +89,7 @@ class ReciterRevisionsProjector extends Projector
 
         $last->revise(
             $snapshot,
-            ChangeType::MODIFIED(),
+            ChangeType::Modified,
             $event->getUserId(),
             $this->getStoredEvent($event),
         )->save();
@@ -106,7 +106,7 @@ class ReciterRevisionsProjector extends Projector
 
         $last->revise(
             $snapshot,
-            ChangeType::MODIFIED(),
+            ChangeType::Modified,
             $event->getUserId(),
             $this->getStoredEvent($event),
         );
@@ -137,7 +137,7 @@ class ReciterRevisionsProjector extends Projector
 
         $last->revise(
             $snapshot,
-            ChangeType::MODIFIED(),
+            ChangeType::Modified,
             $event->getUserId(),
             $storedEvent
         )->save();
