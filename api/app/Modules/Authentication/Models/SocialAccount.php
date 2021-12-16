@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Authentication\Models;
 
+use App\Exceptions\NotImplementedException;
 use App\Modules\Authentication\Events\SocialAccountRegistered;
 use App\Modules\Core\Contracts\TimestampedEntity;
 use App\Modules\Core\Models\HasTimestamps;
@@ -37,15 +38,16 @@ class SocialAccount extends Model implements TimestampedEntity
 
     public static function create(string $userId, string $provider, string $providerId): self
     {
-        $id = Uuid::uuid1()->toString();
-
-        event(new SocialAccountRegistered($id, [
-            'userId' => $userId,
-            'provider' => $provider,
-            'providerId' => $providerId,
-        ]));
-
-        return self::retrieve($id);
+        throw new NotImplementedException();
+//        $id = Uuid::uuid1()->toString();
+//
+//        event(new SocialAccountRegistered($id, [
+//            'userId' => $userId,
+//            'provider' => $provider,
+//            'providerId' => $providerId,
+//        ]));
+//
+//        return self::retrieve($id);
     }
 
     /**
