@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 namespace App\Modules\Library\Projectors;
 
+use App\Modules\Audit\Enum\EntityType;
 use App\Modules\Library\Events\Reciters\ReciterViewed;
 use App\Modules\Library\Events\Tracks\TrackViewed;
-use App\Modules\Library\Models\Reciter;
-use App\Modules\Library\Models\Track;
 use App\Modules\Library\Models\Visit;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Spatie\EventSourcing\EventHandlers\Projectors\Projector;
@@ -19,7 +18,7 @@ class VisitsProjector extends Projector implements ShouldQueue
         Visit::create([
             'visited_at' => $event->visitedAt,
             'visitable_id' => $event->id,
-            'visitable_type' => Reciter::class,
+            'visitable_type' => EntityType::RECITER,
         ]);
     }
 
@@ -28,7 +27,7 @@ class VisitsProjector extends Projector implements ShouldQueue
         Visit::create([
             'visited_at' => $event->visitedAt,
             'visitable_id' => $event->id,
-            'visitable_type' => Track::class,
+            'visitable_type' => EntityType::RECITER,
         ]);
     }
 

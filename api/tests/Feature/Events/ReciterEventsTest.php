@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace Tests\Feature\Events;
 
 use App\Modules\Library\Models\Reciter;
-use App\Modules\Library\Models\Visit;
-use Illuminate\Database\Eloquent\Relations\Relation;
 use Ramsey\Uuid\Uuid;
 
 class ReciterEventsTest extends ReplayEventsTest
