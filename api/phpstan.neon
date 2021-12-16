@@ -7,3 +7,5 @@ parameters:
     level: 5
     ignoreErrors:
         - '#Unsafe usage of new static#'
+        - '#Access to undefined constant [A-Za-z0-9\\]+Enum[A-Za-z0-9\\:]+#'
+        - '#Access to an undefined property [A-Za-z0-9\\]+Enum[A-Za-z0-9\\:]+\$value#'
