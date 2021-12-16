@@ -92,9 +92,9 @@ if [ $# -gt 0 ];then
 
     # If "test" is used, run linting, unit, and feature tests
     elif [ "$1" == "test" ]; then
-      ./dev lint
-      ./dev test:unit
-      ./dev test:feature
+      ./dev --$MODE lint
+      ./dev --$MODE test:unit
+      ./dev --$MODE test:feature
 
     # If "down" is used, take down everything
     elif [ "$1" == "down" ]; then
