@@ -7,5 +7,5 @@ namespace App\Modules\Core\Events;
 interface UserAwareEvent
 {
     public function getUserId(): ?string;
-    public function setUserId(?string $id): void;
+    public function setUserId(?string $id): static;
 }
