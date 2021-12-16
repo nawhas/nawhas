@@ -13,3 +13,4 @@ parameters:
         - '#Access to an undefined property App\\Modules\\Lyrics\\Documents\\Format::\$value#'
         - '#Call to an undefined static method App\\Modules\\Lyrics\\Documents\\Format::from\(\)#'
         - '#Match expression does not handle remaining value: App\\Modules\\Lyrics\\Documents\\Format#'
+        - '#Match expression does not handle remaining value: App\\Modules\\Audit\\Enum\\EntityType#'

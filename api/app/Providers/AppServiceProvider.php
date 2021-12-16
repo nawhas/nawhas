@@ -39,9 +39,9 @@ class AppServiceProvider extends ServiceProvider
         });
 
         Relation::morphMap([
-            EntityType::RECITER => Reciter::class,
-            EntityType::ALBUM => Album::class,
-            EntityType::TRACK => Track::class,
+            EntityType::Reciter->value => Reciter::class,
+            EntityType::Album->value => Album::class,
+            EntityType::Track->value => Track::class,
         ]);
     }
 

@@ -56,7 +56,7 @@ class TrackSnapshot implements Snapshot
 
     public function getType(): EntityType
     {
-        return EntityType::TRACK();
+        return EntityType::Track;
     }
 
     public function getId(): string

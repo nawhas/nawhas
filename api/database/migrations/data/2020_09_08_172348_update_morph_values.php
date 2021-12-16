@@ -19,19 +19,19 @@ class UpdateMorphValues extends Migration
 
         $connection->table('visits')
             ->where('visitable_type', Reciter::class)
-            ->update(['visitable_type' => EntityType::RECITER]);
+            ->update(['visitable_type' => EntityType::Reciter->value]);
 
         $connection->table('visits')
             ->where('visitable_type', Track::class)
-            ->update(['visitable_type' => EntityType::TRACK]);
+            ->update(['visitable_type' => EntityType::Track->value]);
 
         $connection->table('visits')
             ->where('visitable_type', Album::class)
-            ->update(['visitable_type' => EntityType::ALBUM]);
+            ->update(['visitable_type' => EntityType::Album->value]);
 
         $connection->table('saveables')
             ->where('saveable_type', Track::class)
-            ->update(['saveable_type' => EntityType::TRACK]);
+            ->update(['saveable_type' => EntityType::Track->value]);
     }
 
     /**

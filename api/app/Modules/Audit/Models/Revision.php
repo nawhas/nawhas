@@ -20,7 +20,7 @@ use Spatie\EventSourcing\StoredEvents\StoredEvent;
  * App\Modules\Audit\Models\Revision
  *
  * @property string $id
- * @property string $entity_type
+ * @property \App\Modules\Audit\Enum\EntityType $entity_type
  * @property string $entity_id
  * @property array|null $old_values
  * @property array|null $new_values
@@ -29,7 +29,7 @@ use Spatie\EventSourcing\StoredEvents\StoredEvent;
  * @property int $version
  * @property int $event_id
  * @property \Carbon\Carbon $created_at
- * @property-read Model|\Eloquent $entity
+ * @property-read null|\App\Modules\Audit\Revisionable\Revisionable|\Illuminate\Database\Eloquent\Model $entity
  * @property-read User|null $user
  * @method static \Illuminate\Database\Eloquent\Builder|Revision newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Revision newQuery()
@@ -50,6 +50,7 @@ class Revision extends Model
         'old_values' => 'array',
         'new_values' => 'array',
         'change_type' => ChangeType::class,
+        'entity_type' => EntityType::class,
     ];
 
     public function user(): BelongsTo
@@ -67,7 +68,7 @@ class Revision extends Model
         string $entityId
     ): ?Revision {
         return self::query()
-            ->where('entity_type', $entityType->getValue())
+            ->where('entity_type', $entityType->value)
             ->where('entity_id', $entityId)
             ->orderByDesc('version')
             ->first();
@@ -80,7 +81,7 @@ class Revision extends Model
         ?StoredEvent $event = null
     ): self {
         $revision = new self();
-        $revision->entity_type = $snapshot->getType()->getValue();
+        $revision->entity_type = $snapshot->getType();
         $revision->entity_id = $snapshot->getId();
         $revision->version = 1;
         $revision->user_id = $userId;

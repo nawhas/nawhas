@@ -55,7 +55,7 @@ class ReciterSnapshot implements Snapshot
 
     public function getType(): EntityType
     {
-        return EntityType::RECITER();
+        return EntityType::Reciter;
     }
 
     public function getId(): string
