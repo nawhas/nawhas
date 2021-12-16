@@ -46,7 +46,7 @@ class EventSerializer implements SpatieEventSerializer
             }
 
             if ($event instanceof UserAwareEvent) {
-                $event->setUserId($payload['userId']);
+                $event->setUserId($payload['userId'] ?? null);
             }
 
             return $event;

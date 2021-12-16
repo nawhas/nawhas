@@ -6,7 +6,8 @@ namespace Tests\Feature\Events;
 
 use App\Modules\Library\Models\Album;
 use App\Modules\Library\Models\Reciter;
-use Ramsey\Uuid\Uuid;
+
+use function App\Support\uuid;
 
 class AlbumEventsTest extends EventsTest
 {
@@ -24,7 +25,7 @@ class AlbumEventsTest extends EventsTest
     public function it_can_replay_album_created_event(): void
     {
         // With no artwork
-        $id = Uuid::uuid1()->toString();
+        $id = uuid();
         $properties = [
             'id' => $id,
             'reciterId' => $this->reciter->id,
@@ -48,7 +49,7 @@ class AlbumEventsTest extends EventsTest
         $this->assertEquals($attributes['artwork'], $album->artwork);
 
         // With Artwork
-        $id = Uuid::uuid1()->toString();
+        $id = uuid();
         $properties = [
             'id' => $id,
             'reciterId' => $this->reciter->id,

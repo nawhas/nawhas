@@ -5,7 +5,8 @@ declare(strict_types=1);
 namespace Tests\Feature\Events;
 
 use App\Modules\Library\Models\Reciter;
-use Ramsey\Uuid\Uuid;
+
+use function App\Support\uuid;
 
 class ReciterEventsTest extends EventsTest
 {
@@ -14,7 +15,7 @@ class ReciterEventsTest extends EventsTest
      */
     public function it_can_replay_reciter_created_event(): void
     {
-        $id = Uuid::uuid1()->toString();
+        $id = uuid();
         $properties = [
             'id' => $id,
             'attributes' => [

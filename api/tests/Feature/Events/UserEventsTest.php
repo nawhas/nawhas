@@ -6,7 +6,8 @@ namespace Tests\Feature\Events;
 
 use App\Modules\Authentication\Models\User;
 use Illuminate\Contracts\Hashing\Hasher;
-use Ramsey\Uuid\Uuid;
+
+use function App\Support\uuid;
 
 class UserEventsTest extends EventsTest
 {
@@ -16,7 +17,7 @@ class UserEventsTest extends EventsTest
     public function it_can_replay_user_registered_event(): void
     {
         $properties = [
-            'id' => Uuid::uuid1()->toString(),
+            'id' => uuid(),
             'attributes' => [
                 'name' => $this->faker->name,
                 'role' => 'moderator',

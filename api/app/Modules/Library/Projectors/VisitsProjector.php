@@ -27,7 +27,7 @@ class VisitsProjector extends Projector implements ShouldQueue
         Visit::create([
             'visited_at' => $event->visitedAt,
             'visitable_id' => $event->id,
-            'visitable_type' => EntityType::RECITER,
+            'visitable_type' => EntityType::TRACK,
         ]);
     }
 
