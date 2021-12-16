@@ -11,7 +11,7 @@ use Illuminate\Support\Collection;
 class AlbumSnapshot implements Snapshot
 {
     /**
-     * @var Collection<string>
+     * @var Collection<int, string>
      */
     public Collection $tracks;
 

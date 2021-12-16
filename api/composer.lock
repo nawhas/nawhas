@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "37414140a797f600f031665649059db6",
+    "content-hash": "d9e10a6a701c0a7ddd1074481f069aee",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -14392,16 +14392,16 @@
         },
         {
             "name": "vimeo/psalm",
-            "version": "v4.15.0",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/vimeo/psalm.git",
-                "reference": "a1b5e489e6fcebe40cb804793d964e99fc347820"
+                "reference": "f4b48ab6254ef6876e42315f950a1eb3657dd76e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/vimeo/psalm/zipball/a1b5e489e6fcebe40cb804793d964e99fc347820",
-                "reference": "a1b5e489e6fcebe40cb804793d964e99fc347820",
+                "url": "https://api.github.com/repos/vimeo/psalm/zipball/f4b48ab6254ef6876e42315f950a1eb3657dd76e",
+                "reference": "f4b48ab6254ef6876e42315f950a1eb3657dd76e",
                 "shasum": ""
             },
             "require": {
@@ -14450,6 +14450,7 @@
                 "ext-curl": "In order to send data to shepherd",
                 "ext-igbinary": "^2.0.5 is required, used to serialize caching data"
             },
+            "default-branch": true,
             "bin": [
                 "psalm",
                 "psalm-language-server",
@@ -14492,9 +14493,9 @@
             ],
             "support": {
                 "issues": "https://github.com/vimeo/psalm/issues",
-                "source": "https://github.com/vimeo/psalm/tree/v4.15.0"
+                "source": "https://github.com/vimeo/psalm/tree/master"
             },
-            "time": "2021-12-07T11:25:29+00:00"
+            "time": "2021-12-16T17:50:41+00:00"
         },
         {
             "name": "vishnubob/wait-for-it",
@@ -14782,6 +14783,7 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
+        "vimeo/psalm": 20,
         "vishnubob/wait-for-it": 20
     },
     "prefer-stable": true,

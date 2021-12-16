@@ -20,6 +20,7 @@ use App\Modules\Lyrics\Documents\Factory as DocumentFactory;
 use App\Modules\Lyrics\Documents\JsonV1\Document as JsonDocument;
 use JetBrains\PhpStorm\ArrayShape;
 use League\Fractal\Resource\Item;
+use League\Fractal\Resource\NullResource;
 use League\Fractal\Resource\Primitive;
 
 class RevisionTransformer extends Transformer
@@ -42,7 +43,7 @@ class RevisionTransformer extends Transformer
         ];
     }
 
-    public function includeUser(Revision $revision): Primitive|Item
+    public function includeUser(Revision $revision): Primitive|Item|NullResource
     {
         if ($revision->user_id === null) {
             return $this->null();
