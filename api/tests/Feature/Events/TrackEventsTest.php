@@ -151,7 +151,7 @@ class TrackEventsTest extends EventsTest
 
         $track->refresh();
         $this->assertNotNull($track->lyrics);
-        $this->assertEquals($document['format'], $track->lyrics->getFormat()->getValue());
+        $this->assertEquals($document['format'], $track->lyrics->getFormat()->value);
         $this->assertEquals($document['content'], $track->lyrics->getContent());
 
         // V2 Document
@@ -175,7 +175,7 @@ class TrackEventsTest extends EventsTest
 
         $track->refresh();
         $this->assertNotNull($track->lyrics);
-        $this->assertEquals($document['format'], $track->lyrics->getFormat()->getValue());
+        $this->assertEquals($document['format'], $track->lyrics->getFormat()->value);
         $this->assertEquals($document['content'], $track->lyrics->getContent());
 
         // With Null

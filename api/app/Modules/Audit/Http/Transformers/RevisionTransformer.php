@@ -78,7 +78,7 @@ class RevisionTransformer extends Transformer
             if (isset($data['lyrics'])) {
                 $document = DocumentFactory::create(
                     $data['lyrics']['content'],
-                    new Format($data['lyrics']['format'])
+                    Format::from($data['lyrics']['format'])
                 );
                 $data['lyrics'] = $document->render();
                 $data['timestamps'] = 'No';

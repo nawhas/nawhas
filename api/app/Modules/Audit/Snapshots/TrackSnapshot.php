@@ -24,7 +24,7 @@ class TrackSnapshot implements Snapshot
         $lyrics = $data['lyrics'] ?? null;
 
         if ($lyrics) {
-            $lyrics = Factory::create($lyrics['content'], new Format($lyrics['format']));
+            $lyrics = Factory::create($lyrics['content'], Format::from($lyrics['format']));
         }
 
         return new static(

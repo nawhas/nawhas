@@ -67,14 +67,14 @@ class Document implements DocumentContract, Jsonable
 
     public function getFormat(): Format
     {
-        return Format::JSON_V1();
+        return Format::JsonV1;
     }
 
     public function toArray(): array
     {
         return [
             'content' => $this->getContent(),
-            'format' => $this->getFormat(),
+            'format' => $this->getFormat()->value,
         ];
     }
 

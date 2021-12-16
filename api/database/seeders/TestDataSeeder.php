@@ -42,7 +42,7 @@ class TestDataSeeder extends Seeder
                     $track = Track::create($album, $t['title']);
 
                     if ($t['lyrics']) {
-                        $doc = Factory::create($t['lyrics'], Format::PLAIN_TEXT());
+                        $doc = Factory::create($t['lyrics'], Format::PlainText);
                         $track->changeLyrics($doc);
                     }
 
