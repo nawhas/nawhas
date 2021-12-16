@@ -104,6 +104,7 @@ return [
         // User Events
         'user.registered' => Authentication\UserRegistered::class,
         'user.changed.name' => Authentication\UserNameChanged::class,
+        'user.changed.email' => Authentication\UserEmailChanged::class,
         'user.changed.nickname' => Authentication\UserNicknameChanged::class,
         'user.changed.password' => Authentication\UserPasswordChanged::class,
         'user.changed.remember.token' => Authentication\UserRememberTokenChanged::class,

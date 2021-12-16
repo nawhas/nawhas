@@ -8,7 +8,7 @@ use App\Modules\Core\Events\StoredEvent;
 use Tests\Feature\FeatureTest;
 use Tests\WithSimpleFaker;
 
-abstract class ReplayEventsTest extends FeatureTest
+abstract class EventsTest extends FeatureTest
 {
     use WithSimpleFaker;
 

@@ -8,7 +8,7 @@ use App\Modules\Authentication\Models\User;
 use Illuminate\Contracts\Hashing\Hasher;
 use Ramsey\Uuid\Uuid;
 
-class UserEventsTest extends ReplayEventsTest
+class UserEventsTest extends EventsTest
 {
     /**
      * @test

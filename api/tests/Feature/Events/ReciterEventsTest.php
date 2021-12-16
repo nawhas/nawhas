@@ -7,7 +7,7 @@ namespace Tests\Feature\Events;
 use App\Modules\Library\Models\Reciter;
 use Ramsey\Uuid\Uuid;
 
-class ReciterEventsTest extends ReplayEventsTest
+class ReciterEventsTest extends EventsTest
 {
     /**
      * @test

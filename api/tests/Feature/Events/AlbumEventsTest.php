@@ -8,7 +8,7 @@ use App\Modules\Library\Models\Album;
 use App\Modules\Library\Models\Reciter;
 use Ramsey\Uuid\Uuid;
 
-class AlbumEventsTest extends ReplayEventsTest
+class AlbumEventsTest extends EventsTest
 {
     private Reciter $reciter;
 
