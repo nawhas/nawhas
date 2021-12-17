@@ -4,7 +4,6 @@ WORKDIR /opt
 
 RUN apk --no-cache add \
 	git \
-	yarn \
   py3-pip \
   gcc \
   g++ \
@@ -31,7 +30,6 @@ RUN yarn install \
   --frozen-lockfile \
   --non-interactive \
   --production=false
-
 
 ARG APP_ENV
 ARG AXIOS_DEBUG
