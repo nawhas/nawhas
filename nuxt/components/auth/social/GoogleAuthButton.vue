@@ -13,7 +13,7 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'nuxt-property-decorator';
-import GoogleIcon from '@/assets/social/google.svgx';
+const GoogleIcon = require('@/assets/svg/icon.svg?inline');
 
 @Component({
   components: {

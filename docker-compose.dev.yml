@@ -27,7 +27,9 @@ services:
   web:
     command: ['yarn', 'watcher']
     working_dir: /opt
-    image: szainmehdi/node:13
+    build:
+      context: ./nuxt
+      target: dev
     volumes:
       - ./nuxt:/opt:delegated
       - web_node_modules:/opt/node_modules
