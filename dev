@@ -52,6 +52,12 @@ if [ $# -gt 0 ];then
       run api \
         composer "$@"
 
+    # If "composer" is used, pass-thru to "composer"
+    elif [ "$1" == "yarn" ]; then
+      shift 1
+      start web \
+        yarn "$@"
+
     # If "test:feature" is used, run feature tests,
     # pass-thru any extra arguments to php-unit
     elif [ "$1" == "test:feature" ]; then
