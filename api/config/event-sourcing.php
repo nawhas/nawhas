@@ -123,6 +123,15 @@ return [
      */
     'event_serializer' => App\Modules\Core\Events\EventSerializer::class,
 
+    'event_normalizers' => [
+        Spatie\EventSourcing\Support\CarbonNormalizer::class,
+        Spatie\EventSourcing\Support\ModelIdentifierNormalizer::class,
+        Symfony\Component\Serializer\Normalizer\DateTimeNormalizer::class,
+        Symfony\Component\Serializer\Normalizer\ArrayDenormalizer::class,
+        Symfony\Component\Serializer\Normalizer\BackedEnumNormalizer::class,
+        Spatie\EventSourcing\Support\ObjectNormalizer::class,
+    ],
+
     /*
      * When replaying events, potentially a lot of events will have to be retrieved.
      * In order to avoid memory problems events will be retrieved as chunks.

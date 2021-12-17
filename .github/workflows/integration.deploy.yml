@@ -114,6 +114,11 @@ jobs:
         run: |
           docker run --rm nawhas/api:test ./ci/phpstan.sh
 
+      - name: Run PHPStan
+        shell: bash
+        run: |
+          docker run --rm nawhas/api:test ./ci/psalm.sh
+
       - name: Run Unit Tests
         shell: bash
         run: |

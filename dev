@@ -76,12 +76,25 @@ if [ $# -gt 0 ];then
       run api \
         ./vendor/bin/phpunit --testsuite Unit "$args"
 
+
+    # If "lint" is used, run linting
+    elif [ "$1" == "lint" ]; then
+      shift 1
+      run api composer phpstan
+      run api composer psalm
+
     # If "dusk" is used, run Dusk browser-tests,
     # pass-thru any extra arguments
     elif [ "$1" == "dusk" ]; then
       shift 1
       start test \
         php artisan dusk:wait
+
+    # If "test" is used, run linting, unit, and feature tests
+    elif [ "$1" == "test" ]; then
+      ./dev --$MODE lint
+      ./dev --$MODE test:unit
+      ./dev --$MODE test:feature
 
     # If "down" is used, take down everything
     elif [ "$1" == "down" ]; then

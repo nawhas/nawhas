@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Modules\Library\Models;
 
 use App\Modules\Audit\Models\HasRevisions;
+use App\Modules\Audit\Revisionable\Revisionable;
 use App\Modules\Core\Contracts\TimestampedEntity;
 use App\Modules\Core\Models\HasTimestamps;
 use App\Modules\Core\Models\HasUuid;
@@ -41,7 +42,7 @@ use Ramsey\Uuid\Uuid;
  * @method static \Illuminate\Database\Eloquent\Builder|Album query()
  * @mixin \Eloquent
  */
-class Album extends Model implements TimestampedEntity
+class Album extends Model implements TimestampedEntity, Revisionable
 {
     use HasTimestamps;
     use HasUuid;

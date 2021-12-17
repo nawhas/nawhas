@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Modules\Library\Http\Transformers;
 
-use App\Enum\MediaProvider;
-use App\Enum\MediaType;
 use App\Modules\Core\Transformers\Transformer;
+use App\Modules\Library\Enum\MediaProvider;
+use App\Modules\Library\Enum\MediaType;
 use Illuminate\Support\Facades\Storage;
 
 class MediaTransformer extends Transformer
@@ -16,8 +16,8 @@ class MediaTransformer extends Transformer
         return [
             'id' => '(deprecated)',
             'uri' => Storage::url($media),
-            'type' => MediaType::AUDIO,
-            'provider' => MediaProvider::FILE,
+            'type' => MediaType::Audio->value,
+            'provider' => MediaProvider::File->value,
             'createdAt' => $this->dateTime(now()),
             'updatedAt' => $this->dateTime(now()),
         ];

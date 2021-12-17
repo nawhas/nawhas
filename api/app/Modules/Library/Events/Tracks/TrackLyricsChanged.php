@@ -29,7 +29,7 @@ class TrackLyricsChanged extends TrackEvent implements SerializableEvent
     {
         $document = $payload['document'] ? Factory::create(
             $payload['document']['content'],
-            new Format($payload['document']['format'])
+            Format::from($payload['document']['format'])
         ) : null;
 
         return new static($payload['id'], $document);

@@ -35,7 +35,7 @@ class TrackRevisionsProjector extends Projector
 
         $revision = Revision::makeInitial(
             $snapshot,
-            ChangeType::CREATED(),
+            ChangeType::Created,
             $event->getUserId(),
             $this->getStoredEvent($event)
         );
@@ -91,7 +91,7 @@ class TrackRevisionsProjector extends Projector
 
     public function resetState(): void
     {
-        Revision::where('entity_type', EntityType::TRACK)->delete();
+        Revision::where('entity_type', EntityType::Track->value)->delete();
     }
 
     private function recordModification(TrackEvent $event, StoredEvent $storedEvent, callable $modify): void
@@ -103,7 +103,7 @@ class TrackRevisionsProjector extends Projector
 
         $last->revise(
             $snapshot,
-            ChangeType::MODIFIED(),
+            ChangeType::Modified,
             $event->getUserId(),
             $storedEvent
         )->save();
@@ -111,10 +111,10 @@ class TrackRevisionsProjector extends Projector
 
     private function getLastRevision(string $id): Revision
     {
-        $last = Revision::getLast(EntityType::TRACK(), $id);
+        $last = Revision::getLast(EntityType::Track, $id);
 
         if ($last === null) {
-            throw RevisionNotFoundException::forEntity(EntityType::TRACK, $id);
+            throw RevisionNotFoundException::forEntity(EntityType::Track, $id);
         }
 
         return $last;

@@ -13,10 +13,9 @@ class Factory
      */
     public static function create(string $content, Format $format): Document
     {
-        return match ($format->getValue()) {
-            Format::PLAIN_TEXT => new PlainText\Document($content),
-            Format::JSON_V1 => JsonV1\Document::fromJson($content),
-            default => throw new UnsupportedFormatException(),
+        return match ($format) {
+            Format::PlainText => new PlainText\Document($content),
+            Format::JsonV1 => JsonV1\Document::fromJson($content),
         };
     }
 }

@@ -38,7 +38,7 @@ class UserEventsTest extends EventsTest
 
         $attributes = $properties['attributes'];
         $this->assertEquals($attributes['name'], $user->name);
-        $this->assertEquals($attributes['role'], $user->role);
+        $this->assertEquals($attributes['role'], $user->role->value);
         $this->assertEquals($attributes['email'], $user->email);
         $this->assertEquals($attributes['password'], $user->password);
         $this->assertEquals($attributes['remember_token'], $user->remember_token);

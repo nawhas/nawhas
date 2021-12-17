@@ -11,7 +11,7 @@ class Group
     public const TYPE_NORMAL = 'normal';
     public const TYPE_SPACER = 'spacer';
 
-    /** @var \Illuminate\Support\Collection<Line> */
+    /** @var \Illuminate\Support\Collection<int, Line> */
     private Collection $lines;
 
     public function __construct(

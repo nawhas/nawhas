@@ -16,7 +16,7 @@ class Document implements DocumentContract
 
     public function getFormat(): Format
     {
-        return Format::PLAIN_TEXT();
+        return Format::PlainText;
     }
 
     public function render(): string
@@ -50,7 +50,7 @@ class Document implements DocumentContract
     {
         return [
             'content' => $this->getContent(),
-            'format' => $this->getFormat(),
+            'format' => $this->getFormat()->value,
         ];
     }
 }

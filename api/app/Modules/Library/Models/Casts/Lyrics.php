@@ -27,7 +27,7 @@ class Lyrics implements CastsAttributes
         }
 
         $data = json_decode($value, true);
-        return Factory::create($data['content'], new Format($data['format']));
+        return Factory::create($data['content'], Format::from($data['format']));
     }
 
     /**

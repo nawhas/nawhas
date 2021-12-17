@@ -36,7 +36,7 @@ class AlbumRevisionsProjector extends Projector
 
         $revision = Revision::makeInitial(
             $snapshot,
-            ChangeType::CREATED(),
+            ChangeType::Created,
             $event->getUserId(),
             $this->getStoredEvent($event)
         );
@@ -89,7 +89,7 @@ class AlbumRevisionsProjector extends Projector
 
         $last->revise(
             $snapshot,
-            ChangeType::MODIFIED(),
+            ChangeType::Modified,
             $event->getUserId(),
             $this->getStoredEvent($event),
         )->save();
@@ -97,7 +97,7 @@ class AlbumRevisionsProjector extends Projector
 
     public function onTrackDeleted(TrackDeleted $event): void
     {
-        $trackRevision = Revision::getLast(EntityType::TRACK(), $event->id);
+        $trackRevision = Revision::getLast(EntityType::Track, $event->id);
         $trackSnapshot = TrackSnapshot::fromRevision($trackRevision);
 
         $last = $this->getLastRevision($trackSnapshot->albumId);
@@ -106,7 +106,7 @@ class AlbumRevisionsProjector extends Projector
 
         $last->revise(
             $snapshot,
-            ChangeType::MODIFIED(),
+            ChangeType::Modified,
             $event->getUserId(),
             $this->getStoredEvent($event),
         );
@@ -114,7 +114,7 @@ class AlbumRevisionsProjector extends Projector
 
     public function resetState(): void
     {
-        Revision::where('entity_type', EntityType::ALBUM)->delete();
+        Revision::where('entity_type', EntityType::Album->value)->delete();
     }
 
     private function recordModification(AlbumEvent $event, StoredEvent $storedEvent, callable $modify): void
@@ -126,7 +126,7 @@ class AlbumRevisionsProjector extends Projector
 
         $last->revise(
             $snapshot,
-            ChangeType::MODIFIED(),
+            ChangeType::Modified,
             $event->getUserId(),
             $storedEvent
         )->save();
@@ -134,10 +134,10 @@ class AlbumRevisionsProjector extends Projector
 
     private function getLastRevision(string $id): Revision
     {
-        $last = Revision::getLast(EntityType::ALBUM(), $id);
+        $last = Revision::getLast(EntityType::Album, $id);
 
         if ($last === null) {
-            throw RevisionNotFoundException::forEntity(EntityType::ALBUM, $id);
+            throw RevisionNotFoundException::forEntity(EntityType::Album, $id);
         }
 
         return $last;

@@ -40,7 +40,7 @@
         "phpstan/phpstan": "^1.2",
         "phpunit/phpunit": "^9.5.10",
         "psalm/plugin-laravel": "^1.5",
-        "vimeo/psalm": "^4.15",
+        "vimeo/psalm": "dev-master",
         "vishnubob/wait-for-it": "dev-master"
     },
     "config": {
@@ -72,6 +72,9 @@
     "scripts": {
         "phpstan": [
             "./vendor/bin/phpstan analyze --memory-limit=2G"
+        ],
+        "psalm": [
+            "./vendor/bin/psalm"
         ],
         "test": [
             "./vendor/bin/phpunit --colors=always"

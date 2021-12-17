@@ -11,7 +11,7 @@ use Illuminate\Support\Collection;
 class AlbumSnapshot implements Snapshot
 {
     /**
-     * @var Collection<string>
+     * @var Collection<int, string>
      */
     public Collection $tracks;
 
@@ -57,7 +57,7 @@ class AlbumSnapshot implements Snapshot
 
     public function getType(): EntityType
     {
-        return EntityType::ALBUM();
+        return EntityType::Album;
     }
 
     public function getId(): string
