@@ -75,6 +75,17 @@ export default Vue.extend({
     SkeletonCardGrid,
   },
 
+  data(): Data {
+    const page = this.$route.query.page || 1;
+
+    return {
+      page: Number(page),
+      length: 1,
+      reciters: null,
+      popularReciters: null,
+    };
+  },
+
   async fetch() {
     const [reciters, popular] = await Promise.all([
       this.$api.reciters.index({
@@ -91,16 +102,12 @@ export default Vue.extend({
     this.popularReciters = popular.data;
   },
 
-  data(): Data {
-    const page = this.$route.query.page || 1;
-
-    return {
-      page: Number(page),
-      length: 1,
-      reciters: null,
-      popularReciters: null,
-    };
-  },
+  head: () => generateMeta({
+    title: 'Reciters',
+    description: 'Browse, read, and listen to over 6000 nawhas by more than 100 different reciters, ' +
+       'including world-famous reciters like Nadeem Sarwar, Irfan Haider, Tejani Brothers, ' +
+       'Hassan Sadiq, Mir Hasan Mir, and more!',
+  }),
 
   watch: {
     '$route.query': '$fetch',
@@ -121,13 +128,6 @@ export default Vue.extend({
       this.$router.push({ query: { page: String(page) } });
     },
   },
-
-  head: () => generateMeta({
-    title: 'Reciters',
-    description: 'Browse, read, and listen to over 6000 nawhas by more than 100 different reciters, ' +
-       'including world-famous reciters like Nadeem Sarwar, Irfan Haider, Tejani Brothers, ' +
-       'Hassan Sadiq, Mir Hasan Mir, and more!',
-  }),
 });
 </script>
 

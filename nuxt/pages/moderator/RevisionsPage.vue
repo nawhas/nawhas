@@ -51,10 +51,17 @@ interface Data {
 }
 
 export default Vue.extend({
-  layout: 'moderator',
-
   components: {
     RevisionHistoryCard,
+  },
+  layout: 'moderator',
+
+  data(): Data {
+    return {
+      revisions: [],
+      page: getPage(this.$route),
+      length: 0,
+    };
   },
 
   async fetch() {
@@ -65,12 +72,8 @@ export default Vue.extend({
     this.length = response.meta.pagination.total_pages;
   },
 
-  data(): Data {
-    return {
-      revisions: [],
-      page: getPage(this.$route),
-      length: 0,
-    };
+  head: {
+    title: 'Revisions',
   },
 
   watch: {
@@ -82,10 +85,6 @@ export default Vue.extend({
       this.$vuetify.goTo(0);
       this.$router.push({ query: { page: String(page) } });
     },
-  },
-
-  head: {
-    title: 'Revisions',
   },
 });
 </script>

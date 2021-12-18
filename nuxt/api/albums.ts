@@ -1,4 +1,3 @@
-import { NuxtAxiosInstance } from '@nuxtjs/axios';
 import {
   PaginationOptions,
   PaginatedResponse,

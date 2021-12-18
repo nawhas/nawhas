@@ -1,6 +1,6 @@
+import { MeiliSearch } from 'meilisearch';
 import { InjectedApiPlugin } from '@/plugins/api';
 import { InjectedErrorsPlugin } from '@/plugins/errors';
-import MeiliSearch from 'meilisearch';
 
 declare module 'vue/types/vue' {
   interface Vue {
@@ -25,6 +25,7 @@ declare module '@nuxt/types' {
 }
 
 declare module 'vuex/types/index' {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   interface Store<S> {
     $api: InjectedApiPlugin;
     $errors: InjectedErrorsPlugin;

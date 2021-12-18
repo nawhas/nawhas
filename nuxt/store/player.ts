@@ -1,9 +1,22 @@
 export type CurrentTrackRef = number|null;
-export type TrackQueue = Array<QueuedTrack>;
+
 export type RepeatType = null|'one'|'all';
+
 export interface QueuedTrack {
   track: object;
   id: string;
+}
+
+export type TrackQueue = Array<QueuedTrack>;
+
+export interface PlayerState {
+  current: CurrentTrackRef;
+  queue: TrackQueue;
+  shuffled: TrackQueue;
+  seek: number;
+  duration: number;
+  isShuffled: boolean;
+  repeat: RepeatType;
 }
 
 function generateId(): string {
@@ -30,16 +43,6 @@ function getTrackIndexById(state: PlayerState, id: string) {
   }
 
   return state.queue.findIndex((queued: QueuedTrack) => queued.id === id);
-}
-
-export interface PlayerState {
-  current: CurrentTrackRef;
-  queue: TrackQueue;
-  shuffled: TrackQueue;
-  seek: number;
-  duration: number;
-  isShuffled: boolean;
-  repeat: RepeatType;
 }
 
 const state = (): PlayerState => ({

@@ -17,7 +17,7 @@
 <script lang="ts">
 import { Vue, Component, Prop, Watch } from 'nuxt-property-decorator';
 // eslint-disable-next-line import/named
-import MeiliSearch, { Index } from 'meilisearch';
+import { MeiliSearch, Index } from 'meilisearch';
 
 @Component
 export default class IndexResults extends Vue {

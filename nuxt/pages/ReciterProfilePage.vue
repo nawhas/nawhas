@@ -141,28 +141,6 @@ export default Vue.extend({
     EditAlbumDialog,
   },
 
-  async fetch() {
-    if (!this.reciter) {
-      return;
-    }
-
-    const [tracks, albums] = await Promise.all([
-      this.$api.tracks.popular({
-        reciterId: this.reciter.id,
-        pagination: { limit: 6 },
-        include: [TrackIncludes.Album, TrackIncludes.Reciter],
-      }),
-      this.$api.albums.index(this.reciter.id, {
-        pagination: { page: getPage(this.$route) },
-        include: ['tracks.media', 'tracks.reciter', 'tracks.album', 'tracks.related'],
-      }),
-    ]);
-
-    this.popularTracks = tracks.data;
-    this.albums = albums.data;
-    this.length = albums.meta.pagination.total_pages;
-  },
-
   async asyncData({ route, $api, $errors }) {
     const { reciter: reciterId } = route.params;
     try {
@@ -186,6 +164,45 @@ export default Vue.extend({
       albums: null,
       popularTracks: null,
     };
+  },
+
+  async fetch() {
+    if (!this.reciter) {
+      return;
+    }
+
+    const [tracks, albums] = await Promise.all([
+      this.$api.tracks.popular({
+        reciterId: this.reciter.id,
+        pagination: { limit: 6 },
+        include: [TrackIncludes.Album, TrackIncludes.Reciter],
+      }),
+      this.$api.albums.index(this.reciter.id, {
+        pagination: { page: getPage(this.$route) },
+        include: ['tracks.media', 'tracks.reciter', 'tracks.album', 'tracks.related'],
+      }),
+    ]);
+
+    this.popularTracks = tracks.data;
+    this.albums = albums.data;
+    this.length = albums.meta.pagination.total_pages;
+  },
+
+  head(): MetaInfo {
+    const title = this.reciter?.name ?? 'Reciter';
+    let description = this.reciter?.description;
+    const image = getReciterAvatar(this.reciter);
+
+    if (!description) {
+      const albums = String(this.reciter?.related?.albums ?? 'many');
+      description = `Explore ${title}'s collection of nawhas from ${albums} albums.`;
+    }
+
+    return generateMeta({
+      title,
+      description,
+      image,
+    });
   },
 
   computed: {
@@ -213,23 +230,6 @@ export default Vue.extend({
     onPageChanged(page) {
       this.$router.push({ query: { page: String(page) } });
     },
-  },
-
-  head(): MetaInfo {
-    const title = this.reciter?.name ?? 'Reciter';
-    let description = this.reciter?.description;
-    const image = getReciterAvatar(this.reciter);
-
-    if (!description) {
-      const albums = String(this.reciter?.related?.albums ?? 'many');
-      description = `Explore ${title}'s collection of nawhas from ${albums} albums.`;
-    }
-
-    return generateMeta({
-      title,
-      description,
-      image,
-    });
   },
 });
 </script>

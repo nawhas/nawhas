@@ -144,24 +144,6 @@ export default Vue.extend({
     EditAlbumDialog,
   },
 
-  async fetch() {
-    if (!this.album) {
-      return;
-    }
-
-    const response = await this.$api.tracks.index(this.album.reciterId, this.album.id, {
-      include: [
-        TrackIncludes.Reciter,
-        TrackIncludes.Lyrics,
-        TrackIncludes.Album,
-        TrackIncludes.Media,
-        TrackIncludes.Related,
-      ],
-    });
-
-    this.tracks = response.data;
-  },
-
   async asyncData({ route, $api, $errors }) {
     const { reciter: reciterId, album: albumId } = route.params;
 
@@ -187,6 +169,45 @@ export default Vue.extend({
       tracks: null,
       addedToQueueSnackbar: false,
     };
+  },
+
+  async fetch() {
+    if (!this.album) {
+      return;
+    }
+
+    const response = await this.$api.tracks.index(this.album.reciterId, this.album.id, {
+      include: [
+        TrackIncludes.Reciter,
+        TrackIncludes.Lyrics,
+        TrackIncludes.Album,
+        TrackIncludes.Media,
+        TrackIncludes.Related,
+      ],
+    });
+
+    this.tracks = response.data;
+  },
+
+  head(): MetaInfo {
+    let title = `${this.$route.params.albumId} Album`;
+    let description;
+    const image = getAlbumArtwork(this.album);
+
+    if (this.album) {
+      title = `${this.album.title} (${this.album.year}) - Album by ${this.album.reciter?.name}`;
+
+      const trackListPreview = this.tracks?.slice(0, 3).map((track) => track.title).join(', ');
+      description = `Released in ${this.album.year}, ${this.album.title} is an album by ` +
+        `${this.album.reciter?.name} with ${this.album.related?.tracks} nawhas, including ` +
+        `${trackListPreview}, and more.`;
+    }
+
+    return generateMeta({
+      title,
+      description,
+      image,
+    });
   },
 
   computed: {
@@ -271,27 +292,6 @@ export default Vue.extend({
       this.$store.commit('player/ADD_ALBUM_TO_QUEUE', { tracks: this.playable });
       this.addedToQueueSnackbar = true;
     },
-  },
-
-  head(): MetaInfo {
-    let title = `${this.$route.params.albumId} Album`;
-    let description;
-    const image = getAlbumArtwork(this.album);
-
-    if (this.album) {
-      title = `${this.album.title} (${this.album.year}) - Album by ${this.album.reciter?.name}`;
-
-      const trackListPreview = this.tracks?.slice(0, 3).map((track) => track.title).join(', ');
-      description = `Released in ${this.album.year}, ${this.album.title} is an album by ` +
-        `${this.album.reciter?.name} with ${this.album.related?.tracks} nawhas, including ` +
-        `${trackListPreview}, and more.`;
-    }
-
-    return generateMeta({
-      title,
-      description,
-      image,
-    });
   },
 });
 </script>

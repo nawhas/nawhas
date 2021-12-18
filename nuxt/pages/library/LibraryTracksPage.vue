@@ -56,19 +56,18 @@ interface Data {
 }
 
 export default Vue.extend({
-  middleware({ store, redirect }) {
-    if (!store.state.auth.user) {
-      return redirect('/library');
-    }
-  },
   components: {
     SavedTracksEmptyState,
     TrackList,
     LibraryHeader,
   },
-  async fetch() {
-    await this.getTracks();
+
+  middleware({ store, redirect }) {
+    if (!store.state.auth.user) {
+      return redirect('/library');
+    }
   },
+
   data(): Data {
     const page = getPage(this.$route);
 
@@ -78,6 +77,15 @@ export default Vue.extend({
       length: 1,
     };
   },
+
+  async fetch() {
+    await this.getTracks();
+  },
+
+  head: () => generateMeta({
+    title: 'Saved Nawhas',
+  }),
+
   computed: {
     playable(): Array<Track> {
       if (!this.tracks) {
@@ -87,11 +95,13 @@ export default Vue.extend({
       return this.tracks.filter((track) => this.hasAudioFile(track));
     },
   },
+
   watch: {
     '$store.state.auth.user': 'onAuthChange',
     '$route.query': 'getTracks',
     '$store.state.library.trackIds': 'getTracks',
   },
+
   methods: {
     onAuthChange(value) {
       if (!value) {
@@ -125,9 +135,5 @@ export default Vue.extend({
       this.$router.push({ query: { page: String(page) } });
     },
   },
-
-  head: () => generateMeta({
-    title: 'Saved Nawhas',
-  }),
 });
 </script>

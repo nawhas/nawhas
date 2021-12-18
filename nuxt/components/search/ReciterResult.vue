@@ -29,6 +29,7 @@ interface ReciterSearchResult {
     avatar: string|null;
     url: string;
   };
+  // eslint-disable-next-line no-use-before-define
   _formatted?: Formatted;
 }
 

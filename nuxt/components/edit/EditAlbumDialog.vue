@@ -1,6 +1,6 @@
 <template>
   <v-dialog v-model="dialog" persistent max-width="600px">
-    <template v-slot:activator="{ on }">
+    <template #activator="{ on }">
       <v-btn v-if="album" dark text v-on="on">
         Edit
       </v-btn>
@@ -34,7 +34,7 @@
           accept="image/*"
           :show-size="1000"
         >
-          <template v-slot:selection="{ index, text }">
+          <template #selection="{ index, text }">
             <v-chip
               v-if="index < 2"
               color="deep-orange accent-4"

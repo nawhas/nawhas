@@ -166,7 +166,7 @@
           top
           offset-y
         >
-          <template v-slot:activator="{ on }">
+          <template #activator="{ on }">
             <v-btn
               icon
               large
@@ -207,7 +207,7 @@
             allow-overflow
             :close-on-content-click="false"
           >
-            <template v-slot:activator="{ on }">
+            <template #activator="{ on }">
               <v-btn
                 icon
                 large
@@ -284,7 +284,7 @@
 /* eslint-disable no-undef */
 import { Component, Vue, Watch } from 'nuxt-property-decorator';
 import { Howl } from 'howler';
-import moment from 'moment';
+import { utc, duration } from 'moment';
 import QueueList from '@/components/audio-player/QueueList.vue';
 import LyricsRenderer from '@/components/lyrics/LyricsRenderer.vue';
 import LyricsOverlay from '@/components/audio-player/LyricsOverlay.vue';
@@ -312,7 +312,7 @@ interface CachedTrackReference {
 export default class AudioPlayer extends Vue {
   /* Denote whether the user is hovering over the player */
   private hovering = false;
-  /* Denote weather the the audio-player is playing */
+  /* Denote weather the audio-player is playing */
   private playing = false;
   /* Denote whether the player is "minimized". Default to minimized on Mobile */
   private minimized = false;
@@ -475,11 +475,11 @@ export default class AudioPlayer extends Vue {
   }
 
   get formattedSeek() {
-    return moment.utc(moment.duration(this.seek, 'seconds').asMilliseconds()).format('m:ss');
+    return utc(duration(this.seek, 'seconds').asMilliseconds()).format('m:ss');
   }
 
   get formattedDuration() {
-    return moment.utc(moment.duration(this.duration, 'seconds').asMilliseconds()).format('m:ss');
+    return utc(duration(this.duration, 'seconds').asMilliseconds()).format('m:ss');
   }
 
   get isTrackSaved() {
