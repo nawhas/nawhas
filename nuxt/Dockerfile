@@ -1,21 +1,26 @@
-FROM szainmehdi/node:13
+FROM node:16-alpine AS dev
 
 WORKDIR /opt
 
-RUN apk --no-cache add shadow \
-    gcc \
-    musl-dev \
-    autoconf \
-    automake \
-    make \
-    libtool \
-    nasm \
-    tiff \
-    jpeg \
-    zlib \
-    zlib-dev \
-    file \
-    pkgconf
+RUN apk --no-cache add \
+	git \
+  py3-pip \
+  gcc \
+  g++ \
+  musl-dev \
+  autoconf \
+  automake \
+  make \
+  libtool \
+  nasm \
+  tiff \
+  jpeg \
+  zlib \
+  zlib-dev \
+  file \
+  pkgconf
+
+FROM dev AS production
 
 COPY package.json package.json
 COPY yarn.lock yarn.lock
@@ -25,7 +30,6 @@ RUN yarn install \
   --frozen-lockfile \
   --non-interactive \
   --production=false
-
 
 ARG APP_ENV
 ARG AXIOS_DEBUG
