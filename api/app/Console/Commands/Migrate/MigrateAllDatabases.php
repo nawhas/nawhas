@@ -27,19 +27,29 @@ class MigrateAllDatabases extends Command
      */
     public function handle(): int
     {
-        $args = $this->option('fresh') ? ['--fresh' => true] : [];
-
         $this->warn('>> Running events migrations...');
-        $this->call('migrate:events', $args);
+        if ($this->option('fresh')) {
+            $this->call('db:wipe', ['--database' => 'events']);
+        }
+        $this->call('migrate', [
+            '--force' => true,
+            '--path' => 'database/migrations/events',
+            '--database' => 'events',
+        ]);
 
         $this->warn('>> Running data migrations...');
-        $this->call('migrate:data', $args);
-
-        $this->warn('>> Running other migrations...');
         if ($this->option('fresh')) {
-            $this->call('migrate:reset');
+            $this->call('db:wipe', ['--database' => 'data']);
         }
-        $this->call('migrate', ['--force' => true]);
+        $this->call('migrate', [
+            '--force' => true,
+            '--path' => 'database/migrations/data'
+        ]);
+
+        $this->warn('>> Running package migrations...');
+        $this->call('migrate', [
+            '--force' => true,
+        ]);
 
         return 0;
     }
