@@ -20,5 +20,6 @@ module.exports = {
     'no-useless-constructor': 'off',
     'arrow-parens': ['error', 'always'],
     'vue/no-v-html': ['off'],
+    'import/named': ['off'],
   },
 };
