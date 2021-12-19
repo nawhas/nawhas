@@ -118,11 +118,11 @@ if [ $# -gt 0 ];then
     # If "down" is used, take down everything
     elif [ "$1" == "down" ]; then
       shift 1
-      $COMPOSE --profile test down "$@"
+      set -x && $COMPOSE --profile test down "$@"
 
     # Else, pass-thru args to docker-compose
     else
-        $COMPOSE "$@"
+        set -x && $COMPOSE "$@"
     fi
 
 else
