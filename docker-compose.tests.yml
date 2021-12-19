@@ -1,0 +1,67 @@
+version: '3.9'
+
+volumes:
+  test_db:
+
+services:
+  test:
+    profiles:
+      - test
+    restart: 'no'
+    image: szainmehdi/php:8.1-dev-20211203
+    working_dir: /var/www/api
+    environment:
+      - APP_ENV=testing
+      - DB_HOST=test_db
+    volumes:
+      - ./api:/var/www/api:delegated
+    depends_on:
+      - test_db
+      - search
+    networks:
+      - nawhas
+  test_db:
+    profiles:
+      - test
+    image: postgres:11
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "5433:5432"
+    environment:
+      - POSTGRES_MULTIPLE_DATABASES=nawhas_data,nawhas_events
+      - POSTGRES_USER=docker
+      - POSTGRES_PASSWORD=secret
+    volumes:
+      - test_db:/var/lib/postgresql/data:delegated
+      - ./docker/postgres/init:/docker-entrypoint-initdb.d
+    networks:
+      - nawhas
+  dusk:
+    image: szainmehdi/php:8.1-dev-20211203
+    working_dir: /var/www/api
+    restart: 'no'
+    profiles:
+      - test
+    environment:
+      - APP_ENV=testing
+      - APP_URL=http://nawhas.test:3000
+    volumes:
+      - ./api:/var/www/api:delegated
+    networks:
+      - nawhas
+    depends_on:
+      - queue
+      - web
+      - test_db
+      - nginx
+      - search
+      - selenium
+  selenium:
+    profiles:
+      - test
+    image: 'selenium/standalone-chrome'
+    volumes:
+      - '/dev/shm:/dev/shm'
+    networks:
+      - nawhas

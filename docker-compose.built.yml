@@ -23,35 +23,5 @@ services:
       args:
         APP_ENV: development
         APP_VERSION: local-0.0.1
-  # Dusk Profile
-  dusk:
-    image: nawhas/api-test:local
-    build:
-      context: api
-      dockerfile: Dockerfile
-      target: test
-    restart: 'no'
-    profiles:
-      - dusk
-    environment:
-      - APP_ENV=test
-      - APP_URL=http://nawhas.test:3000
-    networks:
-      - nawhas
-    depends_on:
-      - events_db
-      - data_db
-      - nginx
-      - web
-      - search
-      - selenium
-  selenium:
-    profiles:
-      - dusk
-    image: 'selenium/standalone-chrome'
-    volumes:
-      - '/dev/shm:/dev/shm'
-    networks:
-      - nawhas
 
 

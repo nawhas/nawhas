@@ -20,6 +20,33 @@ function run {
 function start {
   set -x && $COMPOSE run --rm "$@"
 }
+function tests {
+  set -x && $COMPOSE -f docker-compose.tests.yml run --rm "$@"
+}
+
+function run_feature_tests {
+  args=$(echo "$@" | sed 's/api\///g')
+
+  # Run database migrations for the first time
+  tests test \
+    php artisan migrate:all
+
+  # Start the tests
+  tests test\
+    ./vendor/bin/phpunit --testsuite Feature "$args"
+}
+
+function run_unit_tests {
+  args=$(echo "$@" | sed 's/api\///g')
+
+  tests --no-deps test \
+    ./vendor/bin/phpunit --testsuite Unit "$args"
+}
+
+function run_php_linting {
+  tests --no-deps test composer phpstan
+  tests --no-deps test composer psalm
+}
 
 if [ "$MODE" == "built" ]; then
   echo "> Using docker-compose.built.yml";
@@ -62,50 +89,36 @@ if [ $# -gt 0 ];then
     # pass-thru any extra arguments to php-unit
     elif [ "$1" == "test:feature" ]; then
       shift 1
-      args=$(echo "$@" | sed 's/api\///g')
-
-      # Run database migrations for the first time
-      start -e DB_HOST=test_db api \
-        php artisan migrate:all
-
-      # Start the tests
-      run api \
-        ./vendor/bin/phpunit --testsuite Feature "$args"
-
+      run_feature_tests "$@"
 
     # If "test:unit" is used, run unit tests,
     # pass-thru any extra arguments to php-unit
     elif [ "$1" == "test:unit" ]; then
       shift 1
-      args=$(echo "$@" | sed 's/api\///g')
-
-      run api \
-        ./vendor/bin/phpunit --testsuite Unit "$args"
-
+      run_unit_tests "$@"
 
     # If "lint" is used, run linting
-    elif [ "$1" == "lint" ]; then
+    elif [ "$1" == "lint:php" ]; then
       shift 1
-      run api composer phpstan
-      run api composer psalm
+      run_php_linting
 
     # If "dusk" is used, run Dusk browser-tests,
     # pass-thru any extra arguments
     elif [ "$1" == "dusk" ]; then
       shift 1
-      start test \
+       tests dusk \
         php artisan dusk:wait
 
     # If "test" is used, run linting, unit, and feature tests
     elif [ "$1" == "test" ]; then
-      ./dev --$MODE lint
-      ./dev --$MODE test:unit
-      ./dev --$MODE test:feature
+      run_php_linting
+      run_unit_tests
+      run_feature_tests
 
     # If "down" is used, take down everything
     elif [ "$1" == "down" ]; then
       shift 1
-      $COMPOSE --profile dusk down
+      $COMPOSE --profile test down "$@"
 
     # Else, pass-thru args to docker-compose
     else
