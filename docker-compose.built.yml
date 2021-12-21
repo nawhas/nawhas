@@ -15,6 +15,12 @@ services:
       dockerfile: Dockerfile
     env_file:
       - api/.env.production
+  test:
+    image: nawhas/api:local-test
+    build:
+      context: api
+      dockerfile: Dockerfile
+      target: test
   web:
     image: nawhas/web:local
     build:

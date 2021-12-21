@@ -4,10 +4,12 @@ services:
   api:
     image: szainmehdi/php:8.1-dev-20211203
     working_dir: /var/www/api
+    ports:
+      - "9000:9000"
     environment:
       - APP_ENV=local
       - XDEBUG_MODE=debug
-      - XDEBUG_CLIENT_PORT=9003
+      - XDEBUG_CLIENT_PORT=9000
       - XDEBUG_IDE_KEY=PHPSTORM
       - XDEBUG_CLIENT_HOST=host.docker.internal
     volumes:
@@ -17,6 +19,11 @@ services:
     working_dir: /var/www/api
     environment:
       - APP_ENV=local
+    volumes:
+      - ./api:/var/www/api:delegated
+  test:
+    image: szainmehdi/php:8.1-dev-20211203
+    working_dir: /var/www/api
     volumes:
       - ./api:/var/www/api:delegated
   web:

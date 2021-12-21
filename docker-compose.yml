@@ -10,8 +10,6 @@ volumes:
 
 services:
   api:
-    ports:
-      - "9000:9000"
     networks:
       - nawhas
     depends_on:
@@ -25,6 +23,19 @@ services:
     depends_on:
       - db
       - cache
+  test:
+    profiles:
+      - test
+    restart: 'no'
+    environment:
+      - APP_ENV=testing
+      - APP_URL=https://nawhas.test
+      - DUSK_HEADLESS_DISABLED=true
+    depends_on:
+      - search
+      - db
+    networks:
+      - nawhas
   nginx:
     image: nginx:stable-alpine
     volumes:
@@ -45,7 +56,10 @@ services:
       - nginx
       - web
     networks:
-      - nawhas
+      nawhas:
+        aliases:
+          - nawhas.test
+          - api.nawhas.test
   web:
     expose:
       - 3000
@@ -96,5 +110,15 @@ services:
     restart: unless-stopped
     ports:
       - "8025:8025"
+    networks:
+      - nawhas
+  selenium:
+    profiles:
+      - dusk
+    image: 'selenium/standalone-chrome-debug'
+    ports:
+      - '5900:5900'
+    volumes:
+      - '/dev/shm:/dev/shm'
     networks:
       - nawhas

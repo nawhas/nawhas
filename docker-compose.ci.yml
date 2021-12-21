@@ -1,8 +1,5 @@
 version: '3.9'
 
-volumes:
-  test_db:
-
 services:
   api:
     image: nawhas/api:${API_IMAGE_TAG}
@@ -14,46 +11,12 @@ services:
       - api/.env.ci
   web:
     image: nawhas/web:${WEB_IMAGE_TAG}
-    environment:
-      - IGNORE_SSL_ERRORS=true
-  test_db:
-    image: postgres:11
-    restart: unless-stopped
-    tty: true
-    ports:
-      - "5433:5432"
-    environment:
-      - POSTGRES_MULTIPLE_DATABASES=nawhas_data,nawhas_events
-      - POSTGRES_USER=docker
-      - POSTGRES_PASSWORD=secret
-    volumes:
-      - test_db:/var/lib/postgresql/data:delegated
-      - ./docker/postgres/init:/docker-entrypoint-initdb.d
-    networks:
-      - nawhas
-  # Dusk Profile
   test:
     image: nawhas/api:${API_TEST_IMAGE_TAG}
-    restart: 'no'
     environment:
-      - APP_ENV=test
-      - APP_URL=http://nawhas.test:3000
-    networks:
-      - nawhas
-    depends_on:
-      - db
-      - nginx
-      - web
-      - search
-      - selenium
+      - APP_ENV=testing
+      - DUSK_HEADLESS_DISABLED=false
     volumes:
       - ./api/tests/Browser/screenshots:/var/www/api/tests/Browser/screenshots
       - ./api/tests/Browser/console:/var/www/api/tests/Browser/console
-  selenium:
-    image: 'selenium/standalone-chrome'
-    volumes:
-      - '/dev/shm:/dev/shm'
-    networks:
-      - nawhas
-
 

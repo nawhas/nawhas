@@ -20,32 +20,29 @@ function run {
 function start {
   set -x && $COMPOSE run --rm "$@"
 }
-function tests {
-  set -x && $COMPOSE -f docker-compose.tests.yml run --rm "$@"
-}
 
 function run_feature_tests {
   args=$(echo "$@" | sed 's/api\///g')
 
   # Run database migrations for the first time
-  tests test \
+  start test \
     php artisan migrate:all
 
   # Start the tests
-  tests test\
+  start test \
     ./vendor/bin/phpunit --testsuite Feature "$args"
 }
 
 function run_unit_tests {
   args=$(echo "$@" | sed 's/api\///g')
 
-  tests --no-deps test \
+  start --no-deps test \
     ./vendor/bin/phpunit --testsuite Unit "$args"
 }
 
 function run_php_linting {
-  tests --no-deps test composer phpstan
-  tests --no-deps test composer psalm
+  start --no-deps test composer phpstan
+  start --no-deps test composer psalm
 }
 
 if [ "$MODE" == "built" ]; then
@@ -107,8 +104,8 @@ if [ $# -gt 0 ];then
     elif [ "$1" == "dusk" ]; then
       shift 1
       set -x \
-        && $COMPOSE -f docker-compose.tests.yml --profile dusk up -d \
-        && tests test \
+        && $COMPOSE --profile dusk up -d \
+        && start test \
             php artisan dusk:wait
 
     # If "test" is used, run linting, unit, and feature tests
@@ -120,7 +117,10 @@ if [ $# -gt 0 ];then
     # If "down" is used, take down everything
     elif [ "$1" == "down" ]; then
       shift 1
-      set -x && $COMPOSE -f docker-compose.tests.yml --profile test --profile dusk down "$@"
+      set -x && $COMPOSE \
+        --profile test \
+        --profile dusk \
+        down "$@"
 
     # Else, pass-thru args to docker-compose
     else

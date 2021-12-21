@@ -19,6 +19,9 @@ trait DatabaseMigrations
     {
         $this->artisan('migrate:all', ['--fresh' => true]);
 
+        /**
+         * @psalm-suppress NullArgument
+         */
         $this->app[Kernel::class]->setArtisan(null);
     }
 }
