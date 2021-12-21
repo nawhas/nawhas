@@ -48,6 +48,7 @@ import { mdiBinoculars } from '@mdi/js';
 import { generateMeta } from '@/utils/meta';
 
 export default Vue.extend({
+  name: 'ErrorLayout',
   layout: 'default',
   props: {
     error: {
@@ -58,6 +59,11 @@ export default Vue.extend({
   data: () => ({
     mdiBinoculars,
   }),
+  head(): MetaInfo {
+    return generateMeta({
+      title: this.title,
+    });
+  },
   computed: {
     status(): number {
       return this.error.statusCode ?? 500;
@@ -73,11 +79,6 @@ export default Vue.extend({
     refresh() {
       window.location.reload();
     },
-  },
-  head(): MetaInfo {
-    return generateMeta({
-      title: this.title,
-    });
   },
 });
 </script>

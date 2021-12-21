@@ -13,7 +13,7 @@
       transition="scale-transition"
       origin="top right"
     >
-      <template v-slot:activator="{ on }">
+      <template #activator="{ on }">
         <v-chip
           label
           outlined

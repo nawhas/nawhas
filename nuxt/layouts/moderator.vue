@@ -90,17 +90,17 @@ const links = [
 export default Vue.extend({
   name: 'DefaultLayout',
 
-  middleware({ store, redirect }) {
-    if (!store.getters['auth/isModerator']) {
-      return redirect('/');
-    }
-  },
-
   components: {
     Toaster,
     UserMenu,
     AudioPlayer,
     UpdateServiceWorker,
+  },
+
+  middleware({ store, redirect }) {
+    if (!store.getters['auth/isModerator']) {
+      return redirect('/');
+    }
   },
 
   data: () => ({

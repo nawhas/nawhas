@@ -33,10 +33,10 @@
 <script lang="ts">
 /* eslint-disable dot-notation */
 import Vue from 'vue';
+import { MetaInfo } from 'vue-meta';
 import LyricsRenderer from '@/components/lyrics/LyricsRenderer.vue';
 import { TrackIncludes } from '@/api/tracks';
 import { Track } from '@/entities/track';
-import { MetaInfo } from 'vue-meta';
 const LogoIcon = require('@/assets/svg/icon.svg?inline');
 const LogoWordmark = require('@/assets/svg/wordmark.svg?inline');
 
@@ -47,12 +47,18 @@ interface Data {
 export default Vue.extend({
   name: 'LyricsPrintLayout',
 
-  layout: 'print',
-
   components: {
     LyricsRenderer,
     LogoIcon,
     LogoWordmark,
+  },
+
+  layout: 'print',
+
+  data(): Data {
+    return {
+      track: null,
+    };
   },
 
   async fetch() {
@@ -63,12 +69,6 @@ export default Vue.extend({
         TrackIncludes.Lyrics,
       ],
     });
-  },
-
-  data(): Data {
-    return {
-      track: null,
-    };
   },
 
   head(): MetaInfo {

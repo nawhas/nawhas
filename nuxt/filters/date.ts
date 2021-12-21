@@ -1,9 +1,9 @@
-import moment from 'moment';
+import { utc, MomentInput } from 'moment';
 
-export function relative(date: moment.MomentInput) {
-  return moment.utc(date).fromNow();
+export function relative(date: MomentInput) {
+  return utc(date).fromNow();
 }
 
-export function local(date: moment.MomentInput) {
-  return moment.utc(date).format('LLL');
+export function local(date: MomentInput) {
+  return utc(date).format('LLL');
 }

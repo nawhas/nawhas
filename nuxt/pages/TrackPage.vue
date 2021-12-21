@@ -195,6 +195,7 @@ import Vue from 'vue';
 import { mapGetters } from 'vuex';
 import getYouTubeID from 'get-youtube-id';
 import Vibrant from 'node-vibrant';
+import { MetaInfo } from 'vue-meta';
 import MoreTracksSkeleton from '@/components/loaders/MoreTracksSkeleton.vue';
 import EditTrackDialog from '@/components/edit/EditTrackDialog.vue';
 import LyricsCard from '@/components/lyrics/LyricsCard.vue';
@@ -202,7 +203,6 @@ import { Track, getTrackUri } from '@/entities/track';
 import { Reciter, getReciterUri } from '@/entities/reciter';
 import { Album, getAlbumArtwork, getAlbumUri } from '@/entities/album';
 import { TrackIncludes } from '@/api/tracks';
-import { MetaInfo } from 'vue-meta';
 import { generateMeta } from '@/utils/meta';
 import LazyImage from '@/components/utils/LazyImage.vue';
 import FavoriteTrackButton from '@/components/tracks/FavoriteTrackButton.vue';
@@ -253,6 +253,25 @@ export default Vue.extend({
     textColor: '#fff',
     addedToQueueSnackbar: false,
   }),
+
+  head(): MetaInfo {
+    let title = 'Loading...';
+    let description;
+    const image = getAlbumArtwork(this.track?.album);
+
+    if (this.track) {
+      title = `${this.track.title} (${this.track.year}) - Nawha by ${this.track.reciter?.name}`;
+
+      description = `${this.track.title} is a nawha by ${this.track.reciter?.name}, released in ${this.track.year} ` +
+        `as part of their album titled ${this.track.album?.title}.`;
+    }
+
+    return generateMeta({
+      title,
+      description,
+      image,
+    });
+  },
 
   computed: {
     ...mapGetters('auth', ['isModerator']),
@@ -394,25 +413,6 @@ export default Vue.extend({
       this.$store.commit('player/REMOVE_TRACK', { id });
       this.addedToQueueSnackbar = false;
     },
-  },
-
-  head(): MetaInfo {
-    let title = 'Loading...';
-    let description;
-    const image = getAlbumArtwork(this.track?.album);
-
-    if (this.track) {
-      title = `${this.track.title} (${this.track.year}) - Nawha by ${this.track.reciter?.name}`;
-
-      description = `${this.track.title} is a nawha by ${this.track.reciter?.name}, released in ${this.track.year} ` +
-        `as part of their album titled ${this.track.album?.title}.`;
-    }
-
-    return generateMeta({
-      title,
-      description,
-      image,
-    });
   },
 });
 </script>

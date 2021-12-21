@@ -8,7 +8,7 @@
       nudge-left="12"
       nudge-top="12"
     >
-      <template v-slot:activator="{ on }">
+      <template #activator="{ on }">
         <div class="timestamp" v-on="on">
           {{ format(model) }}
         </div>
@@ -36,7 +36,7 @@
 import {
   Component, Model, Watch, Vue,
 } from 'vue-property-decorator';
-import moment from 'moment';
+import { utc, duration } from 'moment';
 
 const rule = /^\d:\d\d$/;
 
@@ -76,7 +76,7 @@ export default class Timestamp extends Vue {
    * Format the timestamp to Minutes and Seconds
    */
   format(timestamp) {
-    return moment.utc(moment.duration(timestamp, 'seconds').asMilliseconds()).format('m:ss');
+    return utc(duration(timestamp, 'seconds').asMilliseconds()).format('m:ss');
   }
 
   setTimeFromPlayer() {
@@ -107,7 +107,7 @@ export default class Timestamp extends Vue {
     }
 
     this.invalid = false;
-    const parsed = moment.utc(this.timestamp, 'm:ss').diff(moment.utc().startOf('day'), 'seconds');
+    const parsed = utc(this.timestamp, 'm:ss').diff(utc().startOf('day'), 'seconds');
     this.$emit('change', parsed);
     this.menu = false;
   }

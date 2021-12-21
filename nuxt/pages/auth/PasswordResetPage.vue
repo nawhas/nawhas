@@ -22,6 +22,7 @@ interface Data {
 
 export default Vue.extend({
   components: { PasswordResetForm },
+
   async asyncData({ route, $api, error }) {
     try {
       const { token } = route.params;
@@ -35,16 +36,19 @@ export default Vue.extend({
       error({ statusCode: 404, message: 'Not found.' });
     }
   },
+
   data: (): Data => ({
     user: null,
     token: null,
   }),
-  watch: {
-    '$store.state.auth.user': 'onAuthChange',
-  },
+
   head: () => generateMeta({
     title: 'Reset Your Password',
   }),
+
+  watch: {
+    '$store.state.auth.user': 'onAuthChange',
+  },
 });
 </script>
 

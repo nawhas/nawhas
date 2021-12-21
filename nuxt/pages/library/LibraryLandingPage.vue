@@ -33,9 +33,15 @@ export default Vue.extend({
       return redirect('/library/home');
     }
   },
+
+  head: () => generateMeta({
+    title: 'Welcome to your library',
+  }),
+
   watch: {
     '$store.state.auth.user': 'onAuthChange',
   },
+
   methods: {
     onAuthChange(value) {
       if (value) {
@@ -46,9 +52,6 @@ export default Vue.extend({
       this.$store.commit('auth/PROMPT_USER', { reason: AuthReason.TrackSaved });
     },
   },
-  head: () => generateMeta({
-    title: 'Welcome to your library',
-  }),
 });
 </script>
 

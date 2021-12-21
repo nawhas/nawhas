@@ -7,7 +7,7 @@
     hide-overlay
     transition="dialog-bottom-transition"
   >
-    <template v-slot:activator="{ on }">
+    <template #activator="{ on }">
       <v-btn
         v-if="track"
         dark
@@ -80,7 +80,7 @@
             accept="audio/*"
             :show-size="1000"
           >
-            <template v-slot:selection="{ text }">
+            <template #selection="{ text }">
               <v-chip
                 color="deep-orange accent-4"
                 dark

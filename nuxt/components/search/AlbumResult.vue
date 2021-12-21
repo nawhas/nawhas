@@ -32,6 +32,7 @@ interface AlbumSearchResult {
     artwork: string|null;
     url: string;
   };
+  // eslint-disable-next-line no-use-before-define
   _formatted?: Formatted;
 }
 
