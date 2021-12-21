@@ -106,9 +106,10 @@ if [ $# -gt 0 ];then
     # pass-thru any extra arguments
     elif [ "$1" == "dusk" ]; then
       shift 1
-      set -x && $COMPOSE -f docker-compose.tests.yml --profile dusk up -d
-      tests test \
-        php artisan dusk:wait
+      set -x \
+        && $COMPOSE -f docker-compose.tests.yml --profile dusk up -d \
+        && tests test \
+            php artisan dusk:wait
 
     # If "test" is used, run linting, unit, and feature tests
     elif [ "$1" == "test" ]; then
@@ -119,7 +120,7 @@ if [ $# -gt 0 ];then
     # If "down" is used, take down everything
     elif [ "$1" == "down" ]; then
       shift 1
-      set -x && $COMPOSE -f docker-compose.tests.yml --profile test down "$@"
+      set -x && $COMPOSE -f docker-compose.tests.yml --profile test --profile dusk down "$@"
 
     # Else, pass-thru args to docker-compose
     else

@@ -33,7 +33,9 @@ class WaitForDuskDependencies extends Command
 
         while ($tries < self::MAX_TRIES) {
             try {
-                $response = $client->get($this->getBaseUrl());
+                $response = $client->get($this->getBaseUrl(), [
+                    'verify' => false, // Disable SSL checks
+                ]);
                 $body = (string)$response->getBody();
 
                 if (!str_contains($body, self::NUXT_LOADING_STATE)) {

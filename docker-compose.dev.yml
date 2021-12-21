@@ -29,6 +29,6 @@ services:
       - ./nuxt:/opt:delegated
       - /dev/shm:/dev/shm
     environment:
-      - BUILD_AXIOS_DEBUG=true
+      - BUILD_AXIOS_DEBUG=false
       - CHOKIDAR_USEPOLLING=true
       - SERVER_API_BASE_URL=http://nginx:80

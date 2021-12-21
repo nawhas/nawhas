@@ -12,7 +12,8 @@ services:
     working_dir: /var/www/api
     environment:
       - APP_ENV=testing
-      - APP_URL=http://nawhas.test
+      - APP_URL=https://nawhas.test
+      - DUSK_HEADLESS_DISABLED=true
     volumes:
       - ./api:/var/www/api:delegated
     depends_on:
@@ -25,18 +26,12 @@ services:
         aliases:
           - nawhas.test
           - api.nawhas.test
-  web:
-    environment:
-      - BUILD_APP_ENV=development
-      - API_BASE_URL=http://api.nawhas.test/
-      - SERVER_API_BASE_URL=http://api.nawhas.test/
-      - SEARCH_HOST=http://search.nawhas.test
-      - APP_DOMAIN=http://nawhas.test
-      - HOST=0.0.0.0
   selenium:
     profiles:
       - dusk
-    image: 'selenium/standalone-chrome'
+    image: 'selenium/standalone-chrome-debug'
+    ports:
+      - '5900:5900'
     volumes:
       - '/dev/shm:/dev/shm'
     networks:
