@@ -106,7 +106,8 @@ if [ $# -gt 0 ];then
     # pass-thru any extra arguments
     elif [ "$1" == "dusk" ]; then
       shift 1
-       tests dusk \
+      set -x && $COMPOSE -f docker-compose.tests.yml --profile dusk up -d
+      tests test \
         php artisan dusk:wait
 
     # If "test" is used, run linting, unit, and feature tests

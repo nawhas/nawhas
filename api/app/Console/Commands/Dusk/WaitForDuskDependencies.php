@@ -26,7 +26,8 @@ class WaitForDuskDependencies extends Command
         $this->info('Waiting for selenium to start...');
         $waitForIt = base_path('vendor/bin/wait-for-it.sh');
         passthru("$waitForIt selenium:4444");
-        passthru("$waitForIt nawhas.test:3000");
+        passthru("$waitForIt web:3000");
+        passthru("$waitForIt nawhas.test:80");
 
         $this->info('Waiting for web application to start...');
 
