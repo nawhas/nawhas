@@ -28,7 +28,7 @@ function run_feature_tests {
 
   # Run database migrations for the first time
   start test \
-    php artisan migrate:all
+    php artisan migrate:all --fresh
 
   # Start the tests
   start test \
