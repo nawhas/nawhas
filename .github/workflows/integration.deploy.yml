@@ -116,13 +116,17 @@ jobs:
         run: |
           ./dev --ci pull db search
         env:
+          API_IMAGE_TAG: dev-${{ needs.setup.outputs.short_sha }}
+          WEB_IMAGE_TAG: dev-${{ needs.setup.outputs.short_sha }}
           API_TEST_IMAGE_TAG: test
 
       - name: Run Feature Tests
         run: |
           ./dev --ci test:feature
         env:
-          API_IMAGE_TAG: test
+          API_IMAGE_TAG: dev-${{ needs.setup.outputs.short_sha }}
+          WEB_IMAGE_TAG: dev-${{ needs.setup.outputs.short_sha }}
+          API_TEST_IMAGE_TAG: test
   dusk:
     name: Run Dusk Tests
     runs-on: ubuntu-latest
