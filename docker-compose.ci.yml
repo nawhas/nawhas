@@ -3,12 +3,12 @@ version: '3.9'
 services:
   api:
     image: nawhas/api:${API_IMAGE_TAG}
-    env_file:
-      - api/.env.ci
+    environment:
+      - APP_ENV=testing
   queue:
     image: nawhas/api:${API_IMAGE_TAG}
     env_file:
-      - api/.env.ci
+      - APP_ENV=testing
   web:
     image: nawhas/web:${WEB_IMAGE_TAG}
   test:
