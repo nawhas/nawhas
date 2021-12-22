@@ -148,21 +148,21 @@ jobs:
 
       - name: Generate SSL Certificates
         run: |
-          docker run -v ./docker/nginx/certs:/certs \
+          docker run -v "{$PWD}/docker/nginx/certs:/certs" \
             -e SSL_SUBJECT=api.nawhas.test \
             -e SSL_DNS=api.nawhas.test,localhost,127.0.0.1 \
             -e SSL_CERT=api.nawhas.test.crt \
             -e SSL_KEY=api.nawhas.test.key \
             paulczar/omgwtfssl
           
-          docker run -v ./docker/nginx/certs:/certs \
+          docker run -v "{$PWD}/docker/nginx/certs:/certs" \
             -e SSL_SUBJECT=nawhas.test \
             -e SSL_DNS=nawhas.test,*.nawhas.test,localhost,127.0.0.1 \
             -e SSL_CERT=nawhas.test.crt \
             -e SSL_KEY=nawhas.test.key \
             paulczar/omgwtfssl
           
-          docker run -v ./docker/nginx/certs:/certs \
+          docker run -v "{$PWD}/docker/nginx/certs:/certs" \
             -e SSL_SUBJECT=search.nawhas.test \
             -e SSL_DNS=search.nawhas.test,localhost,127.0.0.1 \
             -e SSL_CERT=search.nawhas.test.crt \
