@@ -146,9 +146,12 @@ jobs:
           WEB_IMAGE_TAG: dev-${{ needs.setup.outputs.short_sha }}
           API_TEST_IMAGE_TAG: test
 
-      - name: Generate SSL Certificates
+      - name: Prepare to Start
         run: |
           ./dev certs
+          echo '' > ./api/storage/logs/laravel.log
+          echo '' > ./api/storage/logs/tests.log
+          echo '' > ./api/storage/logs/queues.log
 
       - name: Run Dusk Tests
         run: |
@@ -175,6 +178,27 @@ jobs:
         with:
           name: console
           path: api/tests/Browser/console
+
+      - name: Upload API Logs
+        if: failure()
+        uses: actions/upload-artifact@v2
+        with:
+          name: laravel.log
+          path: api/storage/logs/laravel.log
+
+      - name: Upload Test Logs
+        if: failure()
+        uses: actions/upload-artifact@v2
+        with:
+          name: tests.log
+          path: api/storage/logs/tests.log
+
+      - name: Upload Queue Logs
+        if: failure()
+        uses: actions/upload-artifact@v2
+        with:
+          name: queues.log
+          path: api/storage/logs/queues.log
   ################################################################
   # Deploy Integration Environment
   ################################################################
