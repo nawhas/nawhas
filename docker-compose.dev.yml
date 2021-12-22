@@ -1,18 +1,15 @@
 version: '3.9'
 
-volumes:
-  web_node_modules:
-  web_nuxt_built:
-  test_db:
-
 services:
   api:
     image: szainmehdi/php:8.1-dev-20211203
     working_dir: /var/www/api
+    ports:
+      - "9000:9000"
     environment:
       - APP_ENV=local
       - XDEBUG_MODE=debug
-      - XDEBUG_CLIENT_PORT=9003
+      - XDEBUG_CLIENT_PORT=9000
       - XDEBUG_IDE_KEY=PHPSTORM
       - XDEBUG_CLIENT_HOST=host.docker.internal
     volumes:
@@ -24,6 +21,11 @@ services:
       - APP_ENV=local
     volumes:
       - ./api:/var/www/api:delegated
+  test:
+    image: szainmehdi/php:8.1-dev-20211203
+    working_dir: /var/www/api
+    volumes:
+      - ./api:/var/www/api:delegated
   web:
     command: ['yarn', 'watcher']
     working_dir: /opt
@@ -32,65 +34,8 @@ services:
       target: dev
     volumes:
       - ./nuxt:/opt:delegated
-      - web_node_modules:/opt/node_modules
-      - web_nuxt_built:/opt/.nuxt
+      - /dev/shm:/dev/shm
     environment:
       - BUILD_AXIOS_DEBUG=
       - CHOKIDAR_USEPOLLING=true
-      - SERVER_API_BASE_URL=http://api.nawhas.test
-  test_db:
-    image: postgres:11
-    restart: unless-stopped
-    tty: true
-    ports:
-      - "5433:5432"
-    environment:
-      - POSTGRES_MULTIPLE_DATABASES=nawhas_data,nawhas_events
-      - POSTGRES_USER=docker
-      - POSTGRES_PASSWORD=secret
-    volumes:
-      - test_db:/var/lib/postgresql/data:delegated
-      - ./docker/postgres/init:/docker-entrypoint-initdb.d
-    networks:
-      - nawhas
-  mail:
-    image: mailhog/mailhog:latest
-    restart: unless-stopped
-    ports:
-      - "8025:8025"
-    networks:
-      nawhas:
-        aliases:
-          - mail
-  # Dusk Profile
-  test:
-    image: szainmehdi/php:8.1-dev-20211203
-    working_dir: /var/www/api
-    restart: 'no'
-    profiles:
-      - dusk
-    environment:
-      - APP_ENV=test
-      - XDEBUG_MODE=debug
-      - XDEBUG_CLIENT_PORT=9003
-      - XDEBUG_IDE_KEY=PHPSTORM
-      - XDEBUG_CLIENT_HOST=host.docker.internal
-      - APP_URL=http://nawhas.test:3000
-    volumes:
-      - ./api:/var/www/api:delegated
-    networks:
-      - nawhas
-    depends_on:
-      - db
-      - nginx
-      - web
-      - search
-      - selenium
-  selenium:
-    profiles:
-      - dusk
-    image: 'selenium/standalone-chrome'
-    volumes:
-      - '/dev/shm:/dev/shm'
-    networks:
-      - nawhas
+      - SERVER_API_BASE_URL=http://nginx:80

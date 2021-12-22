@@ -16,12 +16,4 @@ class ExampleTest extends DuskTestCase
                     ->assertSee('Explore the most advanced library of nawhas online.');
         });
     }
-
-    public function testBasicExampleWithPageClass(): void
-    {
-        $this->browse(function (Browser $browser) {
-            $browser->visit(new HomePage())
-                ->assertSee('Trending This Month');
-        });
-    }
 }
