@@ -12,7 +12,7 @@ class WaitForDuskDependencies extends Command
 {
     private const NUXT_LOADING_STATE = '<title>Nuxt.js: Loading app...</title>';
     private const MAX_TRIES = 10;
-    private const MAX_EXCEPTIONS = 2;
+    private const MAX_EXCEPTIONS = 4;
 
     protected $signature = 'dusk:wait';
 
@@ -27,7 +27,7 @@ class WaitForDuskDependencies extends Command
         $waitForIt = base_path('vendor/bin/wait-for-it.sh');
         passthru("$waitForIt selenium:4444");
         passthru("$waitForIt web:3000");
-        passthru("$waitForIt nawhas.test:80");
+        passthru("$waitForIt nawhas.test:443");
 
         $this->info('Waiting for web application to start...');
 
