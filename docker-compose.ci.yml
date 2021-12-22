@@ -15,7 +15,6 @@ services:
     image: nawhas/api:${API_TEST_IMAGE_TAG}
     environment:
       - APP_ENV=testing
-      - DUSK_HEADLESS_DISABLED=false
     volumes:
       - ./api/tests/Browser/screenshots:/var/www/api/tests/Browser/screenshots
       - ./api/tests/Browser/console:/var/www/api/tests/Browser/console

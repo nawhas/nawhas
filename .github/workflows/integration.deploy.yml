@@ -97,24 +97,12 @@ jobs:
       - name: Build Test API Image
         uses: ./.github/actions/api-build-test
 
-      - name: Prepare .env.ci
-        run: |
-          cp api/.env.ci.example api/.env.ci
-
-      - name: Pull Services
-        run: |
-          ./dev --ci pull db cache search
-        env:
-          API_IMAGE_TAG: test
-          # API_TEST_IMAGE_TAG: test
-          # WEB_IMAGE_TAG: dev-${{ needs.setup.outputs.short_sha }}
-
       - name: Run PHPStan
         shell: bash
         run: |
           docker run --rm nawhas/api:test ./ci/phpstan.sh
 
-      - name: Run PHPStan
+      - name: Run Psalm
         shell: bash
         run: |
           docker run --rm nawhas/api:test ./ci/psalm.sh
@@ -124,10 +112,14 @@ jobs:
         run: |
           docker run --rm nawhas/api:test ./vendor/bin/phpunit --testsuite Unit
 
+      - name: Pull Services
+        run: |
+          ./dev --ci pull db search
+        env:
+          API_TEST_IMAGE_TAG: test
+
       - name: Run Feature Tests
         run: |
-          ./dev --ci up -d api test_db search
-          ./dev --ci art wait:database
           ./dev --ci test:feature
         env:
           API_IMAGE_TAG: test
@@ -142,13 +134,9 @@ jobs:
       - name: Build Test API Image
         uses: ./.github/actions/api-build-test
 
-      - name: Prepare .env.ci
-        run: |
-          cp api/.env.ci.example api/.env.ci
-
       - name: Pull Services
         run: |
-          ./dev --ci pull -q api web nginx mail selenium db search cache
+          ./dev --ci -- -f docker-compose.dusk.yml pull
         env:
           API_IMAGE_TAG: dev-${{ needs.setup.outputs.short_sha }}
           WEB_IMAGE_TAG: dev-${{ needs.setup.outputs.short_sha }}

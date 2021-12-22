@@ -23,6 +23,8 @@ function start {
 
 function run_feature_tests {
   args=$(echo "$@" | sed 's/api\///g')
+  start test \
+    ./vendor/bin/wait-for-it.sh db:5432
 
   # Run database migrations for the first time
   start test \
