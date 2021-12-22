@@ -30,7 +30,8 @@ services:
     environment:
       - APP_ENV=testing
       - APP_URL=https://nawhas.test
-      - DUSK_HEADLESS_DISABLED=true
+      # Uncomment this line to enable debugging dusk tests visually.
+      # - DUSK_HEADLESS_DISABLED=true
     depends_on:
       - search
       - db
@@ -115,9 +116,11 @@ services:
   selenium:
     profiles:
       - dusk
-    image: 'selenium/standalone-chrome-debug'
-    ports:
-      - '5900:5900'
+    image: 'selenium/standalone-chrome'
+    # Uncomment the following lines for visaul debugging dusk tests.
+#    image: 'selenium/standalone-chrome-debug'
+#    ports:
+#      - '5900:5900'
     volumes:
       - '/dev/shm:/dev/shm'
     networks:
