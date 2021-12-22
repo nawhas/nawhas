@@ -146,6 +146,29 @@ jobs:
           WEB_IMAGE_TAG: dev-${{ needs.setup.outputs.short_sha }}
           API_TEST_IMAGE_TAG: test
 
+      - name: Generate SSL Certificates
+        run: |
+          docker run -v ./docker/nginx/certs:/certs \
+            -e SSL_SUBJECT=api.nawhas.test \
+            -e SSL_DNS=api.nawhas.test,localhost,127.0.0.1 \
+            -e SSL_CERT=api.nawhas.test.crt \
+            -e SSL_KEY=api.nawhas.test.key \
+            paulczar/omgwtfssl
+          
+          docker run -v ./docker/nginx/certs:/certs \
+            -e SSL_SUBJECT=nawhas.test \
+            -e SSL_DNS=nawhas.test,*.nawhas.test,localhost,127.0.0.1 \
+            -e SSL_CERT=nawhas.test.crt \
+            -e SSL_KEY=nawhas.test.key \
+            paulczar/omgwtfssl
+          
+          docker run -v ./docker/nginx/certs:/certs \
+            -e SSL_SUBJECT=search.nawhas.test \
+            -e SSL_DNS=search.nawhas.test,localhost,127.0.0.1 \
+            -e SSL_CERT=search.nawhas.test.crt \
+            -e SSL_KEY=search.nawhas.test.key \
+            paulczar/omgwtfssl
+
       - name: Run Dusk Tests
         run: |
           ./dev --ci dusk
