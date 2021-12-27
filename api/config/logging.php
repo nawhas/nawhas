@@ -43,7 +43,7 @@ return [
 
         'single' => [
             'driver' => 'single',
-            'path' => storage_path('logs/laravel.log'),
+            'path' => storage_path(sprintf('logs/%s', env('LOG_FILE', 'laravel.log'))),
             'level' => 'debug',
         ],
 

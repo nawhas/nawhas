@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div dusk="user-menu">
     <v-menu v-model="open" :close-on-content-click="false" left>
       <template #activator="{ on }">
         <v-avatar
@@ -8,6 +8,7 @@
           class="user-menu__avatar"
           size="36"
           :color="$vuetify.theme.dark ? 'grey darken-3' : 'grey lighten-2'"
+          dusk="user-menu__avatar"
           v-on="on"
         >
           <img v-if="authenticated" crossorigin :src="user.avatar" :alt="user.name">
@@ -29,7 +30,9 @@
 
               <v-list-item-content v-if="authenticated">
                 <v-list-item-title class="d-flex align-center">
-                  <div>{{ user.name }}</div>
+                  <div dusk="user-menu__name">
+                    {{ user.name }}
+                  </div>
                   <v-icon
                     v-if="user.role === Role.Moderator"
                     title="Moderator"
@@ -40,7 +43,9 @@
                     security
                   </v-icon>
                 </v-list-item-title>
-                <v-list-item-subtitle>{{ user.email }}</v-list-item-subtitle>
+                <v-list-item-subtitle dusk="user-menu__email">
+                  {{ user.email }}
+                </v-list-item-subtitle>
               </v-list-item-content>
               <v-list-item-content v-else>
                 <v-list-item-title>Guest</v-list-item-title>
@@ -55,7 +60,7 @@
                     <v-btn v-if="canRegister" color="accent" text @click="register">
                       Sign Up
                     </v-btn>
-                    <v-btn color="accent" text @click="login">
+                    <v-btn color="accent" text dusk="user-menu__login-button" @click="login">
                       Log In
                     </v-btn>
                   </div>

@@ -44,7 +44,7 @@ return [
         'mysql' => [
             'driver' => 'mysql',
             'url' => env('DATABASE_URL'),
-            'host' => env('DB_HOST', 'nawhas_db'),
+            'host' => env('DB_HOST', 'db'),
             'port' => env('DB_PORT', '3306'),
             'database' => env('DB_DATABASE', 'nawhas'),
             'username' => env('DB_USERNAME', 'docker'),
@@ -64,7 +64,7 @@ return [
         'pgsql' => [
             'driver' => 'pgsql',
             'url' => env('DATABASE_URL'),
-            'host' => env('DB_HOST', 'nawhas_db'),
+            'host' => env('DB_HOST', 'db'),
             'port' => env('DB_PORT', '5432'),
             'database' => env('DB_DATABASE', 'nawhas'),
             'username' => env('DB_USERNAME', 'docker'),

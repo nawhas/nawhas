@@ -6,11 +6,20 @@ use Facebook\WebDriver\Chrome\ChromeOptions;
 use Facebook\WebDriver\Remote\DesiredCapabilities;
 use Facebook\WebDriver\Remote\RemoteWebDriver;
 use Laravel\Dusk\TestCase as BaseTestCase;
-use Laravel\Telescope\Telescope;
 
 abstract class DuskTestCase extends BaseTestCase
 {
     use CreatesApplication;
+    use SetUpCustomTraits;
+
+    protected function setUpTraits()
+    {
+        $uses = parent::setUpTraits();
+
+        $this->setUpCustomTraits($uses);
+
+        return $uses;
+    }
 
     /**
      * Prepare for Dusk test execution.
@@ -34,6 +43,7 @@ abstract class DuskTestCase extends BaseTestCase
     {
         $options = (new ChromeOptions)->addArguments(collect([
             '--window-size=1920,1080',
+            'ignore-certificate-errors',
         ])->unless($this->hasHeadlessDisabled(), function ($items) {
             return $items->merge([
                 '--disable-gpu',
