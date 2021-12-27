@@ -14,11 +14,10 @@ services:
     env_file:
       - api/.env.production
   test:
-    image: nawhas/api:local-test
-    build:
-      context: api
-      dockerfile: Dockerfile
-      target: test
+    image: szainmehdi/php:8.1-dev-20211203
+    working_dir: /var/www/api
+    volumes:
+      - ./api:/var/www/api:delegated
   web:
     image: nawhas/web:local
     build:

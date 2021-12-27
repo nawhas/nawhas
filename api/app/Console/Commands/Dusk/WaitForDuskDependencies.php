@@ -70,6 +70,17 @@ class WaitForDuskDependencies extends Command
         $this->output->writeln('<info>R</info>');
         $this->output->success('Ready after ' . $tries . ' tries! Starting tests now.');
 
+        $connection = config('database.default');
+        $db = config('database.connections.' . $connection);
+        $this->output->info(
+            <<<TEXT
+            Configuration
+            DB Connection: {$connection}    
+            DB Host: {$db['host']}    
+            DB Database: {$db['database']}    
+            TEXT
+        );
+
         return 0;
     }
 
