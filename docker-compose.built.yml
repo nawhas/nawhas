@@ -6,13 +6,15 @@ services:
     build:
       context: api
       dockerfile: Dockerfile
+    env_file:
+      - ./api/.env
   queue:
     image: nawhas/api:local
     build:
       context: api
       dockerfile: Dockerfile
     env_file:
-      - api/.env.production
+      - ./api/.env
   test:
     image: szainmehdi/php:8.1-dev-20211203
     working_dir: /var/www/api
