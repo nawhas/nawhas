@@ -14,7 +14,9 @@ spec:
     - host: <INTG_API_DOMAIN>
       http:
         paths:
-          - backend:
+          - pathType: Prefix
+            path: "/"
+            backend:
               service:
                 name: api-nginx
                 port:
@@ -22,7 +24,9 @@ spec:
     - host: <INTG_APP_DOMAIN>
       http:
         paths:
-          - backend:
+          - pathType: Prefix
+            path: "/"
+            backend:
               service:
                 name: web
                 port:
@@ -30,7 +34,9 @@ spec:
     - host: <INTG_SEARCH_HOST>
       http:
         paths:
-          - backend:
+          - pathType: Prefix
+            path: "/"
+            backend:
               service:
                 name: search
                 port:
@@ -38,7 +44,9 @@ spec:
     - host: <INTG_MAIL_HOST>
       http:
         paths:
-          - backend:
+          - pathType: Prefix
+            path: "/"
+            backend:
               service:
                 name: mail
                 port:
