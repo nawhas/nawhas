@@ -15,23 +15,31 @@ spec:
       http:
         paths:
           - backend:
-              serviceName: api-nginx
-              servicePort: 80
+              service:
+                name: api-nginx
+                port:
+                  number: 80
     - host: <INTG_APP_DOMAIN>
       http:
         paths:
           - backend:
-              serviceName: web
-              servicePort: 3000
+              service:
+                name: web
+                port:
+                  number: 3000
     - host: <INTG_SEARCH_HOST>
       http:
         paths:
           - backend:
-              serviceName: search
-              servicePort: 7700
+              service:
+                name: search
+                port:
+                  number: 7700
     - host: <INTG_MAIL_HOST>
       http:
         paths:
           - backend:
-              serviceName: mail
-              servicePort: 8025
+              service:
+                name: mail
+                port:
+                  number: 8025
