@@ -17,11 +17,15 @@ spec:
       http:
         paths:
           - backend:
-              serviceName: api-nginx
-              servicePort: 80
+              service:
+                name: api-nginx
+                port:
+                  number: 80
     - host: nawhas.com
       http:
         paths:
           - backend:
-              serviceName: web
-              servicePort: 3000
+              service:
+                name: web
+                port:
+                  number: 3000
