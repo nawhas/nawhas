@@ -16,7 +16,9 @@ spec:
     - host: api.nawhas.com
       http:
         paths:
-          - backend:
+          - pathType: Prefix
+            path: "/"
+            backend:
               service:
                 name: api-nginx
                 port:
@@ -24,7 +26,9 @@ spec:
     - host: nawhas.com
       http:
         paths:
-          - backend:
+          - pathType: Prefix
+            path: "/"
+            backend:
               service:
                 name: web
                 port:

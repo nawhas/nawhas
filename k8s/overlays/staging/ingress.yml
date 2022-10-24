@@ -13,7 +13,9 @@ spec:
     - host: api.staging.nawhas.com
       http:
         paths:
-          - backend:
+          - pathType: Prefix
+            path: "/"
+            backend:
               service:
                 name: api-nginx
                 port:
@@ -21,7 +23,9 @@ spec:
     - host: staging.nawhas.com
       http:
         paths:
-          - backend:
+          - pathType: Prefix
+            path: "/"
+            backend:
               service:
                 name: web
                 port:
@@ -29,7 +33,9 @@ spec:
     - host: search.staging.nawhas.com
       http:
         paths:
-          - backend:
+          - pathType: Prefix
+            path: "/"
+            backend:
               service:
                 name: search
                 port:
