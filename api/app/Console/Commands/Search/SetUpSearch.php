@@ -31,7 +31,7 @@ class SetUpSearch extends Command
 
 
         if ($this->option('import')) {
-            $indices->each(fn ($config) => $this->call('scout:import', [
+            $indices->map(fn ($config) => $this->call('scout:import', [
                 'model' => $config['model'],
             ]));
         }
