@@ -16,27 +16,27 @@ class SetUpSearch extends Command
     public function handle(Meilisearch $client): int
     {
         $prefix = config('scout.prefix');
-        $indices = config('scout.indices');
+        $indices = collect(config('scout.indices'));
 
-        foreach ($indices as $index => $config) {
-            $index = $prefix . $index;
 
-            if ($this->option('reset')) {
-                $client->deleteIndexIfExists($index);
-                $this->comment(">> 🗑  Index \"$index\" deleted.");
-            }
-
-            $client->getOrCreateIndex($index)->updateSettings($config['settings']);
-            $this->comment(">> ✅ Index \"$index\" created");
-
-            if ($this->option('import')) {
-                $this->call('scout:import', [
-                    'model' => $config['model'],
-                ]);
-            }
+        if ($this->option('reset')) {
+            $tasks = $indices->keys()->map(fn ($index) => $client->deleteIndex($prefix . $index)['uid'])->all();
+            $client->waitForTasks($tasks);
+            $this->comment(">> 🗑  Indexes deleted.");
         }
 
-        $this->info('Done!');
+        $tasks = $indices->keys()->map(fn ($index) => $client->createIndex($prefix . $index, ['primaryKey' => 'id'])['uid'])->all();
+        $client->waitForTasks($tasks);
+        $this->comment(">> ✅ Indexes created");
+
+
+        if ($this->option('import')) {
+            $indices->each(fn ($config) => $this->call('scout:import', [
+                'model' => $config['model'],
+            ]));
+        }
+
+        $this->info('✅✅ Done!');
 
         return 0;
     }
