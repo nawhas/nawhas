@@ -1,7 +1,7 @@
 # ---------------------------------------------------------------------------
 # Test Image
 # ---------------------------------------------------------------------------
-FROM szainmehdi/php:8.1-dev-20211203 as test
+FROM --platform=linux/amd64 szainmehdi/php:8.1-dev-20211203 as test
 
 WORKDIR /var/www/api
 ENV APP_ENV production
@@ -20,7 +20,7 @@ RUN composer run post-root-package-install && php artisan key:generate
 # ---------------------------------------------------------------------------
 # Build Image
 # ---------------------------------------------------------------------------
-FROM szainmehdi/php:8.1-dev-20211203 as build
+FROM --platform=linux/amd64 szainmehdi/php:8.1-dev-20211203 as build
 
 WORKDIR /var/www/api
 ENV APP_ENV production
@@ -36,7 +36,7 @@ RUN composer install -n --no-dev --prefer-dist --no-scripts --no-autoloader \
 # ---------------------------------------------------------------------------
 # Production Image
 # ---------------------------------------------------------------------------
-FROM szainmehdi/php:8.1-20211203 as production
+FROM --platform=linux/amd64 szainmehdi/php:8.1-20211203 as production
 
 WORKDIR /var/www/api
 

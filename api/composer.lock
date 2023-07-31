@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d9e10a6a701c0a7ddd1074481f069aee",
+    "content-hash": "2eb364094d040476838bd9e4e537fec0",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -2919,21 +2919,21 @@
         },
         {
             "name": "meilisearch/meilisearch-php",
-            "version": "v0.20.0",
+            "version": "v0.23.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/meilisearch/meilisearch-php.git",
-                "reference": "0b592c1d2b3e642d618254a7ff5716874b72fabf"
+                "reference": "e993256ff7c5be7fe760392145830c9defab8214"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/meilisearch/meilisearch-php/zipball/0b592c1d2b3e642d618254a7ff5716874b72fabf",
-                "reference": "0b592c1d2b3e642d618254a7ff5716874b72fabf",
+                "url": "https://api.github.com/repos/meilisearch/meilisearch-php/zipball/e993256ff7c5be7fe760392145830c9defab8214",
+                "reference": "e993256ff7c5be7fe760392145830c9defab8214",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
-                "php": "^7.3 || ^8.0",
+                "php": "^7.4 || ^8.0",
                 "php-http/client-common": "^2.0",
                 "php-http/discovery": "^1.7",
                 "php-http/httplug": "^2.1"
@@ -2943,10 +2943,10 @@
                 "guzzlehttp/guzzle": "^7.1",
                 "http-interop/http-factory-guzzle": "^1.0",
                 "phpstan/extension-installer": "^1.1",
-                "phpstan/phpstan": "^0.12.87",
-                "phpstan/phpstan-deprecation-rules": "^0.12.6",
-                "phpstan/phpstan-phpunit": "^0.12.19",
-                "phpstan/phpstan-strict-rules": "^0.12.9",
+                "phpstan/phpstan": "^1.4",
+                "phpstan/phpstan-deprecation-rules": "^1.0",
+                "phpstan/phpstan-phpunit": "^1.0",
+                "phpstan/phpstan-strict-rules": "^1.1",
                 "phpunit/phpunit": "^9.5"
             },
             "suggest": {
@@ -2969,7 +2969,7 @@
                     "email": "clementine@meilisearch.com"
                 }
             ],
-            "description": "PHP wrapper for the MeiliSearch API",
+            "description": "PHP wrapper for the Meilisearch API",
             "keywords": [
                 "api",
                 "client",
@@ -2980,9 +2980,9 @@
             ],
             "support": {
                 "issues": "https://github.com/meilisearch/meilisearch-php/issues",
-                "source": "https://github.com/meilisearch/meilisearch-php/tree/v0.20.0"
+                "source": "https://github.com/meilisearch/meilisearch-php/tree/v0.23.3"
             },
-            "time": "2021-11-17T20:46:29+00:00"
+            "time": "2022-06-21T15:55:00+00:00"
         },
         {
             "name": "monolog/monolog",
@@ -11592,16 +11592,16 @@
         },
         {
             "name": "nunomaduro/larastan",
-            "version": "1.0.2",
+            "version": "1.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nunomaduro/larastan.git",
-                "reference": "3e0beabe8cf98373700f4d30cdfb2aa6badb9144"
+                "reference": "f5ce15319da184a5e461ef12c60489c15a9cf65b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nunomaduro/larastan/zipball/3e0beabe8cf98373700f4d30cdfb2aa6badb9144",
-                "reference": "3e0beabe8cf98373700f4d30cdfb2aa6badb9144",
+                "url": "https://api.github.com/repos/nunomaduro/larastan/zipball/f5ce15319da184a5e461ef12c60489c15a9cf65b",
+                "reference": "f5ce15319da184a5e461ef12c60489c15a9cf65b",
                 "shasum": ""
             },
             "require": {
@@ -11666,7 +11666,7 @@
             ],
             "support": {
                 "issues": "https://github.com/nunomaduro/larastan/issues",
-                "source": "https://github.com/nunomaduro/larastan/tree/1.0.2"
+                "source": "https://github.com/nunomaduro/larastan/tree/1.0.3"
             },
             "funding": [
                 {
@@ -11686,7 +11686,7 @@
                     "type": "patreon"
                 }
             ],
-            "time": "2021-11-23T10:50:03+00:00"
+            "time": "2022-01-20T19:33:48+00:00"
         },
         {
             "name": "openlss/lib-array2xml",
@@ -12141,20 +12141,20 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "1.2.0",
+            "version": "1.8.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "cbe085f9fdead5b6d62e4c022ca52dc9427a10ee"
+                "reference": "46e223dd68a620da18855c23046ddb00940b4014"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/cbe085f9fdead5b6d62e4c022ca52dc9427a10ee",
-                "reference": "cbe085f9fdead5b6d62e4c022ca52dc9427a10ee",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/46e223dd68a620da18855c23046ddb00940b4014",
+                "reference": "46e223dd68a620da18855c23046ddb00940b4014",
                 "shasum": ""
             },
             "require": {
-                "php": "^7.1|^8.0"
+                "php": "^7.2|^8.0"
             },
             "conflict": {
                 "phpstan/phpstan-shim": "*"
@@ -12164,11 +12164,6 @@
                 "phpstan.phar"
             ],
             "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.2-dev"
-                }
-            },
             "autoload": {
                 "files": [
                     "bootstrap.php"
@@ -12179,9 +12174,13 @@
                 "MIT"
             ],
             "description": "PHPStan - PHP Static Analysis Tool",
+            "keywords": [
+                "dev",
+                "static analysis"
+            ],
             "support": {
                 "issues": "https://github.com/phpstan/phpstan/issues",
-                "source": "https://github.com/phpstan/phpstan/tree/1.2.0"
+                "source": "https://github.com/phpstan/phpstan/tree/1.8.11"
             },
             "funding": [
                 {
@@ -12193,15 +12192,11 @@
                     "type": "github"
                 },
                 {
-                    "url": "https://www.patreon.com/phpstan",
-                    "type": "patreon"
-                },
-                {
                     "url": "https://tidelift.com/funding/github/packagist/phpstan/phpstan",
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-11-18T14:09:01+00:00"
+            "time": "2022-10-24T15:45:13+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
