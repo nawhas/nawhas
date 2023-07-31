@@ -20,7 +20,7 @@
         "laravel/tinker": "^2.0",
         "league/flysystem-aws-s3-v3": "^1.0",
         "league/fractal": "^0.19.2",
-        "meilisearch/meilisearch-php": "^0.20",
+        "meilisearch/meilisearch-php": "0.23.*",
         "myclabs/php-enum": "^1.7",
         "sentry/sentry-laravel": "^2.10",
         "spatie/laravel-event-sourcing": "^6.0",

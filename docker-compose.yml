@@ -99,7 +99,7 @@ services:
     volumes:
       - redis:/data
   search:
-    image: getmeili/meilisearch:v0.24.0
+    image: getmeili/meilisearch:v0.25.0
     restart: unless-stopped
     tty: true
     ports:
