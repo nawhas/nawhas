@@ -1,6 +1,6 @@
-FROM node:16-alpine AS dev
+FROM --platform=linux/amd64 node:16-alpine AS dev
 
-WORKDIR /opt
+WORKDIR /home/nawhas/web
 
 RUN apk --no-cache add \
 	git \

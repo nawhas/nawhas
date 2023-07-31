@@ -10,12 +10,14 @@ volumes:
 
 services:
   api:
+    platform: linux/amd64
     networks:
       - nawhas
     depends_on:
       - db
       - cache
   queue:
+    platform: linux/amd64
     networks:
       - nawhas
     restart: unless-stopped
@@ -24,6 +26,7 @@ services:
       - db
       - cache
   test:
+    platform: linux/amd64
     profiles:
       - test
     restart: 'no'
@@ -62,6 +65,7 @@ services:
           - nawhas.test
           - api.nawhas.test
   web:
+    platform: linux/amd64
     expose:
       - 3000
     environment:
