@@ -31,7 +31,7 @@ runs:
         docker-username: ${{ inputs.docker-username }}
         docker-password: ${{ inputs.docker-password }}
         build-args: |
-          APP_VERSION=${{ steps.environment.outputs.version }}
+          APP_VERSION=${{ ${{ startsWith(github.ref, 'refs/tags') && github.ref_name || steps.environment.outputs.version }}
         context: ./nuxt
         image: nawhas/web
         tags: |
