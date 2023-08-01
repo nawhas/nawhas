@@ -107,7 +107,7 @@ services:
     environment:
       - MEILI_MASTER_KEY=secret
     volumes:
-      - search:/data.ms:delegated
+      - search:/home/meili/data.ms:delegated
     networks:
       - nawhas
   mail:
