@@ -12,7 +12,6 @@ use Illuminate\Support\ServiceProvider;
 use Laravel\Sanctum\Sanctum;
 use League\Fractal\Manager as Fractal;
 use League\Fractal\Serializer\ArraySerializer;
-use MeiliSearch\Client as Search;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -25,7 +24,7 @@ class AppServiceProvider extends ServiceProvider
     {
         Sanctum::ignoreMigrations();
 
-        if ($this->app->environment('local', 'staging')) {
+        if ($this->app->environment('local', 'integration')) {
             $this->app->register(\Laravel\Telescope\TelescopeServiceProvider::class);
             $this->app->register(TelescopeServiceProvider::class);
         }
