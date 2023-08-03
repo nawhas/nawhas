@@ -52,7 +52,6 @@ RUN chmod +x /usr/bin/docker-nawhas-api-entrypoint
 
 RUN php artisan package:discover \
  && php artisan horizon:publish \
- && php artisan telescope:publish \
  && php artisan route:cache \
  && php artisan event-sourcing:cache-event-handlers
 
