@@ -40,13 +40,16 @@
         "phpstan/phpstan": "1.8.*",
         "phpunit/phpunit": "^9.5.10",
         "psalm/plugin-laravel": "^1.5",
-        "vimeo/psalm": "dev-master",
+        "vimeo/psalm": "^4.8.1",
         "vishnubob/wait-for-it": "dev-master"
     },
     "config": {
         "optimize-autoloader": true,
         "preferred-install": "dist",
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "php-http/discovery": true
+        }
     },
     "extra": {
         "laravel": {
