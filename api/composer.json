@@ -16,7 +16,7 @@
         "laravel/sanctum": "^2.0",
         "laravel/scout": "^9.3.2",
         "laravel/socialite": "^5.0",
-        "laravel/telescope": "^4.0",
+        "laravel/telescope": "^4.15",
         "laravel/tinker": "^2.0",
         "league/flysystem-aws-s3-v3": "^1.0",
         "league/fractal": "^0.19.2",
@@ -53,7 +53,9 @@
     },
     "extra": {
         "laravel": {
-            "dont-discover": []
+            "dont-discover": [
+                "laravel/telescope"
+            ]
         }
     },
     "autoload": {

@@ -62,7 +62,7 @@ return [
     |
     */
 
-    'enabled' => env('TELESCOPE_ENABLED', false),
+    'enabled' => env('TELESCOPE_ENABLED', true),
 
     /*
     |--------------------------------------------------------------------------
@@ -77,6 +77,7 @@ return [
 
     'middleware' => [
         'web',
+        'role:moderator',
         Authorize::class,
     ],
 
