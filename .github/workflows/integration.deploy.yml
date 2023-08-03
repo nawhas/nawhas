@@ -3,7 +3,7 @@ name: Pull Request Build
 on: [pull_request]
 
 concurrency:
-  group: integration
+  group: ci-${{ github.event.number }}
   cancel-in-progress: true
 
 jobs:
