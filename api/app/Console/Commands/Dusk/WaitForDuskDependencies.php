@@ -12,7 +12,7 @@ class WaitForDuskDependencies extends Command
 {
     private const NUXT_LOADING_STATE = '<title>Nuxt.js: Loading app...</title>';
     private const MAX_TRIES = 10;
-    private const MAX_EXCEPTIONS = 4;
+    private const MAX_EXCEPTIONS = 10;
 
     protected $signature = 'dusk:wait';
 

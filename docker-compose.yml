@@ -10,12 +10,14 @@ volumes:
 
 services:
   api:
+    platform: linux/amd64
     networks:
       - nawhas
     depends_on:
       - db
       - cache
   queue:
+    platform: linux/amd64
     networks:
       - nawhas
     restart: unless-stopped
@@ -24,6 +26,7 @@ services:
       - db
       - cache
   test:
+    platform: linux/amd64
     profiles:
       - test
     restart: 'no'
@@ -62,6 +65,7 @@ services:
           - nawhas.test
           - api.nawhas.test
   web:
+    platform: linux/amd64
     expose:
       - 3000
     environment:
@@ -95,7 +99,7 @@ services:
     volumes:
       - redis:/data
   search:
-    image: getmeili/meilisearch:v0.24.0
+    image: getmeili/meilisearch:v0.25.2
     restart: unless-stopped
     tty: true
     ports:
@@ -103,7 +107,7 @@ services:
     environment:
       - MEILI_MASTER_KEY=secret
     volumes:
-      - search:/data.ms:delegated
+      - search:/home/meili/data.ms:delegated
     networks:
       - nawhas
   mail:

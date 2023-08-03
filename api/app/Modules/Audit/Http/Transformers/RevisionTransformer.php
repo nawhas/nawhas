@@ -36,8 +36,8 @@ class RevisionTransformer extends Transformer
             'entityType' => $revision->entity_type,
             'entityId' => $revision->entity_id,
             'changeType' => $revision->change_type,
-            'previous' => $this->prepareSnapshot($revision->old_values, $revision->entity_type),
-            'snapshot' => $this->prepareSnapshot($revision->new_values, $revision->entity_type),
+            'previous' => $this->prepareSnapshot($revision->old_values, $revision->getEntityType()),
+            'snapshot' => $this->prepareSnapshot($revision->new_values, $revision->getEntityType()),
             'meta' => $this->getMeta($revision),
             'createdAt' => $this->dateTime($revision->created_at),
         ];
@@ -94,7 +94,7 @@ class RevisionTransformer extends Transformer
 
     private function getMeta(Revision $revision): array
     {
-        return match ($revision->entity_type) {
+        return match ($revision->getEntityType()) {
             EntityType::Reciter => [
                 'link' => $revision->entity?->getUrlPath(),
             ],
@@ -121,17 +121,17 @@ class RevisionTransformer extends Transformer
      */
     private function getReciterSnapshot(Revision $revision): ReciterSnapshot
     {
-        if ($revision->entity_type === EntityType::Reciter) {
+        if ($revision->getEntityType() === EntityType::Reciter) {
             return ReciterSnapshot::fromRevision($revision);
         }
 
         $id = (function (Revision $revision) {
-            if ($revision->entity_type === EntityType::Album) {
+            if ($revision->getEntityType() === EntityType::Album) {
                 $album = AlbumSnapshot::fromRevision($revision);
                 return $album->reciterId;
             }
 
-            if ($revision->entity_type === EntityType::Track) {
+            if ($revision->getEntityType() === EntityType::Track) {
                 $track = TrackSnapshot::fromRevision($revision);
                 $album = AlbumSnapshot::fromRevision(
                     Revision::getLast(EntityType::Album, $track->albumId)
@@ -149,11 +149,11 @@ class RevisionTransformer extends Transformer
 
     private function getAlbumSnapshot(Revision $revision): AlbumSnapshot
     {
-        if ($revision->entity_type === EntityType::Album) {
+        if ($revision->getEntityType() === EntityType::Album) {
             return AlbumSnapshot::fromRevision($revision);
         }
 
-        if ($revision->entity_type === EntityType::Track) {
+        if ($revision->getEntityType() === EntityType::Track) {
             $track = TrackSnapshot::fromRevision($revision);
             return AlbumSnapshot::fromRevision(
                 Revision::getLast(EntityType::Album, $track->albumId)
