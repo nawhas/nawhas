@@ -5,7 +5,7 @@ on:
   merge_group:
 
 concurrency:
-  group: ci-${{ github.event.number }}
+  group: ci-${{ github.head_ref }}
   cancel-in-progress: true
 
 jobs:
