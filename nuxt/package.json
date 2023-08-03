@@ -32,7 +32,7 @@
     "@nuxtjs/sentry": "^4.3.4",
     "@nuxtjs/universal-storage": "^0.5.5",
     "@nuxtjs/vuetify": "^1.11.2",
-    "axios": "^0.19.2",
+    "axios": "^0.21.2",
     "axios-auth-refresh": "^2.2.8",
     "diff": "^4.0.2",
     "dot-object": "^2.1.3",
