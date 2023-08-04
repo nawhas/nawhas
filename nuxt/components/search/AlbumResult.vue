@@ -32,7 +32,7 @@ interface AlbumSearchResult {
     artwork: string|null;
     url: string;
   };
-  _formatted?: Formatted;
+  _formatted?: Omit<AlbumSearchResult, '_formatted'>;
 }
 
 type Formatted = Omit<AlbumSearchResult, '_formatted'>;
@@ -52,7 +52,7 @@ export default class AlbumResult extends Vue {
   get isDark() {
     return this.$vuetify.theme.dark;
   }
-};
+}
 </script>
 
 <style lang="scss">

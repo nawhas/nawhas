@@ -58,6 +58,11 @@ export default Vue.extend({
   data: () => ({
     mdiBinoculars,
   }),
+  head(): MetaInfo {
+    return generateMeta({
+      title: this.title,
+    });
+  },
   computed: {
     status(): number {
       return this.error.statusCode ?? 500;
@@ -73,11 +78,6 @@ export default Vue.extend({
     refresh() {
       window.location.reload();
     },
-  },
-  head(): MetaInfo {
-    return generateMeta({
-      title: this.title,
-    });
   },
 });
 </script>

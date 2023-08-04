@@ -70,8 +70,8 @@ export default class DiffTableRow extends Vue {
   }
 
   get diff() {
-    const old: string = String(this.old ?? '');
-    const snapshot: string = String(this.value ?? '');
+    const old = String(this.old ?? '');
+    const snapshot = String(this.value ?? '');
 
     return Diff.diffChars(old, snapshot);
   }

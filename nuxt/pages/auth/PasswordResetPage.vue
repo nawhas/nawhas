@@ -39,12 +39,12 @@ export default Vue.extend({
     user: null,
     token: null,
   }),
-  watch: {
-    '$store.state.auth.user': 'onAuthChange',
-  },
   head: () => generateMeta({
     title: 'Reset Your Password',
   }),
+  watch: {
+    '$store.state.auth.user': 'onAuthChange',
+  },
 });
 </script>
 
