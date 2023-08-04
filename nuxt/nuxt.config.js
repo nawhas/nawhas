@@ -289,7 +289,7 @@ export default {
    ** See https://github.com/nuxt-community/sentry-module
    */
   sentry: {
-    dsn: process.env.BUILD_SENTRY_DSN || '',
+    dsn: process.env.SENTRY_DSN || '',
     publishRelease: process.env.BUILD_SENTRY_PUBLISH_RELEASE || false,
     sourceMapStyle: 'hidden-source-map',
     config: {
