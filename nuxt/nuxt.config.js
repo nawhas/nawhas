@@ -296,6 +296,15 @@ export default {
       environment: process.env.BUILD_APP_ENV,
       release: APP_VERSION,
     },
+    tracing: process.env.BUILD_APP_ENV === 'development'
+      ? false
+      : {
+          tracesSampleRate: 1.0,
+          browserTracing: {},
+          vueOptions: {
+            trackComponents: true,
+          },
+        },
   },
 
   /*
