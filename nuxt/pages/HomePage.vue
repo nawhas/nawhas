@@ -139,6 +139,13 @@ export default Vue.extend({
     GlobalSearch,
   },
 
+  data: (): Data => ({
+    reciters: null,
+    tracks: null,
+    savedTracks: null,
+    savedTracksLoading: false,
+  }),
+
   async fetch() {
     const [reciters, tracks] = await Promise.all([
       this.$api.reciters.popular({
@@ -154,13 +161,6 @@ export default Vue.extend({
     this.reciters = reciters.data;
     this.tracks = tracks.data;
   },
-
-  data: (): Data => ({
-    reciters: null,
-    tracks: null,
-    savedTracks: null,
-    savedTracksLoading: false,
-  }),
 
   computed: {
     popularReciters(): Array<Reciter> | null {

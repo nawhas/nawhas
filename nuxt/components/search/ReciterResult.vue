@@ -48,7 +48,7 @@ export default class ReciterResult extends Vue {
   get isDark() {
     return this.$vuetify.theme.dark;
   }
-};
+}
 </script>
 
 <style lang="scss">

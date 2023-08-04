@@ -33,13 +33,6 @@
 <script lang="ts">
 import { Component, Vue } from 'nuxt-property-decorator';
 
-interface Release {
-  version: string;
-  date: string;
-  title: string;
-  description: string;
-}
-
 @Component
 export default class AppChangelog extends Vue {
 

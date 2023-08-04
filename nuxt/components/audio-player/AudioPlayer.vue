@@ -166,7 +166,7 @@
           top
           offset-y
         >
-          <template v-slot:activator="{ on }">
+          <template #activator="{ on }">
             <v-btn
               icon
               large
@@ -207,7 +207,7 @@
             allow-overflow
             :close-on-content-click="false"
           >
-            <template v-slot:activator="{ on }">
+            <template #activator="{ on }">
               <v-btn
                 icon
                 large
@@ -281,10 +281,10 @@
 </template>
 
 <script lang="ts">
-/* eslint-disable no-undef */
+
 import { Component, Vue, Watch } from 'nuxt-property-decorator';
 import { Howl } from 'howler';
-import moment from 'moment';
+import * as moment from 'moment';
 import QueueList from '@/components/audio-player/QueueList.vue';
 import LyricsRenderer from '@/components/lyrics/LyricsRenderer.vue';
 import LyricsOverlay from '@/components/audio-player/LyricsOverlay.vue';
@@ -380,7 +380,7 @@ export default class AudioPlayer extends Vue {
   /**
    * Gets the current track from the player store
    */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
   get track(): any {
     const queued: QueuedTrack|null = this.$store.getters['player/track'];
     return queued !== null ? queued.track : null;

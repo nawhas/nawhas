@@ -24,7 +24,7 @@
           color="primary"
           small
         >
-          <template v-slot:opposite>
+          <template #opposite>
             <span class="headline font-weight-bold" v-text="date" />
           </template>
           <div class="py-4">
@@ -121,9 +121,9 @@
 
 <script lang="ts">
 import Vue from 'vue';
+import { mdiGithub } from '@mdi/js';
 import HeroBanner from '@/components/HeroBanner.vue';
 import HeroQuote from '@/components/HeroQuote.vue';
-import { mdiGithub } from '@mdi/js';
 import { generateMeta } from '@/utils/meta';
 
 export default Vue.extend({
@@ -134,6 +134,11 @@ export default Vue.extend({
 
   data: () => ({
     github: mdiGithub,
+  }),
+
+  head: () => generateMeta({
+    title: 'About',
+    description: 'Learn about the history behind Nawhas.com, and our plans for the future.',
   }),
 
   computed: {
@@ -228,11 +233,6 @@ export default Vue.extend({
       ];
     },
   },
-
-  head: () => generateMeta({
-    title: 'About',
-    description: 'Learn about the history behind Nawhas.com, and our plans for the future.',
-  }),
 });
 </script>
 

@@ -63,7 +63,7 @@ export default class TrackResult extends Vue {
   get isDark() {
     return this.$vuetify.theme.dark;
   }
-};
+}
 </script>
 
 <style lang="scss">
