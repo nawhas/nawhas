@@ -58,6 +58,11 @@ else
   COMPOSE="$COMPOSE -f docker-compose.dev.yml"
 fi
 
+if test -e "docker-compose.override.yml"; then
+  echo "> Overrides from docker-compose.override.yml applied."
+  COMPOSE="$COMPOSE -f docker-compose.override.yml"
+fi
+
 # If we pass any arguments...
 if [ $# -gt 0 ];then
     # If "art" is used, pass-thru to "artisan"
