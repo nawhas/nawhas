@@ -129,6 +129,16 @@
                   </v-list-item-title>
                 </v-list-item-content>
               </v-list-item>
+              <v-list-item @click="throwError">
+                <v-list-item-content>
+                  <v-list-item-title class="user-menu__action">
+                    <v-icon>alert-circle</v-icon>
+                    <div class="user-menu__action__text">
+                      Test Sentry
+                    </div>
+                  </v-list-item-title>
+                </v-list-item-content>
+              </v-list-item>
               <v-list-item @click="showBugReport">
                 <v-list-item-content>
                   <v-list-item-title class="user-menu__action">
@@ -298,6 +308,11 @@ export default class UserMenu extends Vue {
   showBugReport() {
     EventBus.$emit(SHOW_FEEDBACK);
     this.open = false;
+  }
+
+  throwError() {
+    this.open = false;
+    throw new Error('Sentry Error');
   }
 
   register() {
