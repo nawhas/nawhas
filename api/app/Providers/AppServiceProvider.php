@@ -29,9 +29,6 @@ class AppServiceProvider extends ServiceProvider
             return new Meilisearch(config('scout.meilisearch.host'), config('scout.meilisearch.key'));
         });
 
-        $client = new Meilisearch(config('scout.meilisearch.host'), config('scout.meilisearch.key'));
-        echo $client->getKeys();
-
         $this->app->singleton(Fractal::class, function (): Fractal {
             $fractal = new Fractal();
 
@@ -57,8 +54,10 @@ class AppServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function boot()
+    public function boot(Meilisearch $client)
     {
         JsonResource::withoutWrapping();
+
+        echo $client->getKeys();
     }
 }
