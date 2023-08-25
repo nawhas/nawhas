@@ -25,6 +25,11 @@ class AppServiceProvider extends ServiceProvider
     {
         Sanctum::ignoreMigrations();
 
+        echo config('scout.meilisearch.host');
+        echo "\n";
+        echo config('scout.meilisearch.key');
+        echo "\n\n";
+
         $this->app->singleton(Meilisearch::class, function () {
             return new Meilisearch(config('scout.meilisearch.host'), config('scout.meilisearch.key'));
         });
