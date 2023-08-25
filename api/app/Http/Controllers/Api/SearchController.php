@@ -12,11 +12,10 @@ use Meilisearch\Endpoints\Keys;
 class SearchController extends Controller
 {
     const SEARCH_API_KEY_DESCRIPTION = 'Default Search API Key'; // TODO - provision own keys
-    private Search $search;
 
-    public function __construct() {
-        $this->search = new Search('http://search:7700', 'secret');
-    }
+    public function __construct(
+        private Search $search
+    ) {}
 
     public function key(): JsonResponse
     {

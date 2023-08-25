@@ -12,6 +12,7 @@ use Illuminate\Support\ServiceProvider;
 use Laravel\Sanctum\Sanctum;
 use League\Fractal\Manager as Fractal;
 use League\Fractal\Serializer\ArraySerializer;
+use Meilisearch\Client as Meilisearch;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -23,6 +24,10 @@ class AppServiceProvider extends ServiceProvider
     public function register()
     {
         Sanctum::ignoreMigrations();
+
+        $this->app->singleton(Meilisearch::class, function () {
+            return new Meilisearch(config('scout.meilisearch.host'), config('scout.meilisearch.key'));
+        });
 
         $this->app->singleton(Fractal::class, function (): Fractal {
             $fractal = new Fractal();
