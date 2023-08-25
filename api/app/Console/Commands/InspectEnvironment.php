@@ -11,7 +11,7 @@ class InspectEnvironment extends Command
     protected $signature = 'inspect:environment';
     protected $description = 'Get the current environment.';
 
-    public function handle()
+    public function handle(): void
     {
         $this->line(env('APP_ENV', config('app.env')));
     }

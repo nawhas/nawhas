@@ -83,12 +83,12 @@ class Document implements DocumentContract, Jsonable
         return $this->data->render();
     }
 
-    public function toJson($options = 0)
+    public function toJson($options = 0): bool|string
     {
         return json_encode($this->toArray(), $options);
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return $this->render();
     }

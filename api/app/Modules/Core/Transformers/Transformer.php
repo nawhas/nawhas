@@ -7,7 +7,7 @@ use BadMethodCallException;
 use DateTimeInterface;
 use Illuminate\Http\Resources\ConditionallyLoadsAttributes;
 use Illuminate\Http\Resources\MergeValue;
-use League\Fractal\Resource\Primitive;
+use League\Fractal\Resource\NullResource;
 use League\Fractal\TransformerAbstract;
 
 abstract class Transformer extends TransformerAbstract
@@ -41,10 +41,10 @@ abstract class Transformer extends TransformerAbstract
     }
 
     /**
-     * @return \League\Fractal\Resource\NullResource|Primitive
+     * @return NullResource
      */
-    protected function null()
+    protected function null(): NullResource
     {
-        return $this->primitive(null);
+        return new NullResource();
     }
 }

@@ -23,7 +23,7 @@ class ClearResponseCache
         return self::with(['tags' => $tags]);
     }
 
-    public function handle(Request $request, Closure $next, string ...$tags)
+    public function handle(Request $request, Closure $next, string ...$tags): Response
     {
         /** @var Response $response */
         $response = $next($request);

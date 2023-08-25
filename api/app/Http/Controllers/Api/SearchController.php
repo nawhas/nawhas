@@ -6,8 +6,8 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
-use MeiliSearch\Client as Search;
-use MeiliSearch\Endpoints\Keys;
+use Meilisearch\Client as Search;
+use Meilisearch\Endpoints\Keys;
 
 class SearchController extends Controller
 {

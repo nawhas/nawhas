@@ -27,7 +27,7 @@ class LibraryController extends Controller
         return $this->respondWithPaginator($tracks, new TrackTransformer());
     }
 
-    public function getTrackIds()
+    public function getTrackIds(): JsonResponse
     {
         $tracks = $this->getUser()->savedTracks()->get(['saveable_id'])->map(function ($result) {
             return $result->saveable_id;
@@ -50,7 +50,7 @@ class LibraryController extends Controller
         return response()->noContent();
     }
 
-    public function removeSavedTracks(RemoveSavedTracksRequest $request)
+    public function removeSavedTracks(RemoveSavedTracksRequest $request): Response
     {
         $this->prepareIds($request->get('ids'))
             ->each(fn (string $id) => (bool)event(new SavedTrackRemoved($id)));
