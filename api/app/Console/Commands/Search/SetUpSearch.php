@@ -13,20 +13,23 @@ class SetUpSearch extends Command
 
     protected $description = 'Setup search indices, settings, etc.';
 
-    public function handle(Meilisearch $client): int
+    private Meilisearch $client;
+
+    public function handle(): int
     {
+        $this->client = new Meilisearch('http://search:7700', 'secret');
         $prefix = config('scout.prefix');
         $indices = collect(config('scout.indices'));
 
 
         if ($this->option('reset')) {
-            $tasks = $indices->keys()->map(fn ($index) => $client->deleteIndex($prefix . $index)['taskUid'])->all();
-            $client->waitForTasks($tasks);
+            $tasks = $indices->keys()->map(fn ($index) => $this->client->deleteIndex($prefix . $index)['taskUid'])->all();
+            $this->client->waitForTasks($tasks);
             $this->comment(">> 🗑  Indexes deleted.");
         }
 
-        $tasks = $indices->keys()->map(fn ($index) => $client->createIndex($prefix . $index, ['primaryKey' => 'id'])['taskUid'])->all();
-        $client->waitForTasks($tasks);
+        $tasks = $indices->keys()->map(fn ($index) => $this->client->createIndex($prefix . $index, ['primaryKey' => 'id'])['taskUid'])->all();
+        $this->client->waitForTasks($tasks);
         $this->comment(">> ✅ Indexes created");
 
 
