@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Console\Commands\Search;
 
 use Illuminate\Console\Command;
-use MeiliSearch\Client as Meilisearch;
+use Meilisearch\Client as Meilisearch;
 
 class SetUpSearch extends Command
 {
