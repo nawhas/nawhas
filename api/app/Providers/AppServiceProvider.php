@@ -54,10 +54,8 @@ class AppServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function boot(Meilisearch $client)
+    public function boot()
     {
         JsonResource::withoutWrapping();
-
-        echo $client->getKeys();
     }
 }
