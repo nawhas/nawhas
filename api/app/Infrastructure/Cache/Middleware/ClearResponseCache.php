@@ -6,8 +6,8 @@ namespace App\Infrastructure\Cache\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Spatie\ResponseCache\ResponseCache;
+use Symfony\Component\HttpFoundation\Response;
 use TiMacDonald\Middleware\HasParameters;
 
 class ClearResponseCache
