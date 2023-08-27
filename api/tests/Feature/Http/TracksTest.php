@@ -7,7 +7,7 @@ namespace Tests\Feature\Http;
 use App\Modules\Library\Models\Album;
 use App\Modules\Library\Models\Reciter;
 use App\Modules\Library\Models\Track;
-use Tests\Feature\FeatureTest;
+use Tests\Feature\FeatureTestCase;
 use Tests\Feature\Http\Responses\AlbumResponse;
 use Tests\Feature\Http\Responses\PaginatedCollectionResponse;
 use Tests\Feature\Http\Responses\TrackResponse;
@@ -15,7 +15,7 @@ use Tests\WithSearchIndex;
 
 use function App\Support\times;
 
-class TracksTest extends FeatureTest
+class TracksTest extends FeatureTestCase
 {
     use WithSearchIndex;
 

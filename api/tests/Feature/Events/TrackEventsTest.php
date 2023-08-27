@@ -10,7 +10,7 @@ use App\Modules\Library\Models\Track;
 
 use function App\Support\uuid;
 
-class TrackEventsTest extends EventsTest
+class TrackEventsTest extends EventsTestCase
 {
     private Reciter $reciter;
     private Album $album;

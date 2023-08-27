@@ -8,7 +8,7 @@ use App\Modules\Library\Models\Reciter;
 
 use function App\Support\uuid;
 
-class ReciterEventsTest extends EventsTest
+class ReciterEventsTest extends EventsTestCase
 {
     /**
      * @test

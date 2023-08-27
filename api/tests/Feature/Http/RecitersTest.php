@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Tests\Feature\Http;
 
 use App\Modules\Library\Models\Reciter;
-use Tests\Feature\FeatureTest;
+use Tests\Feature\FeatureTestCase;
 use Tests\Feature\Http\Responses\PaginatedCollectionResponse;
 use Tests\Feature\Http\Responses\ReciterResponse;
 use Tests\WithSearchIndex;
@@ -14,7 +14,7 @@ use Tests\WithSimpleFaker;
 
 use function App\Support\times;
 
-class RecitersTest extends HttpTest
+class RecitersTest extends HttpTestCase
 {
     use WithSearchIndex;
     use WithSimpleFaker;

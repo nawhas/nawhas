@@ -9,7 +9,7 @@ use App\Modules\Library\Models\Reciter;
 
 use function App\Support\uuid;
 
-class AlbumEventsTest extends EventsTest
+class AlbumEventsTest extends EventsTestCase
 {
     private Reciter $reciter;
 

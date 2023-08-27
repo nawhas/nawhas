@@ -9,7 +9,7 @@ use Illuminate\Contracts\Hashing\Hasher;
 
 use function App\Support\uuid;
 
-class UserEventsTest extends EventsTest
+class UserEventsTest extends EventsTestCase
 {
     /**
      * @test

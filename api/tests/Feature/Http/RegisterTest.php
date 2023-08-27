@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace Tests\Feature\Http;
 
 use Illuminate\Support\Collection;
-use Tests\Feature\FeatureTest;
+use Tests\Feature\FeatureTestCase;
 use Tests\WithSimpleFaker;
 
-class RegisterTest extends FeatureTest
+class RegisterTest extends FeatureTestCase
 {
     use WithSimpleFaker;
 
