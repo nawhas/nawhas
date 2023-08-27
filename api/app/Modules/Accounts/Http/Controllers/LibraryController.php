@@ -32,8 +32,7 @@ class LibraryController extends Controller
     {
         $tracks = $this->getUser()
                        ->savedTracks()
-                       ->get(['id'])
-                       ->map(fn(Track $result) => $result->id)
+                       ->pluck('id')
                        ->unique()
                        ->values();
 
