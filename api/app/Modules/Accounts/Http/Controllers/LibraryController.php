@@ -29,9 +29,7 @@ class LibraryController extends Controller
 
     public function getTrackIds(): JsonResponse
     {
-        $tracks = $this->getUser()->savedTracks()->get(['saveable_id'])->map(function ($result) {
-            return $result->saveable_id;
-        })->unique()->values();
+        $tracks = $this->getUser()->savedTracks()->get(['saveable_id'])->unique()->values();
         return $this->respondWithArray($tracks->all());
     }
 

@@ -23,7 +23,7 @@ class SearchController extends Controller
 
         /** @var Keys $key */
         $key = collect($keys)
-            ->first(fn (Keys $key) => str_starts_with($key->getDescription(), self::SEARCH_API_KEY_DESCRIPTION));
+            ->first(fn (Keys $key) => str_starts_with($key->getName(), self::SEARCH_API_KEY_DESCRIPTION));
 
         return $this->respondWithArray([
             'data' => $key->getKey(),

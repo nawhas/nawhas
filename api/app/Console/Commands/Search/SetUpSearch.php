@@ -20,12 +20,12 @@ class SetUpSearch extends Command
 
 
         if ($this->option('reset')) {
-            $tasks = $indices->keys()->map(fn ($index) => $client->deleteIndex($prefix . $index)['uid'])->all();
+            $tasks = $indices->keys()->map(fn ($index) => $client->deleteIndex($prefix . $index)['taskUid'])->all();
             $client->waitForTasks($tasks);
             $this->comment(">> 🗑  Indexes deleted.");
         }
 
-        $tasks = $indices->keys()->map(fn ($index) => $client->createIndex($prefix . $index, ['primaryKey' => 'id'])['uid'])->all();
+        $tasks = $indices->keys()->map(fn ($index) => $client->createIndex($prefix . $index, ['primaryKey' => 'id'])['taskUid'])->all();
         $client->waitForTasks($tasks);
         $this->comment(">> ✅ Indexes created");
 
