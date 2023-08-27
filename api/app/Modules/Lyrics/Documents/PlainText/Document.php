@@ -8,6 +8,9 @@ use App\Modules\Lyrics\Documents\Document as DocumentContract;
 use App\Modules\Lyrics\Documents\Format;
 use Illuminate\Support\Stringable;
 
+/**
+ * @implements DocumentContract<string,string|int>
+ */
 class Document implements DocumentContract
 {
     public function __construct(

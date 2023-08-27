@@ -10,6 +10,9 @@ use Illuminate\Contracts\Support\Jsonable;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Stringable;
 
+/**
+ * @implements DocumentContract<string,string|int>
+ */
 class Document implements DocumentContract, Jsonable
 {
     public function __construct(
