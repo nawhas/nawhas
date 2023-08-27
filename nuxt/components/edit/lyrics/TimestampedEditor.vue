@@ -403,7 +403,7 @@ export default class TimestampedEditor extends Vue {
     let newLine = '';
     if (line.text.length !== cursor) {
       newLine = line.text.substring(cursor).trimEnd();
-      // eslint-disable-next-line
+
       line.text = line.text.substring(0, cursor);
     }
     group.lines.splice(coordinates.line + 1, 0, { text: newLine, repeat: 0 });

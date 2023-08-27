@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { Plugin } from '@nuxt/types';
 import {
   shouldUseDarkMode, applyTheme, saveAppliedTheme, Theme, THEME_PREFERENCE_STORAGE_KEY,

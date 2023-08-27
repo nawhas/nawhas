@@ -18,7 +18,12 @@ module.exports = {
     'no-console': 'warn',
     'quote-props': ['error', 'consistent-as-needed'],
     'no-useless-constructor': 'off',
+    'no-use-before-define': ['off'],
+    '@typescript-eslint/no-use-before-define': ['error', { typedefs: false }],
     'arrow-parens': ['error', 'always'],
     'vue/no-v-html': ['off'],
+    'vue/no-v-text-v-html-on-component': ['off'],
+    'vue/order-in-components': ['off'],
+    '@typescript-eslint/no-var-requires': ['off'],
   },
 };

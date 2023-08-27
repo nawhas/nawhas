@@ -112,7 +112,7 @@ export default class GlobalSearch extends Vue {
   private activated = false;
   private focused = false;
   private search = '';
-  @Prop({ type: Boolean, default: false }) private readonly hero!: boolean
+  @Prop({ type: Boolean, default: false }) private readonly hero!: boolean;
   @Ref('search') readonly input!: HTMLElement;
 
   get mobile() {

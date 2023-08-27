@@ -16,14 +16,16 @@ const TITLE_TEMPLATE = '%s | ' + TITLE_SUFFIX;
 const DEFAULT_DESCRIPTION = 'Welcome to Nawhas.com, the most advanced library of nawhas online. ' +
   'Browse thousands of nawhas from hundreds of reciters, including thousands of nawha write-ups (lyrics).';
 
-const proxy = process.env.BUILD_PROXY_API ? {
-  // For local dev only
-  '/api': {
-    target: 'https://api.nawhas.test/',
-    pathRewrite: { '^/api': '' },
-    secure: false,
-  },
-} : {};
+const proxy = process.env.BUILD_PROXY_API
+  ? {
+      // For local dev only
+      '/api': {
+        target: 'https://api.nawhas.test/',
+        pathRewrite: { '^/api': '' },
+        secure: false,
+      },
+    }
+  : {};
 
 export default {
   debug: process.env.BUILD_APP_ENV !== 'production',
@@ -287,13 +289,22 @@ export default {
    ** See https://github.com/nuxt-community/sentry-module
    */
   sentry: {
-    dsn: process.env.BUILD_SENTRY_DSN || '',
+    dsn: process.env.SENTRY_DSN || '',
     publishRelease: process.env.BUILD_SENTRY_PUBLISH_RELEASE || false,
     sourceMapStyle: 'hidden-source-map',
     config: {
       environment: process.env.BUILD_APP_ENV,
       release: APP_VERSION,
     },
+    tracing: process.env.BUILD_APP_ENV === 'development'
+      ? false
+      : {
+          tracesSampleRate: 1.0,
+          browserTracing: {},
+          vueOptions: {
+            trackComponents: true,
+          },
+        },
   },
 
   /*

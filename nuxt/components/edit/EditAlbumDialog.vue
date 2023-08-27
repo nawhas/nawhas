@@ -1,6 +1,6 @@
 <template>
   <v-dialog v-model="dialog" persistent max-width="600px">
-    <template v-slot:activator="{ on }">
+    <template #activator="{ on }">
       <v-btn v-if="album" dark text v-on="on">
         Edit
       </v-btn>
@@ -34,7 +34,7 @@
           accept="image/*"
           :show-size="1000"
         >
-          <template v-slot:selection="{ index, text }">
+          <template #selection="{ index, text }">
             <v-chip
               v-if="index < 2"
               color="deep-orange accent-4"
@@ -108,7 +108,6 @@ export default class EditAlbumDialog extends Vue {
   addFile(e) {
     const file = e.dataTransfer.files[0];
     if (file.type.match(/image.*/)) {
-      // eslint-disable-next-line prefer-destructuring
       this.form.artwork = file;
     }
   }
@@ -167,7 +166,6 @@ export default class EditAlbumDialog extends Vue {
   }
 
   async confirmDelete() {
-    // eslint-disable-next-line no-alert
     if (window.confirm(`Are you sure you want to delete '${this.album.title} - ${this.album.year}'?`)) {
       const { id, reciterId } = this.album;
       await this.$api.albums.delete(reciterId, id);

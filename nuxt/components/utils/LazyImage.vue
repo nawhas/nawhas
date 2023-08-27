@@ -15,7 +15,7 @@ const placeholder = 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABA
 export default class LazyImage extends Vue {
   @Prop({ type: String, required: true }) private readonly src!: string;
   @Prop({ type: String, required: false, default: 'lazy' }) private readonly loading!: string;
-  private native: boolean = false;
+  private native = false;
 
   mounted() {
     this.native = 'loading' in HTMLImageElement.prototype;

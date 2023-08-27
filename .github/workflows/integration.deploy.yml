@@ -1,9 +1,11 @@
 name: Pull Request Build
 
-on: [pull_request]
+on: 
+  pull_request:
+  merge_group:
 
 concurrency:
-  group: integration
+  group: ci-${{ github.head_ref }}
   cancel-in-progress: true
 
 jobs:

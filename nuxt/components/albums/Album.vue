@@ -30,7 +30,7 @@
           bottom
           direction="left"
         >
-          <template v-slot:activator>
+          <template #activator>
             <v-btn v-model="fab" :small="$vuetify.breakpoint.smAndDown" fab :color="fabColor">
               <v-icon v-if="fab" color="black">
                 close
@@ -41,7 +41,7 @@
             </v-btn>
           </template>
           <v-tooltip top>
-            <template v-slot:activator="{ on }">
+            <template #activator="{ on }">
               <v-btn fab small @click="playAlbum" v-on="on">
                 <v-icon>play_arrow</v-icon>
               </v-btn>
@@ -49,7 +49,7 @@
             <span>Play Album</span>
           </v-tooltip>
           <v-tooltip top>
-            <template v-slot:activator="{ on }">
+            <template #activator="{ on }">
               <v-btn fab small @click="addAlbumToQueue" v-on="on">
                 <v-icon>playlist_add</v-icon>
               </v-btn>
@@ -70,11 +70,11 @@
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import Vibrant from 'node-vibrant';
+import { RawLocation } from 'vue-router';
+import { DataTableHeader } from 'vuetify';
 import { Album, getAlbumArtwork, getAlbumUri } from '@/entities/album';
 import { Reciter } from '@/entities/reciter';
 import { Track } from '@/entities/track';
-import { RawLocation } from 'vue-router';
-import { DataTableHeader } from 'vuetify';
 import EditTrackDialog from '@/components/edit/EditTrackDialog.vue';
 import EditAlbumDialog from '@/components/edit/EditAlbumDialog.vue';
 import TrackList from '@/components/tracks/TrackList.vue';

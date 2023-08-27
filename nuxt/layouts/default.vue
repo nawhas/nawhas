@@ -146,16 +146,16 @@ export default Vue.extend({
     BugReportForm,
   },
 
+  data: () => ({
+    drawer: false,
+    showBugReportDialog: false,
+  }),
+
   async fetch() {
     await Promise.all([
       this.$store.dispatch('features/fetch').catch(() => null),
     ]);
   },
-
-  data: () => ({
-    drawer: false,
-    showBugReportDialog: false,
-  }),
 
   computed: {
     mobile() {

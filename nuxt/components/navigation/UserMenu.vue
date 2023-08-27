@@ -228,10 +228,6 @@ export default class UserMenu extends Vue {
     return this.$store.getters['auth/showLoginDialog'];
   }
 
-  get appVersion() {
-    return this.$store.state.app.version;
-  }
-
   set showLoginDialog(value) {
     if (!value) {
       this.$store.commit('auth/REMOVE_PROMPT');
@@ -240,6 +236,10 @@ export default class UserMenu extends Vue {
         type: 'login',
       });
     }
+  }
+
+  get appVersion() {
+    return this.$store.state.app.version;
   }
 
   get showPasswordResetRequestDialog() {

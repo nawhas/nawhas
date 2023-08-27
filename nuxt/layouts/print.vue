@@ -7,7 +7,7 @@
 </template>
 
 <script lang="ts">
-/* eslint-disable dot-notation */
+
 import Vue from 'vue';
 
 interface Data {

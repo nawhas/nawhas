@@ -22,7 +22,7 @@
         "league/fractal": "^0.19.2",
         "meilisearch/meilisearch-php": "0.23.*",
         "myclabs/php-enum": "^1.7",
-        "sentry/sentry-laravel": "^2.10",
+        "sentry/sentry-laravel": "^3.7",
         "spatie/laravel-event-sourcing": "^6.0",
         "spatie/laravel-responsecache": "^7.1",
         "spatie/laravel-sluggable": "^3.0",
@@ -40,13 +40,16 @@
         "phpstan/phpstan": "1.8.*",
         "phpunit/phpunit": "^9.5.10",
         "psalm/plugin-laravel": "^1.5",
-        "vimeo/psalm": "dev-master",
+        "vimeo/psalm": "^4.8.1",
         "vishnubob/wait-for-it": "dev-master"
     },
     "config": {
         "optimize-autoloader": true,
         "preferred-install": "dist",
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "php-http/discovery": true
+        }
     },
     "extra": {
         "laravel": {
