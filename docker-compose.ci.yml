@@ -3,7 +3,6 @@ version: '3.9'
 services:
   api:
     image: nawhas/api:${API_IMAGE_TAG}
-    user: "1000:1000"
     environment:
       - APP_ENV=testing
       - LOG_FILE=laravel.log
@@ -18,7 +17,6 @@ services:
     image: nawhas/web:${WEB_IMAGE_TAG}
   test:
     image: nawhas/api:${API_TEST_IMAGE_TAG}
-    user: "1000:1000"
     environment:
       - APP_ENV=testing
     volumes:
