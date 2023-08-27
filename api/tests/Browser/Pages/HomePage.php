@@ -2,6 +2,7 @@
 
 namespace Tests\Browser\Pages;
 
+use Facebook\WebDriver\Exception\TimeOutException;
 use Laravel\Dusk\Browser;
 
 class HomePage extends Page
@@ -11,7 +12,7 @@ class HomePage extends Page
      *
      * @return string
      */
-    public function url()
+    public function url(): string
     {
         return '/';
     }
@@ -19,12 +20,27 @@ class HomePage extends Page
     /**
      * Assert that the browser is on the page.
      *
-     * @param  \Laravel\Dusk\Browser  $browser
+     * @param Browser $browser
      * @return void
+     * @throws TimeOutException
      */
-    public function assert(Browser $browser)
+    public function assert(Browser $browser): void
     {
-        //
+        $browser->assertPathIs($this->url());
+        $browser->assertTitle('Home | Nawhas.com');
+        $browser->assertSee('Explore the most advanced library of nawhas online.');
+        $browser->waitFor('input[placeholder="Search Nawhas.com"]');
+        $browser->assertSee('Trending This Month');
+        $browser->assertSee('Recently Saved Nawhas');
+        $browser->assertSee('The murder of Hussain has lit a fire in the hearts of the believers which will never extinguish.');
+        $browser->assertSee('Top Reciters');
+        $browser->assertSee('Top Nawhas');
+
+        $browser->waitFor('@naLinks');
+
+        foreach (['Home', 'Browse', 'Library', 'About'] as $link) {
+            $browser->assertSeeIn('@naLinks', $link);
+        }
     }
 
     /**
@@ -32,10 +48,10 @@ class HomePage extends Page
      *
      * @return array
      */
-    public function elements()
+    public function elements(): array
     {
         return [
-            '@element' => '#selector',
+            '@naLinks' => '.nav__buttons',
         ];
     }
 }
