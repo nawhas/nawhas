@@ -11,6 +11,7 @@ volumes:
 services:
   api:
     platform: linux/amd64
+    user: "1000:1000"
     networks:
       - nawhas
     depends_on:
@@ -27,6 +28,7 @@ services:
       - cache
   test:
     platform: linux/amd64
+    user: "1000:1000"
     profiles:
       - test
     restart: 'no'
