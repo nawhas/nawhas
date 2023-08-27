@@ -20,9 +20,9 @@ class ReciterEventsTest extends EventsTestCase
         $properties = [
             'id' => $id,
             'attributes' => [
-                'name' => $this->faker->name,
-                'description' => $this->faker->text,
-                'avatar' => $this->faker->imageUrl,
+                'name' => static::faker()->name,
+                'description' => static::faker()->text,
+                'avatar' => static::faker()->imageUrl,
             ]
         ];
         $this->event('reciter.created', $properties);
@@ -45,7 +45,7 @@ class ReciterEventsTest extends EventsTestCase
     public function it_can_replay_reciter_name_changed_event(): void
     {
         $reciter = $this->getReciterFactory()->create();
-        $name = $this->faker->name;
+        $name = static::faker()->name;
 
         $this->assertNotEquals($reciter->name, $name);
 
@@ -67,7 +67,7 @@ class ReciterEventsTest extends EventsTestCase
     public function it_can_replay_reciter_description_changed_event(): void
     {
         $reciter = $this->getReciterFactory()->create();
-        $description = $this->faker->text;
+        $description = static::faker()->text;
 
         $this->assertNotEquals($reciter->description, $description);
 
@@ -91,7 +91,7 @@ class ReciterEventsTest extends EventsTestCase
         $reciter = $this->getReciterFactory()->create();
 
         // With a real image URL
-        $avatar = $this->faker->imageUrl;
+        $avatar = static::faker()->imageUrl;
         $this->assertNotEquals($reciter->avatar, $avatar);
 
         $this->event('reciter.changed.avatar', [

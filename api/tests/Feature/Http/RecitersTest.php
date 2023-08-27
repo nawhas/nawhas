@@ -87,7 +87,7 @@ class RecitersTest extends HttpTestCase
     public function it_can_create_reciter_if_moderator(): void
     {
         $request = [
-            'name' => $this->faker->name,
+            'name' => static::faker()->name,
         ];
 
         $response = $this->assertRequiresModeratorAuthentication(
@@ -109,8 +109,8 @@ class RecitersTest extends HttpTestCase
         $reciter = $this->getReciterFactory()->create();
 
         $request = [
-            'name' => $this->faker->name,
-            'description' => $this->faker->text,
+            'name' => static::faker()->name,
+            'description' => static::faker()->text,
         ];
 
         $this->assertNotEquals($reciter->name, $request['name']);

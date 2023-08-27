@@ -15,10 +15,6 @@ trait SetUpCustomTraits
             $this->setUpSearchIndex();
         }
 
-        if (isset($uses[WithSimpleFaker::class]) && method_exists($this, 'setUpFaker')) {
-            $this->setUpFaker();
-        }
-
         if (isset($uses[DatabaseMigrations::class]) && method_exists($this, 'runDatabaseMigrations')) {
             $this->runDatabaseMigrations();
         }

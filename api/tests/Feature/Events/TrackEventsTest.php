@@ -33,7 +33,7 @@ class TrackEventsTest extends EventsTestCase
             'id' => $id,
             'albumId' => $this->album->id,
             'attributes' => [
-                'title' => $this->faker->name,
+                'title' => static::faker()->name,
             ]
         ];
         $this->event('track.created', $properties);
@@ -55,7 +55,7 @@ class TrackEventsTest extends EventsTestCase
     {
         $track = $this->getTrackFactory()->create($this->album);
 
-        $title = $this->faker->name;
+        $title = static::faker()->name;
 
         $this->event('track.changed.title', [
             'id' => $track->id,
@@ -75,7 +75,7 @@ class TrackEventsTest extends EventsTestCase
     {
         $track = $this->getTrackFactory()->create($this->album);
 
-        $audio = $this->faker->url . '.mp3';
+        $audio = static::faker()->url . '.mp3';
 
         $this->event('track.changed.audio', [
             'id' => $track->id,
@@ -105,7 +105,7 @@ class TrackEventsTest extends EventsTestCase
     {
         $track = $this->getTrackFactory()->create($this->album);
 
-        $video = $this->faker->url;
+        $video = static::faker()->url;
 
         $this->event('track.changed.video', [
             'id' => $track->id,
@@ -139,7 +139,7 @@ class TrackEventsTest extends EventsTestCase
 
         // V1 Document
         $document = [
-            'content' => implode("\n\n", $this->faker->sentences(4)),
+            'content' => implode("\n\n", static::faker()->sentences(4)),
             'format' => 1
         ];
 
@@ -160,7 +160,7 @@ class TrackEventsTest extends EventsTestCase
                 'meta' => ['timestamps' => false],
                 'data' => [
                     ['timestamp' => 0, 'type' => 'normal', 'lines' => [
-                        ['text' => $this->faker->sentence, 'repeat' => 0],
+                        ['text' => static::faker()->sentence, 'repeat' => 0],
                     ]],
                 ],
             ]),
