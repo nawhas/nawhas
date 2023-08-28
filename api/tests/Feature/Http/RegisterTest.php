@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace Tests\Feature\Http;
 
 use Illuminate\Support\Collection;
-use Tests\Feature\FeatureTest;
+use Tests\Feature\FeatureTestCase;
 use Tests\WithSimpleFaker;
 
-class RegisterTest extends FeatureTest
+class RegisterTest extends FeatureTestCase
 {
     use WithSimpleFaker;
 
@@ -20,9 +20,9 @@ class RegisterTest extends FeatureTest
     public function it_allows_registering_a_new_user(): void
     {
         $request = [
-            'name' => $this->faker->name,
-            'email' => $this->faker->email,
-            'password' => $this->faker->password,
+            'name' => static::faker()->name,
+            'email' => static::faker()->email,
+            'password' => static::faker()->password,
         ];
 
         $this->postJson(self::ROUTE_REGISTER, $request)
@@ -53,9 +53,9 @@ class RegisterTest extends FeatureTest
         $this->getUserFactory()->contributor(['email' => $email]);
 
         $request = [
-            'name' => $this->faker->name,
+            'name' => static::faker()->name,
             'email' => $email,
-            'password' => $this->faker->password,
+            'password' => static::faker()->password,
         ];
 
         $this->postJson(self::ROUTE_REGISTER, $request)
@@ -76,14 +76,12 @@ class RegisterTest extends FeatureTest
         $this->assertGuest();
     }
 
-    public function provideInvalidRequests(): array
+    public static function provideInvalidRequests(): array
     {
-        $this->setUpFaker();
-
         $defaults = collect([
-            'name' => $this->faker->name,
-            'email' => $this->faker->email,
-            'password' => $this->faker->password,
+            'name' => self::faker()->name,
+            'email' => self::faker()->email,
+            'password' => self::faker()->password,
         ]);
 
         return [

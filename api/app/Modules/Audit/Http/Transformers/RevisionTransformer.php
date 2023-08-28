@@ -25,8 +25,8 @@ use League\Fractal\Resource\Primitive;
 
 class RevisionTransformer extends Transformer
 {
-    protected $availableIncludes = ['user'];
-    protected $defaultIncludes = ['user'];
+    protected array $availableIncludes = ['user'];
+    protected array $defaultIncludes = ['user'];
 
     public function toArray(Revision $revision): array
     {
@@ -46,7 +46,7 @@ class RevisionTransformer extends Transformer
     public function includeUser(Revision $revision): Primitive|Item|NullResource
     {
         if ($revision->user_id === null) {
-            return $this->null();
+            return $this->empty();
         }
 
         return $this->item($revision->user, new UserTransformer());

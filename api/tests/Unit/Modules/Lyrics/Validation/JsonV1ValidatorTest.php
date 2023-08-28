@@ -64,7 +64,7 @@ class JsonV1ValidatorTest extends TestCase
         }
     }
 
-    public function provideBadData(): array
+    public static function provideBadData(): array
     {
         return [
             'no meta field' => [
@@ -74,15 +74,15 @@ class JsonV1ValidatorTest extends TestCase
                     "data": []
                 }
                 JSON,
-                [
-                    'meta' => [
-                        'validation.present',
-                    ]
-                ]
-            ],
-            'invalid meta.timestamps' => [
-                /** @lang JSON */
-                <<<JSON
+                            [
+                                'meta' => [
+                                    'validation.present',
+                                ]
+                            ]
+                        ],
+                        'invalid meta.timestamps' => [
+                            /** @lang JSON */
+                            <<<JSON
                 {
                     "meta": {
                         "timestamps": "hello"
@@ -90,15 +90,15 @@ class JsonV1ValidatorTest extends TestCase
                     "data": []
                 }
                 JSON,
-                [
-                    'meta.timestamps' => [
-                        'validation.boolean',
-                    ]
-                ]
-            ],
-            'invalid data.*.timestamp' => [
-                /** @lang JSON */
-                <<<JSON
+                            [
+                                'meta.timestamps' => [
+                                    'validation.boolean',
+                                ]
+                            ]
+                        ],
+                        'invalid data.*.timestamp' => [
+                            /** @lang JSON */
+                            <<<JSON
                 {
                     "meta": {
                         "timestamps": true
@@ -113,12 +113,12 @@ class JsonV1ValidatorTest extends TestCase
                     ]
                 }
                 JSON,
-                [
-                    'data.0.timestamp' => [
-                        'validation.numeric',
-                    ]
-                ]
-            ]
-        ];
-    }
+                            [
+                                'data.0.timestamp' => [
+                                    'validation.numeric',
+                                ]
+                            ]
+                        ]
+                    ];
+                }
 }

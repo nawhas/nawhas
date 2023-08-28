@@ -149,7 +149,7 @@ class Album extends Model implements TimestampedEntity, Revisionable
         return parent::resolveChildRouteBinding($childType, $value, $field);
     }
 
-    public function toSearchableArray()
+    public function toSearchableArray(): array
     {
         return [
             'id' => $this->id,
@@ -163,7 +163,7 @@ class Album extends Model implements TimestampedEntity, Revisionable
         ];
     }
 
-    public function deleteAlbum()
+    public function deleteAlbum(): void
     {
         $this->tracks->each(fn (Track $track) => $track->delete());
         $this->delete();

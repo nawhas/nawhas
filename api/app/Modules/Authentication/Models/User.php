@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Modules\Authentication\Models;
 
 use App\Modules\Authentication\Enum\Role;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use App\Modules\Authentication\Events\{UserEmailChanged,
     UserNameChanged,
     UserNicknameChanged,
@@ -121,7 +122,7 @@ class User extends Authenticatable implements TimestampedEntity
         return "https://www.gravatar.com/avatar/{$hash}?s={$size}";
     }
 
-    public function savedTracks()
+    public function savedTracks(): MorphToMany
     {
         return $this->morphedByMany(Track::class, 'saveable');
     }
