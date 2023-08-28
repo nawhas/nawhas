@@ -6,14 +6,14 @@ namespace Tests\Feature\Http;
 
 use App\Modules\Library\Models\Album;
 use App\Modules\Library\Models\Reciter;
-use Tests\Feature\FeatureTestCase;
+use Tests\Feature\FeatureTest;
 use Tests\Feature\Http\Responses\AlbumResponse;
 use Tests\Feature\Http\Responses\PaginatedCollectionResponse;
 use Tests\WithSearchIndex;
 
 use function App\Support\times;
 
-class AlbumsTest extends FeatureTestCase
+class AlbumsTest extends FeatureTest
 {
     use WithSearchIndex;
 

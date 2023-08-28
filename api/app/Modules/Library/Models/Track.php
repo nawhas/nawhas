@@ -192,7 +192,7 @@ class Track extends Model implements TimestampedEntity, Revisionable
         return $this->where($field ?? 'slug', $value)->firstOrFail();
     }
 
-    public function toSearchableArray(): array
+    public function toSearchableArray()
     {
         return [
             'id' => $this->id,

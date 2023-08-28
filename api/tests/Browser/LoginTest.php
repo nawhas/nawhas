@@ -33,7 +33,7 @@ class LoginTest extends DuskTestCase
                     ->type('.auth-dialog input[type=email]', 'moderator@nawhas.com')
                     ->type('.auth-dialog input[type=password]', 'secret123')
                     ->press('.auth-dialog button[type=submit]')
-                    ->waitUntilVue('authenticated', "true", '@user-menu')
+                    ->waitUntilVue('authenticated', true, '@user-menu')
                     ->pause(2000)
                     ->click('@user-menu__avatar')
                     ->waitFor('@user-menu__name')

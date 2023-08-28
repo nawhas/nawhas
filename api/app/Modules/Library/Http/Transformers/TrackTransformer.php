@@ -13,7 +13,7 @@ use League\Fractal\Resource\ResourceInterface;
 
 class TrackTransformer extends Transformer
 {
-    protected array $availableIncludes = ['reciter', 'album', 'lyrics', 'media', 'related'];
+    protected $availableIncludes = ['reciter', 'album', 'lyrics', 'media', 'related'];
 
     public function toArray(Track $track): array
     {
@@ -43,7 +43,7 @@ class TrackTransformer extends Transformer
     public function includeLyrics(Track $track): ?ResourceInterface
     {
         if (($lyrics = $track->lyrics) === null) {
-            return $this->empty();
+            return $this->null();
         }
 
         return $this->item($lyrics, new LyricsTransformer());

@@ -27,13 +27,6 @@ use Spatie\EventSourcing\StoredEvents\StoredEvent as SpatieStoredEvent;
  * @method static \Spatie\EventSourcing\StoredEvents\Models\EloquentStoredEventQueryBuilder|EloquentStoredEvent startingFrom($storedEventId)
  * @method static \Spatie\EventSourcing\StoredEvents\Models\EloquentStoredEventQueryBuilder|EloquentStoredEvent uuid($uuid)
  * @method static \Spatie\EventSourcing\StoredEvents\Models\EloquentStoredEventQueryBuilder|EloquentStoredEvent withMetaDataAttributes()
- * @method static \Spatie\EventSourcing\StoredEvents\Models\EloquentStoredEventCollection<int, static> all($columns = ['*'])
- * @method static \Spatie\EventSourcing\StoredEvents\Models\EloquentStoredEventCollection<int, static> get($columns = ['*'])
- * @method static \Spatie\EventSourcing\StoredEvents\Models\EloquentStoredEventQueryBuilder|StoredEvent lastEvent(string ...$eventClasses)
- * @method static \Spatie\EventSourcing\StoredEvents\Models\EloquentStoredEventQueryBuilder|StoredEvent whereAggregateRoot(string $uuid)
- * @method static \Spatie\EventSourcing\StoredEvents\Models\EloquentStoredEventQueryBuilder|StoredEvent whereEvent(string ...$eventClasses)
- * @method static \Spatie\EventSourcing\StoredEvents\Models\EloquentStoredEventQueryBuilder|StoredEvent wherePropertyIs(string $property, ?mixed $value)
- * @method static \Spatie\EventSourcing\StoredEvents\Models\EloquentStoredEventQueryBuilder|StoredEvent wherePropertyIsNot(string $property, ?mixed $value)
  * @mixin \Eloquent
  */
 class StoredEvent extends EloquentStoredEvent

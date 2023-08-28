@@ -11,7 +11,7 @@ return [
     | using Laravel Scout. This connection is used when syncing all models
     | to the search service. You should adjust this based on your needs.
     |
-    | Supported: "algolia", "meilisearch", "database", "collection", "null"
+    | Supported: "algolia", "meilisearch", null
     |
     */
 
@@ -45,19 +45,6 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Database Transactions
-    |--------------------------------------------------------------------------
-    |
-    | This configuration option determines if your data will only be synced
-    | with your search indexes after every open database transaction has
-    | been committed, thus preventing any discarded data from syncing.
-    |
-    */
-
-    'after_commit' => false,
-
-    /*
-    |--------------------------------------------------------------------------
     | Chunk Sizes
     |--------------------------------------------------------------------------
     |
@@ -87,21 +74,6 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Identify User
-    |--------------------------------------------------------------------------
-    |
-    | This option allows you to control whether to notify the search engine
-    | of the user performing the search. This is sometimes useful if the
-    | engine supports any analytics based on this application's users.
-    |
-    | Supported engines: "algolia"
-    |
-    */
-
-    'identify' => env('SCOUT_IDENTIFY', false),
-
-    /*
-    |--------------------------------------------------------------------------
     | Algolia Configuration
     |--------------------------------------------------------------------------
     |
@@ -116,19 +88,6 @@ return [
         'secret' => env('ALGOLIA_API_KEY', ''),
         'settings_path' => config_path('algolia')
     ],
-
-    /*
-    |--------------------------------------------------------------------------
-    | Meilisearch Configuration
-    |--------------------------------------------------------------------------
-    |
-    | Here you may configure your Meilisearch settings. Meilisearch is an open
-    | source search engine with minimal configuration. Below, you can state
-    | the host and key information for your own Meilisearch installation.
-    |
-    | See: https://www.meilisearch.com/docs/learn/configuration/instance_options#all-instance-options
-    |
-    */
 
     'meilisearch' => [
         'host' => env('MEILISEARCH_HOST', 'http://search:7700'),

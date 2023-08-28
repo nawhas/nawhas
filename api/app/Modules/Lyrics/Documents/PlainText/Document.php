@@ -8,13 +8,10 @@ use App\Modules\Lyrics\Documents\Document as DocumentContract;
 use App\Modules\Lyrics\Documents\Format;
 use Illuminate\Support\Stringable;
 
-/**
- * @implements DocumentContract<string,string|int>
- */
 class Document implements DocumentContract
 {
     public function __construct(
-        private readonly string $content
+        private string $content
     ) {}
 
     public function getFormat(): Format
@@ -39,7 +36,7 @@ class Document implements DocumentContract
             ->isEmpty();
     }
 
-    public function __toString(): string
+    public function __toString()
     {
         return $this->render();
     }

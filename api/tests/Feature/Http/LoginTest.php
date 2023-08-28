@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Http;
 
-use Tests\Feature\FeatureTestCase;
+use Tests\Feature\FeatureTest;
 use Tests\Feature\Http\Responses\UserResponse;
 
-class LoginTest extends FeatureTestCase
+class LoginTest extends FeatureTest
 {
     private const ROUTE_LOGIN = 'v1/auth/login';
 

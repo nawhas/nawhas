@@ -10,9 +10,6 @@ use Illuminate\Contracts\Support\Jsonable;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Stringable;
 
-/**
- * @implements DocumentContract<string,string|int>
- */
 class Document implements DocumentContract, Jsonable
 {
     public function __construct(
@@ -86,12 +83,12 @@ class Document implements DocumentContract, Jsonable
         return $this->data->render();
     }
 
-    public function toJson($options = 0): bool|string
+    public function toJson($options = 0)
     {
         return json_encode($this->toArray(), $options);
     }
 
-    public function __toString(): string
+    public function __toString()
     {
         return $this->render();
     }

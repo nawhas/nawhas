@@ -12,7 +12,7 @@ abstract class DuskTestCase extends BaseTestCase
     use CreatesApplication;
     use SetUpCustomTraits;
 
-    protected function setUpTraits(): array
+    protected function setUpTraits()
     {
         $uses = parent::setUpTraits();
 
@@ -27,19 +27,19 @@ abstract class DuskTestCase extends BaseTestCase
      * @beforeClass
      * @return void
      */
-    public static function prepare(): void
+    public static function prepare()
     {
-//        if (! static::runningInSail()) {
-//            static::startChromeDriver();
-//        }
+        if (! static::runningInSail()) {
+            static::startChromeDriver();
+        }
     }
 
     /**
      * Create the RemoteWebDriver instance.
      *
-     * @return RemoteWebDriver
+     * @return \Facebook\WebDriver\Remote\RemoteWebDriver
      */
-    protected function driver(): RemoteWebDriver
+    protected function driver()
     {
         $options = (new ChromeOptions)->addArguments(collect([
             '--window-size=1920,1080',
@@ -64,7 +64,7 @@ abstract class DuskTestCase extends BaseTestCase
      *
      * @return bool
      */
-    protected function hasHeadlessDisabled(): bool
+    protected function hasHeadlessDisabled()
     {
         return isset($_SERVER['DUSK_HEADLESS_DISABLED']) ||
                isset($_ENV['DUSK_HEADLESS_DISABLED']);

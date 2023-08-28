@@ -12,6 +12,7 @@ use Illuminate\Support\ServiceProvider;
 use Laravel\Sanctum\Sanctum;
 use League\Fractal\Manager as Fractal;
 use League\Fractal\Serializer\ArraySerializer;
+use MeiliSearch\Client as Search;
 
 class AppServiceProvider extends ServiceProvider
 {

@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Tests\Feature\Http\Requests;
 
 use Illuminate\Testing\TestResponse;
-use Tests\Feature\FeatureTestCase;
+use Tests\Feature\FeatureTest;
 
 class RequestBuilder
 {
     public function __construct(
-        private FeatureTestCase $test,
+        private FeatureTest $test,
         private ?string $url = null,
     ) {}
 

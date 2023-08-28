@@ -40,7 +40,7 @@
     "get-youtube-id": "^1.0.1",
     "lazysizes": "^5.2.2",
     "lodash": "^4.17.20",
-    "meilisearch": "^0.34.1",
+    "meilisearch": "^0.24.0",
     "nuxt": "^2.14.0",
     "nuxt-property-decorator": "^2.7.2",
     "vue": "^2",

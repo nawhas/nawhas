@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Tests\Feature\Http;
 
 use App\Modules\Library\Models\Reciter;
-use Tests\Feature\FeatureTestCase;
+use Tests\Feature\FeatureTest;
 use Tests\Feature\Http\Responses\PaginatedCollectionResponse;
 use Tests\Feature\Http\Responses\ReciterResponse;
 use Tests\WithSearchIndex;
@@ -14,7 +14,7 @@ use Tests\WithSimpleFaker;
 
 use function App\Support\times;
 
-class RecitersTest extends HttpTestCase
+class RecitersTest extends HttpTest
 {
     use WithSearchIndex;
     use WithSimpleFaker;
@@ -87,7 +87,7 @@ class RecitersTest extends HttpTestCase
     public function it_can_create_reciter_if_moderator(): void
     {
         $request = [
-            'name' => static::faker()->name,
+            'name' => $this->faker->name,
         ];
 
         $response = $this->assertRequiresModeratorAuthentication(
@@ -109,8 +109,8 @@ class RecitersTest extends HttpTestCase
         $reciter = $this->getReciterFactory()->create();
 
         $request = [
-            'name' => static::faker()->name,
-            'description' => static::faker()->text,
+            'name' => $this->faker->name,
+            'description' => $this->faker->text,
         ];
 
         $this->assertNotEquals($reciter->name, $request['name']);

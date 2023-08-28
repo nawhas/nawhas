@@ -6,7 +6,7 @@ namespace App\Modules\Core\Models;
 
 trait UsesDataConnection
 {
-    public function getConnectionName(): string
+    public function getConnectionName()
     {
         return 'data';
     }

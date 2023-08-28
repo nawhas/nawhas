@@ -9,7 +9,7 @@ use Illuminate\Contracts\Hashing\Hasher;
 
 use function App\Support\uuid;
 
-class UserEventsTest extends EventsTestCase
+class UserEventsTest extends EventsTest
 {
     /**
      * @test
@@ -20,12 +20,12 @@ class UserEventsTest extends EventsTestCase
         $properties = [
             'id' => uuid(),
             'attributes' => [
-                'name' => static::faker()->name,
+                'name' => $this->faker->name,
                 'role' => 'moderator',
-                'email' => static::faker()->email,
-                'password' => bcrypt(static::faker()->password),
-                'remember_token' => static::faker()->randomAscii,
-                'nickname' => static::faker()->userName,
+                'email' => $this->faker->email,
+                'password' => bcrypt($this->faker->password),
+                'remember_token' => $this->faker->randomAscii,
+                'nickname' => $this->faker->userName,
             ],
         ];
 
@@ -54,7 +54,7 @@ class UserEventsTest extends EventsTestCase
         $hasher = app(Hasher::class);
 
         $user = $this->getUserFactory()->moderator();
-        $newPassword = static::faker()->password;
+        $newPassword = $this->faker->password;
 
         $this->assertFalse($hasher->check($newPassword, $user->password));
 
@@ -76,7 +76,7 @@ class UserEventsTest extends EventsTestCase
     public function it_can_replay_user_name_changed_event(): void
     {
         $user = $this->getUserFactory()->moderator();
-        $name = static::faker()->name;
+        $name = $this->faker->name;
 
         $this->assertNotEquals($name, $user->name);
 
@@ -98,7 +98,7 @@ class UserEventsTest extends EventsTestCase
     public function it_can_replay_user_email_changed_event(): void
     {
         $user = $this->getUserFactory()->moderator();
-        $email = static::faker()->email;
+        $email = $this->faker->email;
 
         $this->assertNotEquals($email, $user->email);
 
@@ -120,7 +120,7 @@ class UserEventsTest extends EventsTestCase
     public function it_can_replay_user_nickname_changed_event(): void
     {
         $user = $this->getUserFactory()->moderator();
-        $nickname = static::faker()->userName;
+        $nickname = $this->faker->userName;
 
         $this->assertNotEquals($nickname, $user->nickname);
 

@@ -27,7 +27,7 @@ class PopularController extends Controller
         return $this->respondWithCollection($reciters, $transformer);
     }
 
-    public function tracks(Request $request, TrackTransformer $transformer): JsonResponse
+    public function tracks(Request $request, TrackTransformer $transformer)
     {
         $pagination = PaginationState::fromRequest($request);
 

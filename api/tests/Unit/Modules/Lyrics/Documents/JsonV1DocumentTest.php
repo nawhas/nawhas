@@ -158,7 +158,7 @@ class JsonV1DocumentTest extends TestCase
         $expected = <<<TEXT
         Hello
         World (x2)
-
+        
         This is a test
         Remain calm (x2)
         TEXT;
@@ -171,7 +171,6 @@ class JsonV1DocumentTest extends TestCase
     /**
      * @test
      * @dataProvider provideContentsForEmptyTest
-     * @throws \JsonException
      */
     public function it_determines_empty_documents_correctly(string $content, bool $expected): void
     {
@@ -181,7 +180,7 @@ class JsonV1DocumentTest extends TestCase
         $this->assertEquals($expected, $doc->isEmpty());
     }
 
-    public static function provideContentsForEmptyTest(): array
+    public function provideContentsForEmptyTest(): array
     {
         return [
             'empty json' => ['{}', true],
@@ -204,10 +203,10 @@ class JsonV1DocumentTest extends TestCase
                   ]
                 }
                 JSON,
-                            true,
-                        ],
-                        'empty document with timestamps disabled' => [
-                            /** @lang JSON */ <<<JSON
+                true,
+            ],
+            'empty document with timestamps disabled' => [
+                /** @lang JSON */ <<<JSON
                 {
                   "meta": {
                     "timestamps": false
@@ -225,10 +224,10 @@ class JsonV1DocumentTest extends TestCase
                   ]
                 }
                 JSON,
-                            true,
-                        ],
-                        'lots_of_empty_document_lines' => [
-                            /** @lang JSON */ <<<JSON
+                true,
+            ],
+            'lots_of_empty_document_lines' => [
+                /** @lang JSON */ <<<JSON
                 {
                   "meta": {
                     "timestamps": false
@@ -271,10 +270,10 @@ class JsonV1DocumentTest extends TestCase
                   ]
                 }
                 JSON,
-                            true,
-                        ],
-                        'not empty' => [
-                            /** @lang JSON */ <<<JSON
+                true,
+            ],
+            'not empty' => [
+                /** @lang JSON */ <<<JSON
                 {
                   "meta": {
                     "timestamps": true
@@ -305,8 +304,8 @@ class JsonV1DocumentTest extends TestCase
                   ]
                 }
                 JSON,
-                            false,
-                        ],
-                    ];
-                }
+                false,
+            ],
+        ];
+    }
 }

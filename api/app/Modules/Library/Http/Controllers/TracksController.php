@@ -99,7 +99,7 @@ class TracksController extends Controller
         return $this->respondWithItem($track);
     }
 
-    private function updateLyrics(Track $track, Request $request): void
+    private function updateLyrics(Track $track, Request $request)
     {
         $format = $request->has('format') ? Format::from($request->get('format')) : Format::JsonV1;
 

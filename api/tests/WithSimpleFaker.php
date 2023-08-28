@@ -9,19 +9,10 @@ use Faker\Generator;
 
 trait WithSimpleFaker
 {
-    protected static ?Generator $faker = null;
+    protected Generator $faker;
 
-    protected static function setUpFaker(): void
+    protected function setUpFaker(): void
     {
-        static::$faker = Factory::create();
-    }
-
-    protected static function faker(): Generator
-    {
-        if (static::$faker === null) {
-            static::setUpFaker();
-        }
-
-        return static::$faker;
+        $this->faker = Factory::create();
     }
 }

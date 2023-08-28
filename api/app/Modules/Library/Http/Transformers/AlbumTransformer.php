@@ -13,7 +13,7 @@ use League\Fractal\Resource\Primitive;
 
 class AlbumTransformer extends Transformer
 {
-    protected array $availableIncludes = [
+    protected $availableIncludes = [
         'reciter', 'tracks', 'related'
     ];
 

@@ -9,7 +9,7 @@ use App\Modules\Library\Models\Reciter;
 
 use function App\Support\uuid;
 
-class AlbumEventsTest extends EventsTestCase
+class AlbumEventsTest extends EventsTest
 {
     private Reciter $reciter;
 
@@ -31,8 +31,8 @@ class AlbumEventsTest extends EventsTestCase
             'id' => $id,
             'reciterId' => $this->reciter->id,
             'attributes' => [
-                'title' => static::faker()->name,
-                'year' => static::faker()->year,
+                'title' => $this->faker->name,
+                'year' => $this->faker->year,
                 'artwork' => null,
             ]
         ];
@@ -55,9 +55,9 @@ class AlbumEventsTest extends EventsTestCase
             'id' => $id,
             'reciterId' => $this->reciter->id,
             'attributes' => [
-                'title' => static::faker()->name,
-                'year' => static::faker()->year,
-                'artwork' => static::faker()->imageUrl,
+                'title' => $this->faker->name,
+                'year' => $this->faker->year,
+                'artwork' => $this->faker->imageUrl,
             ]
         ];
         $this->event('album.created', $properties);
@@ -76,7 +76,7 @@ class AlbumEventsTest extends EventsTestCase
     public function it_can_replay_album_title_changed_event(): void
     {
         $album = $this->getAlbumFactory()->create($this->reciter);
-        $title = static::faker()->name;
+        $title = $this->faker->name;
 
         $this->assertNotEquals($album->title, $title);
 
@@ -98,7 +98,7 @@ class AlbumEventsTest extends EventsTestCase
     public function it_can_replay_album_year_changed_event(): void
     {
         $album = $this->getAlbumFactory()->create($this->reciter);
-        $year = static::faker()->year;
+        $year = $this->faker->year;
 
         $this->assertNotEquals($album->year, $year);
 
@@ -120,7 +120,7 @@ class AlbumEventsTest extends EventsTestCase
     public function it_can_replay_album_artwork_changed_event(): void
     {
         $album = $this->getAlbumFactory()->create($this->reciter);
-        $artwork = static::faker()->imageUrl;
+        $artwork = $this->faker->imageUrl;
 
         $this->assertNotEquals($album->artwork, $artwork);
 

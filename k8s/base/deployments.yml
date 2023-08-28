@@ -176,7 +176,7 @@ spec:
     spec:
       containers:
         - name: search
-          image: getmeili/meilisearch:v1.3.2
+          image: getmeili/meilisearch:v0.25.2
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 7700
@@ -186,7 +186,7 @@ spec:
       volumes:
         - name: search-data
           persistentVolumeClaim:
-            claimName: search-volume-v1.3.2
+            claimName: search-volume-v0.25.2
 ---
 apiVersion: apps/v1
 kind: Deployment

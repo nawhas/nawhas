@@ -6,11 +6,6 @@ namespace App\Modules\Lyrics\Documents;
 
 use Illuminate\Contracts\Support\Arrayable;
 
-/**
- * @template TKey of array-key
- * @template TValue
- * @template-extends Arrayable<TKey, TValue>
- */
 interface Document extends Arrayable
 {
     public function getContent(): string;
