@@ -6,8 +6,8 @@ namespace App\Infrastructure\Cache\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Spatie\ResponseCache\ResponseCache;
+use Symfony\Component\HttpFoundation\Response;
 use TiMacDonald\Middleware\HasParameters;
 
 class ClearResponseCache
@@ -23,7 +23,7 @@ class ClearResponseCache
         return self::with(['tags' => $tags]);
     }
 
-    public function handle(Request $request, Closure $next, string ...$tags)
+    public function handle(Request $request, Closure $next, string ...$tags): Response
     {
         /** @var Response $response */
         $response = $next($request);

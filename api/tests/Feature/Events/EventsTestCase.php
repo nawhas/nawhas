@@ -7,10 +7,10 @@ namespace Tests\Feature\Events;
 use App\Modules\Core\Events\StoredEvent;
 use ReflectionAttribute;
 use ReflectionMethod;
-use Tests\Feature\FeatureTest;
+use Tests\Feature\FeatureTestCase;
 use Tests\WithSimpleFaker;
 
-abstract class EventsTest extends FeatureTest
+abstract class EventsTestCase extends FeatureTestCase
 {
     use WithSimpleFaker;
 

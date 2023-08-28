@@ -14,7 +14,7 @@ use Tests\TestCase;
 use Tests\WithSearchIndex;
 use Tests\WithSimpleFaker;
 
-abstract class FeatureTest extends TestCase
+abstract class FeatureTestCase extends TestCase
 {
     use ModelFactories;
     use DatabaseTransactions;

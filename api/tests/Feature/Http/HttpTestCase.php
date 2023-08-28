@@ -6,9 +6,9 @@ namespace Tests\Feature\Http;
 
 use App\Modules\Authentication\Models\User;
 use Illuminate\Testing\TestResponse;
-use Tests\Feature\FeatureTest;
+use Tests\Feature\FeatureTestCase;
 
-abstract class HttpTest extends FeatureTest
+abstract class HttpTestCase extends FeatureTestCase
 {
     private ?User $contributor;
     private ?User $moderator;

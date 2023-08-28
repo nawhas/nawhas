@@ -165,7 +165,7 @@ class Reciter extends Model implements TimestampedEntity, Revisionable
         return parent::resolveChildRouteBinding($childType, $value, $field);
     }
 
-    public function toSearchableArray()
+    public function toSearchableArray(): array
     {
         return [
             'id' => $this->id,
@@ -178,7 +178,7 @@ class Reciter extends Model implements TimestampedEntity, Revisionable
         ];
     }
 
-    public function deleteReciter()
+    public function deleteReciter(): void
     {
         $this->albums->each(fn (Album $album) => $album->deleteAlbum());
         $this->delete();

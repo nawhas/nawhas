@@ -8,7 +8,7 @@ use App\Modules\Accounts\Events\Saves\TrackSaved;
 use App\Modules\Authentication\Models\User;
 use App\Modules\Library\Models\Track;
 
-class AccountEventsTest extends EventsTest
+class AccountEventsTest extends EventsTestCase
 {
     private User $user;
     private Track $track;

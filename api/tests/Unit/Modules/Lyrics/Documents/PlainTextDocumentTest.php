@@ -20,16 +20,16 @@ class PlainTextDocumentTest extends TestCase
         $this->assertEquals($expected, $doc->isEmpty());
     }
 
-    public function provideContentsForEmptyTest(): array
+    public static function provideContentsForEmptyTest(): array
     {
         return [
             'empty string' => ['', true],
             'single line whitespace' => ['          ', true],
             'multi-line whitespace' => [
                 <<<STR
-                
-                            
-                
+
+
+
                 STR,
                 true
             ],
