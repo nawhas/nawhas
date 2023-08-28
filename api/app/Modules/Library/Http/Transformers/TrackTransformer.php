@@ -43,7 +43,7 @@ class TrackTransformer extends Transformer
     public function includeLyrics(Track $track): ?ResourceInterface
     {
         if (($lyrics = $track->lyrics) === null) {
-            return $this->null();
+            return $this->empty();
         }
 
         return $this->item($lyrics, new LyricsTransformer());

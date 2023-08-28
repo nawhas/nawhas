@@ -46,7 +46,7 @@ class RevisionTransformer extends Transformer
     public function includeUser(Revision $revision): Primitive|Item|NullResource
     {
         if ($revision->user_id === null) {
-            return $this->null();
+            return $this->empty();
         }
 
         return $this->item($revision->user, new UserTransformer());

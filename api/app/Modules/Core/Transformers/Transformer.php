@@ -2,12 +2,14 @@
 
 namespace App\Modules\Core\Transformers;
 
+use App\Exceptions\NotImplementedException;
 use App\Modules\Core\Contracts\TimestampedEntity;
 use BadMethodCallException;
 use DateTimeInterface;
 use Illuminate\Http\Resources\ConditionallyLoadsAttributes;
 use Illuminate\Http\Resources\MergeValue;
 use League\Fractal\Resource\NullResource;
+use League\Fractal\Resource\Primitive;
 use League\Fractal\TransformerAbstract;
 
 abstract class Transformer extends TransformerAbstract
@@ -40,11 +42,13 @@ abstract class Transformer extends TransformerAbstract
         ]);
     }
 
-    /**
-     * @return NullResource
-     */
     protected function null(): NullResource
     {
-        return new NullResource();
+        throw new NotImplementedException('Use Transformer#empty() instead.');
+    }
+
+    protected function empty(): Primitive
+    {
+        return new Primitive(data: null);
     }
 }
