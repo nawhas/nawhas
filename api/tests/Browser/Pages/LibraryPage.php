@@ -27,6 +27,7 @@ class LibraryPage extends Page
     public function assert(Browser $browser): void
     {
         $browser->assertPathIs($this->url());
+        $browser->assertTitle('Welcome to your library | Nawhas.com');
     }
 
     /**

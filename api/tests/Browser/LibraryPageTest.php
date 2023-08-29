@@ -11,12 +11,10 @@ use Throwable;
 class LibraryPageTest extends DuskTestCase
 {
     /**
-     * A Dusk test example.
-     *
      * @return void
      * @throws Throwable
      */
-    public function testExample()
+    public function testLibraryPageWhenNotLoggedIn(): void
     {
         $this->browse(function (Browser $browser) {
             $libraryPage = new LibraryPage();
