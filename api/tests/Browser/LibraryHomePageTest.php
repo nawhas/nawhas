@@ -2,9 +2,7 @@
 
 namespace Tests\Browser;
 
-use App\Modules\Authentication\Enum\Role;
 use App\Modules\Authentication\Models\User;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Laravel\Dusk\Browser;
 use Tests\Browser\Pages\LibraryHomePage;
 use Tests\DuskTestCase;
@@ -22,12 +20,11 @@ class LibraryHomePageTest extends DuskTestCase
     {
         $this->createUsersIfRequired();
         $this->browse(function (Browser $browser) {
-            $libraryHomePage = new LibraryHomePage();
-            $browser->loginAs(User::findByEmail('contributor@nawhas.test'))
-                ->visit($libraryHomePage)
-                ->logout();
+            $contributor = User::findByEmail('contributor@nawhas.test');
 
-            $browser->loginAs(User::findByEmail('moderator@nawhas.test'))
+            $libraryHomePage = new LibraryHomePage();
+            $browser->loginAs($contributor)
+                ->assertAuthenticatedAs($contributor)
                 ->visit($libraryHomePage)
                 ->logout();
         });
