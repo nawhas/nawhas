@@ -120,8 +120,8 @@ services:
   selenium:
     profiles:
       - dusk
-    image: 'selenium/standalone-chromium'
-    # Uncomment the following lines for visual debugging dusk tests.
+    image: 'selenium/standalone-chrome'
+    # Uncomment the following lines for visaul debugging dusk tests.
 #    image: 'selenium/standalone-chrome-debug'
 #    ports:
 #      - '5900:5900'
