@@ -2,7 +2,7 @@
 
 namespace Tests\Browser\Pages;
 
-use Facebook\WebDriver\Exception\TimeOutException;
+use Facebook\WebDriver\Exception\TimeoutException;
 use Laravel\Dusk\Browser;
 use Laravel\Dusk\Page;
 
@@ -47,7 +47,7 @@ class LibraryPage extends Page
     }
 
     /**
-     * @throws TimeOutException
+     * @throws TimeoutException
      */
     public function verifyPageWhenUnauthenticated(Browser $browser): void
     {

@@ -2,7 +2,7 @@
 
 namespace Tests\Browser\Pages;
 
-use Facebook\WebDriver\Exception\TimeOutException;
+use Facebook\WebDriver\Exception\TimeoutException;
 use Laravel\Dusk\Browser;
 
 class HomePage extends Page
@@ -22,7 +22,7 @@ class HomePage extends Page
      *
      * @param Browser $browser
      * @return void
-     * @throws TimeOutException
+     * @throws TimeoutException
      */
     public function assert(Browser $browser): void
     {
