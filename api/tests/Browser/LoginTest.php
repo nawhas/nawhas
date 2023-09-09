@@ -2,7 +2,7 @@
 
 namespace Tests\Browser;
 
-use Faker\Generator;
+use Faker\Factory;
 use Laravel\Dusk\Browser;
 use Tests\DatabaseMigrations;
 use Tests\DuskTestCase;
@@ -101,7 +101,7 @@ class LoginTest extends DuskTestCase
      * @test
      */
     public function it_does_not_allow_incorrect_email_to_log_in(): void {
-        $invalidEmail = Generator::$email;
+        $invalidEmail = Factory::create()->email;
         $this->browse(function (Browser $browser) use ($invalidEmail) {
             $browser->visit('/')
                 ->waitFor('@user-menu__avatar', seconds: 10)
