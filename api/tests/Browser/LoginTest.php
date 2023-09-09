@@ -2,6 +2,7 @@
 
 namespace Tests\Browser;
 
+use Faker\Generator;
 use Laravel\Dusk\Browser;
 use Tests\DatabaseMigrations;
 use Tests\DuskTestCase;
@@ -72,7 +73,6 @@ class LoginTest extends DuskTestCase
         });
     }
 
-    // test to ensure incorrect password does not allow user to log in
     /**
      * @test
      */
@@ -94,6 +94,27 @@ class LoginTest extends DuskTestCase
                     ->press('.auth-dialog button[type=submit]')
                     ->waitFor('.auth-dialog div[role=alert] div[class=v-alert__content]')
                     ->assertSeeIn('.auth-dialog div[role=alert] div[class=v-alert__content]', 'These credentials do not match our records.');
+        });
+    }
+
+    /**
+     * @test
+     */
+    public function it_does_not_allow_incorrect_email_to_log_in(): void {
+        $invalidEmail = Generator::$email;
+        $this->browse(function (Browser $browser) use ($invalidEmail) {
+            $browser->visit('/')
+                ->waitFor('@user-menu__avatar', seconds: 10)
+                ->click('@user-menu__avatar')
+                ->waitFor('@user-menu__login-button')
+                ->click('@user-menu__login-button')
+                ->waitFor('.auth-dialog')
+                ->assertSee('Welcome back!')
+                ->type('.auth-dialog input[type=email]', $invalidEmail)
+                ->type('.auth-dialog input[type=password]', 'secret1234')
+                ->press('.auth-dialog button[type=submit]')
+                ->waitFor('.auth-dialog div[role=alert] div[class=v-alert__content]')
+                ->assertSeeIn('.auth-dialog div[role=alert] div[class=v-alert__content]', 'These credentials do not match our records.');
         });
     }
 }
