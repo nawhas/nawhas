@@ -23,6 +23,7 @@ class About extends Page
         $browser->assertPathIs($this->url());
         $browser->assertTitle("About | Nawhas.com");
         $browser->assertSee("The Journey");
+        $browser->assertSee("I desire that you recite for me poetry, for surely, these days are the days of grief and sorrow, which have passed over us, Ahlul Bayt.");
     }
 
     /**
