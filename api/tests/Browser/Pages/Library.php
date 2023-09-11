@@ -6,7 +6,7 @@ use Facebook\WebDriver\Exception\TimeoutException;
 use Laravel\Dusk\Browser;
 use Laravel\Dusk\Page;
 
-class LibraryPage extends Page
+class Library extends Page
 {
     /**
      * Get the URL for the page.

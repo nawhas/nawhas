@@ -5,7 +5,7 @@ namespace Tests\Browser\Pages;
 use Facebook\WebDriver\Exception\TimeoutException;
 use Laravel\Dusk\Browser;
 
-class HomePage extends Page
+class Home extends Page
 {
     /**
      * Get the URL for the page.

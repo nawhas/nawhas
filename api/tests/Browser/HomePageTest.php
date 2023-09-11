@@ -4,7 +4,7 @@ namespace Tests\Browser;
 
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Laravel\Dusk\Browser;
-use Tests\Browser\Pages\HomePage;
+use Tests\Browser\Pages\Home;
 use Tests\DuskTestCase;
 use Throwable;
 
@@ -17,7 +17,7 @@ class HomePageTest extends DuskTestCase
     {
         $this->browse(function (Browser $browser) {
             $browser->visit('/')
-                ->on(new HomePage);
+                ->on(new Home);
         });
     }
 }

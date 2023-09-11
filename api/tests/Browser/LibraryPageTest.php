@@ -4,7 +4,7 @@ namespace Tests\Browser;
 
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Laravel\Dusk\Browser;
-use Tests\Browser\Pages\LibraryPage;
+use Tests\Browser\Pages\Library;
 use Tests\DuskTestCase;
 use Throwable;
 
@@ -17,7 +17,7 @@ class LibraryPageTest extends DuskTestCase
     public function testLibraryPageWhenNotLoggedIn(): void
     {
         $this->browse(function (Browser $browser) {
-            $libraryPage = new LibraryPage();
+            $libraryPage = new Library();
             $browser->logout()->visit($libraryPage);
             $libraryPage->verifyPageWhenUnauthenticated($browser);
         });

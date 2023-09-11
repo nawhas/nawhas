@@ -5,7 +5,7 @@ namespace Tests\Browser\Pages;
 use Laravel\Dusk\Browser;
 use Laravel\Dusk\Page;
 
-class LibraryHomePage extends Page
+class LibraryHome extends Page
 {
     /**
      * Get the URL for the page.

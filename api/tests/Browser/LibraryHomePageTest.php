@@ -4,7 +4,7 @@ namespace Tests\Browser;
 
 use App\Modules\Authentication\Models\User;
 use Laravel\Dusk\Browser;
-use Tests\Browser\Pages\LibraryHomePage;
+use Tests\Browser\Pages\LibraryHome;
 use Tests\DuskTestCase;
 use Throwable;
 
@@ -22,7 +22,7 @@ class LibraryHomePageTest extends DuskTestCase
         $this->browse(function (Browser $browser) {
             $contributor = User::findByEmail('contributor@nawhas.test');
 
-            $libraryHomePage = new LibraryHomePage();
+            $libraryHomePage = new LibraryHome();
             $browser->loginAs($contributor)
                 ->assertAuthenticatedAs($contributor)
                 ->visit($libraryHomePage)
