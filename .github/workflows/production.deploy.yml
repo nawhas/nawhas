@@ -3,6 +3,8 @@ name: Production Deploy
 on:
   release:
     types: [published]
+  workflow_dispatch:
+
 
 concurrency:
   group: production
