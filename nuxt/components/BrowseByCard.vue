@@ -68,10 +68,10 @@ export default class BrowseByCard extends Vue {
   readonly browseBy!: 'reciter' | 'topic';
 
   @Prop({ required: false })
-  readonly popularReciters!: Array<Reciter> | null
+  readonly popularReciters!: Array<Reciter> | null;
 
   @Prop({ required: false })
-  readonly topics!: Array<Topic> | null
+  readonly topics!: Array<Topic> | null;
 
   goToViewAllPage() {
     if (this.browseBy === 'topic') {

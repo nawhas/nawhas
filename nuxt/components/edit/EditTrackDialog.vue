@@ -74,7 +74,7 @@
           label="Select Topics"
           multiple
           outlined
-        ></v-select>
+        />
         <div
           class="file-input"
           @drop.prevent="addFile"

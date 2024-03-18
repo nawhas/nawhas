@@ -15,10 +15,10 @@
 </template>
 
 <script lang="ts">
-/* eslint-disable dot-notation */
+
 import { Component, Vue, Prop } from 'nuxt-property-decorator';
-import LazyImage from '@/components/utils/LazyImage.vue';
 import Vibrant from 'node-vibrant';
+import LazyImage from '@/components/utils/LazyImage.vue';
 import { getTopicImage, getTopicUri, Topic } from '@/entities/topic';
 
 @Component({

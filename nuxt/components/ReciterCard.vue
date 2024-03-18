@@ -22,7 +22,6 @@ import { Component, Vue, Prop } from 'nuxt-property-decorator';
 import Vibrant from 'node-vibrant';
 import LazyImage from '@/components/utils/LazyImage.vue';
 import { Reciter } from '@/entities/reciter';
-import { pluralize } from '@/filters/string';
 
 @Component({
   components: {
@@ -32,6 +31,7 @@ import { pluralize } from '@/filters/string';
 export default class ReciterCard extends Vue {
   @Prop({ required: true })
   readonly reciter!: Reciter;
+
   @Prop() private featured!: any;
 
   private vibrantBackgroundColor: null|string = null;
