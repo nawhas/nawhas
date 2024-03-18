@@ -5,16 +5,15 @@ declare(strict_types=1);
 namespace App\Modules\Authentication\Models;
 
 use App\Modules\Authentication\Enum\Role;
-use App\Modules\Library\Models\Track;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use App\Modules\Authentication\Events\{UserEmailChanged,
     UserNameChanged,
     UserNicknameChanged,
     UserPasswordChanged,
-    UserRegistered,
-    UserRememberTokenChanged,
-    UserRoleChanged};
+    UserRegistered};
 use App\Modules\Core\Contracts\TimestampedEntity;
 use App\Modules\Core\Models\{HasTimestamps, HasUuid, UsesDataConnection};
+use App\Modules\Library\Models\Track;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Ramsey\Uuid\Uuid;
@@ -27,11 +26,11 @@ use Ramsey\Uuid\Uuid;
  * @property string $email
  * @property string|null $email_verified_at
  * @property string $password
- * @property string $role
+ * @property \App\Modules\Authentication\Enum\Role $role
  * @property string|null $nickname
  * @property string|null $remember_token
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property \Carbon\Carbon|null $created_at
+ * @property \Carbon\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|Track[] $savedTracks
  * @property-read int|null $saved_tracks_count
  * @method static \Illuminate\Database\Eloquent\Builder|User newModelQuery()
@@ -47,12 +46,22 @@ class User extends Authenticatable implements TimestampedEntity
 
     protected $guarded = [];
 
-    public static function create(Role $role, string $name, string $email, ?string $password = null, ?bool $rememberToken = null, ?string $nickname = null ): self
-    {
+    protected $casts = [
+        'role' => Role::class,
+    ];
+
+    public static function create(
+        Role $role,
+        string $name,
+        string $email,
+        ?string $password = null,
+        ?bool $rememberToken = null,
+        ?string $nickname = null
+    ): self {
         $id = Uuid::uuid1()->toString();
 
         event(new UserRegistered($id, [
-            'role' => $role->getValue(),
+            'role' => $role->value,
             'name' => $name,
             'email' => $email,
             'password' => bcrypt($password),
@@ -87,13 +96,6 @@ class User extends Authenticatable implements TimestampedEntity
         }
     }
 
-    public function changeRole(Role $role): void
-    {
-        if ($role->getValue() === $this->role) {
-            event(new UserRoleChanged($this->id, $role));
-        }
-    }
-
     public function changeEmail(string $email): void
     {
         if ($email !== $this->email) {
@@ -104,11 +106,6 @@ class User extends Authenticatable implements TimestampedEntity
     public function changePassword(string $password):void
     {
         event(new UserPasswordChanged($this->id, bcrypt($password)));
-    }
-
-    public function changeRememberToken(string $rememberToken): void
-    {
-        event(new UserRememberTokenChanged($this->id, $rememberToken));
     }
 
     public function changeNickname(?string $nickname):void
@@ -125,7 +122,7 @@ class User extends Authenticatable implements TimestampedEntity
         return "https://www.gravatar.com/avatar/{$hash}?s={$size}";
     }
 
-    public function savedTracks()
+    public function savedTracks(): MorphToMany
     {
         return $this->morphedByMany(Track::class, 'saveable');
     }
@@ -133,5 +130,10 @@ class User extends Authenticatable implements TimestampedEntity
     public function hasSavedTrack(string $id): bool
     {
         return $this->savedTracks()->where('saveable_id', $id)->exists();
+    }
+
+    public function isModerator(): bool
+    {
+        return $this->role === Role::Moderator;
     }
 }

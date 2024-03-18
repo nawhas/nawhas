@@ -11,7 +11,7 @@ class FeedbackRequest extends FormRequest
         return true;
     }
 
-    public function rules()
+    public function rules(): array
     {
         return [
             'type' => ['required', 'in:bug,feature,general'],

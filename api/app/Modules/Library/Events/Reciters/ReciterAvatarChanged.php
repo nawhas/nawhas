@@ -6,11 +6,8 @@ namespace App\Modules\Library\Events\Reciters;
 
 class ReciterAvatarChanged extends ReciterEvent
 {
-    public ?string $avatar;
-
-    public function __construct(string $id, ?string $avatar)
-    {
-        $this->id = $id;
-        $this->avatar = $avatar;
-    }
+    public function __construct(
+        public string $id,
+        public ?string $avatar
+    ) {}
 }

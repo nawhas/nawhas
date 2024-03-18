@@ -28,8 +28,8 @@ use Spatie\EventSourcing\StoredEvents\StoredEvent;
  * @property string|null $user_id
  * @property int $version
  * @property int $event_id
- * @property \Illuminate\Support\Carbon $created_at
- * @property-read Model|\Eloquent $entity
+ * @property \Carbon\Carbon $created_at
+ * @property-read null|\App\Modules\Audit\Revisionable\Revisionable|\Illuminate\Database\Eloquent\Model $entity
  * @property-read User|null $user
  * @method static \Illuminate\Database\Eloquent\Builder|Revision newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Revision newQuery()
@@ -51,6 +51,16 @@ class Revision extends Model
         'new_values' => 'array',
     ];
 
+    public function getChangeType(): ChangeType
+    {
+        return ChangeType::from($this->change_type);
+    }
+
+    public function getEntityType(): EntityType
+    {
+        return EntityType::from($this->entity_type);
+    }
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
@@ -66,7 +76,7 @@ class Revision extends Model
         string $entityId
     ): ?Revision {
         return self::query()
-            ->where('entity_type', $entityType->getValue())
+            ->where('entity_type', $entityType->value)
             ->where('entity_id', $entityId)
             ->orderByDesc('version')
             ->first();
@@ -79,11 +89,11 @@ class Revision extends Model
         ?StoredEvent $event = null
     ): self {
         $revision = new self();
-        $revision->entity_type = $snapshot->getType()->getValue();
+        $revision->entity_type = $snapshot->getType()->value;
         $revision->entity_id = $snapshot->getId();
         $revision->version = 1;
         $revision->user_id = $userId;
-        $revision->change_type = $changeType->getValue();
+        $revision->change_type = $changeType->value;
         $revision->event_id = $event->id;
         $revision->created_at = Carbon::make($event ? $event->created_at : 'now');
         $revision->setValues(
@@ -99,11 +109,11 @@ class Revision extends Model
         ChangeType $changeType,
         ?string $userId = null,
         ?StoredEvent $event = null
-    ): self {
+    ): static {
         $revision = $this->replicate();
 
         $revision->user_id = $userId;
-        $revision->change_type = $changeType->getValue();
+        $revision->change_type = $changeType->value;
         $revision->version = $this->version + 1;
         $revision->created_at = Carbon::make($event ? $event->created_at : 'now');
         $revision->event_id = $event->id;
@@ -118,11 +128,11 @@ class Revision extends Model
     public function reviseForDeletion(
         ?string $userId = null,
         ?StoredEvent $event = null
-    ): self  {
+    ): static  {
         $revision = $this->replicate();
 
         $revision->user_id = $userId;
-        $revision->change_type = ChangeType::DELETED;
+        $revision->change_type = ChangeType::Deleted->value;
         $revision->version = $this->version + 1;
         $revision->created_at = Carbon::make($event ? $event->created_at : 'now');
         $revision->event_id = $event->id;
@@ -155,7 +165,7 @@ class Revision extends Model
 
     public function save(array $options = [])
     {
-        if ($this->change_type === ChangeType::MODIFIED && empty($this->old_values)) {
+        if ($this->change_type === ChangeType::Modified->value && empty($this->old_values)) {
             return false;
         }
 

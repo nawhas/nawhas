@@ -1,6 +1,18 @@
 #!/usr/bin/env bash
 
-COMPOSE="docker-compose"
+MODE="dev"
+
+while [[ "$1" =~ ^- && ! "$1" == "--" ]]; do case $1 in
+  -B | --built )
+    MODE="built"
+    ;;
+  -C | --ci )
+    MODE="ci"
+    ;;
+esac; shift; done
+if [[ "$1" == '--' ]]; then shift; fi
+
+COMPOSE="docker compose -f docker-compose.yml"
 
 function run {
   set -x && $COMPOSE exec "$@"
@@ -9,9 +21,46 @@ function start {
   set -x && $COMPOSE run --rm "$@"
 }
 
-if [ "$1" == "prod" ]; then
-  COMPOSE="$COMPOSE -f docker-compose.prod.yml"
-  shift 1
+function run_feature_tests {
+  args=$(echo "$@" | sed 's/api\///g')
+  start test \
+    ./vendor/bin/wait-for-it.sh db:5432
+
+  # Run database migrations for the first time
+  start test \
+    php artisan migrate:all --fresh
+
+  # Start the tests
+  start test \
+    ./vendor/bin/phpunit --testsuite Feature "$args"
+}
+
+function run_unit_tests {
+  args=$(echo "$@" | sed 's/api\///g')
+
+  start --no-deps test \
+    ./vendor/bin/phpunit --testsuite Unit "$args"
+}
+
+function run_php_linting {
+  start --no-deps test composer phpstan
+  start --no-deps test composer psalm
+}
+
+if [ "$MODE" == "built" ]; then
+  echo "> Using docker-compose.built.yml";
+  COMPOSE="$COMPOSE -f docker-compose.built.yml"
+elif [ "$MODE" == "ci" ]; then
+  echo "> Using docker-compose.ci.yml";
+  COMPOSE="$COMPOSE -f docker-compose.ci.yml"
+else
+  echo "> Using docker-compose.dev.yml";
+  COMPOSE="$COMPOSE -f docker-compose.dev.yml"
+fi
+
+if test -e "docker-compose.override.yml"; then
+  echo "> Overrides from docker-compose.override.yml applied."
+  COMPOSE="$COMPOSE -f docker-compose.override.yml"
 fi
 
 # If we pass any arguments...
@@ -34,27 +83,82 @@ if [ $# -gt 0 ];then
       run api \
         composer "$@"
 
-    # If "test" is used, run unit tests,
-    # pass-thru any extra arguments to php-unit
-    elif [ "$1" == "test" ]; then
+    # If "composer" is used, pass-thru to "composer"
+    elif [ "$1" == "yarn" ]; then
       shift 1
-      run api \
-        ./vendor/bin/phpunit "$@"
+      start web \
+        yarn "$@"
 
-    elif [ "$1" == "db:sync" ]; then
-      $COMPOSE up -d --force-recreate db
-      run api php artisan doctrine:migrations:migrate
-      run db sync_database
+    # If "test:feature" is used, run feature tests,
+    # pass-thru any extra arguments to php-unit
+    elif [ "$1" == "test:feature" ]; then
+      shift 1
+      run_feature_tests "$@"
 
-    elif [ "$1" == "db:refresh" ]; then
-      $COMPOSE up -d --force-recreate db
-      run db clean_database
-      run api php artisan doctrine:migrations:migrate
-      run db sync_database
+    # If "test:unit" is used, run unit tests,
+    # pass-thru any extra arguments to php-unit
+    elif [ "$1" == "test:unit" ]; then
+      shift 1
+      run_unit_tests "$@"
+
+    # If "lint" is used, run linting
+    elif [ "$1" == "lint:php" ]; then
+      shift 1
+      run_php_linting
+
+    # If "dusk" is used, run Dusk browser-tests,
+    # pass-thru any extra arguments
+    elif [[ "$1" =~ ^dusk* ]]; then
+      set -x \
+        && $COMPOSE -f docker-compose.dusk.yml \
+            --profile dusk up -d \
+        && start test \
+            php artisan dusk:wait \
+        && start test \
+            php artisan "$@"
+
+    # If "test" is used, run linting, unit, and feature tests
+    elif [ "$1" == "test" ]; then
+      run_php_linting
+      run_unit_tests
+      run_feature_tests
+
+    # If "down" is used, take down everything
+    elif [ "$1" == "down" ]; then
+      shift 1
+      set -x && $COMPOSE \
+        --profile test \
+        --profile dusk \
+        down "$@"
+
+    # If "certs" is used, generate certs
+    elif [ "$1" == "certs" ]; then
+      shift 1
+      set -x
+      docker run -v "${PWD}/docker/nginx/certs:/certs" \
+        -e SSL_SUBJECT=api.nawhas.test \
+        -e SSL_DNS=api.nawhas.test,localhost,127.0.0.1 \
+        -e SSL_CERT=api.nawhas.test.crt \
+        -e SSL_KEY=api.nawhas.test.key \
+        paulczar/omgwtfssl
+
+      docker run -v "${PWD}/docker/nginx/certs:/certs" \
+        -e SSL_SUBJECT=nawhas.test \
+        -e SSL_DNS=nawhas.test,*.nawhas.test,localhost,127.0.0.1 \
+        -e SSL_CERT=nawhas.test.crt \
+        -e SSL_KEY=nawhas.test.key \
+        paulczar/omgwtfssl
+
+      docker run -v "${PWD}/docker/nginx/certs:/certs" \
+        -e SSL_SUBJECT=search.nawhas.test \
+        -e SSL_DNS=search.nawhas.test,localhost,127.0.0.1 \
+        -e SSL_CERT=search.nawhas.test.crt \
+        -e SSL_KEY=search.nawhas.test.key \
+        paulczar/omgwtfssl
 
     # Else, pass-thru args to docker-compose
     else
-        $COMPOSE "$@"
+        set -x && $COMPOSE "$@"
     fi
 
 else

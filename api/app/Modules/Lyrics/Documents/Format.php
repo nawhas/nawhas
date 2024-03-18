@@ -4,20 +4,12 @@ declare(strict_types=1);
 
 namespace App\Modules\Lyrics\Documents;
 
-use MyCLabs\Enum\Enum;
-
-/**
- * @method static Format PLAIN_TEXT()
- * @method static Format JSON_V1()
- * @psalm-immutable
- */
-final class Format extends Enum
+enum Format: int
 {
     /**
      * Format 1:
-     * @see
      */
-    public const PLAIN_TEXT = 1;
+    case PlainText = 1;
 
     /**
      * Version 2:
@@ -31,5 +23,5 @@ final class Format extends Enum
      *   }
      * ]
      */
-    public const JSON_V1 = 2;
+    case JsonV1 = 2;
 }

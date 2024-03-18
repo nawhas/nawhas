@@ -3,7 +3,7 @@
 ## Getting started
 
 ```bash
-docker-compose up -d
+./dev up -d
 ```
 
 ## Tips & Tricks

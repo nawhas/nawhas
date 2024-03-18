@@ -1,25 +1,15 @@
 name: Pull Request Build
 
-on: [pull_request]
+on: 
+  pull_request:
+  merge_group:
 
-env:
-  API_IMAGE: nawhas/api
-  WEB_IMAGE: nawhas/web
+concurrency:
+  group: ci-${{ github.head_ref }}
+  cancel-in-progress: true
 
 jobs:
-  ################################################################
-  # Cancel Previous Builds
-  ################################################################
-  cleanup:
-    name: Cancel Previous Runs
-    runs-on: ubuntu-latest
-    steps:
-      - uses: n1hility/cancel-previous-runs@v2
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-  ################################################################
   # Notify Build Started
-  ################################################################
   notify_start:
     name: Notify Build Started
     runs-on: ubuntu-latest
@@ -33,211 +23,229 @@ jobs:
           color: warning
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
-  ################################################################
-  # Build & Test API Image
-  ################################################################
+  # Setup Job
+  setup:
+    name: Setup Workflow
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Determine PR Number
+        id: environment
+        run: |
+          pr_num="$EVENT_NUMBER"
+          short_sha="${SHA::8}"
+          echo "::set-output name=pr_num::${pr_num}"
+          echo "::set-output name=short_sha::${short_sha}"
+        env:
+          EVENT_NUMBER: ${{github.event.number}}
+          SHA: ${{ github.sha }}
+    outputs:
+      pr_num: ${{ steps.environment.outputs.pr_num }}
+      short_sha: ${{ steps.environment.outputs.short_sha }}
+  # Build API Image
   build_api:
-    name: Build & Test API Image
+    name: Build API Image
     runs-on: ubuntu-latest
+    needs: [setup]
     steps:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Docker Login
-        env:
-          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-        run: |
-          docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-
-      - name: Prepare Environment
-        run: |
-          PR_NUM=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
-          NAMESPACE="intg-$PR_NUM"
-          API_DOMAIN="api.pr-$PR_NUM.intg.k8s.nawhas.com"
-          APP_DOMAIN="pr-$PR_NUM.intg.k8s.nawhas.com"
-
-          echo "::set-env name=NAMESPACE::$NAMESPACE"
-          echo "::set-env name=PR_NUM::$PR_NUM"
-          echo "::set-env name=API_DOMAIN::$API_DOMAIN"
-          echo "::set-env name=APP_DOMAIN::$APP_DOMAIN"
-
-      - name: Build API
-        run: |
-          docker build --file ./api/Dockerfile \
-            -t $API_IMAGE:$NAMESPACE-${GITHUB_SHA::8} \
-            --build-arg GITHUB_SHA="$GITHUB_SHA" \
-            --build-arg GITHUB_REF=$NAMESPACE \
-            ./api
-
-      - name: Publish API
-        run: |
-          docker push $API_IMAGE:$NAMESPACE-${GITHUB_SHA::8}
-  ################################################################
-  # Test & Lint Web App
-  ################################################################
-  test_web:
-    name: Test & Lint Web App
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: nuxt
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-
-      - uses: actions/setup-node@v1
+      - name: Build
+        uses: ./.github/actions/api-build
         with:
-          node-version: '13.x'
-
-      - name: Install Dependencies
-        run: yarn install --frozen-lockfile
-
-      - name: Lint Codebase
-        run: NODE_ENV=production yarn lint --no-fix --format stylish
-  ################################################################
-  # Build Web Image
-  ################################################################
-  build_web:
-    name: Build & Test Web Image
+          docker-username: ${{ secrets.DOCKER_USERNAME }}
+          docker-password: ${{ secrets.DOCKER_PASSWORD }}
+          extra-tags: |
+            nawhas/api:pr-${{ needs.setup.outputs.pr_num }}
+            nawhas/api:pr-${{ needs.setup.outputs.pr_num }}-${{ needs.setup.outputs.short_sha }}
+  # Lint Web App
+  lint_web:
+    name: Lint Web App
     runs-on: ubuntu-latest
-    needs: test_web
     steps:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Docker Login
+      - name: Lint
+        uses: ./.github/actions/web-lint
+  # Build Web Image
+  build_web:
+    name: Build Web Image
+    runs-on: ubuntu-latest
+    needs: [setup]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Build
+        uses: ./.github/actions/web-build
+        with:
+          docker-username: ${{ secrets.DOCKER_USERNAME }}
+          docker-password: ${{ secrets.DOCKER_PASSWORD }}
+          extra-tags: |
+            nawhas/web:pr-${{ needs.setup.outputs.pr_num }}
+            nawhas/web:pr-${{ needs.setup.outputs.pr_num }}-${{ needs.setup.outputs.short_sha }}
+  test_api:
+    name: Test API Image
+    runs-on: ubuntu-latest
+    needs: [setup]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Build Test API Image
+        uses: ./.github/actions/api-build-test
+
+      - name: Run PHPStan
+        shell: bash
+        run: |
+          docker run --rm nawhas/api:test ./ci/phpstan.sh
+
+      - name: Run Psalm
+        shell: bash
+        run: |
+          docker run --rm nawhas/api:test ./ci/psalm.sh
+
+      - name: Run Unit Tests
+        shell: bash
+        run: |
+          docker run --rm nawhas/api:test ./vendor/bin/phpunit --testsuite Unit
+
+      - name: Pull Services
+        run: |
+          ./dev --ci pull db search
         env:
-          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-        run: |
-          docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+          API_IMAGE_TAG: dev-${{ needs.setup.outputs.short_sha }}
+          WEB_IMAGE_TAG: dev-${{ needs.setup.outputs.short_sha }}
+          API_TEST_IMAGE_TAG: test
 
-      - name: Prepare Environment
+      - name: Run Feature Tests
         run: |
-          PR_NUM=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
-          NAMESPACE="intg-$PR_NUM"
-          API_DOMAIN="api.pr-$PR_NUM.intg.k8s.nawhas.com"
-          APP_DOMAIN="pr-$PR_NUM.intg.k8s.nawhas.com"
-          SEARCH_HOST="search.pr-$PR_NUM.intg.k8s.nawhas.com"
-
-          echo "::set-env name=NAMESPACE::$NAMESPACE"
-          echo "::set-env name=PR_NUM::$PR_NUM"
-          echo "::set-env name=API_DOMAIN::$API_DOMAIN"
-          echo "::set-env name=APP_DOMAIN::$APP_DOMAIN"
-          echo "::set-env name=SEARCH_HOST::$SEARCH_HOST"
-
-      - name: Decrypt Web secrets
-        working-directory: ./k8s/overlays/integration/secrets
-        run: |
-          gpg --quiet --batch --yes --decrypt --passphrase="$GPG_KEY" --output web.integration.env web.integration.env.gpg
+          ./dev --ci test:feature
         env:
-          GPG_KEY: ${{ secrets.GPG_KEY }}
+          API_IMAGE_TAG: dev-${{ needs.setup.outputs.short_sha }}
+          WEB_IMAGE_TAG: dev-${{ needs.setup.outputs.short_sha }}
+          API_TEST_IMAGE_TAG: test
+  dusk:
+    name: Run Dusk Tests
+    runs-on: ubuntu-latest
+    needs: [setup, build_api, build_web]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
 
-      - name: Build Web
+      - name: Build Test API Image
+        uses: ./.github/actions/api-build-test
+
+      - name: Pull Services
         run: |
-          cp ./k8s/overlays/integration/secrets/web.integration.env ./nuxt/.env.docker
+          ./dev --ci -- -f docker-compose.dusk.yml pull
+        env:
+          API_IMAGE_TAG: dev-${{ needs.setup.outputs.short_sha }}
+          WEB_IMAGE_TAG: dev-${{ needs.setup.outputs.short_sha }}
+          API_TEST_IMAGE_TAG: test
 
-          printf "\nAPI_BASE_URL=https://$API_DOMAIN/" >> ./nuxt/.env.docker
-          printf "\nAPP_DOMAIN=https://$APP_DOMAIN" >> ./nuxt/.env.docker
-          printf "\nSEARCH_HOST=https://$SEARCH_HOST" >> ./nuxt/.env.docker
-
-          docker build --file ./nuxt/Dockerfile \
-            -t $WEB_IMAGE:$NAMESPACE-${GITHUB_SHA::8} \
-            --build-arg APP_VERSION="$NAMESPACE-${GITHUB_SHA::8}" \
-            ./nuxt
-
-      - name: Publish Web
+      - name: Prepare to Start
         run: |
-          docker push $WEB_IMAGE:$NAMESPACE-${GITHUB_SHA::8}
+          ./dev certs
+          echo '' > ./api/storage/logs/laravel.log
+          echo '' > ./api/storage/logs/tests.log
+          echo '' > ./api/storage/logs/queues.log
 
+      - name: Run Dusk Tests
+        run: |
+          ./dev --ci dusk
+        env:
+          API_IMAGE_TAG: dev-${{ needs.setup.outputs.short_sha }}
+          WEB_IMAGE_TAG: dev-${{ needs.setup.outputs.short_sha }}
+          API_TEST_IMAGE_TAG: test
+
+      - name: Dump docker logs on failure
+        if: failure()
+        uses: jwalton/gh-docker-logs@v1
+
+      - name: Upload Screenshots
+        if: failure()
+        uses: actions/upload-artifact@v2
+        with:
+          name: screenshots
+          path: api/tests/Browser/screenshots
+
+      - name: Upload Console Logs
+        if: failure()
+        uses: actions/upload-artifact@v2
+        with:
+          name: console
+          path: api/tests/Browser/console
+
+      - name: Upload API Logs
+        if: failure()
+        uses: actions/upload-artifact@v2
+        with:
+          name: laravel.log
+          path: api/storage/logs/laravel.log
+
+      - name: Upload Test Logs
+        if: failure()
+        uses: actions/upload-artifact@v2
+        with:
+          name: tests.log
+          path: api/storage/logs/tests.log
+
+      - name: Upload Queue Logs
+        if: failure()
+        uses: actions/upload-artifact@v2
+        with:
+          name: queues.log
+          path: api/storage/logs/queues.log
   ################################################################
   # Deploy Integration Environment
   ################################################################
   deploy:
     name: Deploy Integration Environment
     runs-on: ubuntu-latest
-    needs: [build_api, build_web]
+    needs: [lint_web, build_web, build_api, test_api]
     if: endsWith(github.head_ref, '-integration')
     steps:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Save DigitalOcean kubeconfig
-        uses: digitalocean/action-doctl@v1.7.0
-        env:
-          DIGITALOCEAN_ACCESS_TOKEN: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
-        with:
-          args: kubernetes cluster kubeconfig show k8s-nawhas > $GITHUB_WORKSPACE/.kubeconfig
-
-      - name: Decrypt secrets
-        working-directory: ./k8s/overlays/integration/secrets
-        run: |
-          gpg --quiet --batch --yes --decrypt --passphrase="$GPG_KEY" --output api.integration.env api.integration.env.gpg
-          gpg --quiet --batch --yes --decrypt --passphrase="$GPG_KEY" --output web.integration.env web.integration.env.gpg
-          gpg --quiet --batch --yes --decrypt --passphrase="$GPG_KEY" --output search.integration.env search.integration.env.gpg
-        env:
-          GPG_KEY: ${{ secrets.GPG_KEY }}
-
       - name: Prepare Environment
         run: |
-          PR_NUM=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
-          NAMESPACE="intg-$PR_NUM"
-          API_DOMAIN="api.pr-$PR_NUM.intg.k8s.nawhas.com"
-          APP_DOMAIN="pr-$PR_NUM.intg.k8s.nawhas.com"
-          SEARCH_HOST="search.pr-$PR_NUM.intg.k8s.nawhas.com"
-          MAIL_HOST="mail.pr-$PR_NUM.intg.k8s.nawhas.com"
+          ./scripts/github/prepare-integration-environment.sh
 
-          echo "::set-env name=NAMESPACE::$NAMESPACE"
-          echo "::set-env name=PR_NUM::$PR_NUM"
-          echo "::set-env name=API_DOMAIN::$API_DOMAIN"
-          echo "::set-env name=APP_DOMAIN::$APP_DOMAIN"
-          echo "::set-env name=SEARCH_HOST::$SEARCH_HOST"
-          echo "::set-env name=MAIL_HOST::$MAIL_HOST"
-
-      - name: Prepare Secrets
-        working-directory: ./k8s/overlays/integration/secrets
+      - name: Substitute Deployment Variables
         run: |
-          printf "\nAPP_DOMAIN=$APP_DOMAIN" >> api.integration.env
-          printf "\nALGOLIA_PREFIX=intg_${PR_NUM}_" >> api.integration.env
-          printf "\nSESSION_COOKIE_PREFIX=intg_${PR_NUM}_" >> api.integration.env
+          {
+            echo "APP_DOMAIN=${APP_DOMAIN}"
+            echo "ALGOLIA_PREFIX=${ALGOLIA_PREFIX}"
+            echo "SESSION_COOKIE_PREFIX=${SESSION_COOKIE_PREFIX}"
+          } >> ./k8s/overlays/integration/env/api.env
+          
+          {
+            echo "API_BASE_URL=https://${API_DOMAIN}/"
+            echo "APP_DOMAIN=https://${APP_DOMAIN}"
+            echo "SEARCH_HOST=https://${SEARCH_HOST}"
+          } >> ./k8s/overlays/integration/env/web.env
+          
+          cat ./k8s/overlays/integration/ingress.yml \
+            | sed "s/<INTG_APP_DOMAIN>/${APP_DOMAIN}/g" \
+            | sed "s/<INTG_API_DOMAIN>/${API_DOMAIN}/g" \
+            | sed "s/<INTG_SEARCH_HOST>/${SEARCH_HOST}/g" \
+            | sed "s/<INTG_MAIL_HOST>/${MAIL_HOST}/g" \
+          > ./k8s/overlays/integration/ingress.yml
 
-      # Set up kustomize
-      - name: Set up Kustomize
-        working-directory: ./k8s/overlays/integration
-        run: |
-          curl -o kustomize --location https://github.com/kubernetes-sigs/kustomize/releases/download/v3.1.0/kustomize_3.1.0_linux_amd64
-          chmod u+x ./kustomize
-
-      - name: Prepare Kustomization
-        working-directory: ./k8s/overlays/integration
-        run: |
-          ./kustomize edit set image "IMAGE:TAG=$API_IMAGE:$NAMESPACE-${GITHUB_SHA::8}"
-          ./kustomize edit set image "WEB:TAG=$WEB_IMAGE:$NAMESPACE-${GITHUB_SHA::8}"
-          ./kustomize edit set namespace "$NAMESPACE"
-
-      - name: Create Namespace
-        working-directory: ./k8s/overlays/integration
-        run: |
-          if [[ $(kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig get namespace | grep "$NAMESPACE") == "" ]]; then
-            echo "Namespace does not exist!";
-            kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig create namespace "$NAMESPACE"
-          fi
-
-      # Deploy the Docker image to the GKE cluster
       - name: Deploy
-        working-directory: ./k8s/overlays/integration
-        run: |
-          ./kustomize build . \
-            | sed "s/ING_APP_DOMAIN/$APP_DOMAIN/g" \
-            | sed "s/ING_API_DOMAIN/$API_DOMAIN/g" \
-            | sed "s/ING_SEARCH_HOST/$SEARCH_HOST/g" \
-            | sed "s/ING_MAIL_HOST/$MAIL_HOST/g" \
-            | kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig apply -f -
-
-          kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig rollout status --timeout=2m deployment/api -n $NAMESPACE
-          kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig rollout status --timeout=2m deployment/web -n $NAMESPACE
-          kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig get services -o wide -n $NAMESPACE
+        uses: ./.github/actions/deploy
+        with:
+          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+          environment: integration
+          secret-key: ${{ secrets.GPG_KEY }}
+          namespace: ${{ env.NAMESPACE }}
+          tag: ${{ env.APP_VERSION }}
 
       - name: Post Link on PR
         if: success()
@@ -246,6 +254,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           msg: "Your integration branch has been deployed to https://${{ env.APP_DOMAIN }}"
+          check_for_duplicate_msg: true
   ################################################################
   # Notify Build Status
   ################################################################
@@ -253,7 +262,7 @@ jobs:
     name: Notify Build Status
     runs-on: ubuntu-latest
     needs: [build_api, build_web, deploy]
-    if: always()
+    if: endsWith(github.head_ref, '-integration')
     steps:
       - name: Notify Build Success
         uses: voxmedia/github-action-slack-notify-build@v1

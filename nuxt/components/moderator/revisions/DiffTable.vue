@@ -39,7 +39,7 @@
 </template>
 
 <script lang="ts">
-import { get } from 'lodash';
+import _ from 'lodash';
 import { Component, Prop, Vue } from 'nuxt-property-decorator';
 import dot from 'dot-object';
 import DiffTableRow from '@/components/moderator/revisions/DiffTableRow.vue';
@@ -57,7 +57,7 @@ const ignored = [
 export default class DiffTable extends Vue {
   @Prop({ type: Object, required: true }) private readonly old !: object;
   @Prop({ type: Object, required: true }) private readonly snapshot !: object;
-  private readonly get = get;
+  private readonly get = _.get;
   private view = 'changed';
 
   get attributes() {

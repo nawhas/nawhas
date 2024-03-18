@@ -1,6 +1,6 @@
 import { InjectedApiPlugin } from '@/plugins/api';
 import { InjectedErrorsPlugin } from '@/plugins/errors';
-import MeiliSearch from 'meilisearch';
+import { MeiliSearch } from 'meilisearch';
 
 declare module 'vue/types/vue' {
   interface Vue {

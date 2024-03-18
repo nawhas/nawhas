@@ -1,4 +1,4 @@
-/* eslint-disable no-param-reassign,no-underscore-dangle,dot-notation */
+/* eslint-disable dot-notation */
 import { DirectiveOptions } from 'vue';
 
 export interface Activator {

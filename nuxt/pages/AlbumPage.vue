@@ -144,24 +144,6 @@ export default Vue.extend({
     EditAlbumDialog,
   },
 
-  async fetch() {
-    if (!this.album) {
-      return;
-    }
-
-    const response = await this.$api.tracks.index(this.album.reciterId, this.album.id, {
-      include: [
-        TrackIncludes.Reciter,
-        TrackIncludes.Lyrics,
-        TrackIncludes.Album,
-        TrackIncludes.Media,
-        TrackIncludes.Related,
-      ],
-    });
-
-    this.tracks = response.data;
-  },
-
   async asyncData({ route, $api, $errors }) {
     const { reciter: reciterId, album: albumId } = route.params;
 
@@ -187,6 +169,24 @@ export default Vue.extend({
       tracks: null,
       addedToQueueSnackbar: false,
     };
+  },
+
+  async fetch() {
+    if (!this.album) {
+      return;
+    }
+
+    const response = await this.$api.tracks.index(this.album.reciterId, this.album.id, {
+      include: [
+        TrackIncludes.Reciter,
+        TrackIncludes.Lyrics,
+        TrackIncludes.Album,
+        TrackIncludes.Media,
+        TrackIncludes.Related,
+      ],
+    });
+
+    this.tracks = response.data;
   },
 
   computed: {

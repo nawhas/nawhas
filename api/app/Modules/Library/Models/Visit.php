@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $id
  * @property string $visitable_id
  * @property string $visitable_type
- * @property \Illuminate\Support\Carbon $visited_at
+ * @property \Carbon\Carbon $visited_at
  * @method static \Illuminate\Database\Eloquent\Builder|Visit newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Visit newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Visit query()

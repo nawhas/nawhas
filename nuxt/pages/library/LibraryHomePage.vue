@@ -55,11 +55,6 @@ interface Data {
 }
 
 export default Vue.extend({
-  middleware({ store, redirect }) {
-    if (!store.state.auth.user) {
-      return redirect('/library');
-    }
-  },
   components: {
     SavedTracksEmptyState,
     TrackCard,
@@ -67,6 +62,14 @@ export default Vue.extend({
     TrackCardSkeleton,
     LibraryHeader,
   },
+  middleware({ store, redirect }) {
+    if (!store.state.auth.user) {
+      return redirect('/library');
+    }
+  },
+  data: (): Data => ({
+    tracks: null,
+  }),
   async fetch() {
     const response = await this.$api.library.tracks({
       include: [
@@ -82,8 +85,8 @@ export default Vue.extend({
     });
     this.tracks = response.data;
   },
-  data: (): Data => ({
-    tracks: null,
+  head: () => generateMeta({
+    title: 'My Library',
   }),
   watch: {
     '$store.state.auth.user': 'onAuthChange',
@@ -96,9 +99,6 @@ export default Vue.extend({
       }
     },
   },
-  head: () => generateMeta({
-    title: 'My Library',
-  }),
 });
 </script>
 

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Authentication\Models;
 
+use App\Exceptions\NotImplementedException;
 use App\Modules\Authentication\Events\SocialAccountRegistered;
 use App\Modules\Core\Contracts\TimestampedEntity;
 use App\Modules\Core\Models\HasTimestamps;
@@ -21,8 +22,8 @@ use Ramsey\Uuid\Uuid;
  * @property string $user_id
  * @property string $provider
  * @property string $provider_id
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property \Carbon\Carbon|null $created_at
+ * @property \Carbon\Carbon|null $updated_at
  * @property-read \App\Modules\Authentication\Models\User $user
  * @method static \Illuminate\Database\Eloquent\Builder|SocialAccount newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|SocialAccount newQuery()
@@ -37,15 +38,16 @@ class SocialAccount extends Model implements TimestampedEntity
 
     public static function create(string $userId, string $provider, string $providerId): self
     {
-        $id = Uuid::uuid1()->toString();
-
-        event(new SocialAccountRegistered($id, [
-            'userId' => $userId,
-            'provider' => $provider,
-            'providerId' => $providerId,
-        ]));
-
-        return self::retrieve($id);
+        throw new NotImplementedException();
+//        $id = Uuid::uuid1()->toString();
+//
+//        event(new SocialAccountRegistered($id, [
+//            'userId' => $userId,
+//            'provider' => $provider,
+//            'providerId' => $providerId,
+//        ]));
+//
+//        return self::retrieve($id);
     }
 
     /**

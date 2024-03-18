@@ -15,7 +15,7 @@ class LyricsTransformer extends Transformer
             'id' => '(deprecated)',
             'trackId' => '(deprecated)',
             'content' => $document->getContent(),
-            'format' => $document->getFormat()->getValue(),
+            'format' => $document->getFormat()->value,
             'createdAt' => $this->dateTime(now()),
             'updatedAt' => $this->dateTime(now()),
         ];

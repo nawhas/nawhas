@@ -10,38 +10,24 @@ use App\Modules\Lyrics\Documents\{Document, Factory, Format};
 
 class TrackSnapshot implements Snapshot
 {
-    public string $id;
-    public string $albumId;
-    public string $title;
-    public ?Document $lyrics;
-    public ?string $audio;
-    public ?string $video;
-
     public function __construct(
-        string $id,
-        string $albumId,
-        string $title,
-        ?string $audio = null,
-        ?string $video = null,
-        ?Document $lyrics = null
-    ) {
-        $this->id = $id;
-        $this->title = $title;
-        $this->lyrics = $lyrics;
-        $this->audio = $audio;
-        $this->video = $video;
-        $this->albumId = $albumId;
-    }
+        public string $id,
+        public string $albumId,
+        public string $title,
+        public ?string $audio = null,
+        public ?string $video = null,
+        public ?Document $lyrics = null
+    ) {}
 
-    public static function fromArray(array $data): self
+    public static function fromArray(array $data): static
     {
         $lyrics = $data['lyrics'] ?? null;
 
         if ($lyrics) {
-            $lyrics = Factory::create($lyrics['content'], new Format($lyrics['format']));
+            $lyrics = Factory::create($lyrics['content'], Format::from($lyrics['format']));
         }
 
-        return new self(
+        return new static(
             $data['id'],
             $data['albumId'],
             $data['title'],
@@ -51,9 +37,9 @@ class TrackSnapshot implements Snapshot
         );
     }
 
-    public static function fromRevision(Revision $revision): self
+    public static function fromRevision(Revision $revision): static
     {
-        return self::fromArray($revision->new_values);
+        return static::fromArray($revision->new_values);
     }
 
     public function toArray(): array
@@ -70,7 +56,7 @@ class TrackSnapshot implements Snapshot
 
     public function getType(): EntityType
     {
-        return EntityType::TRACK();
+        return EntityType::Track;
     }
 
     public function getId(): string

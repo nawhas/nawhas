@@ -8,36 +8,40 @@ use App\Modules\Lyrics\Documents\Document;
 use App\Modules\Lyrics\Documents\Factory;
 use App\Modules\Lyrics\Documents\Format;
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
+use Illuminate\Database\Eloquent\Model;
 use InvalidArgumentException;
 
+/**
+ * @implements CastsAttributes<Document,string|Document>
+ */
 class Lyrics implements CastsAttributes
 {
     /**
-     * @param \Illuminate\Database\Eloquent\Model $model
+     * @param Model $model
      * @param string $key
      * @param mixed $value
      * @param array $attributes
-     * @return \App\Modules\Lyrics\Documents\Document|null
+     * @return Document|null
      * @throws \JsonException
      */
-    public function get($model, string $key, $value, array $attributes)
+    public function get(Model $model, string $key, mixed $value, array $attributes): ?Document
     {
         if ($value === null) {
             return null;
         }
 
         $data = json_decode($value, true);
-        return Factory::create($data['content'], new Format($data['format']));
+        return Factory::create($data['content'], Format::from($data['format']));
     }
 
     /**
-     * @param \Illuminate\Database\Eloquent\Model $model
+     * @param Model $model
      * @param string $key
      * @param mixed $value
      * @param array $attributes
-     * @return array|false|string
+     * @return mixed
      */
-    public function set($model, string $key, $value, array $attributes)
+    public function set(Model $model, string $key, mixed $value, array $attributes): mixed
     {
         if ($value === null) {
             return null;

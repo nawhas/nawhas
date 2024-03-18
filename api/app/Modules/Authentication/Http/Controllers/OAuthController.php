@@ -10,7 +10,9 @@ use App\Modules\Authentication\Models\SocialAccount;
 use App\Modules\Authentication\Models\User;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Contracts\Auth\Factory as AuthFactory;
+use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Contracts\Auth\StatefulGuard;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\RedirectResponse;
 use Laravel\Socialite\Contracts\Factory as Socialite;
 use Laravel\Socialite\Contracts\User as SocialiteUser;
@@ -19,7 +21,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse as SymfonyRedirectResponse
 
 class OAuthController extends Controller
 {
-    private StatefulGuard $guard;
+    private Guard|StatefulGuard $guard;
     private Socialite $socialite;
 
     public function __construct(AuthFactory $auth, Socialite $socialite)
@@ -51,11 +53,10 @@ class OAuthController extends Controller
         $socialiteUser = $this->socialite->driver($provider)->user();
 
         // Need to change this to the new Repo
-        $socialAccount = SocialAccount::findByProviderId($provider, $socialiteUser->getId());
-
-        if ($socialAccount !== null) {
+        try {
+            $socialAccount = SocialAccount::findByProviderId($provider, $socialiteUser->getId());
             $user = $socialAccount->user;
-        } else {
+        } catch (ModelNotFoundException $e) {
             $user = $this->persistUser($provider, $socialiteUser);
         }
 
@@ -66,9 +67,9 @@ class OAuthController extends Controller
 
     private function persistUser(string $provider, SocialiteUser $socialiteUser): User
     {
-        $user = User::findByEmail($socialiteUser->getEmail());
+        $exists = User::query()->where('email', $socialiteUser->getEmail())->exists();
 
-        if ($user !== null) {
+        if ($exists === true) {
             // If the user email already exists
             // then we need to redirect to a "connect account" screen.
             // For now, we'll just throw an exception.
@@ -77,7 +78,7 @@ class OAuthController extends Controller
         }
 
         $user = User::create(
-            Role::CONTRIBUTOR(),
+            Role::Contributor,
             $socialiteUser->getName(),
             $socialiteUser->getEmail(),
         );

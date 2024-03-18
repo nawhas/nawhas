@@ -99,12 +99,11 @@ class TracksController extends Controller
         return $this->respondWithItem($track);
     }
 
-    private function updateLyrics(Track $track, Request $request)
+    private function updateLyrics(Track $track, Request $request): void
     {
-        $document = DocumentFactory::create(
-            $request->get('lyrics'),
-            new Format($request->get('format', Format::JSON_V1))
-        );
+        $format = $request->has('format') ? Format::from($request->get('format')) : Format::JsonV1;
+
+        $document = DocumentFactory::create($request->get('lyrics'), $format);
 
         if (!$document->isEmpty()) {
             $track->changeLyrics($document);

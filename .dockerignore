@@ -32,3 +32,4 @@ public/storage
 .phpunit.result.cache
 tmp
 k8s
+docker-compose.override.yml

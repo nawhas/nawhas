@@ -28,7 +28,7 @@ class CreateUserCommand extends Command
         // Get variables from input scrypt
         $name = $this->argument('name');
         $email = $this->argument('email');
-        $role = $this->option('moderator') ? Role::MODERATOR() : Role::CONTRIBUTOR();
+        $role = $this->option('moderator') ? Role::Moderator : Role::Contributor;
 
         $password = $this->ask('What is the password? Press [Enter] if you would like to generate a random password');
         if (!$password) {
@@ -39,7 +39,7 @@ class CreateUserCommand extends Command
         $this->info("The following user is being created");
         $this->comment("Name: $name");
         $this->comment("Email: $email");
-        $this->comment("Role: $role");
+        $this->comment("Role: $role->value");
         $this->comment("Password: $password");
 
         $confirmed = $this->confirm('Are the details displayed above correct?');

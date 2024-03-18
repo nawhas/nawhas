@@ -16,7 +16,7 @@ use App\Modules\Authentication\Http\Transformers\UserTransformer;
 use App\Modules\Authentication\Jobs\RequestPasswordReset;
 use App\Modules\Authentication\Models\PasswordResetToken;
 use App\Modules\Authentication\Models\User;
-use Illuminate\Contracts\Auth\{Factory as AuthFactory, StatefulGuard};
+use Illuminate\Contracts\Auth\{Factory as AuthFactory, Guard, StatefulGuard};
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
@@ -26,7 +26,7 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class AuthController extends Controller
 {
-    private StatefulGuard $guard;
+    private Guard|StatefulGuard $guard;
 
     public function __construct(AuthFactory $auth, UserTransformer $transformer)
     {
@@ -47,7 +47,7 @@ class AuthController extends Controller
 
     public function register(RegisterRequest $request): JsonResponse
     {
-        $role = Role::CONTRIBUTOR();
+        $role = Role::Contributor;
         $name = $request->get('name');
         $email = $request->get('email');
         $password = $request->get('password');

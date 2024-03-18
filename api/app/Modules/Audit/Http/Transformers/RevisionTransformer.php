@@ -19,11 +19,15 @@ use App\Modules\Lyrics\Documents\Format;
 use Illuminate\Support\Facades\Storage;
 use App\Modules\Lyrics\Documents\Factory as DocumentFactory;
 use App\Modules\Lyrics\Documents\JsonV1\Document as JsonDocument;
+use JetBrains\PhpStorm\ArrayShape;
+use League\Fractal\Resource\Item;
+use League\Fractal\Resource\NullResource;
+use League\Fractal\Resource\Primitive;
 
 class RevisionTransformer extends Transformer
 {
-    protected $availableIncludes = ['user'];
-    protected $defaultIncludes = ['user'];
+    protected array $availableIncludes = ['user'];
+    protected array $defaultIncludes = ['user'];
 
     public function toArray(Revision $revision): array
     {
@@ -33,17 +37,17 @@ class RevisionTransformer extends Transformer
             'entityType' => $revision->entity_type,
             'entityId' => $revision->entity_id,
             'changeType' => $revision->change_type,
-            'previous' => $this->prepareSnapshot($revision->old_values, new EntityType($revision->entity_type)),
-            'snapshot' => $this->prepareSnapshot($revision->new_values, new EntityType($revision->entity_type)),
+            'previous' => $this->prepareSnapshot($revision->old_values, $revision->getEntityType()),
+            'snapshot' => $this->prepareSnapshot($revision->new_values, $revision->getEntityType()),
             'meta' => $this->getMeta($revision),
             'createdAt' => $this->dateTime($revision->created_at),
         ];
     }
 
-    public function includeUser(Revision $revision)
+    public function includeUser(Revision $revision): Primitive|Item|NullResource
     {
         if ($revision->user_id === null) {
-            return $this->null();
+            return $this->empty();
         }
 
         return $this->item($revision->user, new UserTransformer());
@@ -55,19 +59,19 @@ class RevisionTransformer extends Transformer
             return null;
         }
 
-        if ($type->equals(EntityType::RECITER())) {
+        if ($type === EntityType::Reciter) {
             if (isset($data['avatar'])) {
                 $data['avatar'] = $this->qualifyAssetPath($data['avatar']);
             }
         }
 
-        if ($type->equals(EntityType::ALBUM())) {
+        if ($type === EntityType::Album) {
             if (isset($data['artwork'])) {
                 $data['artwork'] = $this->qualifyAssetPath($data['artwork']);
             }
         }
 
-        if ($type->equals(EntityType::TRACK())) {
+        if ($type === EntityType::Track) {
             if (isset($data['audio'])) {
                 $data['audio'] = $this->qualifyAssetPath($data['audio']);
             }
@@ -75,7 +79,7 @@ class RevisionTransformer extends Transformer
             if (isset($data['lyrics'])) {
                 $document = DocumentFactory::create(
                     $data['lyrics']['content'],
-                    new Format($data['lyrics']['format'])
+                    Format::from($data['lyrics']['format'])
                 );
                 $data['lyrics'] = $document->render();
                 $data['timestamps'] = 'No';
@@ -91,42 +95,21 @@ class RevisionTransformer extends Transformer
 
     private function getMeta(Revision $revision): array
     {
-        switch ($revision->entity_type) {
-            case EntityType::RECITER:
-                /** @var Reciter|null $reciter */
-                $reciter = $revision->entity;
-                return [
-                    'link' => optional($reciter)->getUrlPath(),
-                ];
-            case EntityType::ALBUM:
-                /** @var Album|null $album */
-                $album = $revision->entity;
-
-                return [
-                    'reciter' => $this->getReciterSnapshot($revision)->name,
-                    'link' => optional($album)->getUrlPath(),
-                ];
-            case EntityType::TRACK:
-                /** @var Track|null $track */
-                $track = $revision->entity;
-                $album = $this->getAlbumSnapshot($revision);
-
-                return [
-                    'reciter' => $this->getReciterSnapshot($revision)->name,
-                    'album' => $album->title,
-                    'year' => $album->year,
-                    'link' => optional($track)->getUrlPath(),
-                ];
-            case EntityType::TOPIC:
-                /** @var Topic|null $track */
-                $topic = $revision->entity;
-
-                return [
-                    'link' => null,
-                ];
-            default:
-                throw new \InvalidArgumentException('Unknown entity type.');
-        }
+        return match ($revision->getEntityType()) {
+            EntityType::Reciter => [
+                'link' => $revision->entity?->getUrlPath(),
+            ],
+            EntityType::Album => [
+                'reciter' => $this->getReciterSnapshot($revision)->name,
+                'link' => $revision->entity?->getUrlPath(),
+            ],
+            EntityType::Track => [
+                'reciter' => $this->getReciterSnapshot($revision)->name,
+                'album' => $this->getAlbumSnapshot($revision)->title,
+                'year' => $this->getAlbumSnapshot($revision)->year,
+                'link' => $revision->entity?->getUrlPath(),
+            ]
+        };
     }
 
     private function qualifyAssetPath(?string $path): ?string
@@ -136,24 +119,23 @@ class RevisionTransformer extends Transformer
 
     /**
      * Get the last snapshot of the reciter associated with the entity.
-     * @return ReciterSnapshot
      */
     private function getReciterSnapshot(Revision $revision): ReciterSnapshot
     {
-        if ($revision->entity_type === EntityType::RECITER) {
+        if ($revision->getEntityType() === EntityType::Reciter) {
             return ReciterSnapshot::fromRevision($revision);
         }
 
         $id = (function (Revision $revision) {
-            if ($revision->entity_type === EntityType::ALBUM) {
+            if ($revision->getEntityType() === EntityType::Album) {
                 $album = AlbumSnapshot::fromRevision($revision);
                 return $album->reciterId;
             }
 
-            if ($revision->entity_type === EntityType::TRACK) {
+            if ($revision->getEntityType() === EntityType::Track) {
                 $track = TrackSnapshot::fromRevision($revision);
                 $album = AlbumSnapshot::fromRevision(
-                    Revision::getLast(EntityType::ALBUM(), $track->albumId)
+                    Revision::getLast(EntityType::Album, $track->albumId)
                 );
                 return $album->reciterId;
             }
@@ -162,24 +144,20 @@ class RevisionTransformer extends Transformer
         })($revision);
 
         return ReciterSnapshot::fromRevision(
-            Revision::getLast(EntityType::RECITER(), $id)
+            Revision::getLast(EntityType::Reciter, $id)
         );
     }
 
-    /**
-     * @return Album|AlbumSnapshot
-     */
-    private function getAlbumSnapshot(Revision $revision)
+    private function getAlbumSnapshot(Revision $revision): AlbumSnapshot
     {
-        if ($revision->entity_type === EntityType::ALBUM) {
+        if ($revision->getEntityType() === EntityType::Album) {
             return AlbumSnapshot::fromRevision($revision);
         }
 
-        if ($revision->entity_type === EntityType::TRACK) {
+        if ($revision->getEntityType() === EntityType::Track) {
             $track = TrackSnapshot::fromRevision($revision);
-            logger()->debug('Track Snapshot', ['track' => $track->toArray()]);
             return AlbumSnapshot::fromRevision(
-                Revision::getLast(EntityType::ALBUM(), $track->albumId)
+                Revision::getLast(EntityType::Album, $track->albumId)
             );
         }
 

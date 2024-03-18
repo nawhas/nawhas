@@ -11,8 +11,6 @@ use App\Modules\Authentication\Events\{
     UserNicknameChanged,
     UserPasswordChanged,
     UserRegistered,
-    UserRememberTokenChanged,
-    UserRoleChanged
 };
 use App\Modules\Authentication\Models\User;
 use Spatie\EventSourcing\EventHandlers\Projectors\Projector;
@@ -53,24 +51,10 @@ class UsersProjector extends Projector
         $user->saveOrFail();
     }
 
-    public function onUserRoleChanged(UserRoleChanged $event): void
-    {
-        $user = User::retrieve($event->id);
-        $user->role = $event->role;
-        $user->saveOrFail();
-    }
-
     public function onUserNicknameChanged(UserNicknameChanged $event): void
     {
         $user = User::retrieve($event->id);
         $user->nickname = $event->nickname;
-        $user->saveOrFail();
-    }
-
-    public function onUserRememberTokenChanged(UserRememberTokenChanged $event): void
-    {
-        $user = User::retrieve($event->id);
-        $user->remember_token = $event->rememberToken;
         $user->saveOrFail();
     }
 

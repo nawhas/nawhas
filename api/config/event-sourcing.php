@@ -106,16 +106,13 @@ return [
         // User Events
         'user.registered' => Authentication\UserRegistered::class,
         'user.changed.name' => Authentication\UserNameChanged::class,
+        'user.changed.email' => Authentication\UserEmailChanged::class,
         'user.changed.nickname' => Authentication\UserNicknameChanged::class,
         'user.changed.password' => Authentication\UserPasswordChanged::class,
-        'user.changed.remember.token' => Authentication\UserRememberTokenChanged::class,
-        'user.changed.role' => Authentication\UserRoleChanged::class,
         // Auth Events
         'auth.login' => Authentication\UserLoggedIn::class,
         'auth.logout' => Authentication\UserLoggedOut::class,
         'auth.password.reset.requested' => Authentication\PasswordResetRequested::class,
-        // Social Accounts Events
-        'user.social.registered' => Authentication\SocialAccountRegistered::class,
         // Account Events
         'accounts.saves.track.added' => Accounts\Saves\TrackSaved::class,
         'accounts.saves.track.removed' => Accounts\Saves\SavedTrackRemoved::class,
@@ -127,6 +124,15 @@ return [
      * should implement Spatie\EventSourcing\EventSerializers\EventSerializer.
      */
     'event_serializer' => App\Modules\Core\Events\EventSerializer::class,
+
+    'event_normalizers' => [
+        Spatie\EventSourcing\Support\CarbonNormalizer::class,
+        Spatie\EventSourcing\Support\ModelIdentifierNormalizer::class,
+        Symfony\Component\Serializer\Normalizer\DateTimeNormalizer::class,
+        Symfony\Component\Serializer\Normalizer\ArrayDenormalizer::class,
+        Symfony\Component\Serializer\Normalizer\BackedEnumNormalizer::class,
+        Spatie\EventSourcing\Support\ObjectNormalizer::class,
+    ],
 
     /*
      * When replaying events, potentially a lot of events will have to be retrieved.

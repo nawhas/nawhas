@@ -13,10 +13,10 @@ use Spatie\EventSourcing\StoredEvents\StoredEvent;
 
 class PasswordResetsProjector extends Projector
 {
-    public function onPasswordResetRequested(PasswordResetRequested $event, StoredEvent $storedEvent): void
+    public function onPasswordResetRequested(PasswordResetRequested $event): void
     {
         $this->deleteExistingTokens($event->userId);
-        $this->writeToken($event->userId, $event->token, Carbon::make($storedEvent->created_at));
+        $this->writeToken($event->userId, $event->token, $event->createdAt());
     }
 
     private function writeToken(string $id, string $token, DateTimeInterface $createdAt): void

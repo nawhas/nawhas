@@ -12,14 +12,11 @@ use Illuminate\Validation\Validator;
 
 class JsonV1Validator
 {
-    private ValidationFactory $validation;
     // private MessageBag $errors;
 
-    public function __construct(ValidationFactory $validation)
-    {
-        // $this->errors = new MessageBag();
-        $this->validation = $validation;
-    }
+    public function __construct(
+        private ValidationFactory $validation
+    ) {}
 
 
     /**

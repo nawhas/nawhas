@@ -1,4 +1,4 @@
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: nawhas-ingress
@@ -16,12 +16,20 @@ spec:
     - host: api.nawhas.com
       http:
         paths:
-          - backend:
-              serviceName: api-nginx
-              servicePort: 80
+          - pathType: Prefix
+            path: "/"
+            backend:
+              service:
+                name: api-nginx
+                port:
+                  number: 80
     - host: nawhas.com
       http:
         paths:
-          - backend:
-              serviceName: web
-              servicePort: 3000
+          - pathType: Prefix
+            path: "/"
+            backend:
+              service:
+                name: web
+                port:
+                  number: 3000

@@ -11,11 +11,11 @@ export interface PaginationLinks {
 export interface PaginationMetadata {
   total: number;
   count: number;
-  // eslint-disable-next-line camelcase
+
   per_page: number;
-  // eslint-disable-next-line camelcase
+
   current_page: number;
-  // eslint-disable-next-line camelcase
+
   total_pages: number;
   links: PaginationLinks;
 }

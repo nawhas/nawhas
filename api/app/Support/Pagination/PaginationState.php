@@ -10,29 +10,25 @@ class PaginationState
 {
     public const DEFAULT_LIMIT = 10;
 
-    private int $page;
-    private ?int $limit;
+    protected function __construct(
+        private int $page,
+        private ?int $limit,
+    ) {}
 
-    protected function __construct(int $page, ?int $limit)
+    public static function make(int $page = 1, ?int $limit = null): static
     {
-        $this->page = $page;
-        $this->limit = $limit;
+        return new static($page, $limit);
     }
 
-    public static function make(int $page = 1, ?int $limit = null): self
-    {
-        return new self($page, $limit);
-    }
-
-    public static function fromRequest(Request $request): self
+    public static function fromRequest(Request $request): static
     {
         $perPage = $request->get('per_page') ? (int)$request->get('per_page') : null;
-        return new self((int)$request->get('page', 1), $perPage);
+        return new static((int)$request->get('page', 1), $perPage);
     }
 
     public function getLimit(int $default = self::DEFAULT_LIMIT): int
     {
-        return $this->limit ?? self::DEFAULT_LIMIT;
+        return $this->limit ?? $default;
     }
 
     public function getPage(): int

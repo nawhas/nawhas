@@ -6,11 +6,8 @@ namespace App\Modules\Library\Events\Albums;
 
 class AlbumArtworkChanged extends AlbumEvent
 {
-    public ?string $artwork;
-
-    public function __construct(string $id, ?string $artwork)
-    {
-        $this->id = $id;
-        $this->artwork = $artwork;
-    }
+    public function __construct(
+        public string $id,
+        public ?string $artwork
+    ) {}
 }

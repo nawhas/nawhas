@@ -24,6 +24,7 @@
 import { Component, Vue } from 'nuxt-property-decorator';
 import { EventBus } from '@/events';
 import { SHOW_FEEDBACK } from '@/events/dialogs';
+
 const FooterIcon = require('@/assets/svg/footer-icon.svg?inline');
 
 @Component({
