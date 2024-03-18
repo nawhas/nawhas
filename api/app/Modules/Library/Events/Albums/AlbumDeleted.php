@@ -6,8 +6,7 @@ namespace App\Modules\Library\Events\Albums;
 
 class AlbumDeleted extends AlbumEvent
 {
-    public function __construct(string $id)
-    {
-        $this->id = $id;
-    }
+    public function __construct(
+        public string $id
+    ) {}
 }

@@ -7,7 +7,7 @@
     hide-overlay
     transition="dialog-bottom-transition"
   >
-    <template v-slot:activator="{ on }">
+    <template #activator="{ on }">
       <v-btn
         v-if="track"
         dark
@@ -80,7 +80,7 @@
             accept="audio/*"
             :show-size="1000"
           >
-            <template v-slot:selection="{ text }">
+            <template #selection="{ text }">
               <v-chip
                 color="deep-orange accent-4"
                 dark
@@ -191,7 +191,6 @@ export default class EditTrackDialog extends Vue {
   addFile(e) {
     const file = e.dataTransfer.files[0];
     if (file.type.match(/audio.*/)) {
-      // eslint-disable-next-line prefer-destructuring
       this.form.audio = file;
     }
   }
@@ -293,7 +292,6 @@ export default class EditTrackDialog extends Vue {
   }
 
   async confirmDelete() {
-    // eslint-disable-next-line no-alert
     if (window.confirm(`Are you sure you want to delete '${this.track.title}'?`)) {
       const { id, reciterId, albumId } = this.track;
       await this.$api.tracks.delete(reciterId, albumId, id);

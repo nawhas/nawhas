@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Modules\Library\Models;
 
 use App\Modules\Audit\Models\HasRevisions;
+use App\Modules\Audit\Revisionable\Revisionable;
 use App\Modules\Core\Contracts\TimestampedEntity;
 use App\Modules\Core\Models\HasTimestamps;
 use App\Modules\Core\Models\HasUuid;
@@ -38,8 +39,8 @@ use Spatie\Sluggable\SlugOptions;
  * @property string $slug
  * @property string|null $audio
  * @property \App\Modules\Lyrics\Documents\Document|null|null $lyrics
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property \Carbon\Carbon|null $created_at
+ * @property \Carbon\Carbon|null $updated_at
  * @property string|null $video
  * @property-read \App\Modules\Library\Models\Album $album
  * @property-read \Illuminate\Database\Eloquent\Collection|TrackAlias[] $aliases
@@ -59,9 +60,10 @@ use Spatie\Sluggable\SlugOptions;
  * @method static \Illuminate\Database\Eloquent\Builder|Track popularWeek()
  * @method static \Illuminate\Database\Eloquent\Builder|Track popularYear()
  * @method static \Illuminate\Database\Eloquent\Builder|Track query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Track withTrashed()
  * @mixin \Eloquent
  */
-class Track extends Model implements TimestampedEntity
+class Track extends Model implements TimestampedEntity, Revisionable
 {
     use HasSlug;
     use HasTimestamps;
@@ -122,7 +124,6 @@ class Track extends Model implements TimestampedEntity
         }
     }
 
-
     public function changeVideo(?string $url): void
     {
         if ($url !== $this->video) {
@@ -175,16 +176,11 @@ class Track extends Model implements TimestampedEntity
             $key ??= '0';
         }
 
-        $query = static::where($this->slugOptions->slugField, $slug)
+        return static::where($this->slugOptions->slugField, $slug)
             ->where($this->getKeyName(), '!=', $key)
             ->where('album_id', $this->album_id)
-            ->withoutGlobalScopes();
-
-        if ($this->usesSoftDeletes()) {
-            $query->withTrashed();
-        }
-
-        return $query->exists();
+            ->withoutGlobalScopes()
+            ->exists();
     }
 
     public function resolveRouteBinding($value, $field = null)
@@ -196,7 +192,7 @@ class Track extends Model implements TimestampedEntity
         return $this->where($field ?? 'slug', $value)->firstOrFail();
     }
 
-    public function toSearchableArray()
+    public function toSearchableArray(): array
     {
         return [
             'id' => $this->id,

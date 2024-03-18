@@ -19,10 +19,6 @@
         </h6>
       </div>
 
-      <div class="album__edit">
-        <edit-album-dialog v-if="album && isModerator" :album="album" />
-      </div>
-
       <div class="album__actions">
         <v-speed-dial
           v-if="showSpeedPlay"
@@ -34,7 +30,7 @@
           bottom
           direction="left"
         >
-          <template v-slot:activator>
+          <template #activator>
             <v-btn v-model="fab" :small="$vuetify.breakpoint.smAndDown" fab :color="fabColor">
               <v-icon v-if="fab" color="black">
                 close
@@ -45,7 +41,7 @@
             </v-btn>
           </template>
           <v-tooltip top>
-            <template v-slot:activator="{ on }">
+            <template #activator="{ on }">
               <v-btn fab small @click="playAlbum" v-on="on">
                 <v-icon>play_arrow</v-icon>
               </v-btn>
@@ -53,7 +49,7 @@
             <span>Play Album</span>
           </v-tooltip>
           <v-tooltip top>
-            <template v-slot:activator="{ on }">
+            <template #activator="{ on }">
               <v-btn fab small @click="addAlbumToQueue" v-on="on">
                 <v-icon>playlist_add</v-icon>
               </v-btn>
@@ -63,59 +59,9 @@
         </v-speed-dial>
       </div>
     </div>
-    <v-data-table
-      :headers="headers"
-      :items="tracks"
-      :disable-sort="true"
-      :hide-default-header="true"
-      :disable-pagination="true"
-      :hide-default-footer="true"
-      :class="{'album__tracks': true, 'album__tracks--dark': isDark}"
-    >
-      <template v-slot:item="props">
-        <tr class="album__track" @click="goToTrack(props.item)">
-          <td>
-            <nuxt-link class="track__link" :to="getTrackLink(props.item)">
-              {{ props.item.title }}
-            </nuxt-link>
-          </td>
-          <td class="track__features" align="right">
-            <v-icon
-              :class="{
-                'material-icons-outlined': true,
-                track__feature: true,
-                'track__feature--disabled': !hasLyrics(props.item) && !isDark,
-                'track__feature--disabled--dark': !hasLyrics(props.item) && isDark
-              }"
-            >
-              <template v-if="hasLyrics(props.item)">
-                speaker_notes
-              </template>
-              <template v-else>
-                speaker_notes_off
-              </template>
-            </v-icon>
-            <v-icon
-              :class="{
-                'material-icons-outlined': true,
-                track__feature: true,
-                'track__feature--disabled': !hasAudioFile(props.item) && !isDark,
-                'track__feature--disabled--dark': !hasAudioFile(props.item) && isDark
-              }"
-            >
-              <template v-if="hasAudioFile(props.item)">
-                volume_up
-              </template>
-              <template v-else>
-                volume_off
-              </template>
-            </v-icon>
-            <favorite-track-button :track="props.item.id" />
-          </td>
-        </tr>
-      </template>
-    </v-data-table>
+    <track-list :tracks="tracks" numbered />
     <v-card-actions v-if="album && isModerator" class="d-flex justify-end album__actions">
+      <edit-album-dialog v-if="album && isModerator" :album="album" />
       <edit-track-dialog :album="album" />
     </v-card-actions>
   </v-card>
@@ -124,13 +70,14 @@
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import Vibrant from 'node-vibrant';
+import { RawLocation } from 'vue-router';
+import { DataTableHeader } from 'vuetify';
 import { Album, getAlbumArtwork, getAlbumUri } from '@/entities/album';
 import { Reciter } from '@/entities/reciter';
 import { Track } from '@/entities/track';
-import { RawLocation } from 'vue-router';
-import { DataTableHeader } from 'vuetify';
 import EditTrackDialog from '@/components/edit/EditTrackDialog.vue';
 import EditAlbumDialog from '@/components/edit/EditAlbumDialog.vue';
+import TrackList from '@/components/tracks/TrackList.vue';
 import LazyImage from '@/components/utils/LazyImage.vue';
 import FavoriteTrackButton from '@/components/tracks/FavoriteTrackButton.vue';
 
@@ -140,6 +87,7 @@ import FavoriteTrackButton from '@/components/tracks/FavoriteTrackButton.vue';
     LazyImage,
     EditAlbumDialog,
     EditTrackDialog,
+    TrackList,
   },
 })
 export default class AlbumComponent extends Vue {
@@ -400,21 +348,22 @@ export default class AlbumComponent extends Vue {
   .album__header {
     display: flex;
     align-items: center;
-    flex-direction: row;
+    flex-direction: row-reverse;
   }
   .album__details {
     margin: 0;
     padding: 16px;
   }
   .album__artwork {
-    float: none;
-    margin: 16px 0 16px 16px;
+    margin: 16px;
     border: 2px solid white;
     @include elevation(0);
   }
   .album__title {
-    font-size: 1.15rem;
     margin: 0;
+    h5 {
+      font-size: 1.15rem;
+    }
   }
   .album__release-date {
     font-size: 0.95rem;

@@ -64,7 +64,7 @@ function createForm(): PasswordResetEmailPayload {
 })
 export default class RequestPasswordResetForm extends Vue {
   private form: PasswordResetEmailPayload = createForm();
-  private success: boolean = false;
+  private success = false;
   private error: string|null = null;
   private invalid: any = {};
   private loading = false;

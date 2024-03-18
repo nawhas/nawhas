@@ -17,8 +17,10 @@ trait HasUserContext
         return auth()->id();
     }
 
-    public function setUserId(?string $userId): void
+    public function setUserId(?string $id): static
     {
-        $this->userId = $userId;
+        $this->userId = $id;
+
+        return $this;
     }
 }

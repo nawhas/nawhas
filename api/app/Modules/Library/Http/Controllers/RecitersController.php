@@ -23,6 +23,8 @@ class RecitersController extends Controller
 
     public function store(CreateReciterRequest $request): JsonResponse
     {
+        $this->authorize('create', Reciter::class);
+
         $reciter = Reciter::create(
             $request->name(),
             $request->description(),
@@ -48,6 +50,8 @@ class RecitersController extends Controller
 
     public function update(Reciter $reciter, UpdateReciterRequest $request): JsonResponse
     {
+        $this->authorize('update', $reciter);
+
         if ($request->has('name')) {
             $reciter->changeName($request->name());
         }
@@ -61,6 +65,8 @@ class RecitersController extends Controller
 
     public function uploadAvatar(Reciter $reciter, Request $request): JsonResponse
     {
+        $this->authorize('update', $reciter);
+
         if (!$request->file('avatar')) {
             throw ValidationException::withMessages(['avatar' => 'An avatar file is required.']);
         }
@@ -74,6 +80,8 @@ class RecitersController extends Controller
 
     public function delete(Reciter $reciter): Response
     {
+        $this->authorize('delete', $reciter);
+
         event(new ReciterDeleted($reciter->id));
 
         return response()->noContent();

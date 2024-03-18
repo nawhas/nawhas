@@ -10,6 +10,7 @@ trait HasReciterRouteParameter
 {
     public function reciter(): Reciter
     {
-        return $this->route()->parameter('reciter');
+        /** @var Reciter */
+        return $this->route('reciter');
     }
 }

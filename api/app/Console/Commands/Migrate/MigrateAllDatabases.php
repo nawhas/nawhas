@@ -11,7 +11,7 @@ class MigrateAllDatabases extends Command
      *
      * @var string
      */
-    protected $signature = 'migrate:all';
+    protected $signature = 'migrate:all {--fresh}';
 
     /**
      * The console command description.
@@ -28,13 +28,28 @@ class MigrateAllDatabases extends Command
     public function handle(): int
     {
         $this->warn('>> Running events migrations...');
-        $this->call('migrate:events');
+        if ($this->option('fresh')) {
+            $this->call('db:wipe', ['--database' => 'events']);
+        }
+        $this->call('migrate', [
+            '--force' => true,
+            '--path' => 'database/migrations/events',
+            '--database' => 'events',
+        ]);
 
         $this->warn('>> Running data migrations...');
-        $this->call('migrate:data');
+        if ($this->option('fresh')) {
+            $this->call('db:wipe', ['--database' => 'data']);
+        }
+        $this->call('migrate', [
+            '--force' => true,
+            '--path' => 'database/migrations/data'
+        ]);
 
-        $this->warn('>> Running other migrations...');
-        $this->call('migrate', ['--force' => true]);
+        $this->warn('>> Running package migrations...');
+        $this->call('migrate', [
+            '--force' => true,
+        ]);
 
         return 0;
     }

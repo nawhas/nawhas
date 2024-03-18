@@ -1,5 +1,5 @@
 import { Plugin } from '@nuxt/types';
-import MeiliSearch from 'meilisearch';
+import { MeiliSearch } from 'meilisearch';
 
 interface KeyResponse {
   data: string;

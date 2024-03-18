@@ -6,13 +6,9 @@ namespace App\Modules\Library\Events\Albums;
 
 class AlbumCreated extends AlbumEvent
 {
-    public string $reciterId;
-    public array $attributes = [];
-
-    public function __construct(string $id, string $reciterId, array $attributes)
-    {
-        $this->id = $id;
-        $this->reciterId = $reciterId;
-        $this->attributes = $attributes;
-    }
+    public function __construct(
+        public string $id,
+        public string $reciterId,
+        public array $attributes = []
+    ) {}
 }

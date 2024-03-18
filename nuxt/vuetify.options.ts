@@ -29,4 +29,4 @@ export default function options({ req }: Context): Partial<UserVuetifyPreset> {
       },
     },
   };
-};
+}

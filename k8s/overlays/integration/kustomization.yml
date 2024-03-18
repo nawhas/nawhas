@@ -13,12 +13,14 @@ commonLabels:
   env: integration
 namespace: intg-
 secretGenerator:
-  - name: api.integration.env
+  - name: api.env
     envs:
-      - secrets/api.integration.env
-  - name: web.integration.env
+      - env/api.env
+      - env/api.secret.env
+  - name: web.env
     envs:
-      - secrets/web.integration.env
-  - name: search.integration.env
+      - env/web.env
+      - env/web.secret.env
+  - name: search.env
     envs:
-      - secrets/search.integration.env
+      - env/search.secret.env

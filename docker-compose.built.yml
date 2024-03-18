@@ -1,0 +1,31 @@
+version: '3.9'
+
+services:
+  api:
+    image: nawhas/api:local
+    build:
+      context: api
+      dockerfile: Dockerfile
+  queue:
+    image: nawhas/api:local
+    build:
+      context: api
+      dockerfile: Dockerfile
+    env_file:
+      - api/.env.production
+  test:
+    image: nawhas/api:local-test
+    build:
+      context: api
+      dockerfile: Dockerfile
+      target: test
+  web:
+    image: nawhas/web:local
+    build:
+      context: nuxt
+      dockerfile: Dockerfile
+      args:
+        APP_ENV: development
+        APP_VERSION: local-0.0.1
+
+

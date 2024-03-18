@@ -11,7 +11,7 @@ class MigrateDataDatabase extends Command
      *
      * @var string
      */
-    protected $signature = 'migrate:data';
+    protected $signature = 'migrate:data {--fresh}';
 
     /**
      * The console command description.
@@ -27,10 +27,16 @@ class MigrateDataDatabase extends Command
      */
     public function handle(): int
     {
-        return $this->call('migrate', [
+        $args = [
             '--database' => 'data',
             '--path' => 'database/migrations/data',
             '--force' => true,
-        ]);
+        ];
+
+        if ($this->option('fresh')) {
+            $this->call('migrate:reset', $args);
+        }
+
+        return $this->call('migrate', $args);
     }
 }

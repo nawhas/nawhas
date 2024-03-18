@@ -8,12 +8,8 @@ use Spatie\EventSourcing\StoredEvents\ShouldBeStored;
 
 class UserRegistered extends ShouldBeStored
 {
-    public string $id;
-    public array $attributes = [];
-
-    public function __construct(string $id, array $attributes)
-    {
-        $this->id = $id;
-        $this->attributes = $attributes;
-    }
+    public function __construct(
+        public string $id,
+        public array $attributes = []
+    ) {}
 }

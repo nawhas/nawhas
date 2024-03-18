@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Modules\Library\Models;
 
 use App\Modules\Audit\Models\HasRevisions;
+use App\Modules\Audit\Revisionable\Revisionable;
 use App\Modules\Core\Contracts\TimestampedEntity;
 use App\Modules\Core\Models\HasTimestamps;
 use App\Modules\Core\Models\HasUuid;
@@ -31,8 +32,8 @@ use Spatie\Sluggable\{HasSlug, SlugOptions};
  * @property string $slug
  * @property string|null $description
  * @property string|null $avatar
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property \Carbon\Carbon|null $created_at
+ * @property \Carbon\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Modules\Library\Models\Album[] $albums
  * @property-read int|null $albums_count
  * @property-read \Illuminate\Database\Eloquent\Collection|ReciterAlias[] $aliases
@@ -52,7 +53,7 @@ use Spatie\Sluggable\{HasSlug, SlugOptions};
  * @method static \Illuminate\Database\Eloquent\Builder|Reciter query()
  * @mixin \Eloquent
  */
-class Reciter extends Model implements TimestampedEntity
+class Reciter extends Model implements TimestampedEntity, Revisionable
 {
     use HasSlug;
     use HasTimestamps;
@@ -164,7 +165,7 @@ class Reciter extends Model implements TimestampedEntity
         return parent::resolveChildRouteBinding($childType, $value, $field);
     }
 
-    public function toSearchableArray()
+    public function toSearchableArray(): array
     {
         return [
             'id' => $this->id,
@@ -177,7 +178,7 @@ class Reciter extends Model implements TimestampedEntity
         ];
     }
 
-    public function deleteReciter()
+    public function deleteReciter(): void
     {
         $this->albums->each(fn (Album $album) => $album->deleteAlbum());
         $this->delete();

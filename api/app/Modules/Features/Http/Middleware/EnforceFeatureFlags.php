@@ -14,12 +14,9 @@ class EnforceFeatureFlags
 {
     use HasParameters;
 
-    private FeatureManager $features;
-
-    public function __construct(FeatureManager $features)
-    {
-        $this->features = $features;
-    }
+    public function __construct(
+        private FeatureManager $features
+    ) {}
 
     /**
      * @param Request $request

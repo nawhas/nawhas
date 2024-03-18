@@ -141,28 +141,6 @@ export default Vue.extend({
     EditAlbumDialog,
   },
 
-  async fetch() {
-    if (!this.reciter) {
-      return;
-    }
-
-    const [tracks, albums] = await Promise.all([
-      this.$api.tracks.popular({
-        reciterId: this.reciter.id,
-        pagination: { limit: 6 },
-        include: [TrackIncludes.Album, TrackIncludes.Reciter],
-      }),
-      this.$api.albums.index(this.reciter.id, {
-        pagination: { page: getPage(this.$route) },
-        include: ['tracks.media', 'tracks.reciter', 'tracks.album', 'tracks.related'],
-      }),
-    ]);
-
-    this.popularTracks = tracks.data;
-    this.albums = albums.data;
-    this.length = albums.meta.pagination.total_pages;
-  },
-
   async asyncData({ route, $api, $errors }) {
     const { reciter: reciterId } = route.params;
     try {
@@ -186,6 +164,28 @@ export default Vue.extend({
       albums: null,
       popularTracks: null,
     };
+  },
+
+  async fetch() {
+    if (!this.reciter) {
+      return;
+    }
+
+    const [tracks, albums] = await Promise.all([
+      this.$api.tracks.popular({
+        reciterId: this.reciter.id,
+        pagination: { limit: 6 },
+        include: [TrackIncludes.Album, TrackIncludes.Reciter],
+      }),
+      this.$api.albums.index(this.reciter.id, {
+        pagination: { page: getPage(this.$route) },
+        include: ['tracks.media', 'tracks.reciter', 'tracks.album', 'tracks.related'],
+      }),
+    ]);
+
+    this.popularTracks = tracks.data;
+    this.albums = albums.data;
+    this.length = albums.meta.pagination.total_pages;
   },
 
   computed: {

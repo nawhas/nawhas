@@ -11,12 +11,9 @@ use Illuminate\Support\Str;
 
 class RequestPasswordReset extends Job
 {
-    protected string $email;
-
-    public function __construct(string $email)
-    {
-        $this->email = $email;
-    }
+    public function __construct(
+        protected string $email
+    ) {}
 
     public function handle(): void
     {

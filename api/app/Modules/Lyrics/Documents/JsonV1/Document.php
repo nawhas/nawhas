@@ -10,27 +10,26 @@ use Illuminate\Contracts\Support\Jsonable;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Stringable;
 
+/**
+ * @implements DocumentContract<string,string|int>
+ */
 class Document implements DocumentContract, Jsonable
 {
-    private Metadata $meta;
-    private Lyrics $data;
+    public function __construct(
+        private Metadata $meta,
+        private Lyrics $data
+    ) {}
 
-    public function __construct(Metadata $meta, Lyrics $data)
+    public static function make(Metadata $meta = null, Lyrics $data = null): static
     {
-        $this->meta = $meta;
-        $this->data = $data;
+        return new static($meta ?? new Metadata(), $data ?? new Lyrics());
     }
 
-    public static function make(Metadata $meta = null, Lyrics $data = null): self
-    {
-        return new self($meta ?? new Metadata(), $data ?? new Lyrics());
-    }
-
-    public static function fromJson(string $content): self
+    public static function fromJson(string $content): static
     {
         $source = json_decode($content, true, 512, JSON_THROW_ON_ERROR);
 
-        $document = self::make(new Metadata(Arr::get($source, 'meta.timestamps', true)));
+        $document = static::make(new Metadata(Arr::get($source, 'meta.timestamps', true)));
 
         foreach (Arr::get($source, 'data', []) as $data) {
             $group = new Group(
@@ -71,14 +70,14 @@ class Document implements DocumentContract, Jsonable
 
     public function getFormat(): Format
     {
-        return Format::JSON_V1();
+        return Format::JsonV1;
     }
 
     public function toArray(): array
     {
         return [
             'content' => $this->getContent(),
-            'format' => $this->getFormat(),
+            'format' => $this->getFormat()->value,
         ];
     }
 
@@ -87,12 +86,12 @@ class Document implements DocumentContract, Jsonable
         return $this->data->render();
     }
 
-    public function toJson($options = 0)
+    public function toJson($options = 0): bool|string
     {
         return json_encode($this->toArray(), $options);
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return $this->render();
     }

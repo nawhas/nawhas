@@ -24,15 +24,11 @@ class BootApplication extends Command
             $this->mergeWhen($app->environment('integration', 'staging', 'production'), [
                 'package:discover',
                 'config:cache',
-                'route:cache',
-                'event-sourcing:cache-event-handlers',
-                'horizon:publish',
-                'telescope:publish',
             ]),
             'wait:database',
             'migrate:all',
-            $this->mergeWhen($app->environment('integration'), [
-                'meilisearch:setup',
+            $this->mergeWhen($app->environment('integration', 'dusk'), [
+                'search:setup',
                 'db:seed',
             ]),
         ];

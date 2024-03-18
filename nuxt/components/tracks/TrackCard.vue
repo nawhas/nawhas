@@ -48,7 +48,7 @@ export default class TrackCard extends Vue {
   @Prop({ type: Boolean, default: false })
   private readonly showReciter!: boolean;
 
-  private vibrantBackgroundColor: string = '#ffffff';
+  private vibrantBackgroundColor = '#ffffff';
   private vibrantTextColor: string|null = null;
 
   mounted() {
