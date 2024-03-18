@@ -39,7 +39,7 @@ class RevisionTransformer extends Transformer
             'previous' => $this->prepareSnapshot($revision->old_values, $revision->getEntityType()),
             'snapshot' => $this->prepareSnapshot($revision->new_values, $revision->getEntityType()),
             'meta' => $this->getMeta($revision),
-            'createdAt' => $this->dateTime($revision->created_at),
+            'createdAt' => $revision->created_at,
         ];
     }
 
