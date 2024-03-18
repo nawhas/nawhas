@@ -17,7 +17,7 @@ class UserTransformer extends Transformer
             'nickname' => $user->nickname,
             'avatar' => $user->getAvatar(128),
             'email' => $user->email,
-            'role' => $user->role,
+            'role' => $user->role->value,
             $this->timestamps($user),
         ];
     }

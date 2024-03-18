@@ -6,22 +6,24 @@ namespace App\Infrastructure\Cache\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Spatie\ResponseCache\ResponseCache;
+use Symfony\Component\HttpFoundation\Response;
 use TiMacDonald\Middleware\HasParameters;
 
 class ClearResponseCache
 {
     use HasParameters;
 
-    protected ResponseCache $manager;
+    public function __construct(
+        protected ResponseCache $manager
+    ) {}
 
-    public function __construct(ResponseCache $responseCache)
+    public static function withTags(string ...$tags): string
     {
-        $this->manager = $responseCache;
+        return self::with(['tags' => $tags]);
     }
 
-    public function handle(Request $request, Closure $next, string ...$tags)
+    public function handle(Request $request, Closure $next, string ...$tags): Response
     {
         /** @var Response $response */
         $response = $next($request);
@@ -31,10 +33,5 @@ class ClearResponseCache
         }
 
         return $response;
-    }
-
-    public static function withTags(string ...$tags): string
-    {
-        return self::with(['tags' => $tags]);
     }
 }

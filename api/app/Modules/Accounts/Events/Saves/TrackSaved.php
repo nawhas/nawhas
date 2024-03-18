@@ -8,10 +8,7 @@ use App\Modules\Core\Events\UserAction;
 
 class TrackSaved extends UserAction
 {
-    public string $trackId;
-
-    public function __construct(string $trackId)
-    {
-        $this->trackId = $trackId;
-    }
+    public function __construct(
+        public string $trackId
+    ) {}
 }

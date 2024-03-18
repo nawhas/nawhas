@@ -2,3 +2,5 @@
 node_modules
 .dev.swp
 .DS_Store
+docker-compose.override.yml
+/.env

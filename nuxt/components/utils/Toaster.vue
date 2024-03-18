@@ -17,7 +17,7 @@
         {{ toast.text }}
       </div>
 
-      <template v-slot:action="{ attrs }">
+      <template #action="{ attrs }">
         <v-btn
           color="accent"
           dark

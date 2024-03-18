@@ -8,7 +8,7 @@
       nudge-left="12"
       nudge-top="12"
     >
-      <template v-slot:activator="{ on }">
+      <template #activator="{ on }">
         <div class="timestamp" v-on="on">
           {{ format(model) }}
         </div>
@@ -36,7 +36,7 @@
 import {
   Component, Model, Watch, Vue,
 } from 'vue-property-decorator';
-import moment from 'moment';
+import * as moment from 'moment';
 
 const rule = /^\d:\d\d$/;
 
@@ -100,7 +100,7 @@ export default class Timestamp extends Vue {
 
     if (!rule.test(value)) {
       // Hack-y way to add validation for now.
-      // eslint-disable-next-line dot-notation
+
       this.menu = true;
       this.invalid = true;
       return;

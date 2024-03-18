@@ -11,14 +11,10 @@ use DateTimeInterface;
 
 abstract class EntityViewed extends UserAction implements SerializableEvent
 {
-    public string $id;
-    public DateTimeInterface $visitedAt;
-
-    public function __construct(string $id, ?DateTimeInterface $visitedAt = null)
-    {
-        $this->id = $id;
-        $this->visitedAt = $visitedAt ?? now();
-    }
+    public function __construct(
+        public string $id,
+        public ?DateTimeInterface $visitedAt = new Carbon()
+    ) {}
 
     public function toPayload(): array
     {
@@ -28,7 +24,7 @@ abstract class EntityViewed extends UserAction implements SerializableEvent
         ];
     }
 
-    public static function fromPayload(array $payload): SerializableEvent
+    public static function fromPayload(array $payload): static
     {
         return new static($payload['id'], Carbon::parse($payload['visited_at']));
     }

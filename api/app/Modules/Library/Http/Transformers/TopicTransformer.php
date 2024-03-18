@@ -12,7 +12,7 @@ use League\Fractal\Resource\Primitive;
 
 class TopicTransformer extends Transformer
 {
-    protected $availableIncludes = ['tracks', 'related'];
+    protected array $availableIncludes = ['tracks', 'related'];
 
     public function toArray(Topic $topic): array
     {

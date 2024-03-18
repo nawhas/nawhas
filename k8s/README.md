@@ -33,7 +33,12 @@ kustomize build . | kubectl apply -f -
 
 # Set up Ingress
 # https://www.digitalocean.com/community/tutorials/how-to-set-up-an-nginx-ingress-with-cert-manager-on-digitalocean-kubernetes
-kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/nginx-0.30.0/deploy/static/mandatory.yaml
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.4.0/deploy/static/provider/cloud/deploy.yaml
+# Verify the status of the deployed Ingress
+kubectl wait --namespace ingress-nginx \
+  --for=condition=ready pod \
+  --selector=app.kubernetes.io/component=controller \
+  --timeout=120s
 
 kubectl apply -f ingress-controller.yml
 
@@ -42,7 +47,7 @@ kubectl apply -f ingress.yml
 ## Set up cert-manager for LetsEncrypt certs
 kubectl create namespace cert-manager
 
-kubectl apply --validate=false -f https://github.com/jetstack/cert-manager/releases/download/v0.13.1/cert-manager.yam
+kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.10.0/cert-manager.yaml
 
 ## Create the staging cert issuer (staging here refers to LetsEncrypt's stating server
 kubectl create -f certs/issuer.stg.yml

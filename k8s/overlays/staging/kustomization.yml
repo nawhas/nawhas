@@ -9,12 +9,14 @@ commonLabels:
   env: staging
 namespace: stg
 secretGenerator:
-  - name: api.staging.env
+  - name: api.env
     envs:
-      - secrets/api.staging.env
-  - name: web.staging.env
+      - env/api.env
+      - env/api.secret.env
+  - name: web.env
     envs:
-      - secrets/web.staging.env
-  - name: search.staging.env
+      - env/web.env
+      - env/web.secret.env
+  - name: search.env
     envs:
-      - secrets/search.staging.env
+      - env/search.secret.env

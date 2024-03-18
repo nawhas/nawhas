@@ -78,8 +78,8 @@
 import {
   Component, Prop, Vue,
 } from 'nuxt-property-decorator';
-import FavoriteTrackButton from '@/components/tracks/FavoriteTrackButton.vue';
 import { PropType } from 'vue';
+import FavoriteTrackButton from '@/components/tracks/FavoriteTrackButton.vue';
 import { hasAudioFile, hasLyrics } from '@/utils/tracks';
 import { Track, getTrackUri } from '@/entities/track';
 import { getAlbumArtwork } from '@/entities/album';

@@ -1,4 +1,4 @@
-import moment from 'moment';
+import * as moment from 'moment';
 
 export function relative(date: moment.MomentInput) {
   return moment.utc(date).fromNow();

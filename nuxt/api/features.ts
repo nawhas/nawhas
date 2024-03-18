@@ -1,4 +1,4 @@
-import { NuxtAxiosInstance } from '@nuxtjs/axios';
+import type { NuxtAxiosInstance } from '@nuxtjs/axios';
 import { FeatureMap } from '@/entities/feature';
 
 export interface FeaturesIndexResponse {

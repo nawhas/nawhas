@@ -38,7 +38,6 @@ class ServiceProvider extends IlluminateServiceProvider
         $this->app->bind(FeatureManager::class, function (): FeatureManager {
             $manager = new FeatureManager(
                 $this->app->make(Guard::class),
-                $this->app->make(Container::class)
             );
 
             $this->registerFeatures($manager);

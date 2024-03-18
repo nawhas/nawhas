@@ -1,0 +1,26 @@
+version: '3.9'
+
+services:
+  api:
+    image: nawhas/api:${API_IMAGE_TAG}
+    environment:
+      - APP_ENV=testing
+      - LOG_FILE=laravel.log
+      - ./api/storage/logs/laravel.log:/var/www/api/storage/logs/laravel.log
+  queue:
+    image: nawhas/api:${API_IMAGE_TAG}
+    environment:
+      - APP_ENV=testing
+      - LOG_FILE=queues.log
+      - ./api/storage/logs/queues.log:/var/www/api/storage/logs/queues.log
+  web:
+    image: nawhas/web:${WEB_IMAGE_TAG}
+  test:
+    image: nawhas/api:${API_TEST_IMAGE_TAG}
+    environment:
+      - APP_ENV=testing
+    volumes:
+      - ./api/tests/Browser/screenshots:/var/www/api/tests/Browser/screenshots
+      - ./api/tests/Browser/console:/var/www/api/tests/Browser/console
+      - ./api/storage/logs/tests.log:/var/www/api/storage/logs/tests.log
+

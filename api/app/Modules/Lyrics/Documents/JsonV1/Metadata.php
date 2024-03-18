@@ -6,19 +6,16 @@ namespace App\Modules\Lyrics\Documents\JsonV1;
 
 class Metadata
 {
-    private bool $timestamps;
-
-    public function __construct(bool $timestamps = true)
-    {
-        $this->timestamps = $timestamps;
-    }
+    public function __construct(
+        private bool $timestamps = true
+    ) {}
 
     public function showTimestamps(): bool
     {
         return $this->timestamps;
     }
 
-    public function timestamps(bool $timestamps): self
+    public function timestamps(bool $timestamps): static
     {
         $this->timestamps = $timestamps;
 

@@ -3,11 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\File;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class VendorAssetsController extends Controller
 {
-    public function show(string $asset)
+    public function show(string $asset): BinaryFileResponse
     {
         $path = public_path('vendor/' . $asset);
 
@@ -20,7 +21,7 @@ class VendorAssetsController extends Controller
         ]);
     }
 
-    private function getContentType(string $path): string
+    private function getContentType(string $path): string|false
     {
        $ext = File::extension($path);
 

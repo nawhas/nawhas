@@ -13,7 +13,6 @@ use Illuminate\Support\ServiceProvider;
 use Laravel\Sanctum\Sanctum;
 use League\Fractal\Manager as Fractal;
 use League\Fractal\Serializer\ArraySerializer;
-use MeiliSearch\Client as Search;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -39,13 +38,10 @@ class AppServiceProvider extends ServiceProvider
             return $fractal;
         });
 
-        $this->app->bind(Search::class, fn () => new Search(config('meilisearch.host'), config('meilisearch.key')));
-
         Relation::morphMap([
-            EntityType::RECITER => Reciter::class,
-            EntityType::ALBUM => Album::class,
-            EntityType::TRACK => Track::class,
-            EntityType::TOPIC => Topic::class,
+            EntityType::Reciter->value => Reciter::class,
+            EntityType::Album->value => Album::class,
+            EntityType::Track->value => Track::class,
         ]);
     }
 

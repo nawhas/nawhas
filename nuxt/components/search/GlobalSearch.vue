@@ -24,6 +24,10 @@
           single-line
           hide-details
           background-color="transparent"
+          autocomplete="off"
+          autocorrect="off"
+          autocapitalize="off"
+          spellcheck="false"
           :prepend-inner-icon="mobile ? undefined : 'search'"
           :dense="false"
           :full-width="mobile"
@@ -108,7 +112,7 @@ export default class GlobalSearch extends Vue {
   private activated = false;
   private focused = false;
   private search = '';
-  @Prop({ type: Boolean, default: false }) private readonly hero!: boolean
+  @Prop({ type: Boolean, default: false }) private readonly hero!: boolean;
   @Ref('search') readonly input!: HTMLElement;
 
   get mobile() {

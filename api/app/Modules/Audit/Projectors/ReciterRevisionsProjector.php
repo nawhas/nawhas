@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Audit\Projectors;
 
+use App\Modules\Core\Events\InteractsWithStoredEvents;
 use App\Modules\Audit\Enum\{ChangeType, EntityType};
 use App\Modules\Audit\Exceptions\RevisionNotFoundException;
 use App\Modules\Audit\Models\Revision;
@@ -21,7 +22,9 @@ use Spatie\EventSourcing\StoredEvents\StoredEvent;
 
 class ReciterRevisionsProjector extends Projector
 {
-    public function onReciterCreated(ReciterCreated $event, StoredEvent $storedEvent): void
+    use InteractsWithStoredEvents;
+
+    public function onReciterCreated(ReciterCreated $event): void
     {
         $data = collect($event->attributes);
         $snapshot = new ReciterSnapshot(
@@ -33,52 +36,52 @@ class ReciterRevisionsProjector extends Projector
 
         $revision = Revision::makeInitial(
             $snapshot,
-            ChangeType::CREATED(),
+            ChangeType::Created,
             $event->getUserId(),
-            $storedEvent,
+            $this->getStoredEvent($event),
         );
 
         $revision->save();
     }
 
-    public function onReciterNameChanged(ReciterNameChanged $event, StoredEvent $storedEvent): void
+    public function onReciterNameChanged(ReciterNameChanged $event): void
     {
         $this->recordModification(
             $event,
-            $storedEvent,
+            $this->getStoredEvent($event),
             fn (ReciterSnapshot $snapshot) => $snapshot->name = $event->name
         );
     }
 
-    public function onReciterDescriptionChanged(ReciterDescriptionChanged $event, StoredEvent $storedEvent): void
+    public function onReciterDescriptionChanged(ReciterDescriptionChanged $event): void
     {
         $this->recordModification(
             $event,
-            $storedEvent,
+            $this->getStoredEvent($event),
             fn (ReciterSnapshot $snapshot) => $snapshot->description = $event->description
         );
     }
 
-    public function onReciterAvatarChanged(ReciterAvatarChanged $event, StoredEvent $storedEvent): void
+    public function onReciterAvatarChanged(ReciterAvatarChanged $event): void
     {
         $this->recordModification(
             $event,
-            $storedEvent,
+            $this->getStoredEvent($event),
             fn (ReciterSnapshot $snapshot) => $snapshot->avatar = $event->avatar
         );
     }
 
-    public function onReciterDeleted(ReciterDeleted $event, StoredEvent $storedEvent): void
+    public function onReciterDeleted(ReciterDeleted $event): void
     {
         $last = $this->getLastRevision($event->id);
 
         $last->reviseForDeletion(
             $event->getUserId(),
-            $storedEvent,
+            $this->getStoredEvent($event),
         )->save();
     }
 
-    public function onAlbumCreated(AlbumCreated $event, StoredEvent $storedEvent): void
+    public function onAlbumCreated(AlbumCreated $event): void
     {
         $last = $this->getLastRevision($event->reciterId);
         $snapshot = ReciterSnapshot::fromRevision($last);
@@ -86,15 +89,15 @@ class ReciterRevisionsProjector extends Projector
 
         $last->revise(
             $snapshot,
-            ChangeType::MODIFIED(),
+            ChangeType::Modified,
             $event->getUserId(),
-            $storedEvent,
+            $this->getStoredEvent($event),
         )->save();
     }
 
-    public function onAlbumDeleted(AlbumDeleted $event, StoredEvent $storedEvent): void
+    public function onAlbumDeleted(AlbumDeleted $event): void
     {
-        $albumRevision = Revision::getLast(EntityType::ALBUM(), $event->id);
+        $albumRevision = Revision::getLast(EntityType::Album, $event->id);
         $albumSnapshot = AlbumSnapshot::fromRevision($albumRevision);
 
         $last = $this->getLastRevision($albumSnapshot->reciterId);
@@ -103,23 +106,23 @@ class ReciterRevisionsProjector extends Projector
 
         $last->revise(
             $snapshot,
-            ChangeType::MODIFIED(),
+            ChangeType::Modified,
             $event->getUserId(),
-            $storedEvent,
+            $this->getStoredEvent($event),
         );
     }
 
     public function resetState(): void
     {
-        Revision::where('entity_type', EntityType::RECITER)->delete();
+        Revision::where('entity_type', EntityType::Reciter->value)->delete();
     }
 
     private function getLastRevision(string $id): Revision
     {
-        $last = Revision::getLast(EntityType::RECITER(), $id);
+        $last = Revision::getLast(EntityType::Reciter, $id);
 
         if ($last === null) {
-            throw RevisionNotFoundException::forEntity(EntityType::RECITER, $id);
+            throw RevisionNotFoundException::forEntity(EntityType::Reciter, $id);
         }
 
         return $last;
@@ -134,7 +137,7 @@ class ReciterRevisionsProjector extends Projector
 
         $last->revise(
             $snapshot,
-            ChangeType::MODIFIED(),
+            ChangeType::Modified,
             $event->getUserId(),
             $storedEvent
         )->save();

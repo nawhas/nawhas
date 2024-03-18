@@ -12,12 +12,12 @@ use Ramsey\Uuid\Uuid;
  */
 trait HasUuid
 {
-    public function getIncrementing()
+    public function getIncrementing(): bool
     {
         return false;
     }
 
-    public function getKeyType()
+    public function getKeyType(): string
     {
         return 'string';
     }
@@ -25,8 +25,8 @@ trait HasUuid
     public static function bootHasUuid(): void
     {
         static::creating(function (Model $model) {
-            if (!isset($model->id)) {
-                $model->id = Uuid::uuid1()->toString();
+            if ($model->getAttribute('id') === null) {
+                $model->setAttribute('id', Uuid::uuid1()->toString());
             }
         });
     }
