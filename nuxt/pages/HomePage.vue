@@ -81,7 +81,7 @@
       <template v-if="popularReciters">
         <v-row :dense="$vuetify.breakpoint.smAndDown">
           <v-col v-for="reciter in popularReciters" :key="reciter.id" md="4" sm="6" cols="12">
-            <reciter-card featured v-bind="reciter" />
+            <reciter-card featured :reciter="reciter" />
           </v-col>
         </v-row>
       </template>
