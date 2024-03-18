@@ -39,6 +39,10 @@ class CreateTrackRequest extends Request
                 'nullable',
                 'url'
             ],
+            'topics' => [
+                'array',
+                'nullable'
+            ]
         ];
     }
 }

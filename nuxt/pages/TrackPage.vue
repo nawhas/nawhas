@@ -105,7 +105,7 @@
               <v-icon>print</v-icon>
             </v-btn>
             <template v-if="track && isModerator">
-              <edit-track-dialog :track="track" />
+              <edit-track-dialog :track="track" :available-topics="availableTopics" />
             </template>
             <v-btn v-if="false" dark icon>
               <v-icon>more_vert</v-icon>
@@ -206,12 +206,14 @@ import { TrackIncludes } from '@/api/tracks';
 import { generateMeta } from '@/utils/meta';
 import LazyImage from '@/components/utils/LazyImage.vue';
 import FavoriteTrackButton from '@/components/tracks/FavoriteTrackButton.vue';
+import { Topic } from '@/entities/topic';
 
 interface Data {
   track: Track | null;
   background: string;
   textColor: string;
   addedToQueueSnackbar: boolean;
+  availableTopics: Array<Topic> | null;
 }
 
 export default Vue.extend({
@@ -241,7 +243,11 @@ export default Vue.extend({
         ],
       });
 
-      return { track };
+      const topicsResponse = await $api.topics.index();
+
+      const availableTopics = topicsResponse.data;
+
+      return { track, availableTopics };
     } catch (e) {
       await $errors.handle404();
     }
@@ -252,6 +258,7 @@ export default Vue.extend({
     background: 'rgb(150, 37, 2)',
     textColor: '#fff',
     addedToQueueSnackbar: false,
+    availableTopics: null,
   }),
 
   computed: {
