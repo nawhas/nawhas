@@ -2,15 +2,15 @@
   <v-card :to="link" :class="classObject" :style="{ 'background-color': background }">
     <div class="reciter-card__avatar">
       <v-avatar size="40" class="avatar">
-        <lazy-image ref="avatarElement" crossorigin :src="image" :alt="name" />
+        <lazy-image ref="avatarElement" crossorigin :src="image" :alt="reciter.name" />
       </v-avatar>
     </div>
     <div class="reciter-card__text" :style="{ 'color': textColor }">
-      <div class="reciter-card__name body-2" :title="name">
-        {{ name }}
+      <div class="reciter-card__name body-2" :title="reciter.name">
+        {{ reciter.name }}
       </div>
-      <div v-if="related" class="reciter-card__name caption">
-        {{ related.albums | pluralize('album', 'albums') }}
+      <div v-if="reciter.related" class="reciter-card__name caption">
+        {{ reciter.related.albums | pluralize('album', 'albums') }}
       </div>
     </div>
   </v-card>
@@ -21,6 +21,8 @@
 import { Component, Vue, Prop } from 'nuxt-property-decorator';
 import Vibrant from 'node-vibrant';
 import LazyImage from '@/components/utils/LazyImage.vue';
+import { Reciter } from '@/entities/reciter';
+import { pluralize } from '@/filters/string';
 
 @Component({
   components: {
@@ -28,24 +30,19 @@ import LazyImage from '@/components/utils/LazyImage.vue';
   },
 })
 export default class ReciterCard extends Vue {
-  @Prop({ type: String }) private id!: any;
-  @Prop({ type: String }) private name!: any;
-  @Prop({ type: String }) private slug!: any;
-  @Prop({ type: String }) private avatar!: any;
-  @Prop({ type: Object }) private related!: any;
-  @Prop({ type: String }) private createdAt!: any;
-  @Prop({ type: String }) private updatedAt!: any;
+  @Prop({ required: true })
+  readonly reciter!: Reciter;
   @Prop() private featured!: any;
 
   private vibrantBackgroundColor: null|string = null;
   private vibrantTextColor: null|string = null;
 
   get image() {
-    return this.avatar || require('@/assets/img/defaults/default-reciter-avatar.png');
+    return this.reciter.avatar || require('@/assets/img/defaults/default-reciter-avatar.png');
   }
 
   get link(): string {
-    return `reciters/${this.slug}`;
+    return `reciters/${this.reciter.slug}`;
   }
 
   get classObject() {

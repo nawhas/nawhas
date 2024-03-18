@@ -12,7 +12,7 @@
       <template v-if="popularReciters">
         <v-row :dense="$vuetify.breakpoint.smAndDown">
           <v-col v-for="reciter in popularReciters" :key="reciter.id" md="4" sm="6" cols="12">
-            <reciter-card v-bind="reciter" :featured="true" />
+            <reciter-card :reciter="reciter" :featured="true" />
           </v-col>
         </v-row>
       </template>
@@ -31,7 +31,7 @@
       <template v-if="reciters">
         <v-row :dense="$vuetify.breakpoint.smAndDown">
           <v-col v-for="reciter in reciters" :key="reciter.id" md="4" sm="6" cols="12">
-            <reciter-card v-bind="reciter" />
+            <reciter-card :reciter="reciter" />
           </v-col>
         </v-row>
       </template>

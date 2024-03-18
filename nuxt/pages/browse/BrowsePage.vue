@@ -64,10 +64,4 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" scoped>
-.view-wrapper {
-  padding-top: 24px;
-}
-.pagination {
-  padding: 24px;
-}
 </style>

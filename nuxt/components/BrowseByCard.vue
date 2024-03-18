@@ -16,17 +16,17 @@
         </div>
       </v-col>
       <v-col class="d-flex justify-center align-center flex-column" md="6">
-        <template v-if="dataItem !== null">
+        <template v-if="popularReciters !== null || topics !== null">
           <template v-if="browseBy === 'reciter'">
             <v-row :dense="$vuetify.breakpoint.smAndDown">
-              <v-col v-for="reciter in dataItem" :key="reciter.id" sm="6" cols="12">
-                <reciter-card featured v-bind="reciter" />
+              <v-col v-for="reciter in popularReciters" :key="reciter.id" sm="6" cols="12">
+                <reciter-card :reciter="reciter" />
               </v-col>
             </v-row>
           </template>
           <template v-else-if="browseBy === 'topic'">
             <v-row :dense="$vuetify.breakpoint.smAndDown">
-              <v-col v-for="topic in dataItem" :key="topic.id" sm="6" cols="12">
+              <v-col v-for="topic in topics" :key="topic.id" sm="6" cols="12">
                 <topic-card :topic="topic" />
               </v-col>
             </v-row>
@@ -53,6 +53,9 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 import ReciterCard from '@/components/ReciterCard.vue';
 import TopicCard from '@/components/topics/TopicCard.vue';
 import SkeletonCardGrid from '@/components/loaders/SkeletonCardGrid.vue';
+import { Reciter } from '@/entities/reciter';
+import { Topic } from '@/entities/topic';
+
 @Component({
   components: {
     ReciterCard,
@@ -65,28 +68,13 @@ export default class BrowseByCard extends Vue {
   readonly browseBy!: 'reciter' | 'topic';
 
   @Prop({ required: false })
-  readonly popularReciters!: Array<any> | null
+  readonly popularReciters!: Array<Reciter> | null
 
   @Prop({ required: false })
-  readonly topics!: Array<any> | null
-
-  get dataItem(): Array<any> | null {
-    if (this.browseBy === 'topic') {
-      if (this.browseBy === 'topic' && this.topics !== null) {
-        return this.topics;
-      }
-    }
-    if (this.browseBy === 'reciter') {
-      if (this.browseBy === 'reciter' && this.popularReciters !== null) {
-        return this.popularReciters;
-      }
-    }
-    return null;
-  }
+  readonly topics!: Array<Topic> | null
 
   goToViewAllPage() {
     if (this.browseBy === 'topic') {
-      this.$router.push({ name: 'topics.index' });
       this.$router.push({ name: 'topics.index' });
     } else if (this.browseBy === 'reciter') {
       this.$router.push({ name: 'reciters.index' });
