@@ -1,0 +1,38 @@
+<?php
+
+namespace Tests\Browser\Pages;
+
+use Laravel\Dusk\Browser;
+use Laravel\Dusk\Page;
+
+class About extends Page
+{
+    /**
+     * Get the URL for the page.
+     */
+    public function url(): string
+    {
+        return '/about';
+    }
+
+    /**
+     * Assert that the browser is on the page.
+     */
+    public function assert(Browser $browser): void
+    {
+        $browser->assertPathIs($this->url());
+        $browser->assertTitle("About | Nawhas.com");
+        $browser->assertSee("The Journey");
+        $browser->assertSee("I desire that you recite for me poetry, for surely, these days are the days of grief and sorrow, which have passed over us, Ahlul Bayt.");
+    }
+
+    /**
+     * Get the element shortcuts for the page.
+     *
+     * @return array<string, string>
+     */
+    public function elements(): array
+    {
+        return [];
+    }
+}

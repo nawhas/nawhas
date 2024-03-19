@@ -29,8 +29,10 @@ class BootApplication extends Command
             'migrate:all',
             $this->mergeWhen($app->environment('integration', 'dusk'), [
                 'search:setup',
-                'db:seed',
             ]),
+            $this->mergeWhen($app->environment('integration'), [
+                'db:seed',
+            ])
         ];
 
         try {

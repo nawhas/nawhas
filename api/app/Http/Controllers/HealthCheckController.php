@@ -12,6 +12,8 @@ class HealthCheckController extends Controller
         return response()->json([
             'status' => 'OK',
             'config' => [
+                'environment' => app()->environment(),
+                'frontend_domain' => env('APP_DOMAIN'),
                 'database' => [
                     'data' => Arr::only(config('database.connections.data'), ['host', 'database']),
                     'events' => Arr::only(config('database.connections.events'), ['host', 'database']),

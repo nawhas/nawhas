@@ -115,6 +115,8 @@ if [ $# -gt 0 ];then
         && start test \
             php artisan dusk:wait \
         && start test \
+            php artisan dusk:chrome-driver \
+        && start test \
             php artisan "$@"
 
     # If "test" is used, run linting, unit, and feature tests
