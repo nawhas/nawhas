@@ -42,10 +42,6 @@ class Revision extends Model
 
     public $timestamps = false;
 
-    protected $dates = [
-        'created_at',
-    ];
-
     protected $casts = [
         'old_values' => 'array',
         'new_values' => 'array',
