@@ -181,7 +181,7 @@ spec:
           ports:
             - containerPort: 7700
           volumeMounts:
-              - mountPath: /home/meili/data.ms
+              - mountPath: /meili_data
                 name: search-data
       volumes:
         - name: search-data
