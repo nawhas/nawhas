@@ -42,6 +42,12 @@ export default {
     axios: {
       browserBaseURL: process.env.API_BASE_URL,
     },
+
+    sentry: {
+      config: {
+        dsn: process.env.SENTRY_DSN,
+      },
+    },
   },
 
   privateRuntimeConfig: {
