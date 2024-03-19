@@ -22,7 +22,9 @@ class Visit extends Model
 {
     protected $fillable = ['visited_at', 'visitable_id', 'visitable_type'];
 
-    protected $dates = ['visited_at'];
+    protected $casts = [
+        'visited_at' => 'datetime'
+    ];
 
     public $timestamps = false;
 }
