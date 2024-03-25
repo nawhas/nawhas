@@ -19,3 +19,15 @@ jobs:
 
       - name: Set up Kubectl
         uses: azure/setup-kubectl@v1
+
+      - uses: clowdhaus/argo-cd-action/@main
+        with:
+          version: 2.6.7
+          command: login
+          options: ${{ secrets.ARGOCD_SERVER }} --sso --grpc-web --username ${{ secrets.ARGOCD_USERNAME }} --password ${{ secrets.ARGOCD_ACCESS_TOKEN }}
+        
+      - uses: clowdhaus/argo-cd-action/@main
+        with:
+          version: 2.6.7
+          command: account
+          options: list
