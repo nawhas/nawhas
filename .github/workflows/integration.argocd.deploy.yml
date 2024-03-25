@@ -11,6 +11,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
+      - name: Setup Argo CD CLI
+        run: |
+          curl -sSL -o argocd https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64
+          chmod +x argocd
+          sudo mv argocd /usr/local/bin/
+
       - name: Get PR number
         id: pr_number
         run: echo "PR number is ${{ github.event.pull_request.number }}"
@@ -20,14 +26,8 @@ jobs:
       - name: Set up Kubectl
         uses: azure/setup-kubectl@v1
 
-      - uses: clowdhaus/argo-cd-action/@main
-        with:
-          version: 2.6.7
-          command: login
-          options: ${{ secrets.ARGOCD_SERVER }} --grpc-web --username ${{ secrets.ARGOCD_USERNAME }} --password ${{ secrets.ARGOCD_PASSWORD }}
+      - name: Login to Argo CD
+        run: argocd login ${{ secrets.ARGOCD_SERVER }} --grpc-web --username ${{ secrets.ARGOCD_USERNAME }} --password ${{ secrets.ARGOCD_PASSWORD }}
         
-      - uses: clowdhaus/argo-cd-action/@main
-        with:
-          version: 2.6.7
-          command: account
-          options: list
+      - name: Test argocd
+        run: argocd version
