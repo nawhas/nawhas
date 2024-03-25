@@ -117,12 +117,13 @@ import { clone } from '@/utils/clone';
 import { RequestOptions, TrackIncludes } from '@/api/tracks';
 import TimestampedEditor from '@/components/edit/lyrics/TimestampedEditor.vue';
 import { Documents, Format } from '@/entities/lyrics';
-import { getTrackUri } from '@/entities/track';
+import { getTrackUri, Track } from '@/entities/track';
 import { getReciterUri } from '@/entities/reciter';
 import { Topic } from '@/entities/topic';
 import JsonV1Document = Documents.JsonV1.Document;
 import GroupType = Documents.JsonV1.LineGroupType;
 import LyricsData = Documents.JsonV1.LyricsData;
+import { Album } from '@/entities/album';
 
 interface Form {
   title: string|null;
@@ -143,9 +144,15 @@ const defaults: Form = {
   components: { TimestampedEditor },
 })
 export default class EditTrackDialog extends Vue {
-  @Prop({ type: Object }) private track;
-  @Prop({ type: Object }) private album;
-  @Prop({ type: Array }) private availableTopics;
+  @Prop({ default: null })
+  readonly track!: Track|null;
+
+  @Prop({ required: true })
+  readonly album!: Album;
+
+  @Prop({ required: true })
+  readonly availableTopics!: Topic;
+
   private dialog = false;
   private form: Form = { ...defaults };
   private loading = false;
@@ -162,7 +169,7 @@ export default class EditTrackDialog extends Vue {
   }
 
   @Watch('dialog')
-  onDialogStateChanged(opened) {
+  onDialogStateChanged(opened: boolean) {
     if (opened) {
       this.resetForm();
     }

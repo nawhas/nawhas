@@ -7,6 +7,7 @@ namespace App\Modules\Library\Http\Requests;
 use App\Http\Requests\Request;
 use App\Modules\Library\Http\Requests\Traits\HasAlbumRouteParameter;
 use App\Modules\Library\Http\Requests\Traits\HasReciterRouteParameter;
+use App\Modules\Library\Models\Topic;
 use Illuminate\Validation\Rule;
 
 class CreateTrackRequest extends Request
@@ -41,7 +42,8 @@ class CreateTrackRequest extends Request
             ],
             'topics' => [
                 'array',
-                'nullable'
+                'nullable',
+                Rule::exists(Topic::class)
             ]
         ];
     }

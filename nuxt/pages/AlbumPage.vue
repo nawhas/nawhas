@@ -95,7 +95,7 @@
     <v-container class="app__section mt-6 pb-12">
       <div class="section__title section__title--with-actions mb-5">
         <div>Tracks</div>
-        <edit-track-dialog v-if="album && isModerator" :album="album" />
+        <edit-track-dialog v-if="album && isModerator" :album="album" :available-topics="availableTopics" />
       </div>
       <track-list :tracks="tracks" numbered />
     </v-container>
@@ -126,6 +126,7 @@ import EditTrackDialog from '@/components/edit/EditTrackDialog.vue';
 import EditAlbumDialog from '@/components/edit/EditAlbumDialog.vue';
 import { generateMeta } from '@/utils/meta';
 import LazyImage from '@/components/utils/LazyImage.vue';
+import { Topic } from '@/entities/topic';
 
 interface Data {
   album: Album | null;
@@ -134,6 +135,7 @@ interface Data {
   track: Track | null;
   tracks: Array<Track> | null;
   addedToQueueSnackbar: boolean;
+  availableTopics: Array<Topic> | null;
 }
 
 export default Vue.extend({
@@ -152,8 +154,11 @@ export default Vue.extend({
         include: [AlbumIncludes.Reciter, AlbumIncludes.Related],
       });
 
+      const topicsResponse = await $api.topics.index();
+      const availableTopics = topicsResponse.data;
+
       return {
-        album,
+        album, availableTopics,
       };
     } catch (e) {
       await $errors.handle404();
@@ -168,6 +173,7 @@ export default Vue.extend({
       track: null,
       tracks: null,
       addedToQueueSnackbar: false,
+      availableTopics: null,
     };
   },
 

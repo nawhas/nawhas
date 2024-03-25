@@ -62,7 +62,7 @@
     <track-list :tracks="tracks" numbered />
     <v-card-actions v-if="album && isModerator" class="d-flex justify-end album__actions">
       <edit-album-dialog v-if="album && isModerator" :album="album" />
-      <edit-track-dialog :album="album" />
+      <edit-track-dialog :album="album" :available-topics="[]" />
     </v-card-actions>
   </v-card>
 </template>
