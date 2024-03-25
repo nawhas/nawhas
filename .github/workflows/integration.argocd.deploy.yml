@@ -3,7 +3,6 @@ name: Deploy Integration Environment
 on:
   pull_request:
 
-
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -11,23 +10,22 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Setup Argo CD CLI
-        run: |
-          curl -sSL -o argocd https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64
-          chmod +x argocd
-          sudo mv argocd /usr/local/bin/
-
       - name: Get PR number
         id: pr_number
         run: echo "PR number is ${{ github.event.pull_request.number }}"
         env:
           PR_NUMBER: ${{ steps.pr_number.outputs.pr_number }}
 
-      - name: Set up Kubectl
-        uses: azure/setup-kubectl@v1
+      - name: Deploy through ArgoCD
+        uses: ./.github/actions/argocd-deploy
+        with:
+          server: ${{ secrets.ARGOCD_SERVER }}
+          username: ${{ secrets.ARGOCD_USERNAME }}
+          password: ${{ secrets.ARGOCD_PASSWORD }}
+          pr_number: ${{ PR_NUMBER }}
+#          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+#          environment: integration
+#          secret-key: ${{ secrets.GPG_KEY }}
+#          namespace: ${{ env.NAMESPACE }}
+#          tag: ${{ env.APP_VERSION }}
 
-      - name: Login to Argo CD
-        run: argocd login ${{ secrets.ARGOCD_SERVER }} --grpc-web --username ${{ secrets.ARGOCD_USERNAME }} --password ${{ secrets.ARGOCD_PASSWORD }}
-        
-      - name: Test argocd
-        run: argocd version

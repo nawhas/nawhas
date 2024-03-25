@@ -1,0 +1,70 @@
+name: 'Argocd Deploy'
+description: 'Deploy via ArgoCD'
+inputs:
+  server:
+    description: 'ArgoCD Server'
+    required: true
+  username:
+    description: "ArgoCD Username"
+    required: true
+  password:
+    description: "ArgoCD Password"
+    required: true
+  pr_number:
+    description: "Pull Request Number"
+    required: false
+runs:
+  using: "composite"
+  steps:
+    - name: Install ArgoCD
+      shell: bash
+      run: |
+        curl -sSL -o argocd https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64
+        chmod +x argocd
+        sudo mv argocd /usr/local/bin/
+
+    - name: Set up Kubectl
+      uses: azure/setup-kubectl@v1
+
+    - name: Login to Argo CD
+      shell: bash
+      run: argocd login ${{ ARGOCD_SERVER }} --grpc-web --username ${{ ARGOCD_USERNAME }} --password ${{ ARGOCD_PASSWORD }}
+      env:
+        ARGOCD_SERVER: ${{ inputs.server }}
+        ARGOCD_USERNAME: ${{ inputs.username }}
+        ARGOCD_PASSWORD: ${{ inputs.password }}
+
+    - name: Create Argo CD Application on the Fly
+      env:
+        PR_NUMBER: ${{ inputs.pr_number }}
+      shell: bash
+      run: |
+        APP_NAME=nawhas-integration-${PR_NUMBER}
+        DEST_NAMESPACE=nawhas-${PR_NUMBER}
+        REPO_URL=git@github.com:nawhas/nawhas.git
+        PATH_IN_REPO=k8s/overlays/integration
+        # Dynamically create the Argo CD app definition
+        cat <<EOF | argocd app create --upsert -f -
+        apiVersion: argoproj.io/v1alpha1
+        kind: Application
+        metadata:
+          name: $APP_NAME
+        spec:
+          project: nawhas
+          source:
+            repoURL: '$REPO_URL'
+            targetRevision: HEAD
+            path: '$PATH_IN_REPO'
+          destination:
+            server: 'https://kubernetes.default.svc'
+            namespace: '$DEST_NAMESPACE'
+          syncPolicy:
+            automated: {}
+        EOF
+    - name: Sync Argo CD Application
+      env:
+        PR_NUMBER: ${{ github.event.pull_request.number }}
+      shell: bash
+      run: |
+        APP_NAME=nawhas-integration-${PR_NUMBER}
+        argocd app sync $APP_NAME
