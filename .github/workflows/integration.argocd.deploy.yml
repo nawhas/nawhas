@@ -24,7 +24,7 @@ jobs:
         with:
           version: 2.6.7
           command: login
-          options: ${{ secrets.ARGOCD_SERVER }} --sso --grpc-web --username ${{ secrets.ARGOCD_USERNAME }} --password ${{ secrets.ARGOCD_ACCESS_TOKEN }}
+          options: ${{ secrets.ARGOCD_SERVER }} --grpc-web --username ${{ secrets.ARGOCD_USERNAME }} --password ${{ secrets.ARGOCD_PASSWORD }}
         
       - uses: clowdhaus/argo-cd-action/@main
         with:
