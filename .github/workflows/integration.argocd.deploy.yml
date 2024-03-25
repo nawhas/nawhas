@@ -24,7 +24,7 @@ jobs:
           password: ${{ secrets.ARGOCD_PASSWORD }}
           pr_number: ${{ github.event.pull_request.number }}
 #          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
-#          environment: integration
+          environment: integration
           secret-key: ${{ secrets.GPG_KEY }}
 #          namespace: ${{ env.NAMESPACE }}
 #          tag: ${{ env.APP_VERSION }}

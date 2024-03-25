@@ -16,6 +16,9 @@ inputs:
   secret-key:
     description: "key for decryption"
     required: true
+  environment:
+    description: "overlay name"
+    required: true
 runs:
   using: "composite"
   steps:
