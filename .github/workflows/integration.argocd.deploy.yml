@@ -1,0 +1,31 @@
+name: Deploy Integration Environment
+
+on:
+  push:
+    branches:
+      - 'integration'
+
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Determine PR Number
+        id: environment
+        run: |
+          pr_num="$EVENT_NUMBER"
+          short_sha="${SHA::8}"
+          echo "::set-output name=pr_num::${pr_num}"
+          echo "::set-output name=short_sha::${short_sha}"
+        env:
+          EVENT_NUMBER: ${{github.event.number}}
+          SHA: ${{ github.sha }}
+
+      - name: Set up Kubectl
+        uses: azure/setup-kubectl@v1
+
+      - name: Set up Argo CD CLI
+        uses: argoproj/setup-argocd@v1
