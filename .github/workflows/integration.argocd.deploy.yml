@@ -2,8 +2,6 @@ name: Deploy Integration Environment
 
 on:
   pull_request:
-    branches:
-      - '*-integration'
 
 
 jobs:
