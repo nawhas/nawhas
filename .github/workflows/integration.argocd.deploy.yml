@@ -22,7 +22,7 @@ jobs:
           server: ${{ secrets.ARGOCD_SERVER }}
           username: ${{ secrets.ARGOCD_USERNAME }}
           password: ${{ secrets.ARGOCD_PASSWORD }}
-          pr_number: ${{ PR_NUMBER }}
+          pr_number: ${{ github.event.pull_request.number }}
 #          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
 #          environment: integration
 #          secret-key: ${{ secrets.GPG_KEY }}
