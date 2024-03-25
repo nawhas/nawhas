@@ -3,7 +3,7 @@ name: Deploy Integration Environment
 on:
   push:
     branches:
-      - 'integration'
+      - '*-integration'
 
 
 jobs:
