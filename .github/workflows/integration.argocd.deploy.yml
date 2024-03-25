@@ -13,16 +13,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Determine PR Number
-        id: environment
-        run: |
-          pr_num="$EVENT_NUMBER"
-          short_sha="${SHA::8}"
-          echo "::set-output name=pr_num::${pr_num}"
-          echo "::set-output name=short_sha::${short_sha}"
+      - name: Get PR number
+        id: pr_number
+        run: echo "PR number is ${{ github.event.pull_request.number }}"
         env:
-          EVENT_NUMBER: ${{github.event.number}}
-          SHA: ${{ github.sha }}
+          PR_NUMBER: ${{ steps.pr_number.outputs.pr_number }}
 
       - name: Set up Kubectl
         uses: azure/setup-kubectl@v1
