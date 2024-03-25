@@ -28,7 +28,7 @@ runs:
 
     - name: Login to Argo CD
       shell: bash
-      run: argocd login ${{ ARGOCD_SERVER }} --grpc-web --username ${{ ARGOCD_USERNAME }} --password ${{ ARGOCD_PASSWORD }}
+      run: argocd login ${ARGOCD_SERVER} --grpc-web --username ${ARGOCD_USERNAME} --password ${ARGOCD_PASSWORD}
       env:
         ARGOCD_SERVER: ${{ inputs.server }}
         ARGOCD_USERNAME: ${{ inputs.username }}
