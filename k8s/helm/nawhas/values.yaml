@@ -14,6 +14,7 @@ api:
   image: "your-api-image"
   tag: "latest"
   apiEnv:
+    APP_KEY=base64:wev2Ggj31wN2ThNp/uQv8LnvUAiJvuwxizve0dS7BJk=
     APP_ENV: integration
     DB_USERNAME: nawhas
     DB_HOST: postgres
@@ -63,7 +64,6 @@ web:
   image: "WEB:TAG"
   tag: "latest"
   env:
-    APP_KEY=base64:wev2Ggj31wN2ThNp/uQv8LnvUAiJvuwxizve0dS7BJk=
     APP_ENV: integration
     API_BASE_URL: https://api.pr-611.intg.k8s.nawhas.com/
     SERVER_API_BASE_URL: http://api-nginx:80/
