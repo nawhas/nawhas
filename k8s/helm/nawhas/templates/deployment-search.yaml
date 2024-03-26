@@ -21,6 +21,11 @@ spec:
       - name: {{ .Values.search.containerName }}
         image: {{ .Values.search.image }}:{{ .Values.search.tag }}
         imagePullPolicy: IfNotPresent
+        env:
+          {{- range $key, $value := .Values.search.env }}
+          - name: {{ $key }}
+            value: {{ $value | quote }}
+          {{- end }}
         ports:
         - containerPort: 7700
         volumeMounts:

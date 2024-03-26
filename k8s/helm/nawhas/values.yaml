@@ -42,6 +42,8 @@ search:
   tag: "v1.3.2"
   pvcName: "search-volume-{{ .Values.search.tag }}"
   storageClassName: do-block-storage
+  env:
+    MEILI_MASTER_KEY: EnterSomeValue
 
 
 queue:
