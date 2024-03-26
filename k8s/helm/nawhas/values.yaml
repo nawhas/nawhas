@@ -14,7 +14,7 @@ api:
   image: "your-api-image"
   tag: "latest"
   apiEnv:
-    APP_KEY=base64:wev2Ggj31wN2ThNp/uQv8LnvUAiJvuwxizve0dS7BJk=
+    APP_KEY: base64:wev2Ggj31wN2ThNp/uQv8LnvUAiJvuwxizve0dS7BJk=
     APP_ENV: integration
     DB_USERNAME: nawhas
     DB_HOST: postgres
