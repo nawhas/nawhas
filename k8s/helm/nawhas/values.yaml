@@ -16,7 +16,7 @@ api:
   apiEnv:
     APP_ENV: integration
     DB_USERNAME: nawhas
-    DB_HOST=postgres
+    DB_HOST: postgres
     DB_PORT: 5432
     DB_DATABASE: nawhas_original
     EVENTS_DB_DATABASE: nawhas_events
