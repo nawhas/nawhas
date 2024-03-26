@@ -21,6 +21,11 @@ spec:
       - name: {{ .Values.api.containerName }}
         image: {{ .Values.api.image }}:{{ .Values.api.tag }}
         imagePullPolicy: IfNotPresent
+        env:
+          {{- range $key, $value := .Values.api.apiEnv }}
+          - name: {{ $key }}
+            value: {{ $value | quote }}
+          {{- end }}
         ports:
         - containerPort: 8080
         livenessProbe:
