@@ -64,7 +64,10 @@ web:
   tag: "latest"
   env:
     APP_ENV: integration
+    API_BASE_URL: https://api.pr-611.intg.k8s.nawhas.com/
     SERVER_API_BASE_URL: http://api-nginx:80/
+    APP_DOMAIN: https://pr-611.intg.k8s.nawhas.com/
+    SEARCH_HOST: https://search.pr-611.intg.k8s.nawhas.com/
 
 
 ingress:
