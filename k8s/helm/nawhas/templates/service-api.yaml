@@ -1,0 +1,15 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: {{ .Values.api.name }}
+  labels:
+    tier: backend
+spec:
+  type: NodePort
+  selector:
+    app: {{ .Values.api.name }}
+    tier: backend
+  ports:
+    - name: 'php'
+      port: 9000
+      protocol: TCP

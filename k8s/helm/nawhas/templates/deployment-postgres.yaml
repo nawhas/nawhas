@@ -1,0 +1,35 @@
+{{- if .Values.postgres.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.postgres.name }}
+  labels:
+    app: {{ .Values.postgres.name }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Values.postgres.name }}
+  replicas: {{ .Values.postgres.replicas }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.postgres.name }}
+    spec:
+      containers:
+        - name: {{ .Values.postgres.containerName }}
+          image: {{ .Values.postgres.image }}:{{ .Values.postgres.tag }}
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 5432
+              name: postgres
+          envFrom:
+            - configMapRef:
+                name: {{ .Values.postgres.configName }}
+          volumeMounts:
+            - mountPath: /var/lib/postgresql/data
+              name: postgres-data
+      volumes:
+        - name: postgres-data
+          persistentVolumeClaim:
+            claimName: {{ .Values.postgres.pvcName }}
+{{- end }}

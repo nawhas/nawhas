@@ -1,0 +1,17 @@
+{{- if .Values.postgres.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.postgres.name }}
+  labels:
+    app: {{ .Values.postgres.name }}
+spec:
+  type: NodePort
+  selector:
+    app: {{ .Values.postgres.name }}
+  ports:
+    - port: 5432
+      targetPort: 5432
+      name: 'postgres'
+      protocol: TCP
+{{- end }}
