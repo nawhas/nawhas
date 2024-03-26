@@ -62,6 +62,9 @@ web:
   replicas: 1
   image: "WEB:TAG"
   tag: "latest"
+  env:
+    APP_ENV: integration
+    SERVER_API_BASE_URL: http://api-nginx:80/
 
 
 ingress:

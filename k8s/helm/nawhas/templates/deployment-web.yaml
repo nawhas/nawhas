@@ -21,5 +21,10 @@ spec:
         - name: {{ .Values.web.containerName }}
           image: {{ .Values.web.image }}:{{ .Values.web.tag }}
           imagePullPolicy: IfNotPresent
+          env:
+            {{- range $key, $value := .Values.web.env }}
+            - name: {{ $key }}
+              value: {{ $value | quote }}
+            {{- end }}
           ports:
             - containerPort: 3000
