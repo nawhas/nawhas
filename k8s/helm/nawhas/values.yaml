@@ -14,7 +14,7 @@ api:
   image: "your-api-image"
   tag: "latest"
   apiEnv:
-    APP_KEY: base64:wev2Ggj31wN2ThNp/uQv8LnvUAiJvuwxizve0dS7BJk=
+    APP_KEY: EnterSomeValue
     APP_ENV: integration
     DB_USERNAME: nawhas
     DB_HOST: postgres
@@ -26,9 +26,12 @@ api:
     SMTP_HOST: mail
     FILESYSTEM_DRIVER: s3
     FILESYSTEM_CLOUD: s3
+    AWS_ACCESS_KEY_ID: EnterSomeValue
+    AWS_SECRET_ACCESS_KEY: EnterSomeValue
     AWS_BUCKET: intg.nawhas
     AWS_DEFAULT_REGION: us-east-2
     MEILISEARCH_HOST: http://search:7700
+    MEILISEARCH_KEY: EnterSomeValue
 
 
 search:
