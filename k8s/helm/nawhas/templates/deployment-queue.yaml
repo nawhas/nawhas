@@ -21,6 +21,11 @@ spec:
       - name: {{ .Values.queue.containerName }}
         image: {{ .Values.queue.image }}:{{ .Values.queue.tag }}
         imagePullPolicy: IfNotPresent
+        env:
+          {{- range $key, $value := .Values.api.apiEnv }}
+          - name: {{ $key }}
+            value: {{ $value | quote }}
+          {{- end }}
         command: ['php', 'artisan', 'horizon']
         livenessProbe:
           exec:
