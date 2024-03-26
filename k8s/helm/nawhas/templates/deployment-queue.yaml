@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.queue.name }}
+  labels:
+    app: {{ .Values.queue.name }}
+    tier: backend
+spec:
+  replicas: {{ .Values.queue.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.queue.name }}
+      tier: backend
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.queue.name }}
+        tier: backend
+    spec:
+      containers:
+      - name: {{ .Values.queue.containerName }}
+        image: {{ .Values.queue.image }}:{{ .Values.queue.tag }}
+        imagePullPolicy: IfNotPresent
+        command: ['php', 'artisan', 'horizon']
+        livenessProbe:
+          exec:
+            command:
+            - php
+            - artisan
+            - healthcheck
+          initialDelaySeconds: 10
+          timeoutSeconds: 2
+        readinessProbe:
+          exec:
+            command:
+            - php
+            - artisan
+            - healthcheck
+          initialDelaySeconds: 2
+          timeoutSeconds: 2

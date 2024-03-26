@@ -1,0 +1,54 @@
+apiNginx:
+  name: api-nginx
+  containerName: api-nginx
+  replicas: 1
+  image: "nginx"
+  tag: "stable-alpine"
+  configMapName: "nginx-config"
+
+
+api:
+  name: api
+  containerName: api
+  replicas: 1
+  image: "your-api-image"
+  tag: "latest"
+
+
+search:
+  name: search
+  containerName: search
+  replicas: 1
+  image: "getmeili/meilisearch"
+  tag: "v1.3.2"
+  pvcName: "search-volume-{{ .Values.search.tag }}"
+  storageClassName: do-block-storage
+
+
+queue:
+  name: queue
+  containerName: queue
+  replicas: 1
+  image: "your-queue-image"
+  tag: "latest"
+
+
+cache:
+  name: redis
+  containerName: master
+  replicas: 1
+  image: "your-queue-image"
+  tag: "latest"
+
+
+web:
+  name: web
+  containerName: web
+  replicas: 1
+  image: "WEB:TAG"
+  tag: "latest"
+
+
+ingress:
+  clusterIssuer: letsencrypt-prod
+  apiHost: api.nawhas.com

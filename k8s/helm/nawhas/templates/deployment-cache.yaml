@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cache
+  labels:
+    app: {{ .Values.cache.name }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Values.cache.name }}
+      role: master
+      tier: backend
+  replicas: {{ .Values.cache.replicas }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.cache.name }}
+        role: master
+        tier: backend
+    spec:
+      containers:
+        - name: {{ .Values.cache.containerName }}
+          image: {{ .Values.cache.image }}:{{ .Values.cache.tag }}
+          ports:
+            - containerPort: 6379
+
