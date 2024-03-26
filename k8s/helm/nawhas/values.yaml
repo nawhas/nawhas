@@ -52,3 +52,15 @@ web:
 ingress:
   clusterIssuer: letsencrypt-prod
   apiHost: api.nawhas.com
+
+
+postgres:
+  enabled: false
+  name: postgres
+  replicas: 1
+  containerName: postgres
+  image: szainmehdi/postgres
+  tag: 11-multi
+  pvcName: postgres-volume
+  storageClassName: do-block-storage
+  configName: postgres-config
