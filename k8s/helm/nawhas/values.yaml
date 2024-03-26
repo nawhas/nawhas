@@ -80,6 +80,7 @@ ingress:
   clusterIssuer: letsencrypt-prod
   apiHost: api.nawhas.com
   webHost: nawhas.com
+  searchHost: search.nawhas.com
 
 
 postgres:
