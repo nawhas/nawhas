@@ -37,8 +37,8 @@ cache:
   name: redis
   containerName: master
   replicas: 1
-  image: "your-queue-image"
-  tag: "latest"
+  image: redis
+  tag: 5
 
 
 web:

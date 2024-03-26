@@ -3,5 +3,5 @@ kind: ConfigMap
 metadata:
   name: nginx-config
 data:
-  nginx.conf: |-
-    {{ .Files.Get "templates/configs/nginx.conf" | nindent 4 }}
+  nginx.conf: |
+    {{ .Files.Get "configs/nginx.conf" | nindent 4 }}
