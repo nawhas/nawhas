@@ -81,10 +81,8 @@ runs:
     #       syncPolicy:
     #         automated: {}
     #     EOF
-    # - name: Sync Argo CD Application
-    #   env:
-    #     PR_NUMBER: ${{ github.event.pull_request.number }}
-    #   shell: bash
-    #   run: |
-    #     APP_NAME=nawhas-integration-${PR_NUMBER}
-    #     argocd app sync $APP_NAME
+    - name: Sync Argo CD Application
+      shell: bash
+      run: |
+        argocd app sync nawhas-${{ inputs.pr_number }}
+
