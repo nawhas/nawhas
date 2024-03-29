@@ -53,9 +53,24 @@ runs:
       shell: bash
       run: |
         gpg --quiet --batch --yes --passphrase="$GPG_KEY" --output api.secret.env api.secret.env.gpg
-        cat api.secret.env
+        while IFS= read -r line; do
+          if [[ "$line" == *=* ]]; then
+            key=${line%%=*}
+            value=${line#*=}
+            echo "API_$key=$value" >> $GITHUB_ENV
+          fi
+        done < api.secret.env
       env:
         GPG_KEY: ${{ inputs.secret-key }}
+
+    - name: echo out environment variables
+      shell: bash
+      run: |
+        for var in $(compgen -e); do
+          if [[ $var == API_* ]]; then
+            echo "$var=${!var}"
+          fi
+        done
 
     # - name: create app with configs through helm
     #   shell: bash
