@@ -60,13 +60,6 @@ runs:
         while IFS= read -r line; do echo "SEARCH_$line" >> $GITHUB_ENV; done < search.secret.env
       env:
         GPG_KEY: ${{ inputs.secret-key }}
-    
-    - echo env variables
-      shell: bash
-      run: |
-        env | grep '^API_' | while read -r line ; do
-          echo "$line"
-        done
 
     - name: create app with configs through helm
       shell: bash
