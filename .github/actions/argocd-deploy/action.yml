@@ -47,31 +47,27 @@ runs:
         echo "API_DOMAIN=api.pr-${{ inputs.pr_number }}.intg.k8s.nawhas.com" >> $GITHUB_ENV
         echo "WEB_DOMAIN=pr-${{ inputs.pr_number }}.intg.k8s.nawhas.com" >> $GITHUB_ENV
         echo "SEARCH_DOMAIN=search.pr-${{ inputs.pr_number }}.intg.k8s.nawhas.com" >> $GITHUB_ENV
-
-    - name: Decrypt environment secrets and export
+    
+    - Decrypt environment variables
       working-directory: ./k8s/overlays/${{ inputs.environment }}/env
       shell: bash
       run: |
         gpg --quiet --batch --yes --passphrase="$GPG_KEY" --output api.secret.env api.secret.env.gpg
-        gpg --quiet --batch --yes --passphrase="$GPG_KEY" --output web.secret.env web.secret.env.gpg
-        gpg --quiet --batch --yes --passphrase="$GPG_KEY" --output search.secret.env search.secret.env.gpg
-        while IFS= read -r line; do echo "API_$line" >> $GITHUB_ENV; done < api.secret.env
-        while IFS= read -r line; do echo "WEB_$line" >> $GITHUB_ENV; done < web.secret.env
-        while IFS= read -r line; do echo "SEARCH_$line" >> $GITHUB_ENV; done < search.secret.env
+        cat api.secret.env
       env:
         GPG_KEY: ${{ inputs.secret-key }}
 
-    - name: create app with configs through helm
-      shell: bash
-      run: argocd app create $ARGOCD_APP_NAME --repo git@github.com:nawhas/nawhas.git --path k8s/helm/nawhas --dest-server https://kubernetes.default.svc --dest-namespace $ARGOCD_APP_NAME --revision ${{ github.head_ref }} --helm-set namespace=$ARGOCD_APP_NAME --helm-set api.image=nawhas/api --helm-set api.tag=latest --helm-set api.apiEnv.APP_DOMAIN=$API_DOMAIN --helm-set api.apiEnv.APP_KEY=${{ env.API_APP_KEY }} --helm-set api.apiEnv.AWS_ACCESS_KEY_ID=${{ env.API_AWS_ACCESS_KEY_ID }} --helm-set api.apiEnv.AWS_SECRET_ACCESS_KEY=${{ env.API_AWS_SECRET_ACCESS_KEY }} --helm-set api.apiEnv.MEILISEARCH_KEY=${{ env.API_MEILISEARCH_KEY }} --helm-set search.pvcName=search-volume-v1.3.2 --helm-set search.storageClassName=nfs-client --helm-set search.env.MEILI_MASTER_KEY=${{ env.SEARCH_MEILI_MASTER_KEY }} --helm-set queue.image=nawhas/api --helm-set queue.tag=latest --helm-set web.image=nawhas/web --helm-set web.tag=latest --helm-set web.env.API_BASE_URL=https://$API_DOMAIN/ --helm-set web.env.APP_DOMAIN=https://$WEB_DOMAIN/ --helm-set web.env.SEARCH_HOST=https://$SEARCH_DOMAIN/ --helm-set ingress.apiHost=$API_DOMAIN --helm-set ingress.webHost=$WEB_DOMAIN --helm-set ingress.searchHost=$SEARCH_DOMAIN --helm-set postgres.enabled=true --helm-set postgres.storageClassName=nfs-client
-      env:
-        ARGOCD_APP_NAME: ${{ env.ARGOCD_APP_NAME }}
-        API_DOMAIN: ${{ env.API_DOMAIN }}
-        WEB_DOMAIN: ${{ env.WEB_DOMAIN }}
-        SEARCH_DOMAIN: ${{ env.SEARCH_DOMAIN }}
+    # - name: create app with configs through helm
+    #   shell: bash
+    #   run: argocd app create $ARGOCD_APP_NAME --repo git@github.com:nawhas/nawhas.git --path k8s/helm/nawhas --dest-server https://kubernetes.default.svc --dest-namespace $ARGOCD_APP_NAME --revision ${{ github.head_ref }} --helm-set namespace=$ARGOCD_APP_NAME --helm-set api.image=nawhas/api --helm-set api.tag=latest --helm-set api.apiEnv.APP_DOMAIN=$API_DOMAIN --helm-set api.apiEnv.APP_KEY=EnterSomeValue --helm-set api.apiEnv.AWS_ACCESS_KEY_ID=EnterSomeValue --helm-set api.apiEnv.AWS_SECRET_ACCESS_KEY=EnterSomeValue --helm-set api.apiEnv.MEILISEARCH_KEY=EnterSomeValue --helm-set search.pvcName=search-volume-v1.3.2 --helm-set search.storageClassName=nfs-client --helm-set search.env.MEILI_MASTER_KEY=EnterSomeValue --helm-set queue.image=nawhas/api --helm-set queue.tag=latest --helm-set web.image=nawhas/web --helm-set web.tag=latest --helm-set web.env.API_BASE_URL=https://$API_DOMAIN/ --helm-set web.env.APP_DOMAIN=https://$WEB_DOMAIN/ --helm-set web.env.SEARCH_HOST=https://$SEARCH_DOMAIN/ --helm-set ingress.apiHost=$API_DOMAIN --helm-set ingress.webHost=$WEB_DOMAIN --helm-set ingress.searchHost=$SEARCH_DOMAIN --helm-set postgres.enabled=true --helm-set postgres.storageClassName=nfs-client
+    #   env:
+    #     ARGOCD_APP_NAME: ${{ env.ARGOCD_APP_NAME }}
+    #     API_DOMAIN: ${{ env.API_DOMAIN }}
+    #     WEB_DOMAIN: ${{ env.WEB_DOMAIN }}
+    #     SEARCH_DOMAIN: ${{ env.SEARCH_DOMAIN }}
 
-    - name: Sync Argo CD Application
-      shell: bash
-      run: argocd app sync $ARGOCD_APP_NAME
-      env:
-        ARGOCD_APP_NAME: ${{ env.ARGOCD_APP_NAME }}
+    # - name: Sync Argo CD Application
+    #   shell: bash
+    #   run: argocd app sync $ARGOCD_APP_NAME
+    #   env:
+    #     ARGOCD_APP_NAME: ${{ env.ARGOCD_APP_NAME }}
