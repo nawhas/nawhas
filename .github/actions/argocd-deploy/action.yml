@@ -55,11 +55,18 @@ runs:
         gpg --quiet --batch --yes --passphrase="$GPG_KEY" --output api.secret.env api.secret.env.gpg
         gpg --quiet --batch --yes --passphrase="$GPG_KEY" --output web.secret.env web.secret.env.gpg
         gpg --quiet --batch --yes --passphrase="$GPG_KEY" --output search.secret.env search.secret.env.gpg
-        while IFS= read -r line; do export "API_$line"; done < api.secret.env
-        while IFS= read -r line; do export "WEB_$line"; done < web.secret.env
-        while IFS= read -r line; do export "SEARCH_$line"; done < search.secret.env
+        while IFS= read -r line; do echo "API_$line" >> $GITHUB_ENV; done < api.secret.env
+        while IFS= read -r line; do echo "WEB_$line" >> $GITHUB_ENV; done < web.secret.env
+        while IFS= read -r line; do echo "SEARCH_$line" >> $GITHUB_ENV; done < search.secret.env
       env:
         GPG_KEY: ${{ inputs.secret-key }}
+    
+    - echo env variables
+      shell: bash
+      run: |
+        env | grep '^API_' | while read -r line ; do
+          echo "$line"
+        done
 
     - name: create app with configs through helm
       shell: bash
