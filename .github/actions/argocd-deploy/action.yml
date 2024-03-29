@@ -40,12 +40,6 @@ runs:
         ARGOCD_USERNAME: ${{ inputs.username }}
         ARGOCD_PASSWORD: ${{ inputs.password }}
 
-    - name: echo out PR Number
-      shell: bash
-      run: echo "PR_NUMBER:  $PR_NUMBER"
-      env:
-        PR_NUMBER: ${{ inputs.pr_number }}
-
     - name: create app with configs through helm
       shell: bash
       run: argocd app create nawhas-$PR_NUMBER \
