@@ -49,11 +49,10 @@ runs:
         echo "SEARCH_DOMAIN=search.pr-${{ inputs.pr_number }}.intg.k8s.nawhas.com" >> $GITHUB_ENV
     
     - Decrypt environment variables
-      working-directory: ./k8s/overlays/${{ inputs.environment }}/env
       shell: bash
       run: |
-        gpg --quiet --batch --yes --passphrase="$GPG_KEY" --output api.secret.env api.secret.env.gpg
-        cat api.secret.env
+        gpg --quiet --batch --yes --passphrase="$GPG_KEY" --output k8s/overlays/${{ inputs.environment }}/env/api.secret.env k8s/overlays/${{ inputs.environment }}/env/api.secret.env.gpg
+        cat k8s/overlays/${{ inputs.environment }}/env/api.secret.env
       env:
         GPG_KEY: ${{ inputs.secret-key }}
 
