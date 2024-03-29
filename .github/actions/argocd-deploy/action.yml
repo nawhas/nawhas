@@ -40,47 +40,80 @@ runs:
         ARGOCD_USERNAME: ${{ inputs.username }}
         ARGOCD_PASSWORD: ${{ inputs.password }}
 
-    - name: Decrypt environment secrets
-      working-directory: ./k8s/overlays/${{ inputs.environment }}/env
+    - name: create app with configs through helm
       shell: bash
-      run: |
-        gpg --quiet --batch --yes --passphrase="$GPG_KEY" --output api.secret.env api.secret.env.gpg
-        gpg --quiet --batch --yes --passphrase="$GPG_KEY" --output web.secret.env web.secret.env.gpg
-        gpg --quiet --batch --yes --passphrase="$GPG_KEY" --output search.secret.env search.secret.env.gpg
-      env:
-        GPG_KEY: ${{ inputs.secret-key }}
-
-    - name: Create Argo CD Application on the Fly
+      run: argocd app create nawhas-${PR_NUMBER} \
+        --repo git@github.com:nawhas/nawhas.git \
+        --path k8s/helm/nawhas \
+        --dest-server https://kubernetes.default.svc \
+        --dest-namespace nawhas-${PR_NUMBER} \
+        --helm-set namespace=nawhas-${PR_NUMBER} \
+        --helm-set api.image=nawhas/api \
+        --helm-set api.tag=latest \
+        --helm-set api.apiEnv.APP_DOMAIN=pr-${PR_NUMBER}.intg.k8s.nawhas.com \
+        --helm-set api.apiEnv.APP_KEY=EnterSomeValue \
+        --helm-set api.apiEnv.AWS_ACCESS_KEY_ID=EnterSomeValue \
+        --helm-set api.apiEnv.AWS_SECRET_ACCESS_KEY=EnterSomeValue \
+        --helm-set api.apiEnv.MEILISEARCH_KEY=EnterSomeValue \
+        --helm-set search.pvcName=search-volume-v1.3.2 \
+        --helm-set search.storageClassName=nfs-client \
+        --helm-set search.env.MEILI_MASTER_KEY=EnterSomeValue \
+        --helm-set queue.image=nawhas/api \
+        --helm-set queue.tag=latest \
+        --helm-set web.image=nawhas/web \
+        --helm-set web.tag=latest \
+        --helm-set web.env.API_BASE_URL=https://api.pr-${PR_NUMBER}.intg.k8s.nawhas.com/ \
+        --helm-set web.env.APP_DOMAIN=https://pr-${PR_NUMBER}.intg.k8s.nawhas.com/ \
+        --helm-set web.env.SEARCH_HOST=https://search.pr-${PR_NUMBER}.intg.k8s.nawhas.com/ \
+        --helm-set ingress.apiHost=api.pr-${PR_NUMBER}.intg.k8s.nawhas.com \
+        --helm-set ingress.webHost=pr-${PR_NUMBER}.intg.k8s.nawhas.com \
+        --helm-set ingress.searchHost=search.pr-${PR_NUMBER}.intg.k8s.nawhas.com \
+        --helm-set postgres.enabled=true \
+        --helm-set postgres.storageClassName=nfs-client 
       env:
         PR_NUMBER: ${{ inputs.pr_number }}
-      shell: bash
-      run: |
-        APP_NAME=nawhas-integration-${PR_NUMBER}
-        DEST_NAMESPACE=nawhas-${PR_NUMBER}
-        REPO_URL=git@github.com:nawhas/nawhas.git
-        PATH_IN_REPO=k8s/overlays/integration
-        # Dynamically create the Argo CD app definition
-        cat <<EOF | argocd app create --upsert -f -
-        apiVersion: argoproj.io/v1alpha1
-        kind: Application
-        metadata:
-          name: $APP_NAME
-        spec:
-          project: nawhas
-          source:
-            repoURL: '$REPO_URL'
-            targetRevision: HEAD
-            path: '$PATH_IN_REPO'
-          destination:
-            server: 'https://kubernetes.default.svc'
-            namespace: '$DEST_NAMESPACE'
-          syncPolicy:
-            automated: {}
-        EOF
-    - name: Sync Argo CD Application
-      env:
-        PR_NUMBER: ${{ github.event.pull_request.number }}
-      shell: bash
-      run: |
-        APP_NAME=nawhas-integration-${PR_NUMBER}
-        argocd app sync $APP_NAME
+
+    # - name: Decrypt environment secrets
+    #   working-directory: ./k8s/overlays/${{ inputs.environment }}/env
+    #   shell: bash
+    #   run: |
+    #     gpg --quiet --batch --yes --passphrase="$GPG_KEY" --output api.secret.env api.secret.env.gpg
+    #     gpg --quiet --batch --yes --passphrase="$GPG_KEY" --output web.secret.env web.secret.env.gpg
+    #     gpg --quiet --batch --yes --passphrase="$GPG_KEY" --output search.secret.env search.secret.env.gpg
+    #   env:
+    #     GPG_KEY: ${{ inputs.secret-key }}
+
+    # - name: Create Argo CD Application on the Fly
+    #   env:
+    #     PR_NUMBER: ${{ inputs.pr_number }}
+    #   shell: bash
+    #   run: |
+    #     APP_NAME=nawhas-integration-${PR_NUMBER}
+    #     DEST_NAMESPACE=nawhas-${PR_NUMBER}
+    #     REPO_URL=git@github.com:nawhas/nawhas.git
+    #     PATH_IN_REPO=k8s/overlays/integration
+    #     # Dynamically create the Argo CD app definition
+    #     cat <<EOF | argocd app create --upsert -f -
+    #     apiVersion: argoproj.io/v1alpha1
+    #     kind: Application
+    #     metadata:
+    #       name: $APP_NAME
+    #     spec:
+    #       project: nawhas
+    #       source:
+    #         repoURL: '$REPO_URL'
+    #         targetRevision: HEAD
+    #         path: '$PATH_IN_REPO'
+    #       destination:
+    #         server: 'https://kubernetes.default.svc'
+    #         namespace: '$DEST_NAMESPACE'
+    #       syncPolicy:
+    #         automated: {}
+    #     EOF
+    # - name: Sync Argo CD Application
+    #   env:
+    #     PR_NUMBER: ${{ github.event.pull_request.number }}
+    #   shell: bash
+    #   run: |
+    #     APP_NAME=nawhas-integration-${PR_NUMBER}
+    #     argocd app sync $APP_NAME

@@ -1,3 +1,5 @@
+namespace: EnterSomeValue
+
 apiNginx:
   name: api-nginx
   containerName: api-nginx
