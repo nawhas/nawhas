@@ -42,21 +42,19 @@ runs:
 
     - name: echo out PR Number
       shell: bash
-      run: echo "PR_NUMBER: ${PR_NUMBER}"
-      env:
-        PR_NUMBER: ${{ inputs.pr_number }}
+      run: echo "PR_NUMBER: ${{ inputs.pr_number }}"
 
     - name: create app with configs through helm
       shell: bash
-      run: argocd app create nawhas-${PR_NUMBER} \
+      run: argocd app create nawhas-${{ inputs.pr_number }} \
         --repo git@github.com:nawhas/nawhas.git \
         --path k8s/helm/nawhas \
         --dest-server https://kubernetes.default.svc \
-        --dest-namespace nawhas-${PR_NUMBER} \
-        --helm-set namespace=nawhas-${PR_NUMBER} \
+        --dest-namespace nawhas-${{ inputs.pr_number }} \
+        --helm-set namespace=nawhas-${{ inputs.pr_number }} \
         --helm-set api.image=nawhas/api \
         --helm-set api.tag=latest \
-        --helm-set api.apiEnv.APP_DOMAIN=pr-${PR_NUMBER}.intg.k8s.nawhas.com \
+        --helm-set api.apiEnv.APP_DOMAIN=pr-${{ inputs.pr_number }}.intg.k8s.nawhas.com \
         --helm-set api.apiEnv.APP_KEY=EnterSomeValue \
         --helm-set api.apiEnv.AWS_ACCESS_KEY_ID=EnterSomeValue \
         --helm-set api.apiEnv.AWS_SECRET_ACCESS_KEY=EnterSomeValue \
@@ -68,16 +66,14 @@ runs:
         --helm-set queue.tag=latest \
         --helm-set web.image=nawhas/web \
         --helm-set web.tag=latest \
-        --helm-set web.env.API_BASE_URL=https://api.pr-${PR_NUMBER}.intg.k8s.nawhas.com/ \
-        --helm-set web.env.APP_DOMAIN=https://pr-${PR_NUMBER}.intg.k8s.nawhas.com/ \
-        --helm-set web.env.SEARCH_HOST=https://search.pr-${PR_NUMBER}.intg.k8s.nawhas.com/ \
-        --helm-set ingress.apiHost=api.pr-${PR_NUMBER}.intg.k8s.nawhas.com \
-        --helm-set ingress.webHost=pr-${PR_NUMBER}.intg.k8s.nawhas.com \
-        --helm-set ingress.searchHost=search.pr-${PR_NUMBER}.intg.k8s.nawhas.com \
+        --helm-set web.env.API_BASE_URL=https://api.pr-${{ inputs.pr_number }}.intg.k8s.nawhas.com/ \
+        --helm-set web.env.APP_DOMAIN=https://pr-${{ inputs.pr_number }}.intg.k8s.nawhas.com/ \
+        --helm-set web.env.SEARCH_HOST=https://search.pr-${{ inputs.pr_number }}.intg.k8s.nawhas.com/ \
+        --helm-set ingress.apiHost=api.pr-${{ inputs.pr_number }}.intg.k8s.nawhas.com \
+        --helm-set ingress.webHost=pr-${{ inputs.pr_number }}.intg.k8s.nawhas.com \
+        --helm-set ingress.searchHost=search.pr-${{ inputs.pr_number }}.intg.k8s.nawhas.com \
         --helm-set postgres.enabled=true \
         --helm-set postgres.storageClassName=nfs-client 
-      env:
-        PR_NUMBER: ${{ inputs.pr_number }}
 
     # - name: Decrypt environment secrets
     #   working-directory: ./k8s/overlays/${{ inputs.environment }}/env
