@@ -2,7 +2,7 @@ name: Deploy Integration Environment
 
 on:
   pull_request:
-    types: [opened, reopened, synchronize]
+  merge_group:
 
 jobs:
   deploy:
