@@ -32,5 +32,6 @@ runs:
         ARGOCD_PASSWORD: ${{ inputs.password }}
 
     - name: 'Cleanup ArgoCD deployments'
+      shell: bash
       run: |
         argocd app delete ${{ inputs.argocd-app-name }}
