@@ -1,0 +1,99 @@
+namespace: EnterSomeValue
+
+apiNginx:
+  name: api-nginx
+  containerName: api-nginx
+  replicas: 1
+  image: "nginx"
+  tag: "stable-alpine"
+  configMapName: "nginx-config"
+
+
+api:
+  name: api
+  containerName: api
+  replicas: 1
+  image: "your-api-image"
+  tag: "latest"
+  apiEnv:
+    APP_DOMAIN: EnterSomeValue
+    APP_KEY: EnterSomeValue
+    APP_ENV: integration
+    DB_USERNAME: nawhas
+    DB_HOST: postgres
+    DB_PORT: 5432
+    DB_DATABASE: nawhas_original
+    EVENTS_DB_DATABASE: nawhas_events
+    DATA_DB_DATABASE: nawhas_data
+    QUEUE_CONNECTION: redis
+    SMTP_HOST: mail
+    FILESYSTEM_DRIVER: s3
+    FILESYSTEM_CLOUD: s3
+    AWS_ACCESS_KEY_ID: EnterSomeValue
+    AWS_SECRET_ACCESS_KEY: EnterSomeValue
+    AWS_BUCKET: intg.nawhas
+    AWS_DEFAULT_REGION: us-east-2
+    MEILISEARCH_HOST: http://search:7700
+    MEILISEARCH_KEY: EnterSomeValue
+
+
+search:
+  name: search
+  containerName: search
+  replicas: 1
+  image: "getmeili/meilisearch"
+  tag: "v1.3.2"
+  pvcName: "search-volume-{{ .Values.search.tag }}"
+  storageClassName: do-block-storage
+  env:
+    MEILI_MASTER_KEY: EnterSomeValue
+
+
+queue:
+  name: queue
+  containerName: queue
+  replicas: 1
+  image: "your-queue-image"
+  tag: "latest"
+
+
+cache:
+  name: redis
+  containerName: master
+  replicas: 1
+  image: redis
+  tag: 5
+
+
+web:
+  name: web
+  containerName: web
+  replicas: 1
+  image: "WEB:TAG"
+  tag: "latest"
+  env:
+    APP_ENV: integration
+    API_BASE_URL: https://api.pr-611.intg.k8s.nawhas.com/
+    SERVER_API_BASE_URL: http://api-nginx:80/
+    APP_DOMAIN: https://pr-611.intg.k8s.nawhas.com/
+    SEARCH_HOST: https://search.pr-611.intg.k8s.nawhas.com/
+    SENTRY_DSN: 
+
+
+ingress:
+  clusterIssuer: letsencrypt-prod
+  apiHost: api.nawhas.com
+  webHost: nawhas.com
+  searchHost: search.nawhas.com
+
+
+postgres:
+  enabled: false
+  name: postgres
+  replicas: 1
+  containerName: postgres
+  image: szainmehdi/postgres
+  tag: 11-multi
+  pvcName: postgres-volume
+  storageClassName: do-block-storage
+  configName: postgres-config

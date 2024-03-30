@@ -213,38 +213,18 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Prepare Environment
-        run: |
-          ./scripts/github/prepare-integration-environment.sh
-
-      - name: Substitute Deployment Variables
-        run: |
-          {
-            echo "APP_DOMAIN=${APP_DOMAIN}"
-            echo "ALGOLIA_PREFIX=${ALGOLIA_PREFIX}"
-            echo "SESSION_COOKIE_PREFIX=${SESSION_COOKIE_PREFIX}"
-          } >> ./k8s/overlays/integration/env/api.env
-          
-          {
-            echo "API_BASE_URL=https://${API_DOMAIN}/"
-            echo "APP_DOMAIN=https://${APP_DOMAIN}"
-            echo "SEARCH_HOST=https://${SEARCH_HOST}"
-          } >> ./k8s/overlays/integration/env/web.env
-          
-          cat ./k8s/overlays/integration/ingress.yml \
-            | sed "s/<INTG_APP_DOMAIN>/${APP_DOMAIN}/g" \
-            | sed "s/<INTG_API_DOMAIN>/${API_DOMAIN}/g" \
-            | sed "s/<INTG_SEARCH_HOST>/${SEARCH_HOST}/g" \
-            | sed "s/<INTG_MAIL_HOST>/${MAIL_HOST}/g" \
-          > ./k8s/overlays/integration/ingress.yml
-
       - name: Deploy
-        uses: ./.github/actions/deploy
+        if: contains(github.head_ref, '-integration')
+        uses: ./.github/actions/argocd-deploy
         with:
-          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+          server: ${{ secrets.ARGOCD_SERVER }}
+          username: ${{ secrets.ARGOCD_USERNAME }}
+          password: ${{ secrets.ARGOCD_PASSWORD }}
+          pr_number: ${{ needs.setup.outputs.pr_num }}
           environment: integration
           secret-key: ${{ secrets.GPG_KEY }}
-          namespace: ${{ env.NAMESPACE }}
+          argocd-app-name: nawhas-integration-${{ github.event.pull_request.number }}
+          base-url: pr-${{ needs.setup.outputs.pr_num }}.intg.k8s.nawhas.com
           tag: ${{ env.APP_VERSION }}
 
       - name: Post Link on PR
@@ -253,7 +233,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          msg: "Your integration branch has been deployed to https://${{ env.APP_DOMAIN }}"
+          msg: "Your integration branch has been deployed to https://${{ env.WEB_DOMAIN }}"
           check_for_duplicate_msg: true
   ################################################################
   # Notify Build Status

@@ -1,0 +1,13 @@
+{{- if .Values.postgres.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.postgres.configName }}
+  labels:
+    app: {{ .Values.postgres.name }}
+data:
+  POSTGRES_MULTIPLE_DATABASES: nawhas_original,nawhas_events,nawhas_data
+  POSTGRES_USER: nawhas
+  POSTGRES_PASSWORD: secret
+  PGDATA: /var/lib/postgresql/data/pgdata
+{{- end }}
