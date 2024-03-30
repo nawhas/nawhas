@@ -2,8 +2,7 @@ name: Deploy Integration Environment
 
 on:
   pull_request:
-    branches:
-      - '*-integration'
+    types: [opened, reopened, synchronize]
 
 jobs:
   deploy:
@@ -19,6 +18,7 @@ jobs:
           PR_NUMBER: ${{ steps.pr_number.outputs.pr_number }}
 
       - name: Deploy through ArgoCD
+        if: contains(github.head_ref, '-integration')
         uses: ./.github/actions/argocd-deploy
         with:
           server: ${{ secrets.ARGOCD_SERVER }}

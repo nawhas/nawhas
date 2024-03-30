@@ -3,15 +3,15 @@ name: 'Integration ArgoCD Cleanup'
 on:
   pull_request:
     types: [closed]
-    branches:
-      - '*-integration'
 
 jobs:
   cleanup:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+
       - uses: ./.github/actions/argocd-deploy-cleanup
+        if: contains(github.head_ref, '-integration')
         with:
           server: ${{ secrets.ARGOCD_SERVER }}
           username: ${{ secrets.ARGOCD_USERNAME }}
