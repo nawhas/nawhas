@@ -59,6 +59,7 @@ runs:
             if [[ "$line" == *=* ]]; then
               key=${line%%=*}
               value=${line#*=}
+              echo "::add-mask::$value"
               echo "${prefix}_$key=$value" >> $GITHUB_ENV
             fi
           done < $env_file
