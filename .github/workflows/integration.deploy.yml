@@ -220,11 +220,10 @@ jobs:
           server: ${{ secrets.ARGOCD_SERVER }}
           username: ${{ secrets.ARGOCD_USERNAME }}
           password: ${{ secrets.ARGOCD_PASSWORD }}
-          pr_number: ${{ needs.setup.outputs.pr_num }}
           environment: integration
           secret-key: ${{ secrets.GPG_KEY }}
           argocd-app-name: nawhas-integration-${{ github.event.pull_request.number }}
-          base-url: pr-${{ needs.setup.outputs.pr_num }}.intg.k8s.nawhas.com
+          base-url: pr-${{ github.event.pull_request.number }}.intg.k8s.nawhas.com
           tag: ${{ env.APP_VERSION }}
 
       - name: Post Link on PR

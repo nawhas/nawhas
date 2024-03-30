@@ -10,9 +10,6 @@ inputs:
   password:
     description: "ArgoCD Password"
     required: true
-  pr_number:
-    description: "Pull Request Number"
-    required: true
   secret-key:
     description: "key for decryption"
     required: true
