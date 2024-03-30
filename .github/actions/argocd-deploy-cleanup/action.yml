@@ -1,0 +1,36 @@
+name: 'ArgoCD Deploy Cleanup'
+description: 'Cleanup ArgoCD deployments'
+inputs:
+  server:
+    description: 'ArgoCD server URL'
+    required: true
+  username:
+    description: 'ArgoCD username'
+    required: true
+  password:
+    description: 'ArgoCD password'
+    required: true
+  argocd-app-name:
+    description: 'ArgoCD application name'
+    required: true
+runs:
+  using: "composite"
+  steps:
+    - name: Install ArgoCD
+      shell: bash
+      run: |
+        curl -sSL -o argocd https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64
+        chmod +x argocd
+        sudo mv argocd /usr/local/bin/
+
+    - name: Login to Argo CD
+      shell: bash
+      run: argocd login $ARGOCD_SERVER --grpc-web --username $ARGOCD_USERNAME --password $ARGOCD_PASSWORD
+      env:
+        ARGOCD_SERVER: ${{ inputs.server }}
+        ARGOCD_USERNAME: ${{ inputs.username }}
+        ARGOCD_PASSWORD: ${{ inputs.password }}
+
+    - name: 'Cleanup ArgoCD deployments'
+      run: |
+        argocd app delete ${{ inputs.argocd-app-name }}
