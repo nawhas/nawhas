@@ -10,11 +10,17 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: Get PR number
+        id: pr_number
+        run: echo "PR number is ${{ github.event.pull_request.number }}"
+        env:
+          PR_NUMBER: ${{ steps.pr_number.outputs.pr_number }}
+
       - uses: ./.github/actions/argocd-deploy-cleanup
         if: contains(github.head_ref, '-integration')
         with:
           server: ${{ secrets.ARGOCD_SERVER }}
           username: ${{ secrets.ARGOCD_USERNAME }}
           password: ${{ secrets.ARGOCD_PASSWORD }}
-          argocd-app-name: nawhas-integration-${{ github.event.pull_request.head_ref }}
+          argocd-app-name: nawhas-integration-${{ github.event.pull_request.number }}
 
