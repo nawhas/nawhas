@@ -30,6 +30,31 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+      
+      - name: Prepare Environment
+        run: |
+          ./scripts/github/prepare-integration-environment.sh
+
+      - name: Substitute Deployment Variables
+        run: |
+          {
+            echo "APP_DOMAIN=${APP_DOMAIN}"
+            echo "ALGOLIA_PREFIX=${ALGOLIA_PREFIX}"
+            echo "SESSION_COOKIE_PREFIX=${SESSION_COOKIE_PREFIX}"
+          } >> ./k8s/overlays/integration/env/api.env
+          
+          {
+            echo "API_BASE_URL=https://${API_DOMAIN}/"
+            echo "APP_DOMAIN=https://${APP_DOMAIN}"
+            echo "SEARCH_HOST=https://${SEARCH_HOST}"
+          } >> ./k8s/overlays/integration/env/web.env
+          
+          cat ./k8s/overlays/integration/ingress.yml \
+            | sed "s/<INTG_APP_DOMAIN>/${APP_DOMAIN}/g" \
+            | sed "s/<INTG_API_DOMAIN>/${API_DOMAIN}/g" \
+            | sed "s/<INTG_SEARCH_HOST>/${SEARCH_HOST}/g" \
+            | sed "s/<INTG_MAIL_HOST>/${MAIL_HOST}/g" \
+          > ./k8s/overlays/integration/ingress.yml
 
       - name: Determine PR Number
         id: environment
