@@ -17,7 +17,7 @@ class DraftLyricsProjector extends Projector
         $draftLyrics = new DraftLyrics();
         $draftLyrics->id = $event->id;
         $draftLyrics->track_id = $event->trackId;
-        $draftLyrics->format = $event->document->getFormat();
+        $draftLyrics->format = $event->document->getFormat()->value;
         $draftLyrics->content = $event->document->getContent();
         $draftLyrics->save();
     }
@@ -25,7 +25,7 @@ class DraftLyricsProjector extends Projector
     public function onDraftLyricsChanged(DraftLyricsChanged $event)
     {
         $draftLyrics = DraftLyrics::retrieve($event->id);
-        $draftLyrics->format = $event->document->getFormat();
+        $draftLyrics->format = $event->document->getFormat()->value;
         $draftLyrics->content = $event->document->getContent();
         $draftLyrics->save();
     }
