@@ -114,6 +114,11 @@ return [
         // Account Events
         'accounts.saves.track.added' => Accounts\Saves\TrackSaved::class,
         'accounts.saves.track.removed' => Accounts\Saves\SavedTrackRemoved::class,
+        // Draft Lyrics
+        'drafts.lyrics.created' => Library\Drafts\Lyrics\DraftLyricsCreated::class,
+        'drafts.lyrics.changed' => Library\Drafts\Lyrics\DraftLyricsChanged::class,
+        'drafts.lyrics.published' => Library\Drafts\Lyrics\DraftLyricsPublished::class,
+        'drafts.lyrics.deleted' => Library\Drafts\Lyrics\DraftLyricsDeleted::class,
     ],
 
     /*
