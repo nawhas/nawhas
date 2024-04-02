@@ -25,4 +25,9 @@ trait ModelFactories
     {
         return app(TrackFactory::class);
     }
+
+    protected function getDraftLyricsFactory(): DraftLyricsFactory
+    {
+        return app(DraftLyricsFactory::class);
+    }
 }

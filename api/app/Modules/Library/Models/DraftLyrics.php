@@ -52,6 +52,6 @@ class DraftLyrics extends Model implements TimestampedEntity
 
     public function track(): HasOne
     {
-        return $this->hasOne(Track::class);
+        return $this->hasOne(Track::class, 'id', 'track_id');
     }
 }
