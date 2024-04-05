@@ -239,12 +239,16 @@ jobs:
           > ./k8s/overlays/integration/ingress.yml
 
       - name: Deploy
-        uses: ./.github/actions/deploy
+        if: contains(github.head_ref, '-integration')
+        uses: ./.github/actions/argocd-deploy
         with:
-          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+          server: ${{ secrets.ARGOCD_SERVER }}
+          username: ${{ secrets.ARGOCD_USERNAME }}
+          password: ${{ secrets.ARGOCD_PASSWORD }}
           environment: integration
           secret-key: ${{ secrets.GPG_KEY }}
-          namespace: ${{ env.NAMESPACE }}
+          argocd-app-name: nawhas-integration-${{ github.event.pull_request.number }}
+          base-url: pr-${{ github.event.pull_request.number }}.intg.k8s.nawhas.com
           tag: ${{ env.APP_VERSION }}
 
       - name: Post Link on PR
@@ -253,7 +257,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          msg: "Your integration branch has been deployed to https://${{ env.APP_DOMAIN }}"
+          msg: "Your integration branch has been deployed to https://${{ env.WEB_DOMAIN }}"
           check_for_duplicate_msg: true
   ################################################################
   # Notify Build Status

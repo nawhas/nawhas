@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.search.name }}
+  labels:
+    app: {{ .Values.search.name }}
+    tier: backend
+spec:
+  replicas: {{ .Values.search.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.search.name }}
+      tier: backend
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.search.name }}
+        tier: backend
+    spec:
+      containers:
+      - name: {{ .Values.search.containerName }}
+        image: {{ .Values.search.image }}:{{ .Values.search.tag }}
+        imagePullPolicy: IfNotPresent
+        env:
+          {{- range $key, $value := .Values.search.env }}
+          - name: {{ $key }}
+            value: {{ $value | quote }}
+          {{- end }}
+        ports:
+        - containerPort: 7700
+        volumeMounts:
+        - mountPath: /meili_data
+          name: search-data
+      volumes:
+      - name: search-data
+        persistentVolumeClaim:
+          claimName: {{ .Values.search.pvcName }}
