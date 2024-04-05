@@ -23,4 +23,3 @@ spec:
           image: {{ .Values.cache.image }}:{{ .Values.cache.tag }}
           ports:
             - containerPort: 6379
-
