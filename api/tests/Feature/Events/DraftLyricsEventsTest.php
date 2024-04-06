@@ -9,6 +9,7 @@ use App\Modules\Library\Models\DraftLyrics;
 use App\Modules\Library\Models\Reciter;
 use App\Modules\Library\Models\Track;
 use App\Modules\Lyrics\Documents\Document;
+use App\Modules\Lyrics\Documents\Factory;
 use function App\Support\uuid;
 
 class DraftLyricsEventsTest extends EventsTestCase
@@ -88,8 +89,8 @@ class DraftLyricsEventsTest extends EventsTestCase
         $this->assertNotNull($draftLyrics);
 
         $this->assertEquals($track_id, $draftLyrics->track_id);
-        $this->assertEquals($format, $draftLyrics->format);
-        $this->assertEquals($content, $draftLyrics->content);
+        $this->assertEquals($format, $draftLyrics->document->getFormat()->value);
+        $this->assertEquals($content, $draftLyrics->document->getContent());
     }
 
     /**
@@ -131,8 +132,7 @@ class DraftLyricsEventsTest extends EventsTestCase
         $this->replay();
 
         $draftLyrics->refresh();
-        $this->assertEquals($document->getContent(), $draftLyrics->content);
-        $this->assertEquals($document->getFormat()->value, $draftLyrics->format);
+        $this->assertEquals($document, $draftLyrics->document);
     }
 
     /**
@@ -143,7 +143,7 @@ class DraftLyricsEventsTest extends EventsTestCase
     public function it_can_replay_draft_lyrics_published_event(): void
     {
         $draftLyrics = $this->getDraftLyricsFactory()->create();
-        $draftLyricsDocument = \App\Modules\Lyrics\Documents\JsonV1\Document::fromJson($draftLyrics->content);
+        $draftLyricsDocument = $draftLyrics->document;
         $track  = $draftLyrics->track;
         $this->assertNotEquals($track->lyrics, $draftLyricsDocument);
 

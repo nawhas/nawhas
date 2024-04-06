@@ -14,8 +14,7 @@ return new class extends Migration
         Schema::connection('data')->create('draft_lyrics', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->uuid('track_id')->unique();
-            $table->integer('format')->nullable();
-            $table->json('content')->nullable();
+            $table->json('document')->nullable();
             $table->timestamps();
         });
     }

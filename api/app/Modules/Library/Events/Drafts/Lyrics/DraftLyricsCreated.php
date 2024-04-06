@@ -31,10 +31,9 @@ class DraftLyricsCreated extends DraftLyricsEvent implements SerializableEvent
      */
     public static function fromPayload(array $payload): static
     {
-        $document = $payload['document'] ? Factory::create(
-            $payload['document']['content'],
-            Format::from($payload['document']['format'])
-        ) : null;
+        $format = Format::from($payload['document']['format']);
+        $content = $payload['document']['content'];
+        $document = Factory::create($content, $format);
 
         return new static($payload['id'], $payload['track_id'], $document);
     }

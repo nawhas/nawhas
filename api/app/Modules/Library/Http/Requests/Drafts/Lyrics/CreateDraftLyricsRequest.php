@@ -5,7 +5,11 @@ declare(strict_types=1);
 namespace App\Modules\Library\Http\Requests\Drafts\Lyrics;
 
 use App\Http\Requests\Request;
+use App\Modules\Library\Models\DraftLyrics;
 use App\Modules\Library\Models\Track;
+use App\Modules\Lyrics\Documents\Document;
+use App\Modules\Lyrics\Documents\Factory as DocumentFactory;
+use App\Modules\Lyrics\Documents\Format;
 use Illuminate\Validation\Rule;
 
 class CreateDraftLyricsRequest extends Request
@@ -20,31 +24,44 @@ class CreateDraftLyricsRequest extends Request
         return [
             'track_id' => [
                 'required',
-                Rule::exists(Track::class, 'id')
+                Rule::exists(Track::class, 'id'),
+                Rule::unique(DraftLyrics::class, 'track_id')
             ],
             'document' => [
                 'required',
                 'array',
-                'size:2',
-                'required_with:document.content,document.format'
+                'size:2'
             ],
-            'document.content' => ['required_with:document'],
-            'document.format' => ['required_with:document', 'integer']
+            'document.content' => ['required', 'string'],
+            'document.format' => ['required', Rule::enum(Format::class)]
         ];
     }
 
-    public function track(): Track
+    public function getTrackId(): string
     {
-        return Track::retrieve($this->get('track_id'));
+        return $this->get('track_id');
     }
 
-    public function documentContent(): string
+    public function getTrack(): Track
     {
-        return $this->get('document.content');
+        return Track::retrieve($this->getTrackId());
     }
 
-    public function documentFormat(): int
+    /**
+     * @throws \JsonException
+     */
+    public function getDocument(): Document
     {
-        return $this->get('document.format');
+        return DocumentFactory::create($this->getDocumentContent(), $this->getDocumentFormat());
+    }
+
+    public function getDocumentContent(): string
+    {
+        return $this->input('document')['content'];
+    }
+
+    public function getDocumentFormat(): Format
+    {
+        return Format::from((int)$this->input('document')['format']);
     }
 }

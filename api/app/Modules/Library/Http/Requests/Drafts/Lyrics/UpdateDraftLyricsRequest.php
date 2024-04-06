@@ -5,31 +5,41 @@ declare(strict_types=1);
 namespace App\Modules\Library\Http\Requests\Drafts\Lyrics;
 
 use App\Http\Requests\Request;
+use App\Modules\Lyrics\Documents\Document;
+use App\Modules\Lyrics\Documents\Factory as DocumentFactory;
+use App\Modules\Lyrics\Documents\Format;
+use Illuminate\Validation\Rule;
 
 class UpdateDraftLyricsRequest extends Request
 {
     public function rules(): array
     {
         return [
-            'draft_lyrics_id' => ['required', 'uuid'],
             'document' => [
                 'required',
                 'array',
-                'size:2',
-                'required_with:document.content,document.format'
+                'size:2'
             ],
-            'document.content' => ['required_with:document'],
-            'document.format' => ['required_with:document', 'integer']
+            'document.content' => ['required'],
+            'document.format' => ['required', Rule::enum(Format::class)]
         ];
     }
 
-    public function documentContent(): string
+    /**
+     * @throws \JsonException
+     */
+    public function getDocument(): Document
+    {
+        return DocumentFactory::create($this->getDocumentContent(), $this->getDocumentFormat());
+    }
+
+    public function getDocumentContent(): string
     {
         return $this->get('document.content');
     }
 
-    public function documentFormat(): int
+    public function getDocumentFormat(): Format
     {
-        return $this->get('document.format');
+        return Format::from($this->get('document.format'));
     }
 }
