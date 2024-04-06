@@ -42,6 +42,7 @@ class DraftLyricsProjector extends Projector
     {
         $draftLyrics = DraftLyrics::retrieve($event->id);
         event(new TrackLyricsChanged($draftLyrics->track_id, $event->document));
+        $draftLyrics->delete();
     }
 
     public function onDraftLyricsDeleted(DraftLyricsDeleted $event)
