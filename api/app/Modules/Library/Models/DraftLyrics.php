@@ -65,6 +65,7 @@ class DraftLyrics extends Model implements TimestampedEntity
     public function publishLyrics(Document $document): void
     {
         event(new DraftLyricsPublished($this->id, $document));
+        event(new DraftLyricsDeleted($this->id));
     }
 
     public function deleteDraftLyrics(): void
