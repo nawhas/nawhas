@@ -91,7 +91,7 @@ Route::prefix('v1')->middleware(CacheResponse::withTags(CacheTags::LIBRARY))->gr
     | Draft Routes
     |--------------------------------------------------------------------------
     */
-    Route::prefix('draft')->group(function () {
+    Route::prefix('drafts')->group(function () {
         Route::prefix('lyrics')->group(function () {
             Route::get('/', [Controllers\DraftLyricsController::class, 'index']);
             Route::middleware([

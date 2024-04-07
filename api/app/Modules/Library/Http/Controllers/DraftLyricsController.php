@@ -5,8 +5,9 @@ declare(strict_types=1);
 namespace App\Modules\Library\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Modules\Library\Events\Drafts\Lyrics\DraftLyricsDeleted;
 use App\Modules\Library\Http\Requests\Drafts\Lyrics\CreateDraftLyricsRequest;
-use App\Modules\Library\Http\Requests\Drafts\Lyrics\GetDraftLyricsRequest;
+use App\Modules\Library\Http\Requests\Drafts\Lyrics\ListDraftLyricsRequest;
 use App\Modules\Library\Http\Requests\Drafts\Lyrics\UpdateDraftLyricsRequest;
 use App\Modules\Library\Http\Transformers\DraftLyricsTransformer;
 use App\Modules\Library\Models\DraftLyrics;
@@ -21,7 +22,7 @@ class DraftLyricsController extends Controller
         $this->transformer = $transformer;
     }
 
-    public function index(GetDraftLyricsRequest $request): JsonResponse
+    public function index(ListDraftLyricsRequest $request): JsonResponse
     {
         $draftLyrics = $request->track()->draftLyrics()->firstOrFail();
         return $this->respondWithItem($draftLyrics);
@@ -55,7 +56,7 @@ class DraftLyricsController extends Controller
      */
     public function delete(DraftLyrics $draftLyrics): Response
     {
-        $draftLyrics->deleteDraftLyrics();
+        event(new DraftLyricsDeleted($draftLyrics->id));
 
         return response()->noContent();
     }

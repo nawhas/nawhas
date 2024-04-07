@@ -67,18 +67,8 @@ class DraftLyrics extends Model implements TimestampedEntity
         event(new DraftLyricsPublished($this->id, $document));
     }
 
-    public function deleteDraftLyrics(): void
-    {
-        event(new DraftLyricsDeleted($this->id));
-    }
-
     public function track(): HasOne
     {
         return $this->hasOne(Track::class, 'id', 'track_id');
-    }
-
-    public function resolveRouteBinding($value, $field = null)
-    {
-        return $this->where('id', $value)->firstOrFail();
     }
 }

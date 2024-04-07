@@ -8,7 +8,7 @@ use League\Fractal\Resource\Primitive;
 
 class DraftLyricsTransformer extends Transformer
 {
-    protected array $availableIncludes = ['related'];
+    protected array $availableIncludes = ['track', 'related'];
 
     public function toArray(DraftLyrics $draftLyrics): array
     {
@@ -21,10 +21,15 @@ class DraftLyricsTransformer extends Transformer
         ];
     }
 
+    public function includeTrack(DraftLyrics $draftLyrics)
+    {
+        return $this->item($draftLyrics->track->album, new TrackTransformer());
+    }
+
     public function includeRelated(DraftLyrics $draftLyrics): Primitive
     {
         return $this->primitive([
-            'track' => $draftLyrics->track
+            'track' => $draftLyrics->track != null
         ]);
     }
 }

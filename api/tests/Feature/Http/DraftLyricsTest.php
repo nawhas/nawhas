@@ -12,11 +12,11 @@ use Tests\Feature\Http\Responses\DraftLyricsResponse;
 
 class DraftLyricsTest extends HttpTestCase
 {
-    private const ROUTE_GET_DRAFT_LYRICS_FOR_TRACK = 'v1/draft/lyrics?track_id=%s';
-    private const ROUTE_CREATE_DRAFT_LYRICS = 'v1/draft/lyrics';
-    private const ROUTE_SHOW_DRAFT_LYRICS = 'v1/draft/lyrics/%s';
-    private const ROUTE_EDIT_DRAFT_LYRICS = 'v1/draft/lyrics/%s';
-    private const ROUTE_DELETE_DRAFT_LYRICS = 'v1/draft/lyrics/%s';
+    private const ROUTE_GET_DRAFT_LYRICS_FOR_TRACK = 'v1/drafts/lyrics?track_id=%s';
+    private const ROUTE_CREATE_DRAFT_LYRICS = 'v1/drafts/lyrics';
+    private const ROUTE_SHOW_DRAFT_LYRICS = 'v1/drafts/lyrics/%s';
+    private const ROUTE_EDIT_DRAFT_LYRICS = 'v1/drafts/lyrics/%s';
+    private const ROUTE_DELETE_DRAFT_LYRICS = 'v1/drafts/lyrics/%s';
 
     private Track $track;
 

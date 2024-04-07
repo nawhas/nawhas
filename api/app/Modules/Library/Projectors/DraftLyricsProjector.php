@@ -38,10 +38,14 @@ class DraftLyricsProjector extends Projector
         $draftLyrics->saveOrFail();
     }
 
+    /**
+     * @throws \Throwable
+     */
     public function onDraftLyricsPublished(DraftLyricsPublished $event)
     {
         $draftLyrics = DraftLyrics::retrieve($event->id);
-        event(new TrackLyricsChanged($draftLyrics->track_id, $event->document));
+        $draftLyrics->track->lyrics = $draftLyrics->document;
+        $draftLyrics->track->saveOrFail();
         $draftLyrics->delete();
     }
 

@@ -8,7 +8,7 @@ use App\Http\Requests\Request;
 use App\Modules\Library\Models\Track;
 use Illuminate\Validation\Rule;
 
-class GetDraftLyricsRequest extends Request
+class ListDraftLyricsRequest extends Request
 {
     public function authorize(): bool
     {
