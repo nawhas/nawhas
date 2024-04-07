@@ -6,6 +6,7 @@ namespace Tests\Feature\Http;
 
 use App\Modules\Library\Models\DraftLyrics;
 use App\Modules\Library\Models\Track;
+use App\Modules\Lyrics\Documents\Format;
 use Ramsey\Uuid\Uuid;
 use Tests\Feature\Http\Responses\DraftLyricsResponse;
 
@@ -72,11 +73,29 @@ class DraftLyricsTest extends HttpTestCase
 
     /**
      * @test
+     */
+    public function track_id_is_required()
+    {
+        $this->asContributor()
+            ->url(self::ROUTE_CREATE_DRAFT_LYRICS)
+            ->post([])
+            ->assertUnprocessable()
+            ->assertJsonValidationErrors(['track_id' => 'required']);
+
+        $this->asModerator()
+            ->url(self::ROUTE_CREATE_DRAFT_LYRICS)
+            ->post([])
+            ->assertUnprocessable()
+            ->assertJsonValidationErrors(['track_id' => 'required']);
+    }
+
+    /**
+     * @test
      * @throws \JsonException
      */
-    public function moderator_can_create_new_draft()
+    public function moderator_can_create_new_draft_with_plain_text_format()
     {
-        $document = $this->getDraftLyricsFactory()->generateDocument();
+        $document = $this->getDraftLyricsFactory()->generateDocument(Format::PlainText);
 
         $response = $this->asModerator()
             ->url(self::ROUTE_CREATE_DRAFT_LYRICS)
@@ -94,9 +113,50 @@ class DraftLyricsTest extends HttpTestCase
      * @test
      * @throws \JsonException
      */
-    public function contributor_can_create_new_draft()
+    public function moderator_can_create_new_draft_with_json_format()
     {
-        $document = $this->getDraftLyricsFactory()->generateDocument();
+        $document = $this->getDraftLyricsFactory()->generateDocument(Format::JsonV1);
+
+        $response = $this->asModerator()
+            ->url(self::ROUTE_CREATE_DRAFT_LYRICS)
+            ->post([
+                'track_id' => $this->track->id,
+                'document' => $document->toArray()
+            ]);
+        DraftLyricsResponse::from($response)
+            ->assertSuccessful()
+            ->assertTrackId($this->track->id)
+            ->assertDocument($document);
+    }
+
+    /**
+     * @test
+     * @throws \JsonException
+     */
+    public function contributor_can_create_new_draft_with_plain_text_format()
+    {
+        $document = $this->getDraftLyricsFactory()->generateDocument(Format::PlainText);
+
+        $response = $this->asContributor()
+            ->url(self::ROUTE_CREATE_DRAFT_LYRICS)
+            ->post([
+                'track_id' => $this->track->id,
+                'document' => $document->toArray()
+            ]);
+
+        DraftLyricsResponse::from($response)
+            ->assertSuccessful()
+            ->assertTrackId($this->track->id)
+            ->assertDocument($document);
+    }
+
+    /**
+     * @test
+     * @throws \JsonException
+     */
+    public function contributor_can_create_new_draft_with_json_format()
+    {
+        $document = $this->getDraftLyricsFactory()->generateDocument(Format::JsonV1);
 
         $response = $this->asContributor()
             ->url(self::ROUTE_CREATE_DRAFT_LYRICS)

@@ -15,45 +15,7 @@ class DraftLyricsFactory extends Factory
      */
     protected function defaults(): array
     {
-        $document = \App\Modules\Lyrics\Documents\JsonV1\Document::fromJson(/** @lang JSON */ <<<JSON
-        {
-           "meta": {
-               "timestamps": true
-           },
-           "data": [
-               {
-                   "timestamp": 0,
-                   "lines": [
-                        { "text": "some text goes here", "repeat": 0 },
-                        { "text": "some text goes here", "repeat": 2 },
-                        { "text": "some text goes here", "repeat": 4 }
-                   ],
-                   "type": "normal"
-               },
-               {
-                   "timestamp": null,
-                   "lines": [
-                        { "text": "", "repeat": 0 }
-                   ],
-                   "type": "spacer"
-               },
-               {
-                   "timestamp": 14.04,
-                   "lines": [
-                        { "text": "some text goes here", "repeat": 0 },
-                        { "text": "some text goes here", "repeat": 2 }
-                   ]
-               },
-               {
-                   "timestamp": 19.044425,
-                   "lines": [
-                        { "text": "some text goes here", "repeat": 0 },
-                        { "text": "some text goes here", "repeat": 2 }
-                   ]
-               }
-           ]
-        }
-        JSON);
+        $document = $this->generateDocument();
         return [
             'document' => $document
         ];
@@ -70,8 +32,39 @@ class DraftLyricsFactory extends Factory
     /**
      * @throws \JsonException
      */
-    public function generateDocument(): Document
+    public function generateDocument(?Format $format = null): Document
     {
-        return DocumentFactory::create("Sample Lyrics", Format::PlainText);
+        $faker = \Faker\Factory::create();
+        if (is_null($format)) {
+            $formats = [Format::PlainText, Format::JsonV1];
+            $format = $formats[array_rand($formats)];
+        }
+        switch ($format) {
+            case Format::PlainText:
+                $text = $faker->paragraphs(3, true);
+                break;
+            case Format::JsonV1:
+                $text = json_encode([
+                    "meta" => [
+                        "timestamps" => $faker->boolean
+                    ],
+                    "data" => array_map(function () use ($faker) {
+                        return [
+                            "timestamp" => $faker->optional()->randomFloat(2, 0, 20),
+                            "lines" => array_map(function () use ($faker) {
+                                return [
+                                    "text" => $faker->sentence,
+                                    "repeat" => $faker->numberBetween(0, 5)
+                                ];
+                            }, range(1, $faker->numberBetween(1, 4))),
+                            "type" => $faker->randomElement(["normal", "spacer"])
+                        ];
+                    }, range(1, $faker->numberBetween(1, 5)))
+                ], JSON_THROW_ON_ERROR);
+                break;
+            default:
+                throw new \InvalidArgumentException("Invalid format provided");
+        }
+        return DocumentFactory::create($text, $format);
     }
 }
