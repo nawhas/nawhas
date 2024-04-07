@@ -35,11 +35,11 @@ class UpdateDraftLyricsRequest extends Request
 
     public function getDocumentContent(): string
     {
-        return $this->get('document.content');
+        return $this->input('document')['content'];
     }
 
     public function getDocumentFormat(): Format
     {
-        return Format::from($this->get('document.format'));
+        return Format::from((int)$this->input('document')['format']);
     }
 }

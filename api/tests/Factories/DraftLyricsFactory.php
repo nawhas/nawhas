@@ -4,6 +4,9 @@ namespace Tests\Factories;
 
 use App\Modules\Library\Models\DraftLyrics;
 use App\Modules\Library\Models\Track;
+use App\Modules\Lyrics\Documents\Document;
+use \App\Modules\Lyrics\Documents\Factory as DocumentFactory;
+use App\Modules\Lyrics\Documents\Format;
 
 class DraftLyricsFactory extends Factory
 {
@@ -62,5 +65,13 @@ class DraftLyricsFactory extends Factory
         $values = $this->merge($attributes);
 
         return DraftLyrics::create($track->id, $values->get('document'));
+    }
+
+    /**
+     * @throws \JsonException
+     */
+    public function generateDocument(): Document
+    {
+        return DocumentFactory::create("Sample Lyrics", Format::PlainText);
     }
 }

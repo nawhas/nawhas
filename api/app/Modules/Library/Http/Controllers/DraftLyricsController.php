@@ -55,8 +55,6 @@ class DraftLyricsController extends Controller
      */
     public function delete(DraftLyrics $draftLyrics): Response
     {
-        $this->authorize('delete', $draftLyrics);
-
         $draftLyrics->deleteDraftLyrics();
 
         return response()->noContent();
