@@ -209,23 +209,45 @@ class DraftLyricsTest extends HttpTestCase
     /**
      * @test
      */
-    public function it_can_show_draft_lyrics_details()
+    public function it_can_show_draft_lyrics_details_for_plain_text_format()
     {
-        $draftLyrics = $this->getDraftLyricsFactory()->create($this->track);
+        $draftLyricsPlainText = $this->getDraftLyricsFactory()->create($this->track, ['document' => $this->getDraftLyricsFactory()->generateDocument(Format::PlainText)]);
 
-        $response = $this->asContributor()
-            ->url(self::ROUTE_SHOW_DRAFT_LYRICS, $draftLyrics->id)
+        $responsePlainText = $this->asContributor()
+            ->url(self::ROUTE_SHOW_DRAFT_LYRICS, $draftLyricsPlainText->id)
             ->get();
-        DraftLyricsResponse::from($response)
+        DraftLyricsResponse::from($responsePlainText)
             ->assertSuccessful()
-            ->assertMatches($draftLyrics);
+            ->assertMatches($draftLyricsPlainText);
 
-        $response = $this->asModerator()
-            ->url(self::ROUTE_SHOW_DRAFT_LYRICS, $draftLyrics->id)
+        $responsePlainTextModerator = $this->asModerator()
+            ->url(self::ROUTE_SHOW_DRAFT_LYRICS, $draftLyricsPlainText->id)
             ->get();
-        DraftLyricsResponse::from($response)
+        DraftLyricsResponse::from($responsePlainTextModerator)
             ->assertSuccessful()
-            ->assertMatches($draftLyrics);
+            ->assertMatches($draftLyricsPlainText);
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_show_draft_lyrics_details_for_json_format()
+    {
+        $draftLyricsJson = $this->getDraftLyricsFactory()->create($this->track, ['document' => $this->getDraftLyricsFactory()->generateDocument(Format::JsonV1)]);
+
+        $responseJson = $this->asContributor()
+            ->url(self::ROUTE_SHOW_DRAFT_LYRICS, $draftLyricsJson->id)
+            ->get();
+        DraftLyricsResponse::from($responseJson)
+            ->assertSuccessful()
+            ->assertMatches($draftLyricsJson);
+
+        $responseJsonModerator = $this->asModerator()
+            ->url(self::ROUTE_SHOW_DRAFT_LYRICS, $draftLyricsJson->id)
+            ->get();
+        DraftLyricsResponse::from($responseJsonModerator)
+            ->assertSuccessful()
+            ->assertMatches($draftLyricsJson);
     }
 
     /**
@@ -245,10 +267,10 @@ class DraftLyricsTest extends HttpTestCase
      * @test
      * @throws \JsonException
      */
-    public function it_can_edit_draft_lyrics_as_moderator()
+    public function it_can_edit_draft_lyrics_from_plain_text_to_plain_text_as_moderator()
     {
-        $draftLyrics = $this->getDraftLyricsFactory()->create($this->track);
-        $updatedDocument = $this->getDraftLyricsFactory()->generateDocument();
+        $draftLyrics = $this->getDraftLyricsFactory()->create($this->track, ['document' => $this->getDraftLyricsFactory()->generateDocument(Format::PlainText)]);
+        $updatedDocument = $this->getDraftLyricsFactory()->generateDocument(Format::PlainText);
 
         $response = $this->asModerator()
             ->url(self::ROUTE_EDIT_DRAFT_LYRICS, $draftLyrics->id)
@@ -265,10 +287,130 @@ class DraftLyricsTest extends HttpTestCase
      * @test
      * @throws \JsonException
      */
-    public function it_can_edit_draft_lyrics_as_contributor()
+    public function it_can_edit_draft_lyrics_from_plain_text_to_json_as_moderator()
     {
-        $draftLyrics = $this->getDraftLyricsFactory()->create($this->track);
-        $updatedDocument = $this->getDraftLyricsFactory()->generateDocument();
+        $draftLyrics = $this->getDraftLyricsFactory()->create($this->track, ['document' => $this->getDraftLyricsFactory()->generateDocument(Format::PlainText)]);
+        $updatedDocument = $this->getDraftLyricsFactory()->generateDocument(Format::JsonV1);
+
+        $response = $this->asModerator()
+            ->url(self::ROUTE_EDIT_DRAFT_LYRICS, $draftLyrics->id)
+            ->patch([
+                'document' => $updatedDocument->toArray()
+            ]);
+
+        DraftLyricsResponse::from($response)
+            ->assertSuccessful()
+            ->assertDocument($updatedDocument);
+    }
+
+    /**
+     * @test
+     * @throws \JsonException
+     */
+    public function it_can_edit_draft_lyrics_from_json_to_plain_text_as_moderator()
+    {
+        $draftLyrics = $this->getDraftLyricsFactory()->create($this->track, ['document' => $this->getDraftLyricsFactory()->generateDocument(Format::JsonV1)]);
+        $updatedDocument = $this->getDraftLyricsFactory()->generateDocument(Format::PlainText);
+
+        $response = $this->asModerator()
+            ->url(self::ROUTE_EDIT_DRAFT_LYRICS, $draftLyrics->id)
+            ->patch([
+                'document' => $updatedDocument->toArray()
+            ]);
+
+        DraftLyricsResponse::from($response)
+            ->assertSuccessful()
+            ->assertDocument($updatedDocument);
+    }
+
+    /**
+     * @test
+     * @throws \JsonException
+     */
+    public function it_can_edit_draft_lyrics_from_json_to_json_as_moderator()
+    {
+        $draftLyrics = $this->getDraftLyricsFactory()->create($this->track, ['document' => $this->getDraftLyricsFactory()->generateDocument(Format::JsonV1)]);
+        $updatedDocument = $this->getDraftLyricsFactory()->generateDocument(Format::JsonV1);
+
+        $response = $this->asModerator()
+            ->url(self::ROUTE_EDIT_DRAFT_LYRICS, $draftLyrics->id)
+            ->patch([
+                'document' => $updatedDocument->toArray()
+            ]);
+
+        DraftLyricsResponse::from($response)
+            ->assertSuccessful()
+            ->assertDocument($updatedDocument);
+    }
+
+    /**
+     * @test
+     * @throws \JsonException
+     */
+    public function it_can_edit_draft_lyrics_from_plain_text_to_plain_text_as_contributor()
+    {
+        $draftLyrics = $this->getDraftLyricsFactory()->create($this->track, ['document' => $this->getDraftLyricsFactory()->generateDocument(Format::PlainText)]);
+        $updatedDocument = $this->getDraftLyricsFactory()->generateDocument(Format::PlainText);
+
+        $response = $this->asContributor()
+            ->url(self::ROUTE_EDIT_DRAFT_LYRICS, $draftLyrics->id)
+            ->patch([
+                'document' => $updatedDocument->toArray()
+            ]);
+
+        DraftLyricsResponse::from($response)
+            ->assertSuccessful()
+            ->assertDocument($updatedDocument);
+    }
+
+    /**
+     * @test
+     * @throws \JsonException
+     */
+    public function it_can_edit_draft_lyrics_from_plain_text_to_json_as_contributor()
+    {
+        $draftLyrics = $this->getDraftLyricsFactory()->create($this->track, ['document' => $this->getDraftLyricsFactory()->generateDocument(Format::PlainText)]);
+        $updatedDocument = $this->getDraftLyricsFactory()->generateDocument(Format::JsonV1);
+
+        $response = $this->asContributor()
+            ->url(self::ROUTE_EDIT_DRAFT_LYRICS, $draftLyrics->id)
+            ->patch([
+                'document' => $updatedDocument->toArray()
+            ]);
+
+        DraftLyricsResponse::from($response)
+            ->assertSuccessful()
+            ->assertDocument($updatedDocument);
+    }
+
+    /**
+     * @test
+     * @throws \JsonException
+     */
+    public function it_can_edit_draft_lyrics_from_json_to_plain_text_as_contributor()
+    {
+        $draftLyrics = $this->getDraftLyricsFactory()->create($this->track, ['document' => $this->getDraftLyricsFactory()->generateDocument(Format::JsonV1)]);
+        $updatedDocument = $this->getDraftLyricsFactory()->generateDocument(Format::PlainText);
+
+        $response = $this->asContributor()
+            ->url(self::ROUTE_EDIT_DRAFT_LYRICS, $draftLyrics->id)
+            ->patch([
+                'document' => $updatedDocument->toArray()
+            ]);
+
+        DraftLyricsResponse::from($response)
+            ->assertSuccessful()
+            ->assertDocument($updatedDocument);
+    }
+
+    /**
+     * @test
+     * @throws \JsonException
+     */
+    public function it_can_edit_draft_lyrics_from_json_to_json_as_contributor()
+    {
+        $draftLyrics = $this->getDraftLyricsFactory()->create($this->track, ['document' => $this->getDraftLyricsFactory()->generateDocument(Format::JsonV1)]);
+        $updatedDocument = $this->getDraftLyricsFactory()->generateDocument(Format::JsonV1);
 
         $response = $this->asContributor()
             ->url(self::ROUTE_EDIT_DRAFT_LYRICS, $draftLyrics->id)
