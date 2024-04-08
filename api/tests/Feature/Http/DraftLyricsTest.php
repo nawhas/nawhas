@@ -14,6 +14,7 @@ class DraftLyricsTest extends HttpTestCase
 {
     private const ROUTE_GET_DRAFT_LYRICS_FOR_TRACK = 'v1/drafts/lyrics?track_id=%s';
     private const ROUTE_CREATE_DRAFT_LYRICS = 'v1/drafts/lyrics';
+    private const ROUTE_LOCK_DRAFT_LYRICS = 'v1/drafts/lyrics/%s/lock';
     private const ROUTE_SHOW_DRAFT_LYRICS = 'v1/drafts/lyrics/%s';
     private const ROUTE_EDIT_DRAFT_LYRICS = 'v1/drafts/lyrics/%s';
     private const ROUTE_DELETE_DRAFT_LYRICS = 'v1/drafts/lyrics/%s';
@@ -479,5 +480,118 @@ class DraftLyricsTest extends HttpTestCase
         $this->url(self::ROUTE_DELETE_DRAFT_LYRICS, $draftLyrics->id)
             ->delete()
             ->assertUnauthorized();
+    }
+
+    /**
+     * @test
+     * @throws \JsonException
+     */
+    public function it_allows_user_to_edit_a_track_which_they_have_locked()
+    {
+        $requestAsContributor = $this->asContributor();
+
+        $draftLyrics = $this->getDraftLyricsFactory()->create($this->track);
+
+        $requestAsContributor
+            ->url(self::ROUTE_LOCK_DRAFT_LYRICS, $draftLyrics->id)
+            ->post();
+
+        $updatedDocument = $this->getDraftLyricsFactory()->generateDocument();
+        $response = $requestAsContributor
+            ->url(self::ROUTE_EDIT_DRAFT_LYRICS, $draftLyrics->id)
+            ->patch([
+                'document' => $updatedDocument->toArray()
+            ]);
+
+        DraftLyricsResponse::from($response)
+            ->assertSuccessful()
+            ->assertTrackId($this->track->id)
+            ->assertDocument($updatedDocument);
+    }
+
+    /**
+     * @test
+     */
+    public function it_prevents_second_user_from_locking_draft_lyrics()
+    {
+        $draftLyrics = $this->getDraftLyricsFactory()->create($this->track);
+
+        $this->asModerator()
+            ->url(self::ROUTE_LOCK_DRAFT_LYRICS, $draftLyrics->id)
+            ->post();
+
+        $response = $this->asContributor()
+            ->url(self::ROUTE_LOCK_DRAFT_LYRICS, $draftLyrics->id)
+            ->post();
+
+        $response->assertServerError()
+            ->assertSeeText('Draft Lyrics is currently locked by another user.');
+    }
+
+    /**
+     * @test
+     * @throws \JsonException
+     */
+    public function it_prevents_updating_draft_lyrics_for_locked_track_if_not_same_user()
+    {
+        $draftLyrics = $this->getDraftLyricsFactory()->create($this->track);
+
+         $this->asModerator()
+             ->url(self::ROUTE_LOCK_DRAFT_LYRICS, $draftLyrics->id)
+             ->post();
+
+        $response = $this::asContributor()
+            ->url(self::ROUTE_EDIT_DRAFT_LYRICS, $draftLyrics->id)
+            ->patch([
+                'document' => $this->getDraftLyricsFactory()->generateDocument()->toArray()
+            ]);
+
+        $response->assertServerError()
+            ->assertSeeText('Draft Lyrics is currently locked by another user.');
+    }
+
+    /**
+     * @test
+     */
+    public function it_prevents_deleting_draft_lyrics_for_locked_track_if_not_same_user()
+    {
+        $draftLyrics = $this->getDraftLyricsFactory()->create($this->track);
+
+        $this->asModerator()
+            ->url(self::ROUTE_LOCK_DRAFT_LYRICS, $draftLyrics->id)
+            ->post();
+
+        $response = $this::asContributor()
+            ->url(self::ROUTE_DELETE_DRAFT_LYRICS, $draftLyrics->id)
+            ->delete();
+
+        $response->assertServerError()
+            ->assertSeeText('Draft Lyrics is currently locked by another user.');
+    }
+
+    /**
+     * @test
+     */
+    public function it_allows_second_user_to_lock_after_first_user_saves()
+    {
+        $draftLyrics = $this->getDraftLyricsFactory()->create($this->track);
+        $requestAsModerator = $this->asModerator();
+
+        $requestAsModerator
+            ->url(self::ROUTE_LOCK_DRAFT_LYRICS, $draftLyrics->id)
+            ->post()
+            ->assertSuccessful();
+
+        $requestAsModerator
+            ->url(self::ROUTE_EDIT_DRAFT_LYRICS, $draftLyrics->id)
+            ->patch([
+                'document' => $this->getDraftLyricsFactory()->generateDocument()->toArray()
+            ])
+            ->assertSuccessful();
+
+        $this->asContributor()
+            ->url(self::ROUTE_LOCK_DRAFT_LYRICS, $draftLyrics->id)
+            ->post()
+            ->assertSuccessful();
     }
 }
