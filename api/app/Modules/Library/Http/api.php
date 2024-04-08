@@ -85,4 +85,23 @@ Route::prefix('v1')->middleware(CacheResponse::withTags(CacheTags::LIBRARY))->gr
     |--------------------------------------------------------------------------
     */
     Route::get('/redirect', [Controllers\RedirectController::class, 'redirect']);
+
+    /*
+    |--------------------------------------------------------------------------
+    | Draft Routes
+    |--------------------------------------------------------------------------
+    */
+    Route::prefix('drafts')->group(function () {
+        Route::prefix('lyrics')->group(function () {
+            Route::get('/', [Controllers\DraftLyricsController::class, 'index']);
+            Route::middleware([
+                'auth:sanctum'
+            ])->group(function () {
+                Route::post('/', [Controllers\DraftLyricsController::class, 'store']);
+                Route::get('/{draftLyrics}', [Controllers\DraftLyricsController::class, 'show']);
+                Route::patch('/{draftLyrics}', [Controllers\DraftLyricsController::class, 'update']);
+                Route::delete('/{draftLyrics}', [Controllers\DraftLyricsController::class, 'delete']);
+            });
+        });
+    });
 });
