@@ -520,8 +520,7 @@ class DraftLyricsTest extends HttpTestCase
             ->url(self::ROUTE_LOCK_DRAFT_LYRICS, $draftLyrics->id)
             ->post();
 
-        $response = $this->withoutExceptionHandling()
-            ->asContributor()
+        $response = $this->asContributor()
             ->url(self::ROUTE_LOCK_DRAFT_LYRICS, $draftLyrics->id)
             ->post();
 
@@ -541,8 +540,7 @@ class DraftLyricsTest extends HttpTestCase
              ->url(self::ROUTE_LOCK_DRAFT_LYRICS, $draftLyrics->id)
              ->post();
 
-        $response = $this->withoutExceptionHandling()
-            ->asContributor()
+        $response = $this->asContributor()
             ->url(self::ROUTE_EDIT_DRAFT_LYRICS, $draftLyrics->id)
             ->patch([
                 'document' => $this->getDraftLyricsFactory()->generateDocument()->toArray()
@@ -563,8 +561,7 @@ class DraftLyricsTest extends HttpTestCase
             ->url(self::ROUTE_LOCK_DRAFT_LYRICS, $draftLyrics->id)
             ->post();
 
-        $response = $this->withoutExceptionHandling()
-            ->asContributor()
+        $response = $this->asContributor()
             ->url(self::ROUTE_DELETE_DRAFT_LYRICS, $draftLyrics->id)
             ->delete();
 
