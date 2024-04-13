@@ -6,6 +6,7 @@ namespace App\Modules\Library\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Modules\Library\Events\Drafts\Lyrics\DraftLyricsDeleted;
+use App\Modules\Library\Exceptions\DraftUnavailableException;
 use App\Modules\Library\Http\Requests\Drafts\Lyrics\CreateDraftLyricsRequest;
 use App\Modules\Library\Http\Requests\Drafts\Lyrics\ListDraftLyricsRequest;
 use App\Modules\Library\Http\Requests\Drafts\Lyrics\UpdateDraftLyricsRequest;
@@ -14,6 +15,8 @@ use App\Modules\Library\Models\DraftLyrics;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 
 class DraftLyricsController extends Controller
 {
@@ -26,6 +29,19 @@ class DraftLyricsController extends Controller
     {
         $draftLyrics = $request->track()->draftLyrics()->firstOrFail();
         return $this->respondWithItem($draftLyrics);
+    }
+
+    public function lock(DraftLyrics $draftLyrics): Response
+    {
+        $lock = Cache::get("draftLyricsForTrack:{$draftLyrics->track_id}");
+
+        if ($lock && $lock != Auth::id()) {
+            throw DraftUnavailableException::forEntity("Lyrics");
+        }
+
+        Cache::put("draftLyricsForTrack:{$draftLyrics->track_id}", Auth::id(), 3600);
+
+        return response()->noContent();
     }
 
     /**
@@ -47,7 +63,14 @@ class DraftLyricsController extends Controller
      */
     public function update(UpdateDraftLyricsRequest $request, DraftLyrics $draftLyrics): JsonResponse
     {
+        $lock = Cache::get("draftLyricsForTrack:{$draftLyrics->track_id}");
+
+        if ($lock && $lock != $request->user()->id) {
+            throw DraftUnavailableException::forEntity("Lyrics");
+        }
+
         $draftLyrics->changeDraftLyrics($request->getDocument());
+        Cache::forget("draftLyricsForTrack:{$draftLyrics->track_id}");
         return $this->respondWithItem($draftLyrics->fresh());
     }
 
@@ -56,8 +79,13 @@ class DraftLyricsController extends Controller
      */
     public function delete(DraftLyrics $draftLyrics): Response
     {
-        event(new DraftLyricsDeleted($draftLyrics->id));
+        $lock = Cache::get("draftLyricsForTrack:{$draftLyrics->track_id}");
+        if ($lock && $lock != Auth::id()) {
+            throw DraftUnavailableException::forEntity("Lyrics");
+        }
 
+        event(new DraftLyricsDeleted($draftLyrics->id));
+        Cache::forget("draftLyricsForTrack:{$draftLyrics->track_id}");
         return response()->noContent();
     }
 }

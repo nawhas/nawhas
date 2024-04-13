@@ -98,6 +98,7 @@ Route::prefix('v1')->middleware(CacheResponse::withTags(CacheTags::LIBRARY))->gr
                 'auth:sanctum'
             ])->group(function () {
                 Route::post('/', [Controllers\DraftLyricsController::class, 'store']);
+                Route::post('/{draftLyrics}/lock', [Controllers\DraftLyricsController::class, 'lock']);
                 Route::get('/{draftLyrics}', [Controllers\DraftLyricsController::class, 'show']);
                 Route::patch('/{draftLyrics}', [Controllers\DraftLyricsController::class, 'update']);
                 Route::delete('/{draftLyrics}', [Controllers\DraftLyricsController::class, 'delete']);
