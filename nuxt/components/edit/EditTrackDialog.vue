@@ -92,10 +92,6 @@
             </template>
           </v-file-input>
         </div>
-        <timestamped-editor
-          v-model="form.lyrics"
-          :track="track"
-        />
       </v-card-text>
       <v-card-actions />
     </v-card>
@@ -106,7 +102,6 @@
 import { Component, Prop, Vue, Watch } from 'nuxt-property-decorator';
 import { clone } from '@/utils/clone';
 import { RequestOptions, TrackIncludes } from '@/api/tracks';
-import TimestampedEditor from '@/components/edit/lyrics/TimestampedEditor.vue';
 import { Documents, Format } from '@/entities/lyrics';
 import { getTrackUri } from '@/entities/track';
 import { getReciterUri } from '@/entities/reciter';
@@ -127,9 +122,7 @@ const defaults: Form = {
   video: null,
 };
 
-@Component({
-  components: { TimestampedEditor },
-})
+@Component({})
 export default class EditTrackDialog extends Vue {
   @Prop({ type: Object }) private track;
   @Prop({ type: Object }) private album;

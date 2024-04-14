@@ -100,6 +100,9 @@
             </template>
           </div>
           <div class="bar__actions bar__actions--overflow">
+            <v-btn icon>
+              <v-icon>lyrics</v-icon>
+            </v-btn>
             <favorite-track-button v-if="track" :track="track.id" />
             <v-btn v-if="track && track.lyrics" icon :color="textColor" @click="print">
               <v-icon>print</v-icon>
