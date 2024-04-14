@@ -1,6 +1,7 @@
 import type { NuxtAxiosInstance } from '@nuxtjs/axios';
-import { Format } from '@/entities/lyrics';
+import {Documents, Format} from '@/entities/lyrics';
 import { DraftLyrics } from '@/entities/draftLyrics';
+import JsonV1 = Documents.JsonV1;
 
 export interface StoreDraftLyricsPayload {
   track_id: string;
@@ -28,6 +29,10 @@ export class DraftLyricsApi {
 
   async lock(draftLyricsId: string): Promise<void> {
     return await this.axios.$post<void>(`v1/drafts/lyrics/${draftLyricsId}/lock`);
+  }
+
+  async unlock(draftLyricsId: string): Promise<void> {
+    return await this.axios.$post<void>(`v1/drafts/lyrics/${draftLyricsId}/unlock`);
   }
 
   async store(payload: StoreDraftLyricsPayload): Promise<DraftLyrics> {

@@ -44,6 +44,12 @@ class DraftLyricsController extends Controller
         return response()->noContent();
     }
 
+    public function unlock(DraftLyrics $draftLyrics): Response {
+        Cache::forget("draftLyricsForTrack:{$draftLyrics->track_id}");
+
+        return response()->noContent();
+    }
+
     /**
      * @throws \JsonException
      */
@@ -70,7 +76,7 @@ class DraftLyricsController extends Controller
         }
 
         $draftLyrics->changeDraftLyrics($request->getDocument());
-        Cache::forget("draftLyricsForTrack:{$draftLyrics->track_id}");
+        $this->unlock($draftLyrics);
         return $this->respondWithItem($draftLyrics->fresh());
     }
 
@@ -85,7 +91,7 @@ class DraftLyricsController extends Controller
         }
 
         event(new DraftLyricsDeleted($draftLyrics->id));
-        Cache::forget("draftLyricsForTrack:{$draftLyrics->track_id}");
+        $this->unlock($draftLyrics);
         return response()->noContent();
     }
 }
