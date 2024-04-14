@@ -1,7 +1,6 @@
 import type { NuxtAxiosInstance } from '@nuxtjs/axios';
-import {Documents, Format} from '@/entities/lyrics';
+import { Format } from '@/entities/lyrics';
 import { DraftLyrics } from '@/entities/draftLyrics';
-import JsonV1 = Documents.JsonV1;
 
 export interface StoreDraftLyricsPayload {
   track_id: string;
@@ -48,6 +47,10 @@ export class DraftLyricsApi {
   }
 
   async delete(draftLyricsId: string): Promise<void> {
-    await this.axios.delete(`v1/drafts/lyrics/${draftLyricsId}`);
+    return await this.axios.$delete<void>(`v1/drafts/lyrics/${draftLyricsId}`);
+  }
+
+  async publish(draftLyricsId: string) {
+    return await this.axios.$post<void>(`v1/drafts/lyrics/${draftLyricsId}/publish`);
   }
 }

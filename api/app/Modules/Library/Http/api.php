@@ -103,6 +103,7 @@ Route::prefix('v1')->middleware(CacheResponse::withTags(CacheTags::LIBRARY))->gr
                 Route::get('/{draftLyrics}', [Controllers\DraftLyricsController::class, 'show']);
                 Route::patch('/{draftLyrics}', [Controllers\DraftLyricsController::class, 'update']);
                 Route::delete('/{draftLyrics}', [Controllers\DraftLyricsController::class, 'delete']);
+                Route::post('/{draftLyrics}/publish', [Controllers\DraftLyricsController::class, 'publish']);
             });
         });
     });

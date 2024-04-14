@@ -94,4 +94,14 @@ class DraftLyricsController extends Controller
         $this->unlock($draftLyrics);
         return response()->noContent();
     }
+
+    public function publish(DraftLyrics $draftLyrics): Response
+    {
+        if (!Auth::user()->isModerator()) {
+            return response()->noContent();
+        }
+        $draftLyrics->publishLyrics($draftLyrics->document);
+        $this->unlock($draftLyrics);
+        return response()->noContent();
+    }
 }

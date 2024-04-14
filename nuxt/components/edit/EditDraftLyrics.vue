@@ -29,6 +29,13 @@
         <v-spacer />
         <div class="toolbar__actions">
           <v-btn
+            v-if="isModerator && draftLyrics"
+            text
+            @click="publish"
+          >
+            Publish
+          </v-btn>
+          <v-btn
             v-if="draftLyrics"
             text
             @click="confirmDelete"
@@ -211,10 +218,27 @@ export default class EditDraftLyrics extends Vue {
     this.close();
   }
 
+  async publish() {
+    this.loading = true;
+
+    if (!this.form.document.content || !this.draftLyrics) {
+      this.close();
+      return;
+    }
+
+    await this.$api.draftLyrics.publish(this.draftLyrics.id);
+
+    this.close();
+  }
+
   prepareLyrics() {
     const lyrics = clone(this.form.document.content);
 
     return JSON.stringify(lyrics);
+  }
+
+  get isModerator(): boolean {
+    return this.$store.getters['auth/isModerator'];
   }
 }
 </script>
