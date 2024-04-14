@@ -59,7 +59,7 @@ import { Documents, Format } from '@/entities/lyrics';
 import JsonV1Document = Documents.JsonV1.Document;
 import LyricsData = Documents.JsonV1.LyricsData;
 import GroupType = Documents.JsonV1.LineGroupType;
-import {clone} from "@/utils/clone";
+import { clone } from '@/utils/clone';
 
 interface Form {
   document: {
@@ -88,18 +88,38 @@ export default class EditDraftLyrics extends Vue {
   @Watch('dialog')
   async onDialogStateChanged(opened: boolean) {
     if (opened) {
-      this.draftLyrics = await this.$api.draftLyrics.index(this.track.id);
+      await this.getDraftLyrics();
       this.resetForm();
-      if (!this.draftLyrics) {
-        return;
-      }
-      await this.$api.draftLyrics.lock(this.draftLyrics.id);
+      await this.lock();
     } else {
-      if (!this.draftLyrics) {
-        return;
-      }
-      await this.$api.draftLyrics.unlock(this.draftLyrics.id);
+      await this.unlock();
     }
+  }
+
+  async getDraftLyrics(): Promise<void> {
+    try {
+      this.draftLyrics = await this.$api.draftLyrics.index(this.track.id);
+    } catch (e) {
+      this.draftLyrics = null;
+    }
+  }
+
+  async lock(): Promise<void> {
+    if (!this.draftLyrics) {
+      return;
+    }
+    try {
+      await this.$api.draftLyrics.lock(this.draftLyrics.id);
+    } catch (e) {}
+  }
+
+  async unlock(): Promise<void> {
+    if (!this.draftLyrics) {
+      return;
+    }
+    try {
+      await this.$api.draftLyrics.unlock(this.draftLyrics.id);
+    } catch (e) {}
   }
 
   resetForm() {

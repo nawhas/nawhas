@@ -100,24 +100,17 @@
 
 <script lang="ts">
 import { Component, Prop, Vue, Watch } from 'nuxt-property-decorator';
-import { clone } from '@/utils/clone';
 import { RequestOptions, TrackIncludes } from '@/api/tracks';
-import { Documents, Format } from '@/entities/lyrics';
 import { getTrackUri } from '@/entities/track';
 import { getReciterUri } from '@/entities/reciter';
-import JsonV1Document = Documents.JsonV1.Document;
-import GroupType = Documents.JsonV1.LineGroupType;
-import LyricsData = Documents.JsonV1.LyricsData;
 
 interface Form {
   title: string|null;
-  lyrics: JsonV1Document|null;
   audio: File|null;
   video: string|null;
 }
 const defaults: Form = {
   title: null,
-  lyrics: null,
   audio: null,
   video: null,
 };
@@ -148,39 +141,6 @@ export default class EditTrackDialog extends Vue {
     }
   }
 
-  get lyrics(): JsonV1Document|null {
-    if (!this.track.lyrics) {
-      return null;
-    }
-
-    const { content, format } = this.track.lyrics;
-    if (format === Format.JsonV1) {
-      return JSON.parse(content);
-    }
-
-    const data: LyricsData = content.trim().split(/\n/gi).map((text, index) => {
-      if (text.trim().length === 0) {
-        return {
-          timestamp: null,
-          lines: [{ text: '', repeat: 0 }],
-          type: GroupType.Spacer,
-        };
-      }
-
-      return {
-        timestamp: index === 0 ? 0 : null,
-        lines: [{ text: text.trim(), repeat: 0 }],
-      };
-    });
-
-    return {
-      meta: {
-        timestamps: false,
-      },
-      data,
-    };
-  }
-
   addFile(e) {
     const file = e.dataTransfer.files[0];
     if (file.type.match(/audio.*/)) {
@@ -200,7 +160,6 @@ export default class EditTrackDialog extends Vue {
         ...this.form,
         title,
         video,
-        lyrics: this.lyrics,
       };
     }
   }
@@ -223,9 +182,6 @@ export default class EditTrackDialog extends Vue {
     if (this.form.video) {
       data.video = this.form.video;
     }
-    if (this.form.lyrics) {
-      data.lyrics = this.prepareLyrics();
-    }
     const { reciterId } = this.album;
     const albumId = this.album.id;
     let response = await this.$api.tracks.store(
@@ -246,12 +202,6 @@ export default class EditTrackDialog extends Vue {
     if (this.track.video !== this.form.video && this.form.video) {
       data.video = this.form.video;
     }
-    const lyricsString = this.prepareLyrics();
-    if (this.track.lyrics?.content !== lyricsString && this.form.lyrics) {
-      data.lyrics = lyricsString;
-    }
-    // TODO - make dynamic
-    data.format = Format.JsonV1;
     const { id, reciterId, albumId } = this.track;
     let response = await this.$api.tracks.update(
       reciterId,
@@ -295,12 +245,6 @@ export default class EditTrackDialog extends Vue {
   close() {
     this.dialog = false;
     this.loading = false;
-  }
-
-  prepareLyrics() {
-    const lyrics = clone(this.form.lyrics);
-
-    return JSON.stringify(lyrics);
   }
 }
 </script>
