@@ -37,7 +37,7 @@
             Publish
           </v-btn>
           <v-btn
-            v-if="draftLyrics"
+            v-if="isModerator && draftLyrics"
             text
             @click="confirmDelete"
           >
