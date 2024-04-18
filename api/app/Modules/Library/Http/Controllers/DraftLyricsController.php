@@ -44,7 +44,12 @@ class DraftLyricsController extends Controller
         return response()->noContent();
     }
 
+    /**
+     * @throws AuthorizationException
+     */
     public function unlock(DraftLyrics $draftLyrics): Response {
+        $this->authorize('unlock', $draftLyrics);
+
         Cache::forget("draftLyricsForTrack:{$draftLyrics->track_id}");
 
         return response()->noContent();
@@ -52,9 +57,11 @@ class DraftLyricsController extends Controller
 
     /**
      * @throws \JsonException
+     * @throws AuthorizationException
      */
     public function store(CreateDraftLyricsRequest $request): JsonResponse
     {
+        $this->authorize('create');
         $draftLyrics = DraftLyrics::create($request->getTrackId(), $request->getDocument());
         return $this->respondWithItem($draftLyrics);
     }
@@ -66,14 +73,11 @@ class DraftLyricsController extends Controller
 
     /**
      * @throws \JsonException
+     * @throws AuthorizationException
      */
     public function update(UpdateDraftLyricsRequest $request, DraftLyrics $draftLyrics): JsonResponse
     {
-        $lock = Cache::get("draftLyricsForTrack:{$draftLyrics->track_id}");
-
-        if ($lock && $lock != $request->user()->id) {
-            throw DraftUnavailableException::forEntity("Lyrics");
-        }
+        $this->authorize('update', $draftLyrics);
 
         $draftLyrics->changeDraftLyrics($request->getDocument());
         $this->unlock($draftLyrics);
@@ -85,21 +89,20 @@ class DraftLyricsController extends Controller
      */
     public function delete(DraftLyrics $draftLyrics): Response
     {
-        $lock = Cache::get("draftLyricsForTrack:{$draftLyrics->track_id}");
-        if ($lock && $lock != Auth::id()) {
-            throw DraftUnavailableException::forEntity("Lyrics");
-        }
+        $this->authorize('delete', $draftLyrics);
 
         event(new DraftLyricsDeleted($draftLyrics->id));
         $this->unlock($draftLyrics);
         return response()->noContent();
     }
 
+    /**
+     * @throws AuthorizationException
+     */
     public function publish(DraftLyrics $draftLyrics): Response
     {
-        if (!Auth::user()->isModerator()) {
-            return response()->noContent();
-        }
+        $this->authorize('publish', $draftLyrics);
+
         $draftLyrics->publishLyrics($draftLyrics->document);
         $this->unlock($draftLyrics);
         return response()->noContent();
