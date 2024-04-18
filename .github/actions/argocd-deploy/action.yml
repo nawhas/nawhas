@@ -83,6 +83,8 @@ runs:
 
     - name: Sync Argo CD Application
       shell: bash
-      run: argocd app sync $ARGOCD_APP_NAME
+      run: |
+        argocd app sync $ARGOCD_APP_NAME --async --timeout 600
+        argocd app wait $ARGOCD_APP_NAME
       env:
         ARGOCD_APP_NAME: ${{ inputs.argocd-app-name }}
