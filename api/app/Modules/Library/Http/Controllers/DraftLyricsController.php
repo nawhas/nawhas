@@ -61,7 +61,7 @@ class DraftLyricsController extends Controller
      */
     public function store(CreateDraftLyricsRequest $request): JsonResponse
     {
-        $this->authorize('create');
+        $this->authorize('create', DraftLyrics::class);
         $draftLyrics = DraftLyrics::create($request->getTrackId(), $request->getDocument());
         return $this->respondWithItem($draftLyrics);
     }
