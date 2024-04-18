@@ -1,20 +1,14 @@
 import type { NuxtAxiosInstance } from '@nuxtjs/axios';
-import { Format } from '@/entities/lyrics';
+import { LyricsDocument } from '@/entities/lyrics';
 import { DraftLyrics } from '@/entities/draftLyrics';
 
 export interface StoreDraftLyricsPayload {
   track_id: string;
-  document: {
-    content: string;
-    format: Format;
-  };
+  document: LyricsDocument
 }
 
 export interface UpdateDraftLyricsPayload {
-  document: {
-    content: string;
-    format: Format;
-  };
+  document: LyricsDocument
 }
 
 export class DraftLyricsApi {

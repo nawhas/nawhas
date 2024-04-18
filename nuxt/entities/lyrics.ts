@@ -34,10 +34,12 @@ export enum Format {
   JsonV1 = 2,
 }
 
-export interface Lyrics {
+export interface LyricsDocument {
   content: string;
   format: Format;
+}
 
+export interface Lyrics extends LyricsDocument{
   /** @deprecated */
   id: string;
   /** @deprecated */
