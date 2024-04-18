@@ -63,7 +63,7 @@
 import { Component, Prop, Vue, Watch } from 'nuxt-property-decorator';
 import { Track } from '@/entities/track';
 import TimestampedEditor from '@/components/edit/lyrics/TimestampedEditor.vue';
-import { Documents, Format, Lyrics } from '@/entities/lyrics';
+import { Documents, DraftLyrics, Format } from '@/entities/lyrics';
 import JsonV1Document = Documents.JsonV1.Document;
 import LyricsData = Documents.JsonV1.LyricsData;
 import GroupType = Documents.JsonV1.LineGroupType;
@@ -88,7 +88,7 @@ const defaults: Form = {
 })
 export default class EditDraftLyrics extends Vue {
   @Prop({ type: Object, required: true }) private track!: Track;
-  private draftLyrics: Lyrics | null = null;
+  private draftLyrics: DraftLyrics | null = null;
   private form: Form = { ...defaults };
   private dialog = false;
   private loading = false;

@@ -1,5 +1,5 @@
 import type { NuxtAxiosInstance } from '@nuxtjs/axios';
-import { Lyrics, LyricsDocument } from '@/entities/lyrics';
+import { DraftLyrics, LyricsDocument } from '@/entities/lyrics';
 
 export interface StoreDraftLyricsPayload {
   track_id: string;
@@ -15,8 +15,8 @@ export class DraftLyricsApi {
     private axios: NuxtAxiosInstance,
   ) {}
 
-  async index(trackId: string): Promise<Lyrics> {
-    return await this.axios.$get<Lyrics>(`v1/drafts/lyrics?track_id=${trackId}`);
+  async index(trackId: string): Promise<DraftLyrics> {
+    return await this.axios.$get<DraftLyrics>(`v1/drafts/lyrics?track_id=${trackId}`);
   }
 
   async lock(draftLyricsId: string): Promise<void> {
@@ -27,16 +27,16 @@ export class DraftLyricsApi {
     return await this.axios.$post<void>(`v1/drafts/lyrics/${draftLyricsId}/unlock`);
   }
 
-  async store(payload: StoreDraftLyricsPayload): Promise<Lyrics> {
-    return await this.axios.$post<Lyrics>('v1/drafts/lyrics', payload);
+  async store(payload: StoreDraftLyricsPayload): Promise<DraftLyrics> {
+    return await this.axios.$post<DraftLyrics>('v1/drafts/lyrics', payload);
   }
 
-  async show(draftLyricsId: string): Promise<Lyrics> {
-    return await this.axios.$get<Lyrics>(`v1/drafts/lyrics/${draftLyricsId}`);
+  async show(draftLyricsId: string): Promise<DraftLyrics> {
+    return await this.axios.$get<DraftLyrics>(`v1/drafts/lyrics/${draftLyricsId}`);
   }
 
-  async update(draftLyricsId: string, payload: UpdateDraftLyricsPayload): Promise<Lyrics> {
-    return await this.axios.$patch<Lyrics>(`v1/drafts/lyrics/${draftLyricsId}`, payload);
+  async update(draftLyricsId: string, payload: UpdateDraftLyricsPayload): Promise<DraftLyrics> {
+    return await this.axios.$patch<DraftLyrics>(`v1/drafts/lyrics/${draftLyricsId}`, payload);
   }
 
   async delete(draftLyricsId: string): Promise<void> {

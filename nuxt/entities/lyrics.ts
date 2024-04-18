@@ -44,3 +44,8 @@ export interface LyricsDocument {
 export interface Lyrics extends LyricsDocument, PersistedEntity, TimestampedEntity {
   trackId: string;
 }
+
+export interface DraftLyrics extends PersistedEntity, TimestampedEntity {
+  trackId: string;
+  document: LyricsDocument;
+}
