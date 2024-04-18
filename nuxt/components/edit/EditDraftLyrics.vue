@@ -9,6 +9,7 @@
     <template #activator="{ on }">
       <v-btn
         icon
+        dark
         v-on="on"
       >
         <v-icon>lyrics</v-icon>
@@ -25,7 +26,7 @@
         >
           <v-icon>close</v-icon>
         </v-btn>
-        <v-toolbar-title>Draft Lyrics for {{ track.title }}</v-toolbar-title>
+        <v-toolbar-title>Edit Write-Up</v-toolbar-title>
         <v-spacer />
         <div class="toolbar__actions">
           <v-btn

@@ -101,7 +101,7 @@
           </div>
           <div class="bar__actions bar__actions--overflow">
             <edit-draft-lyrics v-if="track" :track="track" />
-            <favorite-track-button v-if="track" :track="track.id" />
+            <favorite-track-button v-if="track" :color="textColor" :track="track.id" />
             <v-btn v-if="track && track.lyrics" icon :color="textColor" @click="print">
               <v-icon>print</v-icon>
             </v-btn>
