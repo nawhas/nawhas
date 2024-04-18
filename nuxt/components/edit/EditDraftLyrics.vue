@@ -5,6 +5,7 @@
     fullscreen
     no-click-animation
     hide-overlay
+    transition="dialog-bottom-transition"
   >
     <template #activator="{ on }">
       <v-btn
