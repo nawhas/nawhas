@@ -14,6 +14,12 @@ class DraftLyricsPolicy
         return $user->isModerator() || $user->isContributor();
     }
 
+    /**
+     * @param User $user
+     * @param DraftLyrics $draftLyrics
+     * @return bool
+     * @throws DraftUnavailableException
+     */
     public function update(User $user, DraftLyrics $draftLyrics): bool
     {
         $lock = Cache::get("draftLyricsForTrack:{$draftLyrics->track_id}");
@@ -24,6 +30,30 @@ class DraftLyricsPolicy
         return true;
     }
 
+    /**
+     * @param User $user
+     * @param DraftLyrics $draftLyrics
+     * @return bool
+     * @throws DraftUnavailableException
+     */
+    public function lock(User $user, DraftLyrics $draftLyrics): bool
+    {
+        $lock = Cache::get("draftLyricsForTrack:{$draftLyrics->track_id}");
+
+        if ($lock && $lock != $user->id) {
+            throw DraftUnavailableException::forEntity("Lyrics");
+        }
+
+        return true;
+    }
+
+
+    /**
+     * @param User $user
+     * @param DraftLyrics $draftLyrics
+     * @return bool
+     * @throws DraftUnavailableException
+     */
     public function unlock(User $user, DraftLyrics $draftLyrics): bool
     {
         if ($user->isModerator()) {

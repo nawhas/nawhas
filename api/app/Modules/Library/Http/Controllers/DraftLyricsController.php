@@ -14,7 +14,6 @@ use App\Modules\Library\Http\Transformers\DraftLyricsTransformer;
 use App\Modules\Library\Models\DraftLyrics;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 
@@ -31,28 +30,41 @@ class DraftLyricsController extends Controller
         return $this->respondWithItem($draftLyrics);
     }
 
-    public function lock(DraftLyrics $draftLyrics): Response
+    /**
+     * @throws AuthorizationException
+     */
+    public function lock(DraftLyrics $draftLyrics): JsonResponse
     {
-        $lock = Cache::get("draftLyricsForTrack:{$draftLyrics->track_id}");
-
-        if ($lock && $lock != Auth::id()) {
-            throw DraftUnavailableException::forEntity("Lyrics");
+        try {
+            $this->authorize('lock', $draftLyrics);
+            /** @phpstan-ignore-next-line  */
+        } catch ( DraftUnavailableException $e) {
+            return response()->json([
+                'error' => $e->getMessage()
+            ], 423);
         }
 
         Cache::put("draftLyricsForTrack:{$draftLyrics->track_id}", Auth::id(), 3600);
 
-        return response()->noContent();
+        return response()->json();
     }
 
     /**
      * @throws AuthorizationException
      */
-    public function unlock(DraftLyrics $draftLyrics): Response {
-        $this->authorize('unlock', $draftLyrics);
+    public function unlock(DraftLyrics $draftLyrics): JsonResponse {
+        try {
+            $this->authorize('unlock', $draftLyrics);
+            /** @phpstan-ignore-next-line */
+        } catch (DraftUnavailableException $e) {
+            return response()->json([
+                'error' => $e->getMessage()
+            ], 423);
+        }
 
         Cache::forget("draftLyricsForTrack:{$draftLyrics->track_id}");
 
-        return response()->noContent();
+        return response()->json();
     }
 
     /**
@@ -61,7 +73,15 @@ class DraftLyricsController extends Controller
      */
     public function store(CreateDraftLyricsRequest $request): JsonResponse
     {
-        $this->authorize('create', DraftLyrics::class);
+        try {
+            $this->authorize('create', DraftLyrics::class);
+            /** @phpstan-ignore-next-line */
+        } catch (DraftUnavailableException $e) {
+            return response()->json([
+                'error' => $e->getMessage()
+            ], 423);
+        }
+
         $draftLyrics = DraftLyrics::create($request->getTrackId(), $request->getDocument());
         return $this->respondWithItem($draftLyrics);
     }
@@ -77,7 +97,14 @@ class DraftLyricsController extends Controller
      */
     public function update(UpdateDraftLyricsRequest $request, DraftLyrics $draftLyrics): JsonResponse
     {
-        $this->authorize('update', $draftLyrics);
+        try {
+            $this->authorize('update', $draftLyrics);
+            /** @phpstan-ignore-next-line */
+        } catch (DraftUnavailableException $e) {
+            return response()->json([
+                'error' => $e->getMessage()
+            ], 423);
+        }
 
         $draftLyrics->changeDraftLyrics($request->getDocument());
         $this->unlock($draftLyrics);
@@ -87,24 +114,24 @@ class DraftLyricsController extends Controller
     /**
      * @throws AuthorizationException
      */
-    public function delete(DraftLyrics $draftLyrics): Response
+    public function delete(DraftLyrics $draftLyrics): JsonResponse
     {
         $this->authorize('delete', $draftLyrics);
 
         event(new DraftLyricsDeleted($draftLyrics->id));
         $this->unlock($draftLyrics);
-        return response()->noContent();
+        return response()->json();
     }
 
     /**
      * @throws AuthorizationException
      */
-    public function publish(DraftLyrics $draftLyrics): Response
+    public function publish(DraftLyrics $draftLyrics): JsonResponse
     {
         $this->authorize('publish', $draftLyrics);
 
         $draftLyrics->publishLyrics($draftLyrics->document);
         $this->unlock($draftLyrics);
-        return response()->noContent();
+        return response()->json();
     }
 }
