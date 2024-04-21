@@ -1,17 +1,17 @@
 <template>
   <v-dialog
-    v-model="dialog"
     persistent
     fullscreen
     no-click-animation
     hide-overlay
     transition="dialog-bottom-transition"
+    :value="dialog"
   >
-    <template #activator="{ on }">
+    <template #activator="{}">
       <v-btn
         icon
         dark
-        v-on="on"
+        @click="handleDialog"
       >
         <v-icon>lyrics</v-icon>
       </v-btn>
@@ -68,6 +68,7 @@ import JsonV1Document = Documents.JsonV1.Document;
 import LyricsData = Documents.JsonV1.LyricsData;
 import GroupType = Documents.JsonV1.LineGroupType;
 import { clone } from '@/utils/clone';
+import { AuthReason } from '@/entities/auth';
 
 interface Form {
   document: {
@@ -102,6 +103,18 @@ export default class EditDraftLyrics extends Vue {
     } else {
       await this.unlock();
     }
+  }
+
+  handleDialog(): void {
+    if (this.isLoggedIn) {
+      this.dialog = true;
+      return;
+    }
+    this.$store.commit('auth/PROMPT_USER', { reason: AuthReason.General }, { root: true });
+  }
+
+  get isLoggedIn() {
+    return this.$store.getters['auth/user'];
   }
 
   async getDraftLyrics(): Promise<void> {
