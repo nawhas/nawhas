@@ -91,7 +91,7 @@ Route::prefix('v1')->middleware(CacheResponse::withTags(CacheTags::LIBRARY))->gr
     | Draft Routes
     |--------------------------------------------------------------------------
     */
-    Route::prefix('drafts')->group(function () {
+    Route::prefix('drafts')->middleware([ClearResponseCache::withTags(CacheTags::LIBRARY)])->group(function () {
         Route::prefix('lyrics')->group(function () {
             Route::get('/', [Controllers\DraftLyricsController::class, 'index']);
             Route::middleware([
@@ -99,9 +99,11 @@ Route::prefix('v1')->middleware(CacheResponse::withTags(CacheTags::LIBRARY))->gr
             ])->group(function () {
                 Route::post('/', [Controllers\DraftLyricsController::class, 'store']);
                 Route::post('/{draftLyrics}/lock', [Controllers\DraftLyricsController::class, 'lock']);
+                Route::post('/{draftLyrics}/unlock', [Controllers\DraftLyricsController::class, 'unlock']);
                 Route::get('/{draftLyrics}', [Controllers\DraftLyricsController::class, 'show']);
                 Route::patch('/{draftLyrics}', [Controllers\DraftLyricsController::class, 'update']);
                 Route::delete('/{draftLyrics}', [Controllers\DraftLyricsController::class, 'delete']);
+                Route::post('/{draftLyrics}/publish', [Controllers\DraftLyricsController::class, 'publish']);
             });
         });
     });

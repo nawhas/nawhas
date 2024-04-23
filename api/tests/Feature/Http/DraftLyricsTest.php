@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Http;
 
+use App\Modules\Authentication\Enum\Role;
 use App\Modules\Library\Models\DraftLyrics;
 use App\Modules\Library\Models\Track;
 use App\Modules\Lyrics\Documents\Format;
@@ -15,9 +16,11 @@ class DraftLyricsTest extends HttpTestCase
     private const ROUTE_GET_DRAFT_LYRICS_FOR_TRACK = 'v1/drafts/lyrics?track_id=%s';
     private const ROUTE_CREATE_DRAFT_LYRICS = 'v1/drafts/lyrics';
     private const ROUTE_LOCK_DRAFT_LYRICS = 'v1/drafts/lyrics/%s/lock';
+    private const ROUTE_UNLOCK_DRAFT_LYRICS = 'v1/drafts/lyrics/%s/unlock';
     private const ROUTE_SHOW_DRAFT_LYRICS = 'v1/drafts/lyrics/%s';
     private const ROUTE_EDIT_DRAFT_LYRICS = 'v1/drafts/lyrics/%s';
     private const ROUTE_DELETE_DRAFT_LYRICS = 'v1/drafts/lyrics/%s';
+    private const ROUTE_PUBLISH_DRAFT_LYRICS = 'v1/drafts/lyrics/%s/publish';
 
     private Track $track;
 
@@ -458,7 +461,7 @@ class DraftLyricsTest extends HttpTestCase
     /**
      * @test
      */
-    public function it_can_delete_draft_lyrics_as_contributor()
+    public function contributor_cannot_delete_draft_lyrics()
     {
         $draftLyrics = $this->getDraftLyricsFactory()->create($this->track);
 
@@ -466,8 +469,7 @@ class DraftLyricsTest extends HttpTestCase
             ->url(self::ROUTE_DELETE_DRAFT_LYRICS, $draftLyrics->id)
             ->delete();
 
-        $response->assertSuccessful();
-        $this->assertDatabaseMissing(DraftLyrics::class, ['id' => $draftLyrics->id]);
+        $response->assertForbidden();
     }
 
     /**
@@ -524,8 +526,7 @@ class DraftLyricsTest extends HttpTestCase
             ->url(self::ROUTE_LOCK_DRAFT_LYRICS, $draftLyrics->id)
             ->post();
 
-        $response->assertServerError()
-            ->assertSeeText('Draft Lyrics is currently locked by another user.');
+        $response->assertNoContent(423);
     }
 
     /**
@@ -546,14 +547,32 @@ class DraftLyricsTest extends HttpTestCase
                 'document' => $this->getDraftLyricsFactory()->generateDocument()->toArray()
             ]);
 
-        $response->assertServerError()
+        $response->assertStatus(423)
             ->assertSeeText('Draft Lyrics is currently locked by another user.');
     }
 
     /**
      * @test
      */
-    public function it_prevents_deleting_draft_lyrics_for_locked_track_if_not_same_user()
+    public function it_allows_moderator_to_delete_draft_lyrics_if_contributor_has_locked_it()
+    {
+        $draftLyrics = $this->getDraftLyricsFactory()->create($this->track);
+
+        $this->asContributor()
+            ->url(self::ROUTE_LOCK_DRAFT_LYRICS, $draftLyrics->id)
+            ->post();
+
+        $response = $this->asModerator()
+            ->url(self::ROUTE_DELETE_DRAFT_LYRICS, $draftLyrics->id)
+            ->delete();
+
+        $response->assertSuccessful();
+    }
+
+    /**
+     * @test
+     */
+    public function it_allows_moderator_to_delete_draft_lyrics_if_same_moderator_has_locked_it()
     {
         $draftLyrics = $this->getDraftLyricsFactory()->create($this->track);
 
@@ -561,12 +580,30 @@ class DraftLyricsTest extends HttpTestCase
             ->url(self::ROUTE_LOCK_DRAFT_LYRICS, $draftLyrics->id)
             ->post();
 
-        $response = $this->asContributor()
+        $response = $this->asModerator()
             ->url(self::ROUTE_DELETE_DRAFT_LYRICS, $draftLyrics->id)
             ->delete();
 
-        $response->assertServerError()
-            ->assertSeeText('Draft Lyrics is currently locked by another user.');
+        $response->assertSuccessful();
+    }
+
+    /**
+     * @test
+     */
+    public function it_allows_second_moderator_to_delete_draft_lyrics_if_first_moderator_has_locked_it()
+    {
+        $draftLyrics = $this->getDraftLyricsFactory()->create($this->track);
+
+        $this->asModerator()
+            ->url(self::ROUTE_LOCK_DRAFT_LYRICS, $draftLyrics->id)
+            ->post();
+
+        $newModerator = $this->getUserFactory()->create(Role::Moderator);
+        $response = $this->actingAs($newModerator)
+            ->url(self::ROUTE_DELETE_DRAFT_LYRICS, $draftLyrics->id)
+            ->delete();
+
+        $response->assertSuccessful();
     }
 
     /**
@@ -593,5 +630,118 @@ class DraftLyricsTest extends HttpTestCase
             ->url(self::ROUTE_LOCK_DRAFT_LYRICS, $draftLyrics->id)
             ->post()
             ->assertSuccessful();
+    }
+
+    /**
+     * @test
+     */
+    public function it_allows_same_moderator_to_unlock_draft_lyrics()
+    {
+        $draftLyrics = $this->getDraftLyricsFactory()->create($this->track);
+
+        $this->asModerator()
+            ->url(self::ROUTE_LOCK_DRAFT_LYRICS, $draftLyrics->id)
+            ->post()
+            ->assertSuccessful();
+
+        $response = $this->asModerator()
+            ->url(self::ROUTE_UNLOCK_DRAFT_LYRICS, $draftLyrics->id)
+            ->post();
+
+        $response->assertSuccessful();
+    }
+
+    /**
+     * @test
+     */
+    public function it_allows_different_moderator_to_unlock_draft_lyrics()
+    {
+        $draftLyrics = $this->getDraftLyricsFactory()->create($this->track);
+        $moderator1 = $this->asModerator();
+        $moderator2 = $this->asModerator();
+
+        $moderator1
+            ->url(self::ROUTE_LOCK_DRAFT_LYRICS, $draftLyrics->id)
+            ->post()
+            ->assertSuccessful();
+
+        $response = $moderator2
+            ->url(self::ROUTE_UNLOCK_DRAFT_LYRICS, $draftLyrics->id)
+            ->post();
+
+        $response->assertSuccessful();
+    }
+
+    /**
+     * @test
+     */
+    public function it_prevents_contributor_from_unlocking_draft_lyrics_if_moderator_has_locked()
+    {
+        $draftLyrics = $this->getDraftLyricsFactory()->create($this->track);
+
+
+        $this->asModerator()
+            ->url(self::ROUTE_LOCK_DRAFT_LYRICS, $draftLyrics->id)
+            ->post()
+            ->assertSuccessful();
+
+
+        $response = $this->asContributor()
+            ->url(self::ROUTE_UNLOCK_DRAFT_LYRICS, $draftLyrics->id)
+            ->post();
+
+        $response->assertNoContent(423);
+    }
+
+    /**
+     * @test
+     */
+    public function contributor_cannot_publish_draft_lyrics()
+    {
+        $draftLyrics = $this->getDraftLyricsFactory()->create($this->track);
+
+        $response = $this->asContributor()
+            ->url(self::ROUTE_PUBLISH_DRAFT_LYRICS, $draftLyrics->id)
+            ->post();
+
+        $response->assertForbidden();
+    }
+
+    /**
+     * @test
+     * @throws \JsonException
+     */
+    public function moderator_can_publish_draft_lyrics_plain_text()
+    {
+        $originalDocument = $this->getDraftLyricsFactory()->generateDocument(Format::PlainText);
+        $draftLyrics = $this->getDraftLyricsFactory()->create($this->track, ['document' => $originalDocument]);
+
+        $response = $this->asModerator()
+            ->url(self::ROUTE_PUBLISH_DRAFT_LYRICS, $draftLyrics->id)
+            ->post();
+
+        $response->assertSuccessful();
+
+        $updatedTrack = $this->track->refresh();
+        $this->assertEquals($originalDocument, $updatedTrack->lyrics);
+    }
+
+    /**
+     * @test
+     * @throws \JsonException
+     */
+    public function moderator_can_publish_draft_lyrics_json_v2()
+    {
+        $originalDocument = $this->getDraftLyricsFactory()->generateDocument(Format::JsonV1);
+        $draftLyrics = $this->getDraftLyricsFactory()->create($this->track, ['document' => $originalDocument]);
+
+        $response = $this->asModerator()
+            ->url(self::ROUTE_PUBLISH_DRAFT_LYRICS, $draftLyrics->id)
+            ->post();
+
+        $response->assertSuccessful();
+
+        $updatedTrack = $this->track->refresh();
+        $this->assertEquals($originalDocument, $updatedTrack->lyrics);
     }
 }

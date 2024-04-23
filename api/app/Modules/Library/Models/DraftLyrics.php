@@ -8,11 +8,11 @@ use App\Modules\Core\Models\HasUuid;
 use App\Modules\Core\Models\UsesDataConnection;
 use App\Modules\Library\Events\Drafts\Lyrics\DraftLyricsChanged;
 use App\Modules\Library\Events\Drafts\Lyrics\DraftLyricsCreated;
-use App\Modules\Library\Events\Drafts\Lyrics\DraftLyricsDeleted;
 use App\Modules\Library\Events\Drafts\Lyrics\DraftLyricsPublished;
 use App\Modules\Lyrics\Documents\Document;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Support\Facades\Cache;
 use Ramsey\Uuid\Uuid;
 
 /**
@@ -70,5 +70,15 @@ class DraftLyrics extends Model implements TimestampedEntity
     public function track(): HasOne
     {
         return $this->hasOne(Track::class, 'id', 'track_id');
+    }
+
+    public function lock(string $userId): void
+    {
+        Cache::put("draftLyricsForTrack:{$this->track_id}", $userId, 3600);
+    }
+
+    public function unlock(): void
+    {
+        Cache::forget("draftLyricsForTrack:{$this->track_id}");
     }
 }

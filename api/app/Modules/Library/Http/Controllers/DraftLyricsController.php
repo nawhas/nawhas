@@ -31,24 +31,54 @@ class DraftLyricsController extends Controller
         return $this->respondWithItem($draftLyrics);
     }
 
+    /**
+     * @throws AuthorizationException
+     */
     public function lock(DraftLyrics $draftLyrics): Response
     {
-        $lock = Cache::get("draftLyricsForTrack:{$draftLyrics->track_id}");
-
-        if ($lock && $lock != Auth::id()) {
-            throw DraftUnavailableException::forEntity("Lyrics");
+        try {
+            $this->authorize('lock', $draftLyrics);
+            /** @phpstan-ignore-next-line  */
+        } catch ( DraftUnavailableException $e) {
+            return response()->noContent(423);
         }
 
-        Cache::put("draftLyricsForTrack:{$draftLyrics->track_id}", Auth::id(), 3600);
+        $draftLyrics->lock(Auth::id());
+
+        return response()->noContent();
+    }
+
+    /**
+     * @throws AuthorizationException
+     */
+    public function unlock(DraftLyrics $draftLyrics): Response {
+        try {
+            $this->authorize('unlock', $draftLyrics);
+            /** @phpstan-ignore-next-line */
+        } catch (DraftUnavailableException $e) {
+            return response()->noContent(423);
+        }
+
+        $draftLyrics->unlock();
 
         return response()->noContent();
     }
 
     /**
      * @throws \JsonException
+     * @throws AuthorizationException
      */
     public function store(CreateDraftLyricsRequest $request): JsonResponse
     {
+        try {
+            $this->authorize('create', DraftLyrics::class);
+            /** @phpstan-ignore-next-line */
+        } catch (DraftUnavailableException $e) {
+            return response()->json([
+                'error' => $e->getMessage()
+            ], 423);
+        }
+
         $draftLyrics = DraftLyrics::create($request->getTrackId(), $request->getDocument());
         return $this->respondWithItem($draftLyrics);
     }
@@ -60,17 +90,21 @@ class DraftLyricsController extends Controller
 
     /**
      * @throws \JsonException
+     * @throws AuthorizationException
      */
     public function update(UpdateDraftLyricsRequest $request, DraftLyrics $draftLyrics): JsonResponse
     {
-        $lock = Cache::get("draftLyricsForTrack:{$draftLyrics->track_id}");
-
-        if ($lock && $lock != $request->user()->id) {
-            throw DraftUnavailableException::forEntity("Lyrics");
+        try {
+            $this->authorize('update', $draftLyrics);
+            /** @phpstan-ignore-next-line */
+        } catch (DraftUnavailableException $e) {
+            return response()->json([
+                'error' => $e->getMessage()
+            ], 423);
         }
 
         $draftLyrics->changeDraftLyrics($request->getDocument());
-        Cache::forget("draftLyricsForTrack:{$draftLyrics->track_id}");
+        $this->unlock($draftLyrics);
         return $this->respondWithItem($draftLyrics->fresh());
     }
 
@@ -79,13 +113,22 @@ class DraftLyricsController extends Controller
      */
     public function delete(DraftLyrics $draftLyrics): Response
     {
-        $lock = Cache::get("draftLyricsForTrack:{$draftLyrics->track_id}");
-        if ($lock && $lock != Auth::id()) {
-            throw DraftUnavailableException::forEntity("Lyrics");
-        }
+        $this->authorize('delete', $draftLyrics);
 
         event(new DraftLyricsDeleted($draftLyrics->id));
-        Cache::forget("draftLyricsForTrack:{$draftLyrics->track_id}");
+        $this->unlock($draftLyrics);
+        return response()->noContent();
+    }
+
+    /**
+     * @throws AuthorizationException
+     */
+    public function publish(DraftLyrics $draftLyrics): Response
+    {
+        $this->authorize('publish', $draftLyrics);
+
+        $draftLyrics->publishLyrics($draftLyrics->document);
+        $this->unlock($draftLyrics);
         return response()->noContent();
     }
 }
