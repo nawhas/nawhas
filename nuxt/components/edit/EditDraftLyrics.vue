@@ -132,7 +132,7 @@ export default class EditDraftLyrics extends Vue {
     try {
       await this.$api.draftLyrics.lock(this.draftLyrics.id);
     } catch (e) {
-      this.$errors.handle423();
+      this.$errors.handle423('write-up');
       this.close();
     }
   }
@@ -144,7 +144,7 @@ export default class EditDraftLyrics extends Vue {
     try {
       await this.$api.draftLyrics.unlock(this.draftLyrics.id);
     } catch (e) {
-      this.$errors.handle423();
+      this.$errors.handle423('write-up');
       this.close();
     }
   }
@@ -208,7 +208,7 @@ export default class EditDraftLyrics extends Vue {
       try {
         await this.$api.draftLyrics.delete(this.draftLyrics.id);
       } catch (e) {
-        this.$errors.handle423();
+        this.$errors.handle423('write-up');
       }
       this.close();
     }
@@ -239,7 +239,7 @@ export default class EditDraftLyrics extends Vue {
           },
         });
       } catch (e) {
-        this.$errors.handle423();
+        this.$errors.handle423('write-up');
       }
     }
 
@@ -257,7 +257,7 @@ export default class EditDraftLyrics extends Vue {
     try {
       await this.$api.draftLyrics.publish(this.draftLyrics.id);
     } catch (e) {
-      this.$errors.handle423();
+      this.$errors.handle423('write-up');
     }
 
     this.close();
