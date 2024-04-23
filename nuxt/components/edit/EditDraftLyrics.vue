@@ -131,7 +131,10 @@ export default class EditDraftLyrics extends Vue {
     }
     try {
       await this.$api.draftLyrics.lock(this.draftLyrics.id);
-    } catch (e) {}
+    } catch (e) {
+      this.$errors.handle423();
+      this.close();
+    }
   }
 
   async unlock(): Promise<void> {
@@ -140,7 +143,10 @@ export default class EditDraftLyrics extends Vue {
     }
     try {
       await this.$api.draftLyrics.unlock(this.draftLyrics.id);
-    } catch (e) {}
+    } catch (e) {
+      this.$errors.handle423();
+      this.close();
+    }
   }
 
   resetForm() {
@@ -199,7 +205,11 @@ export default class EditDraftLyrics extends Vue {
     }
 
     if (window.confirm(`Are you sure you want to delete draft lyrics for '${this.track.title}'?`)) {
-      await this.$api.draftLyrics.delete(this.draftLyrics.id);
+      try {
+        await this.$api.draftLyrics.delete(this.draftLyrics.id);
+      } catch (e) {
+        this.$errors.handle423();
+      }
       this.close();
     }
   }
@@ -221,12 +231,16 @@ export default class EditDraftLyrics extends Vue {
         },
       });
     } else {
-      await this.$api.draftLyrics.update(this.draftLyrics.id, {
-        document: {
-          content: this.prepareLyrics(),
-          format: this.form.document.format,
-        },
-      });
+      try {
+        await this.$api.draftLyrics.update(this.draftLyrics.id, {
+          document: {
+            content: this.prepareLyrics(),
+            format: this.form.document.format,
+          },
+        });
+      } catch (e) {
+        this.$errors.handle423();
+      }
     }
 
     this.close();
@@ -240,7 +254,11 @@ export default class EditDraftLyrics extends Vue {
       return;
     }
 
-    await this.$api.draftLyrics.publish(this.draftLyrics.id);
+    try {
+      await this.$api.draftLyrics.publish(this.draftLyrics.id);
+    } catch (e) {
+      this.$errors.handle423();
+    }
 
     this.close();
   }
