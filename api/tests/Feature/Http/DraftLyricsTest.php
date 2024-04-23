@@ -526,8 +526,7 @@ class DraftLyricsTest extends HttpTestCase
             ->url(self::ROUTE_LOCK_DRAFT_LYRICS, $draftLyrics->id)
             ->post();
 
-        $response->assertStatus(423)
-            ->assertSeeText('Draft Lyrics is currently locked by another user.');
+        $response->assertNoContent(423);
     }
 
     /**
@@ -691,8 +690,7 @@ class DraftLyricsTest extends HttpTestCase
             ->url(self::ROUTE_UNLOCK_DRAFT_LYRICS, $draftLyrics->id)
             ->post();
 
-        $response->assertStatus(423)
-            ->assertSeeText('Draft Lyrics is currently locked by another user.');
+        $response->assertNoContent(423);
     }
 
     /**
