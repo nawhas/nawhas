@@ -16,6 +16,27 @@
         Go home
       </v-btn>
     </div>
+    <div v-else-if="status === 423" class="error-page error-page--other">
+      <div class="error__illustration">
+        <v-icon size="64">
+          warning
+        </v-icon>
+      </div>
+      <h1 class="error__title">
+        423
+      </h1>
+      <h2 class="error__subtitle">
+        {{ error.message }}
+      </h2>
+      <div class="error__actions">
+        <v-btn to="/" x-large color="primary">
+          Go home
+        </v-btn>
+        <v-btn x-large @click="refresh()">
+          Refresh
+        </v-btn>
+      </div>
+    </div>
     <div v-else class="error-page error-page--other">
       <div class="error__illustration">
         <v-icon size="64">
