@@ -12,6 +12,7 @@ use App\Modules\Library\Http\Requests\Drafts\Lyrics\ListDraftLyricsRequest;
 use App\Modules\Library\Http\Requests\Drafts\Lyrics\UpdateDraftLyricsRequest;
 use App\Modules\Library\Http\Transformers\DraftLyricsTransformer;
 use App\Modules\Library\Models\DraftLyrics;
+use App\Support\Pagination\PaginationState;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
@@ -27,8 +28,13 @@ class DraftLyricsController extends Controller
 
     public function index(ListDraftLyricsRequest $request): JsonResponse
     {
-        $draftLyrics = $request->track()->draftLyrics()->firstOrFail();
-        return $this->respondWithItem($draftLyrics);
+        if ($request->has('track_id')) {
+            $draftLyrics = $request->track()->draftLyrics()->firstOrFail();
+            return $this->respondWithItem($draftLyrics);
+        }
+        $draftLyrics = DraftLyrics::query()->orderBy("id")
+            ->paginate(PaginationState::fromRequest($request)->getLimit());
+        return $this->respondWithPaginator($draftLyrics);
     }
 
     /**

@@ -79,6 +79,12 @@ const links = [
     exact: true,
     to: '/moderator/revisions',
   },
+  {
+    icon: 'lyrics',
+    title: 'Draft Lyrics',
+    exact: true,
+    to: '/moderator/drafts/lyrics',
+  },
   // {
   //   icon: 'group',
   //   title: 'Users',
