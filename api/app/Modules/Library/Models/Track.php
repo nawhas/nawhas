@@ -61,6 +61,7 @@ use Spatie\Sluggable\SlugOptions;
  * @method static \Illuminate\Database\Eloquent\Builder|Track popularYear()
  * @method static \Illuminate\Database\Eloquent\Builder|Track query()
  * @method static \Illuminate\Database\Eloquent\Builder|Track withTrashed()
+ * @property-read \App\Modules\Library\Models\DraftLyrics|null $draftLyrics
  * @mixin \Eloquent
  */
 class Track extends Model implements TimestampedEntity, Revisionable
@@ -159,6 +160,11 @@ class Track extends Model implements TimestampedEntity, Revisionable
     public function aliases(): HasMany
     {
         return $this->hasMany(TrackAlias::class);
+    }
+
+    public function draftLyrics(): HasOne
+    {
+        return $this->hasOne(DraftLyrics::class);
     }
 
     public function getSlugOptions(): SlugOptions

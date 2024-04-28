@@ -100,7 +100,8 @@
             </template>
           </div>
           <div class="bar__actions bar__actions--overflow">
-            <favorite-track-button v-if="track" :track="track.id" />
+            <edit-draft-lyrics v-if="track" :track="track" />
+            <favorite-track-button v-if="track" :color="textColor" :track="track.id" />
             <v-btn v-if="track && track.lyrics" icon :color="textColor" @click="print">
               <v-icon>print</v-icon>
             </v-btn>
@@ -198,6 +199,7 @@ import Vibrant from 'node-vibrant';
 import { MetaInfo } from 'vue-meta';
 import MoreTracksSkeleton from '@/components/loaders/MoreTracksSkeleton.vue';
 import EditTrackDialog from '@/components/edit/EditTrackDialog.vue';
+import EditDraftLyrics from '@/components/edit/EditDraftLyrics.vue';
 import LyricsCard from '@/components/lyrics/LyricsCard.vue';
 import { Track, getTrackUri } from '@/entities/track';
 import { Reciter, getReciterUri } from '@/entities/reciter';
@@ -221,6 +223,7 @@ export default Vue.extend({
     MoreTracksSkeleton,
     EditTrackDialog,
     LyricsCard,
+    EditDraftLyrics,
   },
 
   async asyncData({ route, $api, $errors }) {

@@ -22,5 +22,5 @@ services:
     volumes:
       - ./api/tests/Browser/screenshots:/var/www/api/tests/Browser/screenshots
       - ./api/tests/Browser/console:/var/www/api/tests/Browser/console
-      - ./api/storage/logs/tests.log:/var/www/api/storage/logs/tests.log
+#      - ./api/storage/logs/tests.log:/var/www/api/storage/logs/tests.log
 
