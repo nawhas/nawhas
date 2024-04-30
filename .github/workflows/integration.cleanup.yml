@@ -4,7 +4,7 @@ on:
   pull_request:
     types: [closed]
     branches:
-      - master
+      - '*-integration'
 
 jobs:
   clean:
@@ -26,7 +26,6 @@ jobs:
           PR_NUMBER: ${{ steps.pr_number.outputs.pr_number }}
       
       - uses: ./.github/actions/argocd-deploy-cleanup
-        if: contains(github.head_ref, '-integration')
         with:
           server: ${{ secrets.ARGOCD_SERVER }}
           username: ${{ secrets.ARGOCD_USERNAME }}
