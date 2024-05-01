@@ -1,4 +1,5 @@
 import { PersistedEntity, TimestampedEntity } from '@/entities/common';
+import { Track } from '@/entities/track';
 
 export namespace Documents {
   export namespace JsonV1 {
@@ -48,4 +49,5 @@ export interface Lyrics extends LyricsDocument, PersistedEntity, TimestampedEnti
 export interface DraftLyrics extends PersistedEntity, TimestampedEntity {
   trackId: string;
   document: LyricsDocument;
+  track?: Track;
 }

@@ -6,18 +6,17 @@
 <template>
   <v-container class="app__section mt-4">
     <h2>Draft Lyrics</h2>
-    <div v-if="draftLyrics.length > 0" class="revisions">
+    <div v-if="draftLyrics.length > 0" class="draft-lyrics">
       <v-overlay v-if="$fetchState.pending" absolute class="revisions__loading">
         <v-progress-circular
           indeterminate
         />
       </v-overlay>
-      <div
+      <draft-lyrics-card
         v-for="draft in draftLyrics"
         :key="draft.id"
-      >
-        {{ draft.trackId }}
-      </div>
+        :draft-lyric="draft"
+      />
       <v-pagination
         v-model="page"
         class="my-8"
@@ -43,6 +42,8 @@
 import Vue from 'vue';
 import { DraftLyrics } from '@/entities/lyrics';
 import { getPage } from '@/utils/route';
+import DraftLyricsCard from '@/components/moderator/draftLyrics/DraftLyricsCard.vue';
+import { DraftLyricsIncludes } from '@/api/draftLyrics';
 
 interface Data {
   draftLyrics: Array<DraftLyrics>;
@@ -51,6 +52,7 @@ interface Data {
 }
 
 export default Vue.extend({
+  components: { DraftLyricsCard },
   layout: 'moderator',
   data(): Data {
     return {
@@ -68,6 +70,11 @@ export default Vue.extend({
   async fetch() {
     const response = await this.$api.draftLyrics.getAllDraftLyrics({
       pagination: { limit: 30, page: this.page },
+      include: [
+        DraftLyricsIncludes.Track,
+        DraftLyricsIncludes.Lyrics,
+        DraftLyricsIncludes.Reciter,
+      ],
     });
     this.draftLyrics = response.data;
     this.length = response.meta.pagination.total_pages;
@@ -80,3 +87,13 @@ export default Vue.extend({
   },
 });
 </script>
+
+<style scoped lang="scss">
+.draft-lyrics {
+  position: relative;
+}
+.draft-lyrics__loading {
+  padding-top: 24px;
+  align-items: flex-start;
+}
+</style>
