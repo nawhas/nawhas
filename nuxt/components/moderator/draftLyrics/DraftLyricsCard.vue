@@ -42,7 +42,7 @@ import { relative as relativeDate, local as localDate } from '@/filters/date';
 import { ChangeType, getUserDisplay } from '@/entities/revision';
 import DiffTable from '@/components/moderator/revisions/DiffTable.vue';
 import { DraftLyrics } from '@/entities/lyrics';
-import {getTrackUri} from "@/entities/track";
+import { getTrackUri } from '@/entities/track';
 
 @Component({
   filters: {
