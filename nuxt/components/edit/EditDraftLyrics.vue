@@ -23,7 +23,7 @@
       >
         <v-btn
           icon
-          @click="close"
+          @click="closeDialog"
         >
           <v-icon>close</v-icon>
         </v-btn>
@@ -69,6 +69,7 @@ import LyricsData = Documents.JsonV1.LyricsData;
 import GroupType = Documents.JsonV1.LineGroupType;
 import { clone } from '@/utils/clone';
 import { AuthReason } from '@/entities/auth';
+import { User } from '@/entities/user';
 
 interface Form {
   document: {
@@ -93,28 +94,55 @@ export default class EditDraftLyrics extends Vue {
   private form: Form = { ...defaults };
   private dialog = false;
   private loading = false;
+  private buttonClicked: 'save' | 'publish' | 'close' | 'delete' | null = null;
 
   @Watch('dialog')
   async onDialogStateChanged(opened: boolean) {
     if (opened) {
-      await this.getDraftLyrics();
       this.resetForm();
-      await this.lock();
-    } else {
+      return;
+    }
+    if (this.buttonClicked != null && this.buttonClicked !== 'publish' && this.buttonClicked !== 'delete') {
       await this.unlock();
     }
   }
 
-  handleDialog(): void {
-    if (this.isLoggedIn) {
-      this.dialog = true;
+  async handleDialog(): Promise<void> {
+    if (!this.isLoggedIn) {
+      this.$store.commit('auth/PROMPT_USER', { reason: AuthReason.General }, { root: true });
       return;
     }
-    this.$store.commit('auth/PROMPT_USER', { reason: AuthReason.General }, { root: true });
+    await this.getDraftLyrics();
+    const canUserEdit = await this.canUserEdit();
+    if (!canUserEdit) {
+      this.$errors.handle423('write-up');
+      return;
+    }
+    this.dialog = true;
+  }
+
+  async canUserEdit(): Promise<boolean> {
+    if (!this.user) {
+      return false;
+    }
+    if (this.isModerator) {
+      await this.lock();
+      return true;
+    }
+
+    return await this.lock();
+  }
+
+  get user(): User | null {
+    return this.$store.getters['auth/user'];
   }
 
   get isLoggedIn() {
-    return this.$store.getters['auth/user'];
+    return this.user;
+  }
+
+  get isModerator(): boolean {
+    return this.$store.getters['auth/isModerator'];
   }
 
   async getDraftLyrics(): Promise<void> {
@@ -125,16 +153,16 @@ export default class EditDraftLyrics extends Vue {
     }
   }
 
-  async lock(): Promise<void> {
+  async lock(): Promise<boolean> {
     if (!this.draftLyrics) {
-      return;
+      return true;
     }
     try {
       await this.$api.draftLyrics.lock(this.draftLyrics.id);
     } catch (e) {
-      this.$errors.handle423('write-up');
-      this.close();
+      return false;
     }
+    return true;
   }
 
   async unlock(): Promise<void> {
@@ -145,7 +173,6 @@ export default class EditDraftLyrics extends Vue {
       await this.$api.draftLyrics.unlock(this.draftLyrics.id);
     } catch (e) {
       this.$errors.handle423('write-up');
-      this.close();
     }
   }
 
@@ -194,12 +221,18 @@ export default class EditDraftLyrics extends Vue {
     };
   }
 
+  closeDialog() {
+    this.buttonClicked = 'close';
+    this.close();
+  }
+
   close() {
     this.dialog = false;
     this.loading = false;
   }
 
   async confirmDelete() {
+    this.buttonClicked = 'delete';
     if (!this.draftLyrics) {
       return;
     }
@@ -215,6 +248,7 @@ export default class EditDraftLyrics extends Vue {
   }
 
   async submit() {
+    this.buttonClicked = 'save';
     this.loading = true;
 
     if (!this.form.document.content) {
@@ -247,6 +281,7 @@ export default class EditDraftLyrics extends Vue {
   }
 
   async publish() {
+    this.buttonClicked = 'publish';
     this.loading = true;
 
     if (!this.form.document.content || !this.draftLyrics) {
@@ -267,10 +302,6 @@ export default class EditDraftLyrics extends Vue {
     const lyrics = clone(this.form.document.content);
 
     return JSON.stringify(lyrics);
-  }
-
-  get isModerator(): boolean {
-    return this.$store.getters['auth/isModerator'];
   }
 }
 </script>

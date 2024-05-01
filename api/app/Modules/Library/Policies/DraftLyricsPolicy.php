@@ -38,6 +38,10 @@ class DraftLyricsPolicy
      */
     public function lock(User $user, DraftLyrics $draftLyrics): bool
     {
+        if ($user->isModerator()) {
+            return true;
+        }
+
         $lock = Cache::get("draftLyricsForTrack:{$draftLyrics->track_id}");
 
         if ($lock && $lock != $user->id) {
