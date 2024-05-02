@@ -23,7 +23,7 @@ class DraftLyricsTransformer extends Transformer
 
     public function includeTrack(DraftLyrics $draftLyrics)
     {
-        return $this->item($draftLyrics->track->album, new TrackTransformer());
+        return $this->item($draftLyrics->track, new TrackTransformer());
     }
 
     public function includeRelated(DraftLyrics $draftLyrics): Primitive

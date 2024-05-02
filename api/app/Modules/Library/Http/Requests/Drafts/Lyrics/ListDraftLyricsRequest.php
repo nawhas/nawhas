@@ -19,14 +19,14 @@ class ListDraftLyricsRequest extends Request
     {
         return [
             'track_id' => [
-                'required',
+                'sometimes',
                 Rule::exists(Track::class, 'id')
             ],
         ];
     }
 
-    public function track(): Track
+    public function track(): ?Track
     {
-        return Track::retrieve($this->get('track_id'));
+        return $this->has('track_id') ? Track::retrieve($this->get('track_id')) : null;
     }
 }
