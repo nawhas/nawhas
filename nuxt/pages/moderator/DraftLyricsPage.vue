@@ -7,7 +7,7 @@
   <v-container class="app__section mt-4">
     <h2>Draft Lyrics</h2>
     <div v-if="draftLyrics.length > 0" class="draft-lyrics">
-      <v-overlay v-if="$fetchState.pending" absolute class="revisions__loading">
+      <v-overlay v-if="$fetchState.pending" absolute class="draft-lyrics__loading">
         <v-progress-circular
           indeterminate
         />
@@ -29,10 +29,10 @@
         @input="onPageChanged"
       />
     </div>
-    <div v-else-if="$fetchState.pending" class="revisions__loading text-center">
+    <div v-else-if="$fetchState.pending" class="draft-lyrics__loading text-center">
       <v-progress-circular indeterminate />
     </div>
-    <div v-else class="revisions__empty">
+    <div v-else class="draft-lyrics__empty">
       There's nothing here.
     </div>
   </v-container>
@@ -89,6 +89,18 @@ export default Vue.extend({
 </script>
 
 <style scoped lang="scss">
+h2 {
+  font-weight: 300;
+  font-size: 34px;
+  margin-bottom: 16px;
+}
+.draft-lyrics__empty {
+  text-align: center;
+  padding: 24px 0;
+  font-size: 24px;
+  font-weight: 200;
+  opacity: 0.7;
+}
 .draft-lyrics {
   position: relative;
 }

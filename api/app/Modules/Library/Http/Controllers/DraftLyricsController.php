@@ -32,7 +32,7 @@ class DraftLyricsController extends Controller
             $draftLyrics = $request->track()->draftLyrics()->firstOrFail();
             return $this->respondWithItem($draftLyrics);
         }
-        $draftLyrics = DraftLyrics::query()->orderBy("id")
+        $draftLyrics = DraftLyrics::query()->orderBy("updated_at", "desc")
             ->paginate(PaginationState::fromRequest($request)->getLimit());
         return $this->respondWithPaginator($draftLyrics);
     }
