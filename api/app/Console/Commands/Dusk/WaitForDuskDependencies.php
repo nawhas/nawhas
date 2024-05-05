@@ -70,6 +70,27 @@ class WaitForDuskDependencies extends Command
         $this->output->writeln('<info>R</info>');
         $this->output->success('Ready after ' . $tries . ' tries! Starting tests now.');
 
+        $environment = app()->environment();
+        $db = config('database.connections.' . config('database.default'));
+        $this->output->info(
+            <<<TEXT
+            Dusk Configuration
+            Environment: $environment
+            DB Host: {$db['host']}
+            DB Database: {$db['database']}
+            TEXT
+        );
+
+        $health = json_decode(file_get_contents('http://nginx:80/alive'), true);
+        $this->output->info(
+            <<<TEXT
+            API Configuration
+            Environment: {$health['config']['environment']}
+            DB Host: {$health['config']['database']['data']['host']}
+            DB Database: {$health['config']['database']['data']['database']}
+            TEXT
+        );
+
         return 0;
     }
 

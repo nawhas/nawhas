@@ -4,16 +4,20 @@ namespace Tests\Browser;
 
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Laravel\Dusk\Browser;
-use Tests\Browser\Pages\HomePage;
+use Tests\Browser\Pages\Home;
 use Tests\DuskTestCase;
+use Throwable;
 
-class ExampleTest extends DuskTestCase
+class HomePageTest extends DuskTestCase
 {
-    public function testBasicExample(): void
+    /**
+     * @throws Throwable
+     */
+    public function testHomePageRenders(): void
     {
         $this->browse(function (Browser $browser) {
             $browser->visit('/')
-                    ->assertSee('Explore the most advanced library of nawhas online.');
+                ->on(new Home);
         });
     }
 }
