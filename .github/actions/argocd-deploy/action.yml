@@ -1,0 +1,90 @@
+name: 'Argocd Deploy'
+description: 'Deploy via ArgoCD'
+inputs:
+  server:
+    description: 'ArgoCD Server'
+    required: true
+  username:
+    description: "ArgoCD Username"
+    required: true
+  password:
+    description: "ArgoCD Password"
+    required: true
+  secret-key:
+    description: "key for decryption"
+    required: true
+  environment:
+    description: "overlay name"
+    required: true
+  argocd-app-name:
+    description: "ArgoCD App Name"
+    required: true
+  tag:
+    description: 'Image tag'
+    required: true
+  base-url:
+    description: "Base URL"
+    required: true
+runs:
+  using: "composite"
+  steps:
+    - name: Install ArgoCD
+      shell: bash
+      run: |
+        curl -sSL -o argocd https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64
+        chmod +x argocd
+        sudo mv argocd /usr/local/bin/
+
+    - name: Set up Kubectl
+      uses: azure/setup-kubectl@v1
+
+    - name: Login to Argo CD
+      shell: bash
+      run: argocd login $ARGOCD_SERVER --grpc-web --username $ARGOCD_USERNAME --password $ARGOCD_PASSWORD
+      env:
+        ARGOCD_SERVER: ${{ inputs.server }}
+        ARGOCD_USERNAME: ${{ inputs.username }}
+        ARGOCD_PASSWORD: ${{ inputs.password }}
+
+    - name: Define environment variables
+      shell: bash
+      run: |
+        echo "API_DOMAIN=api.${{ inputs.base-url }}" >> $GITHUB_ENV
+        echo "WEB_DOMAIN=${{ inputs.base-url }}" >> $GITHUB_ENV
+        echo "SEARCH_DOMAIN=search.${{ inputs.base-url }}" >> $GITHUB_ENV
+    
+    - name: Decrypt environment variables
+      working-directory: ./k8s/overlays/${{ inputs.environment }}/env
+      shell: bash
+      run: |
+        for env_file in api.secret.env web.secret.env search.secret.env; do
+          gpg --quiet --batch --yes --passphrase="$GPG_KEY" --output $env_file $env_file.gpg
+          prefix=$(echo $env_file | awk -F. '{print toupper($1)}')
+          while IFS= read -r line; do
+            if [[ "$line" == *=* ]]; then
+              key=${line%%=*}
+              value=${line#*=}
+              echo "::add-mask::$value"
+              echo "${prefix}_$key=$value" >> $GITHUB_ENV
+            fi
+          done < $env_file
+        done
+      env:
+        GPG_KEY: ${{ inputs.secret-key }}
+
+    - name: create app with configs through helm
+      shell: bash
+      run: argocd app create $ARGOCD_APP_NAME --project nawhas --sync-option CreateNamespace=true --repo git@github.com:nawhas/nawhas.git --path k8s/helm/nawhas --dest-server https://kubernetes.default.svc --dest-namespace $ARGOCD_APP_NAME --revision ${{ github.head_ref }} --helm-set namespace=$ARGOCD_APP_NAME --helm-set api.image=nawhas/api --helm-set api.tag=${{ inputs.tag }} --helm-set api.apiEnv.APP_DOMAIN=$WEB_DOMAIN --helm-set api.apiEnv.APP_KEY=${{ env.API_APP_KEY }} --helm-set api.apiEnv.AWS_ACCESS_KEY_ID=${{ env.API_AWS_ACCESS_KEY_ID }} --helm-set api.apiEnv.AWS_SECRET_ACCESS_KEY=${{ env.API_AWS_SECRET_ACCESS_KEY }} --helm-set api.apiEnv.MEILISEARCH_KEY=${{ env.API_MEILISEARCH_KEY }} --helm-set search.pvcName=search-volume-v1.3.2 --helm-set search.storageClassName=nfs-client --helm-set search.env.MEILI_MASTER_KEY=${{ env.SEARCH_MEILI_MASTER_KEY }} --helm-set queue.image=nawhas/api --helm-set queue.tag=latest --helm-set web.image=nawhas/web --helm-set web.tag=${{ inputs.tag }} --helm-set web.env.API_BASE_URL=https://$API_DOMAIN/ --helm-set web.env.APP_DOMAIN=https://$WEB_DOMAIN/ --helm-set web.env.SEARCH_HOST=https://$SEARCH_DOMAIN/ --helm-set ingress.apiHost=$API_DOMAIN --helm-set ingress.webHost=$WEB_DOMAIN --helm-set ingress.searchHost=$SEARCH_DOMAIN --helm-set postgres.enabled=true --helm-set postgres.storageClassName=nfs-client --upsert
+      env:
+        ARGOCD_APP_NAME: ${{ inputs.argocd-app-name }}
+        API_DOMAIN: ${{ env.API_DOMAIN }}
+        WEB_DOMAIN: ${{ env.WEB_DOMAIN }}
+        SEARCH_DOMAIN: ${{ env.SEARCH_DOMAIN }}
+
+    - name: Sync Argo CD Application
+      shell: bash
+      run: |
+        argocd app sync $ARGOCD_APP_NAME --async --timeout 600
+        argocd app wait $ARGOCD_APP_NAME
+      env:
+        ARGOCD_APP_NAME: ${{ inputs.argocd-app-name }}

@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.apiNginx.name }}
+  labels:
+    app: {{ .Values.apiNginx.name }}
+    tier: backend
+spec:
+  replicas: {{ .Values.apiNginx.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.apiNginx.name }}
+      tier: backend
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.apiNginx.name }}
+        tier: backend
+    spec:
+      containers:
+      - name: {{ .Values.apiNginx.containerName }}
+        image: {{ .Values.apiNginx.image }}:{{ .Values.apiNginx.tag }}
+        imagePullPolicy: IfNotPresent
+        ports:
+          - name: http
+            containerPort: 80
+          - name: https
+            containerPort: 443
+        livenessProbe:
+          httpGet:
+            path: /alive
+            port: http
+          initialDelaySeconds: 30
+          timeoutSeconds: 5
+        readinessProbe:
+          httpGet:
+            path: /alive
+            port: http
+          initialDelaySeconds: 5
+          timeoutSeconds: 5
+        volumeMounts:
+          - name: nginx-config
+            mountPath: /etc/nginx/conf.d
+      volumes:
+        - name: nginx-config
+          configMap:
+              name: nginx-config

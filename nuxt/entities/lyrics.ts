@@ -1,3 +1,6 @@
+import { PersistedEntity, TimestampedEntity } from '@/entities/common';
+import { Track } from '@/entities/track';
+
 export namespace Documents {
   export namespace JsonV1 {
     export interface Line {
@@ -34,16 +37,17 @@ export enum Format {
   JsonV1 = 2,
 }
 
-export interface Lyrics {
+export interface LyricsDocument {
   content: string;
   format: Format;
+}
 
-  /** @deprecated */
-  id: string;
-  /** @deprecated */
+export interface Lyrics extends LyricsDocument, PersistedEntity, TimestampedEntity {
   trackId: string;
-  /** @deprecated */
-  createdAt: string;
-  /** @deprecated */
-  updatedAt: string;
+}
+
+export interface DraftLyrics extends PersistedEntity, TimestampedEntity {
+  trackId: string;
+  document: LyricsDocument;
+  track?: Track;
 }

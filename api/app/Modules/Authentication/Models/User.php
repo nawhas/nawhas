@@ -136,4 +136,9 @@ class User extends Authenticatable implements TimestampedEntity
     {
         return $this->role === Role::Moderator;
     }
+
+    public function isContributor(): bool
+    {
+        return $this->role === Role::Contributor;
+    }
 }

@@ -1,0 +1,52 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: nawhas-ingress
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    cert-manager.io/cluster-issuer: "{{ .Values.ingress.clusterIssuer }}"
+    nginx.ingress.kubernetes.io/from-to-www-redirect: "true"
+    nginx.ingress.kubernetes.io/proxy-body-size: "500m"
+    nginx.org/client-max-body-size: "500m"
+    nginx.ingress.kubernetes.io/affinity: "cookie"
+    nginx.ingress.kubernetes.io/session-cookie-name: "route"
+    nginx.ingress.kubernetes.io/session-cookie-expires: "172800"
+    nginx.ingress.kubernetes.io/session-cookie-max-age: "172800"
+spec:
+  tls:
+    - hosts:
+      - {{ .Values.ingress.apiHost }}
+      - {{ .Values.ingress.webHost }}
+      - {{ .Values.ingress.searchHost }}
+      secretName: nawhas-tls
+  rules:
+    - host: {{ .Values.ingress.apiHost }}
+      http:
+        paths:
+          - pathType: Prefix
+            path: "/"
+            backend:
+              service:
+                name: {{ .Values.apiNginx.containerName }}
+                port:
+                  number: 80
+    - host: {{ .Values.ingress.webHost }}
+      http:
+        paths:
+          - pathType: Prefix
+            path: "/"
+            backend:
+              service:
+                name: {{ .Values.web.containerName }}
+                port:
+                  number: 3000
+    - host: {{ .Values.ingress.searchHost }}
+      http:
+        paths:
+          - pathType: Prefix
+            path: "/"
+            backend:
+              service:
+                name: {{ .Values.search.containerName }}
+                port:
+                  number: 7700
