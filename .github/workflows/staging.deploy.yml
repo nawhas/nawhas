@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - master
+      # TODO - remove
+      - k8s-improvements-integration
 
 concurrency:
   group: staging
