@@ -9,6 +9,17 @@
   >
     <template #activator="{}">
       <v-btn
+        v-if="cta"
+        large
+        color="primary"
+        rounded
+        dark
+        @click="handleDialog"
+      >
+        {{ cta }}
+      </v-btn>
+      <v-btn
+        v-else
         icon
         dark
         @click="handleDialog"
@@ -90,6 +101,7 @@ const defaults: Form = {
 })
 export default class EditDraftLyrics extends Vue {
   @Prop({ type: Object, required: true }) private track!: Track;
+  @Prop({ type: String, required: false }) private cta!: string|undefined;
   private draftLyrics: DraftLyrics | null = null;
   private form: Form = { ...defaults };
   private dialog = false;
