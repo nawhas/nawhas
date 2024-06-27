@@ -30,7 +30,9 @@ spec:
                 - artisan
                 - healthcheck
             initialDelaySeconds: 30
-            timeoutSeconds: 60
+            timeoutSeconds: 5
+            periodSeconds: 10
+            failureThreshold: 3
           readinessProbe:
             exec:
               command:
@@ -38,7 +40,9 @@ spec:
                 - artisan
                 - healthcheck
             initialDelaySeconds: 30
-            timeoutSeconds: 60
+            timeoutSeconds: 5
+            periodSeconds: 10
+            failureThreshold: 3
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -71,7 +75,9 @@ spec:
                 - artisan
                 - healthcheck
             initialDelaySeconds: 30
-            timeoutSeconds: 60
+            timeoutSeconds: 5
+            periodSeconds: 10
+            failureThreshold: 3
           readinessProbe:
             exec:
               command:
@@ -79,7 +85,9 @@ spec:
                 - artisan
                 - healthcheck
             initialDelaySeconds: 30
-            timeoutSeconds: 60
+            timeoutSeconds: 5
+            periodSeconds: 10
+            failureThreshold: 3
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -114,13 +122,17 @@ spec:
               path: /alive
               port: http
             initialDelaySeconds: 30
-            timeoutSeconds: 60
+            timeoutSeconds: 5
+            periodSeconds: 10
+            failureThreshold: 3
           readinessProbe:
             httpGet:
               path: /alive
               port: http
             initialDelaySeconds: 30
-            timeoutSeconds: 60
+            timeoutSeconds: 5
+            periodSeconds: 10
+            failureThreshold: 3
           volumeMounts:
             - name: nginx-config
               mountPath: /etc/nginx/conf.d
