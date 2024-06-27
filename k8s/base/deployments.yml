@@ -43,6 +43,11 @@ spec:
             timeoutSeconds: 5
             periodSeconds: 10
             failureThreshold: 3
+      initContainers:
+        - name: init-boot
+          image: IMAGE:TAG
+          imagePullPolicy: IfNotPresent
+          command: ['php', 'artisan', 'boot']
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -88,6 +93,10 @@ spec:
             timeoutSeconds: 5
             periodSeconds: 10
             failureThreshold: 3
+      initContainers:
+        - name: init-api
+          image: busybox:1.28
+          command: ['sh', '-c', "until nslookup api.$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace).svc.cluster.local; do echo waiting for api; sleep 2; done"]
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -136,6 +145,10 @@ spec:
           volumeMounts:
             - name: nginx-config
               mountPath: /etc/nginx/conf.d
+      initContainers:
+        - name: init-api
+          image: busybox:1.28
+          command: ['sh', '-c', "until nslookup api.$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace).svc.cluster.local; do echo waiting for api; sleep 2; done"]
       volumes:
         - name: nginx-config
           configMap:
