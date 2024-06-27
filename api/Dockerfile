@@ -47,14 +47,10 @@ COPY --from=build /var/www/api /var/www/api
 
 RUN chown -R www-data: /var/www/api
 
-COPY docker/entrypoint.sh /usr/bin/docker-nawhas-api-entrypoint
-RUN chmod +x /usr/bin/docker-nawhas-api-entrypoint
-
 RUN php artisan package:discover \
  && php artisan horizon:publish \
  && php artisan telescope:publish \
  && php artisan route:cache \
  && php artisan event-sourcing:cache-event-handlers
 
-HEALTHCHECK --interval=1m --timeout=3s CMD php artisan healthcheck
-ENTRYPOINT [ "docker-nawhas-api-entrypoint" ]
+HEALTHCHECK --interval=1m --timeout=10s CMD php artisan healthcheck

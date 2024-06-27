@@ -18,28 +18,32 @@ spec:
         tier: backend
     spec:
       containers:
-      - name: {{ .Values.queue.containerName }}
-        image: {{ .Values.queue.image }}:{{ .Values.queue.tag }}
-        imagePullPolicy: IfNotPresent
-        env:
-          {{- range $key, $value := .Values.api.apiEnv }}
-          - name: {{ $key }}
-            value: {{ $value | quote }}
-          {{- end }}
-        command: ['php', 'artisan', 'horizon']
-        livenessProbe:
-          exec:
-            command:
-            - php
-            - artisan
-            - healthcheck
-          initialDelaySeconds: 10
-          timeoutSeconds: 2
-        readinessProbe:
-          exec:
-            command:
-            - php
-            - artisan
-            - healthcheck
-          initialDelaySeconds: 2
-          timeoutSeconds: 2
+        - name: {{ .Values.queue.containerName }}
+          image: {{ .Values.queue.image }}:{{ .Values.queue.tag }}
+          imagePullPolicy: IfNotPresent
+          env:
+            {{- range $key, $value := .Values.api.apiEnv }}
+            - name: {{ $key }}
+              value: {{ $value | quote }}
+            {{- end }}
+          command: ['php', 'artisan', 'horizon']
+          livenessProbe:
+            exec:
+              command:
+              - php
+              - artisan
+              - healthcheck
+            initialDelaySeconds: 10
+            timeoutSeconds: 2
+          readinessProbe:
+            exec:
+              command:
+              - php
+              - artisan
+              - healthcheck
+            initialDelaySeconds: 2
+            timeoutSeconds: 2
+      initContainers:
+        - name: init-api
+          image: busybox:1.28
+          command: ['sh', '-c', "until nslookup {{ .Values.api.containerName }}.$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace).svc.cluster.local; do echo waiting for api; sleep 2; done"]
