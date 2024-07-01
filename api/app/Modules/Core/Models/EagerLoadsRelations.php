@@ -47,9 +47,6 @@ trait EagerLoadsRelations
         }
 
         $parts = explode('.', $include);
-        if (count($parts) === 0) {
-            return false;
-        }
 
         $related = $parts[0];
         $definition = $model->getEagerLoadableRelations()[$related] ?? null;
