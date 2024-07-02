@@ -7,6 +7,7 @@ namespace App\Modules\Library\Models;
 use App\Modules\Audit\Models\HasRevisions;
 use App\Modules\Audit\Revisionable\Revisionable;
 use App\Modules\Core\Contracts\TimestampedEntity;
+use App\Modules\Core\Models\EagerLoadsRelations;
 use App\Modules\Core\Models\HasTimestamps;
 use App\Modules\Core\Models\HasUuid;
 use App\Modules\Core\Models\UsesDataConnection;
@@ -49,8 +50,16 @@ class Album extends Model implements TimestampedEntity, Revisionable
     use HasRevisions;
     use UsesDataConnection;
     use Searchable;
+    use EagerLoadsRelations;
 
     protected $guarded = [];
+
+    public function getEagerLoadableRelations(): array
+    {
+        return [
+            'tracks' => Track::class,
+        ];
+    }
 
     public function getArtworkUrl(): ?string
     {

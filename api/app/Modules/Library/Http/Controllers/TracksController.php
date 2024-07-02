@@ -27,6 +27,7 @@ class TracksController extends Controller
     {
         $tracks = $album->tracks()
             ->orderBy('title')
+            ->withIncludes($request->get('include'))
             ->paginate(PaginationState::fromRequest($request)->getLimit());
 
         return $this->respondWithPaginator($tracks);
