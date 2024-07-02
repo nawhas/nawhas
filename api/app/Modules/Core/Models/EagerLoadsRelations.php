@@ -14,7 +14,7 @@ trait EagerLoadsRelations
      */
     abstract public function getEagerLoadableRelations(): array;
 
-    public function scopeWithIncludes(Builder $query, string|null $includes): Builder
+    public function scopeWithIncludes(Builder $query, string|null $includes)
     {
         if ($includes === null) {
             return $query;
