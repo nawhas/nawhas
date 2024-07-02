@@ -33,16 +33,47 @@
         </div>
       </div>
     </div>
+    <v-simple-table class="diff-table__table">
+      <template #default>
+        <thead>
+          <tr>
+            <th class="row__label" />
+            <th class="text-left overline">
+              Before
+            </th>
+            <th class="text-left overline">
+              After
+            </th>
+          </tr>
+        </thead>
+        <tbody class="diff-table__body">
+          <diff-table-row
+            attribute="Lyrics"
+            :value="getLyricsAsString(draftLyric.document)"
+            :old="getLyricsAsString(draftLyric.track?.lyrics)"
+            :hide-unchanged="true"
+          />
+        </tbody>
+      </template>
+    </v-simple-table>
+    <v-card-actions>
+      <v-spacer />
+      <v-btn text outlined color="primary" @click="publishLyrics">
+        Publish
+      </v-btn>
+    </v-card-actions>
   </v-card>
 </template>
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
-import { relative as relativeDate, local as localDate } from '@/filters/date';
+import { local as localDate, relative as relativeDate } from '@/filters/date';
 import { ChangeType, getUserDisplay } from '@/entities/revision';
 import DiffTable from '@/components/moderator/revisions/DiffTable.vue';
-import { DraftLyrics } from '@/entities/lyrics';
+import { Documents, DraftLyrics, Format, LyricsDocument } from '@/entities/lyrics';
 import { getTrackUri } from '@/entities/track';
+import DiffTableRow from '@/components/moderator/revisions/DiffTableRow.vue';
+import JsonV1Document = Documents.JsonV1.Document;
 
 @Component({
   filters: {
@@ -50,6 +81,7 @@ import { getTrackUri } from '@/entities/track';
     localDate,
   },
   components: {
+    DiffTableRow,
     DiffTable,
   },
 })
@@ -87,6 +119,26 @@ export default class DraftLyricsCard extends Vue {
       return '';
     }
     return getTrackUri(this.draftLyric.track, this.draftLyric.track.reciter);
+  }
+
+  async publishLyrics() {
+    await this.$api.draftLyrics.publish(this.draftLyric.id);
+    window.location.reload();
+  }
+
+  getLyricsAsString(document: LyricsDocument|null|undefined): string {
+    if (document == null) {
+      return '';
+    }
+    if (document.format === Format.PlainText) {
+      return document.content.replace(/\n/gi, '<br>');
+    }
+    const jsonDocument: JsonV1Document = JSON.parse(document.content);
+    return jsonDocument.data.map((lineGroup: Documents.JsonV1.LineGroup) =>
+      lineGroup.lines
+        .map((line: Documents.JsonV1.Line) => line.repeat > 0 ? `${line.text} x${line.repeat}` : line.text)
+        .join('\n'),
+    ).join('\n');
   }
 }
 </script>
@@ -150,12 +202,12 @@ export default class DraftLyricsCard extends Vue {
 
 .draft-lyrics-card__diff {
   width: 100%;
-  border-top: 1px solid rgba(0,0,0,0.07);
+  border-top: 1px solid rgba(0, 0, 0, 0.07);
 }
 
 .draft-lyrics-card--dark {
   .draft-lyrics-card__diff {
-    border-top: 1px solid rgba(255,255,255,0.07);
+    border-top: 1px solid rgba(255, 255, 255, 0.07);
   }
 }
 </style>
