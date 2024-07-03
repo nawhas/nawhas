@@ -9,7 +9,6 @@ use App\Modules\Core\Models\UsesDataConnection;
 use App\Modules\Library\Events\Drafts\Lyrics\DraftLyricsChanged;
 use App\Modules\Library\Events\Drafts\Lyrics\DraftLyricsCreated;
 use App\Modules\Library\Events\Drafts\Lyrics\DraftLyricsPublished;
-use App\Modules\Library\Events\Tracks\TrackLyricsChanged;
 use App\Modules\Lyrics\Documents\Document;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -66,7 +65,6 @@ class DraftLyrics extends Model implements TimestampedEntity
     public function publishLyrics(Document $document): void
     {
         event(new DraftLyricsPublished($this->id, $document));
-        event(new TrackLyricsChanged($this->track_id, $document));
     }
 
     public function track(): HasOne
