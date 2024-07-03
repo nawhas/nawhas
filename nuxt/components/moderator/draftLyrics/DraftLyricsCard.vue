@@ -53,6 +53,12 @@
             :old="getLyricsAsString(draftLyric.track?.lyrics)"
             :hide-unchanged="true"
           />
+          <diff-table-row
+            attribute="Format"
+            :value="draftLyric.document.format"
+            :old="draftLyric.track?.lyrics?.format"
+            :hide-unchanged="true"
+          />
         </tbody>
       </template>
     </v-simple-table>
