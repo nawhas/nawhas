@@ -68,7 +68,7 @@ export class DraftLyricsApi {
     return await this.axios.$delete<void>(`v1/drafts/lyrics/${draftLyricsId}`);
   }
 
-  async publish(draftLyricsId: string) {
+  async publish(draftLyricsId: string): Promise<void> {
     return await this.axios.$post<void>(`v1/drafts/lyrics/${draftLyricsId}/publish`);
   }
 }
