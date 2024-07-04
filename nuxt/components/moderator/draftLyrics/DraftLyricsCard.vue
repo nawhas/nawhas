@@ -64,7 +64,7 @@
     </v-simple-table>
     <v-card-actions>
       <v-spacer />
-      <v-btn text text color="primary" @click="publishLyrics">
+      <v-btn text color="primary" @click="publishLyrics">
         Publish
       </v-btn>
     </v-card-actions>
