@@ -137,7 +137,7 @@ export default class DraftLyricsCard extends Vue {
       return '';
     }
     if (document.format === Format.PlainText) {
-      return document.content.replace(/\n/gi, '<br>');
+      return document.content;
     }
     const jsonDocument: JsonV1Document = JSON.parse(document.content);
     return jsonDocument.data.map((lineGroup: Documents.JsonV1.LineGroup) =>
