@@ -65,6 +65,7 @@
                 v-if="!addedToQueueSnackbar && tracks"
                 text
                 :color="textColor"
+                dusk="add-to-queue-button"
                 @click="addToQueue"
               >
                 <v-icon left>

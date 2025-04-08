@@ -98,6 +98,19 @@ class Album extends Page
     }
 
     /**
+     * Assert that the album page shows the add to queue button.
+     *
+     * @param Browser $browser
+     * @return void
+     */
+    public function assertAddToQueueButtonVisible(Browser $browser): void
+    {
+        $browser->waitFor('@addToQueueButton')
+            ->assertVisible('@addToQueueButton')
+            ->assertSee('ADD TO QUEUE');
+    }
+
+    /**
      * Click the play album button.
      *
      * @param Browser $browser
@@ -107,6 +120,18 @@ class Album extends Page
     {
         $browser->waitFor('@playAlbumButton')
             ->click('@playAlbumButton');
+    }
+
+    /**
+     * Click the add to queue button.
+     *
+     * @param Browser $browser
+     * @return void
+     */
+    public function clickAddToQueueButton(Browser $browser): void
+    {
+        $browser->waitFor('@addToQueueButton')
+            ->click('@addToQueueButton');
     }
 
     /**
@@ -162,7 +187,7 @@ class Album extends Page
             '@tracksSection' => '.section__title',
             '@trackList' => '[dusk="track-list"]',
             '@playAlbumButton' => '[dusk="play-album-button"]',
-            '@addToQueueButton' => 'button:contains("Add to Queue")',
+            '@addToQueueButton' => '[dusk="add-to-queue-button"]',
             '@trackItems' => '[dusk="track-list"] .v-list-item',
         ];
     }

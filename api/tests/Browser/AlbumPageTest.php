@@ -68,6 +68,7 @@ class AlbumPageTest extends DuskTestCase
 
             $browser->visit($page)
                 ->assertPlayButtonVisible()
+                ->assertAddToQueueButtonVisible()
                 ->assertTrackCount(1);
         });
     }
