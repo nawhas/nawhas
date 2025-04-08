@@ -14,6 +14,15 @@ spec:
             - name: secrets
               mountPath: "/var/www/api/storage/secrets"
               readOnly: true
+      initContainers:
+        - name: init-boot
+          envFrom:
+            - secretRef:
+                name: api.env
+          volumeMounts:
+            - name: secrets
+              mountPath: "/var/www/api/storage/secrets"
+              readOnly: true
       volumes:
         - name: secrets
           secret:

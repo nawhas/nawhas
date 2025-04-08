@@ -88,11 +88,15 @@ export default class LyricsCard extends Vue {
   font-weight: 300;
   padding: 60px 30px;
   text-align: center;
+  flex-direction: column;
 
   .lyrics__empty-message {
     display: flex;
     margin: auto;
     align-self: center;
+  }
+  .lyrics__empty-actions {
+    padding-top: 16px;
   }
 }
 

@@ -18,30 +18,34 @@ spec:
         tier: backend
     spec:
       containers:
-      - name: {{ .Values.apiNginx.containerName }}
-        image: {{ .Values.apiNginx.image }}:{{ .Values.apiNginx.tag }}
-        imagePullPolicy: IfNotPresent
-        ports:
-          - name: http
-            containerPort: 80
-          - name: https
-            containerPort: 443
-        livenessProbe:
-          httpGet:
-            path: /alive
-            port: http
-          initialDelaySeconds: 30
-          timeoutSeconds: 5
-        readinessProbe:
-          httpGet:
-            path: /alive
-            port: http
-          initialDelaySeconds: 5
-          timeoutSeconds: 5
-        volumeMounts:
-          - name: nginx-config
-            mountPath: /etc/nginx/conf.d
+        - name: {{ .Values.apiNginx.containerName }}
+          image: {{ .Values.apiNginx.image }}:{{ .Values.apiNginx.tag }}
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 80
+            - name: https
+              containerPort: 443
+          livenessProbe:
+            httpGet:
+              path: /alive
+              port: http
+            initialDelaySeconds: 30
+            timeoutSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /alive
+              port: http
+            initialDelaySeconds: 5
+            timeoutSeconds: 5
+          volumeMounts:
+            - name: nginx-config
+              mountPath: /etc/nginx/conf.d
       volumes:
         - name: nginx-config
           configMap:
               name: nginx-config
+      initContainers:
+        - name: init-api
+          image: busybox:1.28
+          command: ['sh', '-c', "until nslookup {{ .Values.api.containerName }}.$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace).svc.cluster.local; do echo waiting for api; sleep 2; done"]

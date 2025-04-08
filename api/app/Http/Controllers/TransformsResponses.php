@@ -22,6 +22,11 @@ trait TransformsResponses
      */
     protected function respondWithItem($item, Transformer $transformer = null): JsonResponse
     {
+        // Eager load relationships before passing it through the transformer.
+        if (method_exists($item, 'loadIncludes')) {
+            $item->loadIncludes(request()->get('include'));
+        }
+
         $transformer = $transformer ?: $this->transformer;
         $resource = new FractalItem($item, $transformer);
         $rootScope = $this->getFractal()->createData($resource);

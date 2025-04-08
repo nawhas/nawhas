@@ -69,6 +69,12 @@ export default {
       { hid: 'description', name: 'description', content: DEFAULT_DESCRIPTION },
       { hid: 'og:title', property: 'og:title', content: 'Home', template: TITLE_TEMPLATE },
       { hid: 'og:description', name: 'og:description', content: DEFAULT_DESCRIPTION },
+      ...process.env.BUILD_APP_ENV === 'production'
+        ? []
+        : [{
+            name: 'robots',
+            content: 'noindex, nofollow',
+          }],
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },

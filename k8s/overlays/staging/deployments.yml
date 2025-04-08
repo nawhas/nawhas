@@ -10,6 +10,11 @@ spec:
           envFrom:
             - secretRef:
                 name: api.env
+      initContainers:
+        - name: init-boot
+          envFrom:
+            - secretRef:
+                name: api.env
 ---
 apiVersion: apps/v1
 kind: Deployment

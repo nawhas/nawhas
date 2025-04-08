@@ -4,6 +4,9 @@
       <div class="lyrics__empty-message">
         We don't have a write-up for this nawha yet.
       </div>
+      <div class="lyrics__empty-actions">
+        <edit-draft-lyrics :track="track" cta="Add a Write Up" />
+      </div>
     </div>
     <div v-else-if="unsupported" class="lyrics__empty lyrics__empty--unsupported">
       <div class="lyrics__empty-message">
