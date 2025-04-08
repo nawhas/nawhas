@@ -16,6 +16,7 @@ class TrackFactory extends Factory
     {
         return [
             'title' => fn () => $this->faker->sentence,
+            'audio' => null,
         ];
     }
 
@@ -24,9 +25,19 @@ class TrackFactory extends Factory
         $album = $album ?? $this->getAlbumFactory()->create();
         $values = $this->merge($attributes);
 
-        return Track::create(
+        $track = Track::create(
             $album,
             $values->get('title'),
         );
+
+        if ($values->has('audio')) {
+            $audio = $values->get('audio');
+            if ($audio === 'auto') {
+                $audio = 'track-' . $this->faker->uuid . '.mp3';
+            }
+            $track->changeAudio($audio);
+        }
+
+        return $track;
     }
 }

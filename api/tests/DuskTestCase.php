@@ -15,6 +15,7 @@ abstract class DuskTestCase extends BaseTestCase
 {
     use CreatesApplication;
     use SetUpCustomTraits;
+    use DatabaseMigrations;
     use ModelFactories;
 
     protected function setUpTraits(): array

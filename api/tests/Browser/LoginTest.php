@@ -4,15 +4,10 @@ namespace Tests\Browser;
 
 use Faker\Factory;
 use Laravel\Dusk\Browser;
-use Tests\DatabaseMigrations;
 use Tests\DuskTestCase;
-use Tests\Factories\ModelFactories;
 
 class LoginTest extends DuskTestCase
 {
-    use DatabaseMigrations;
-    use ModelFactories;
-
     /**
      * @test
      */

@@ -53,6 +53,7 @@
                 v-if="tracks"
                 text
                 :color="textColor"
+                dusk="play-album-button"
                 @click="playAlbum"
               >
                 <v-icon left>
