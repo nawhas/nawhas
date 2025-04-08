@@ -67,4 +67,17 @@ class DraftLyricsFactory extends Factory
         }
         return DocumentFactory::create($text, $format);
     }
+
+    /**
+     * Approve the given draft lyrics.
+     *
+     * @param DraftLyrics $draftLyrics
+     * @return DraftLyrics
+     */
+    public function approve(DraftLyrics $draftLyrics): DraftLyrics
+    {
+        $draftLyrics->publishLyrics($draftLyrics->document);
+
+        return $draftLyrics;
+    }
 }
