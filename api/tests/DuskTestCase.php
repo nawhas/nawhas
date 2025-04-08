@@ -9,11 +9,13 @@ use Facebook\WebDriver\Remote\DesiredCapabilities;
 use Facebook\WebDriver\Remote\RemoteWebDriver;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Laravel\Dusk\TestCase as BaseTestCase;
+use Tests\Factories\ModelFactories;
 
 abstract class DuskTestCase extends BaseTestCase
 {
     use CreatesApplication;
     use SetUpCustomTraits;
+    use ModelFactories;
 
     protected function setUpTraits(): array
     {
