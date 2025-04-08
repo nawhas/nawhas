@@ -113,6 +113,10 @@ if [ $# -gt 0 ];then
         && $COMPOSE -f docker-compose.dusk.yml \
             --profile dusk up -d \
         && start test \
+            ./vendor/bin/wait-for-it.sh db:5432 \
+        && start test \
+            php artisan migrate:all --fresh \
+        && start test \
             php artisan dusk:wait \
         && start test \
             php artisan dusk:chrome-driver \
