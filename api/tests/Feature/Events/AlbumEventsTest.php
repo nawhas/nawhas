@@ -25,6 +25,9 @@ class AlbumEventsTest extends EventsTestCase
     #[CoversEvent('album.created')]
     public function it_can_replay_album_created_event(): void
     {
+        $firstYear = '2020';
+        $secondYear = '2021';
+
         // With no artwork
         $id = uuid();
         $properties = [
@@ -32,7 +35,7 @@ class AlbumEventsTest extends EventsTestCase
             'reciterId' => $this->reciter->id,
             'attributes' => [
                 'title' => static::faker()->name,
-                'year' => static::faker()->year,
+                'year' => $firstYear,
                 'artwork' => null,
             ]
         ];
@@ -56,7 +59,7 @@ class AlbumEventsTest extends EventsTestCase
             'reciterId' => $this->reciter->id,
             'attributes' => [
                 'title' => static::faker()->name,
-                'year' => static::faker()->year,
+                'year' => $secondYear,
                 'artwork' => static::faker()->imageUrl,
             ]
         ];
