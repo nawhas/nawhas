@@ -19,8 +19,9 @@ class LibraryTracksTest extends DuskTestCase
         $user = $this->getUserFactory()->contributor();
 
         $this->browse(function (Browser $browser) use ($user) {
-            $this->loginViaUi($browser, $user);
-            $browser->visit(new LibraryTracks())
+            $browser->loginAs($user)
+                ->visit(new LibraryTracks())
+                ->pause(2000)
                 ->assertSee('Saved Nawhas');
         });
     }
