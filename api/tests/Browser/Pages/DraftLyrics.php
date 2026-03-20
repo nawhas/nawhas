@@ -3,16 +3,15 @@
 namespace Tests\Browser\Pages;
 
 use Laravel\Dusk\Browser;
-use Laravel\Dusk\Page;
 
-class Reciters extends Page
+class DraftLyrics extends Page
 {
     /**
      * Get the URL for the page.
      */
     public function url(): string
     {
-        return '/reciters';
+        return '/moderator/drafts/lyrics';
     }
 
     /**
@@ -21,7 +20,6 @@ class Reciters extends Page
     public function assert(Browser $browser): void
     {
         $browser->assertPathIs($this->url());
-        $browser->assertTitle("Reciters | Nawhas.com");
     }
 
     /**
@@ -32,7 +30,8 @@ class Reciters extends Page
     public function elements(): array
     {
         return [
-            '@view-wrapper' => '.view-wrapper',
+            '@heading' => '[dusk="draft-lyrics__heading"]',
+            '@list' => '.draft-lyrics',
         ];
     }
 }

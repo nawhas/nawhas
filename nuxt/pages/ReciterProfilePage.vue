@@ -20,7 +20,7 @@
             </v-avatar>
           </div>
           <div class="hero__details">
-            <div v-if="reciter" class="hero__title">
+            <div v-if="reciter" class="hero__title" dusk="reciter-profile__title">
               {{ reciter.name }}
             </div>
             <div v-else class="hero__title" />
