@@ -38,6 +38,10 @@ class TrackFactory extends Factory
             $track->changeAudio($audio);
         }
 
+        if ($values->has('video')) {
+            $track->changeVideo($values->get('video'));
+        }
+
         return $track;
     }
 }
