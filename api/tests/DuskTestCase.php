@@ -90,4 +90,19 @@ abstract class DuskTestCase extends BaseTestCase
             User::create(Role::Moderator, 'Moderator One', 'moderator@nawhas.test', 'secret');
         }
     }
+
+    protected function loginViaUi(\Laravel\Dusk\Browser $browser, User $user, string $password = 'secret'): void
+    {
+        $browser->visit('/')
+            ->waitFor('@user-menu__avatar', seconds: 10)
+            ->click('@user-menu__avatar')
+            ->waitFor('@user-menu__login-button')
+            ->click('@user-menu__login-button')
+            ->waitFor('.auth-dialog')
+            ->type('.auth-dialog input[type=email]', $user->email)
+            ->type('.auth-dialog input[type=password]', $password)
+            ->press('.auth-dialog button[type=submit]')
+            ->waitUntilVue('authenticated', "true", '@user-menu')
+            ->pause(1000);
+    }
 }
