@@ -29,15 +29,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Determine PR Number
         id: environment
         run: |
           pr_num="$EVENT_NUMBER"
           short_sha="${SHA::8}"
-          echo "::set-output name=pr_num::${pr_num}"
-          echo "::set-output name=short_sha::${short_sha}"
+          echo "pr_num=${pr_num}" >> "$GITHUB_OUTPUT"
+          echo "short_sha=${short_sha}" >> "$GITHUB_OUTPUT"
         env:
           EVENT_NUMBER: ${{github.event.number}}
           SHA: ${{ github.sha }}
@@ -51,7 +51,7 @@ jobs:
     needs: [setup]
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Build
         uses: ./.github/actions/api-build
@@ -67,7 +67,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Lint
         uses: ./.github/actions/web-lint
@@ -78,7 +78,7 @@ jobs:
     needs: [setup]
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Build
         uses: ./.github/actions/web-build
@@ -94,7 +94,7 @@ jobs:
     needs: [setup]
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Build Test API Image
         uses: ./.github/actions/api-build-test
@@ -135,7 +135,7 @@ jobs:
     needs: [setup, build_api, build_web]
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Build Test API Image
         uses: ./.github/actions/api-build-test
@@ -211,7 +211,7 @@ jobs:
     if: endsWith(github.head_ref, '-integration')
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Prepare Environment
         run: |
