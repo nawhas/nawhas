@@ -30,7 +30,8 @@ class Revisions extends Page
     public function elements(): array
     {
         return [
-            '@element' => '#selector',
+            '@heading' => '[dusk="revisions__heading"]',
+            '@list' => '.revisions',
         ];
     }
 }

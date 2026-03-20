@@ -21,8 +21,8 @@ class DraftLyricsTest extends DuskTestCase
         $this->browse(function (Browser $browser) use ($user) {
             $this->loginViaUi($browser, $user, 'secret');
             $browser->visit(new DraftLyrics())
-                ->waitForText('Draft Lyrics', 10)
-                ->assertSee('Draft Lyrics');
+                ->waitFor('@heading', 10)
+                ->assertSeeIn('@heading', 'Draft Lyrics');
         });
     }
 }

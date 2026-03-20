@@ -21,8 +21,8 @@ class LibraryTracksTest extends DuskTestCase
         $this->browse(function (Browser $browser) use ($user) {
             $this->loginViaUi($browser, $user, 'secret');
             $browser->visit(new LibraryTracks())
-                ->waitForText('Saved Nawhas', 10)
-                ->assertSee('Saved Nawhas');
+                ->waitFor('@heading', 10)
+                ->assertSeeIn('@heading', 'Saved Nawhas');
         });
     }
 }

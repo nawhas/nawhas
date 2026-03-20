@@ -5,7 +5,7 @@
 
 <template>
   <v-container class="app__section mt-4">
-    <h2>Revision History</h2>
+    <h2 dusk="revisions__heading">Revision History</h2>
     <div v-if="revisions.length > 0" class="revisions">
       <v-overlay v-if="$fetchState.pending" absolute class="revisions__loading">
         <v-progress-circular

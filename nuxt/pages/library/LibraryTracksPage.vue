@@ -8,7 +8,7 @@
     <library-header />
     <v-container class="app__section">
       <div class="section__title section__title--with-actions mt-6">
-        <div class="d-flex align-center justify-start">
+        <div class="d-flex align-center justify-start" dusk="library-tracks__heading">
           <v-icon class="mr-2">
             favorite
           </v-icon>Saved Nawhas

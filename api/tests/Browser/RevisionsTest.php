@@ -21,8 +21,8 @@ class RevisionsTest extends DuskTestCase
         $this->browse(function (Browser $browser) use ($user) {
             $this->loginViaUi($browser, $user, 'secret');
             $browser->visit(new Revisions())
-                ->waitForText('Revision History', 10)
-                ->assertSee('Revision History');
+                ->waitFor('@heading', 10)
+                ->assertSeeIn('@heading', 'Revision History');
         });
     }
 }

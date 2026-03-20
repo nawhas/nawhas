@@ -41,7 +41,9 @@ class PrintLyrics extends Page
     public function elements(): array
     {
         return [
-            '@element' => '#selector',
+            '@title' => '[dusk="print-lyrics__title"]',
+            '@meta' => '[dusk="print-lyrics__meta"]',
+            '@content' => '.print__content',
         ];
     }
 }

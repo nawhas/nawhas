@@ -1,3 +1,0 @@
-{
-  "comment": "I have cancelled the sub-issues as requested.\n\nI checked the status of [PR #638](https://github.com/nawhas/nawhas/pull/638) and it looks like some checks are failing:\n- **Run Dusk Tests**\n- **Test API Image**\n\nI will investigate these failures and fix them."
-}

@@ -42,9 +42,9 @@ class PrintLyricsPageTest extends DuskTestCase
             $page = new PrintLyricsPage($reciter->slug, $album->year, $track->slug);
 
             $browser->visit($page)
-                ->pause(2000)
-                ->assertSee($track->title)
-                ->assertSee($reciter->name)
+                ->waitFor('@title', 10)
+                ->assertSeeIn('@title', $track->title)
+                ->assertSeeIn('@meta', $reciter->name)
                 ->assertSee($track->lyrics->getContent());
         });
     }

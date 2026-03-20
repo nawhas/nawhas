@@ -18,7 +18,7 @@ class AboutPageTest extends DuskTestCase
     {
         $this->browse(function (Browser $browser) {
             $browser->visit(new AboutPage())
-                ->pause(2000)
+                ->waitForText('The Journey', 10)
                 ->assertSee('The Journey')
                 ->assertSee('Credits')
                 ->assertSee('Contribute');

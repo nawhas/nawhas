@@ -32,7 +32,7 @@ class Reciters extends Page
     public function elements(): array
     {
         return [
-            '@element' => '#selector',
+            '@view-wrapper' => '.view-wrapper',
         ];
     }
 }

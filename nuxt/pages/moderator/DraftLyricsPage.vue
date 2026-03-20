@@ -5,7 +5,7 @@
 
 <template>
   <v-container class="app__section mt-4">
-    <h2>Draft Lyrics</h2>
+    <h2 dusk="draft-lyrics__heading">Draft Lyrics</h2>
     <div v-if="draftLyrics.length > 0" class="draft-lyrics">
       <v-overlay v-if="$fetchState.pending" absolute class="draft-lyrics__loading">
         <v-progress-circular

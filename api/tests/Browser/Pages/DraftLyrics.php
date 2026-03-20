@@ -30,7 +30,8 @@ class DraftLyrics extends Page
     public function elements(): array
     {
         return [
-            '@element' => '#selector',
+            '@heading' => '[dusk="draft-lyrics__heading"]',
+            '@list' => '.draft-lyrics',
         ];
     }
 }

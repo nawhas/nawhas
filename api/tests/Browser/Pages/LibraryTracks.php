@@ -30,7 +30,8 @@ class LibraryTracks extends Page
     public function elements(): array
     {
         return [
-            '@element' => '#selector',
+            '@heading' => '[dusk="library-tracks__heading"]',
+            '@track-list' => '.v-card',
         ];
     }
 }

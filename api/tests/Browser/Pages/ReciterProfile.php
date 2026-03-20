@@ -37,7 +37,8 @@ class ReciterProfile extends Page
     public function elements(): array
     {
         return [
-            '@element' => '#selector',
+            '@title' => '[dusk="reciter-profile__title"]',
+            '@albums-section' => '#albums-section',
         ];
     }
 }
