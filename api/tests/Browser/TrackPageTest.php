@@ -133,7 +133,7 @@ class TrackPageTest extends DuskTestCase
         $track = $this->getTrackFactory()->create($album, [
             'title' => 'Test Track',
             'audio' => 'test-audio.mp3',
-            'video' => 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+            'video' => 'test-video.mp4',
         ]);
 
         $this->browse(function ($browser) use ($reciter, $album, $track) {
