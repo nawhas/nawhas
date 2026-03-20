@@ -22,11 +22,10 @@ class LibraryHomePageTest extends DuskTestCase
         $this->browse(function (Browser $browser) {
             $contributor = User::findByEmail('contributor@nawhas.test');
 
+            $this->loginViaUi($browser, $contributor);
+
             $libraryHomePage = new LibraryHome();
-            $browser->loginAs($contributor)
-                ->assertAuthenticatedAs($contributor)
-                ->visit($libraryHomePage)
-                ->logout();
+            $browser->visit($libraryHomePage);
         });
     }
 }
