@@ -16,12 +16,12 @@ class RevisionsTest extends DuskTestCase
      */
     public function test_revisions_page_renders_for_moderator(): void
     {
-        $user = $this->getUserFactory()->moderator();
+        $user = $this->getUserFactory()->moderator(['password' => 'secret']);
 
         $this->browse(function (Browser $browser) use ($user) {
-            $browser->loginAs($user)
-                ->visit(new Revisions())
-                ->pause(2000)
+            $this->loginViaUi($browser, $user, 'secret');
+            $browser->visit(new Revisions())
+                ->waitForText('Revision History', 10)
                 ->assertSee('Revision History');
         });
     }

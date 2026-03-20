@@ -16,12 +16,12 @@ class DraftLyricsTest extends DuskTestCase
      */
     public function test_draft_lyrics_page_renders_for_moderator(): void
     {
-        $user = $this->getUserFactory()->moderator();
+        $user = $this->getUserFactory()->moderator(['password' => 'secret']);
 
         $this->browse(function (Browser $browser) use ($user) {
-            $browser->loginAs($user)
-                ->visit(new DraftLyrics())
-                ->pause(2000)
+            $this->loginViaUi($browser, $user, 'secret');
+            $browser->visit(new DraftLyrics())
+                ->waitForText('Draft Lyrics', 10)
                 ->assertSee('Draft Lyrics');
         });
     }

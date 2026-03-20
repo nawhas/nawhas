@@ -16,12 +16,12 @@ class LibraryTracksTest extends DuskTestCase
      */
     public function test_library_tracks_page_renders_for_authenticated_user(): void
     {
-        $user = $this->getUserFactory()->contributor();
+        $user = $this->getUserFactory()->contributor(['password' => 'secret']);
 
         $this->browse(function (Browser $browser) use ($user) {
-            $browser->loginAs($user)
-                ->visit(new LibraryTracks())
-                ->pause(2000)
+            $this->loginViaUi($browser, $user, 'secret');
+            $browser->visit(new LibraryTracks())
+                ->waitForText('Saved Nawhas', 10)
                 ->assertSee('Saved Nawhas');
         });
     }

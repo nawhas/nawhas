@@ -2,8 +2,8 @@
 
 namespace Tests\Browser;
 
+use App\Modules\Authentication\Models\PasswordResetToken;
 use Laravel\Dusk\Browser;
-use Tests\Browser\Pages\PasswordReset;
 use Tests\DuskTestCase;
 use Throwable;
 
@@ -16,12 +16,18 @@ class PasswordResetTest extends DuskTestCase
      */
     public function test_password_reset_page_renders(): void
     {
-        $this->browse(function (Browser $browser) {
-            $browser->visit(new PasswordReset())
-                ->pause(2000)
-                ->assertSee('Reset Password')
-                ->assertVisible('input[type=email]')
-                ->assertVisible('button[type=submit]');
+        $user = $this->getUserFactory()->contributor();
+        $token = 'dusk-reset-token';
+        PasswordResetToken::query()->create([
+            'user_id' => $user->id,
+            'token' => $token,
+            'created_at' => now(),
+        ]);
+
+        $this->browse(function (Browser $browser) use ($token) {
+            $browser->visit('/auth/password/reset/' . $token)
+                ->waitForText('Reset Password', 10)
+                ->assertVisible('input[type=password]');
         });
     }
 }

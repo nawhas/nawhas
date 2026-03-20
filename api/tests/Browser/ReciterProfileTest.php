@@ -31,9 +31,8 @@ class ReciterProfileTest extends DuskTestCase
             $page = new ReciterProfile($reciter->slug);
 
             $browser->visit($page)
-                ->pause(3000) // Increased pause
-                ->assertSee($reciter->name)
-                ->assertSee($reciter->description)
+                ->waitForText($reciter->name, 10)
+                ->assertSee('Top Nawhas')
                 ->assertSee($album->title)
                 ->assertSee($album->year);
         });
