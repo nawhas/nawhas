@@ -82,7 +82,7 @@ services:
     restart: unless-stopped
     tty: true
     ports:
-      - "5432:5432"
+      - "5433:5432"
     environment:
       - POSTGRES_MULTIPLE_DATABASES=nawhas_data,nawhas_events,nawhas_data_test,nawhas_events_test
       - POSTGRES_USER=docker

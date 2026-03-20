@@ -18,6 +18,7 @@ class PasswordResetTest extends DuskTestCase
     {
         $this->browse(function (Browser $browser) {
             $browser->visit(new PasswordReset())
+                ->pause(2000)
                 ->assertSee('Reset Password')
                 ->assertVisible('input[type=email]')
                 ->assertVisible('button[type=submit]');

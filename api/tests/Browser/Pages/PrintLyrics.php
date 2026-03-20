@@ -22,7 +22,7 @@ class PrintLyrics extends Page
      */
     public function url(): string
     {
-        return '/reciters/' . $this->reciterSlug . '/albums/' . $this->albumYear . '/tracks/' . $this->trackSlug . '/print';
+        return '/print/' . $this->reciterSlug . '/' . $this->albumYear . '/' . $this->trackSlug;
     }
 
     /**

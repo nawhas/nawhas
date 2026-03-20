@@ -33,6 +33,7 @@ class ReciterProfileTest extends DuskTestCase
             $page = new ReciterProfile($reciter->slug);
 
             $browser->visit($page)
+                ->pause(2000)
                 ->assertSee($reciter->name)
                 ->assertSee($reciter->description)
                 ->assertSee($album->title)

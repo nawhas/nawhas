@@ -19,8 +19,8 @@ class DraftLyricsTest extends DuskTestCase
         $user = $this->getUserFactory()->moderator();
 
         $this->browse(function (Browser $browser) use ($user) {
-            $browser->loginAs($user)
-                ->visit(new DraftLyrics())
+            $this->loginViaUi($browser, $user);
+            $browser->visit(new DraftLyrics())
                 ->assertSee('Draft Lyrics');
         });
     }

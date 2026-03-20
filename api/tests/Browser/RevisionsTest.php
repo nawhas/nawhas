@@ -19,9 +19,9 @@ class RevisionsTest extends DuskTestCase
         $user = $this->getUserFactory()->moderator();
 
         $this->browse(function (Browser $browser) use ($user) {
-            $browser->loginAs($user)
-                ->visit(new Revisions())
-                ->assertSee('Revisions');
+            $this->loginViaUi($browser, $user);
+            $browser->visit(new Revisions())
+                ->assertSee('Revision History');
         });
     }
 }
