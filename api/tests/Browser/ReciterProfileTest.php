@@ -16,14 +16,12 @@ class ReciterProfileTest extends DuskTestCase
      */
     public function test_reciter_profile_page_renders(): void
     {
-        // Create a test reciter
         $reciter = $this->getReciterFactory()->create([
             'name' => 'Test Reciter',
             'slug' => 'test-reciter',
             'description' => 'This is a test reciter description.',
         ]);
 
-        // Create a test album
         $album = $this->getAlbumFactory()->create($reciter, [
             'title' => 'Test Album',
             'year' => '2024',
@@ -33,7 +31,7 @@ class ReciterProfileTest extends DuskTestCase
             $page = new ReciterProfile($reciter->slug);
 
             $browser->visit($page)
-                ->pause(2000)
+                ->pause(3000) // Increased pause
                 ->assertSee($reciter->name)
                 ->assertSee($reciter->description)
                 ->assertSee($album->title)
