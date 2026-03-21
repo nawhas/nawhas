@@ -67,8 +67,8 @@ class ResponsiveViewportCoverageTest extends DuskTestCase
                 $this->loginViaUi($browser, $contributor, 'secret');
 
                 $browser->visit('/library/home')
-                    ->waitForText('My Library', 10)
-                    ->assertSee('My Library');
+                    ->waitForText('Recently Saved Nawhas', 10)
+                    ->assertSee('Recently Saved Nawhas');
                 $this->assertNoHorizontalOverflow($browser, $label, '/library/home');
 
                 $browser->visit('/library/tracks')
@@ -76,6 +76,13 @@ class ResponsiveViewportCoverageTest extends DuskTestCase
                     ->assertSee('Saved Nawhas')
                     ->assertSee($track->title);
                 $this->assertNoHorizontalOverflow($browser, $label, '/library/tracks');
+
+                $trackPath = "/reciters/{$track->reciter->slug}/albums/{$track->album->year}/tracks/{$track->slug}";
+                $browser->visit($trackPath)
+                    ->waitForText($track->title, 10)
+                    ->assertPresent('.bar__actions--overflow [dusk="edit-draft-lyrics-button"]')
+                    ->assertPresent('[dusk="lyrics-card"]');
+                $this->assertNoHorizontalOverflow($browser, $label, $trackPath);
 
                 $browser->logout();
                 $this->loginViaUi($browser, $moderator, 'secret');

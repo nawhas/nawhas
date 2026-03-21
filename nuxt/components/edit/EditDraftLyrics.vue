@@ -14,6 +14,7 @@
         color="primary"
         rounded
         dark
+        dusk="edit-draft-lyrics-cta"
         @click="handleDialog"
       >
         {{ cta }}
@@ -22,6 +23,7 @@
         v-else
         icon
         dark
+        dusk="edit-draft-lyrics-button"
         @click="handleDialog"
       >
         <v-icon>lyrics</v-icon>
@@ -34,6 +36,7 @@
       >
         <v-btn
           icon
+          dusk="edit-draft-lyrics-close"
           @click="closeDialog"
         >
           <v-icon>close</v-icon>
