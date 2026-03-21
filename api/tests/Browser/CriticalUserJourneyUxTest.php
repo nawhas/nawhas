@@ -14,10 +14,61 @@ use Throwable;
 
 /**
  * Multi-step browser journeys across routing and UI boundaries (NAW-44).
- * Each test uses a fresh browser session via {@see DuskTestCase::browse()}.
+ *
+ * Method names are numbered so PHPUnit’s default alphabetical order runs journeys that
+ * touch the global audio player before others that rely on a clean player/queue UI.
  */
 class CriticalUserJourneyUxTest extends DuskTestCase
 {
+    /**
+     * Reciter profile → album → play album → add album to queue (matches {@see AlbumPageTest} flow).
+     *
+     * @throws Throwable
+     */
+    public function test_journey_01_reciter_profile_to_album_playback(): void
+    {
+        $reciter = $this->getReciterFactory()->create([
+            'name' => 'Journey Reciter',
+            'slug' => 'journey-reciter-flow',
+        ]);
+
+        $album = $this->getAlbumFactory()->create($reciter, [
+            'title' => 'Journey Album',
+            'year' => '2023',
+        ]);
+
+        $this->getTrackFactory()->create($album, [
+            'title' => 'Journey Track One',
+            'audio' => 'journey-one.mp3',
+        ]);
+
+        $albumPage = new AlbumPage($reciter->slug, $album->year);
+
+        $this->browse(function (Browser $browser) use ($reciter, $albumPage) {
+            $browser->visit(new ReciterProfile($reciter->slug))
+                ->waitFor('[dusk="reciter-profile__title"]', 15)
+                ->assertSeeIn('[dusk="reciter-profile__title"]', $reciter->name)
+                ->waitFor('[dusk="album-title-link"]', 15)
+                ->click('[dusk="album-title-link"]')
+                ->waitForLocation($albumPage->url(), 20)
+                ->assertPathIs($albumPage->url())
+                ->waitFor('[dusk="track-list"]', 20)
+                ->waitFor('[dusk="play-album-button"]', 20)
+                ->assertVisible('[dusk="play-album-button"]')
+                ->waitForTextIn('[dusk="play-album-button"]', 'PLAY ALBUM')
+                ->click('[dusk="play-album-button"]')
+                ->waitFor('[dusk="add-to-queue-button"]', 25)
+                ->assertVisible('[dusk="add-to-queue-button"]')
+                ->waitForTextIn('[dusk="add-to-queue-button"]', 'ADD TO QUEUE')
+                ->click('[dusk="add-to-queue-button"]')
+                ->waitFor('[dusk="added-to-queue-button"]', 25)
+                ->assertVisible('[dusk="added-to-queue-button"]')
+                ->waitForTextIn('[dusk="added-to-queue-button"]', 'ADDED TO QUEUE')
+                ->waitFor('[dusk="added-to-queue-snackbar"]', 15)
+                ->assertVisible('[dusk="added-to-queue-snackbar"]');
+        });
+    }
+
     /**
      * Home → Browse → reciter → album → track page → audio controls.
      *
@@ -26,7 +77,7 @@ class CriticalUserJourneyUxTest extends DuskTestCase
      *
      * @throws Throwable
      */
-    public function test_journey_home_browse_to_track_playback(): void
+    public function test_journey_02_home_browse_to_track_playback(): void
     {
         $reciter = $this->getReciterFactory()->create([
             'name' => 'Journey Browse Reciter',
@@ -78,60 +129,11 @@ class CriticalUserJourneyUxTest extends DuskTestCase
     }
 
     /**
-     * Reciter profile → album → play album (and queue affordances stay coherent).
-     *
-     * @throws Throwable
-     */
-    public function test_journey_reciter_profile_to_album_playback(): void
-    {
-        $reciter = $this->getReciterFactory()->create([
-            'name' => 'Journey Reciter',
-            'slug' => 'journey-reciter-flow',
-        ]);
-
-        $album = $this->getAlbumFactory()->create($reciter, [
-            'title' => 'Journey Album',
-            'year' => '2023',
-        ]);
-
-        $this->getTrackFactory()->create($album, [
-            'title' => 'Journey Track One',
-            'audio' => 'journey-one.mp3',
-        ]);
-
-        $albumPage = new AlbumPage($reciter->slug, $album->year);
-
-        $this->browse(function (Browser $browser) use ($reciter, $albumPage) {
-            $browser->visit(new ReciterProfile($reciter->slug))
-                ->waitFor('[dusk="reciter-profile__title"]', 15)
-                ->assertSeeIn('[dusk="reciter-profile__title"]', $reciter->name)
-                ->waitFor('[dusk="album-title-link"]', 15)
-                ->click('[dusk="album-title-link"]')
-                ->waitForLocation($albumPage->url(), 20)
-                ->assertPathIs($albumPage->url())
-                ->waitFor('[dusk="track-list"]', 20)
-                ->waitFor('[dusk="add-to-queue-button"]', 25)
-                ->assertVisible('[dusk="add-to-queue-button"]')
-                ->waitForTextIn('[dusk="add-to-queue-button"]', 'ADD TO QUEUE')
-                ->click('[dusk="add-to-queue-button"]')
-                ->waitFor('[dusk="added-to-queue-button"]', 25)
-                ->assertVisible('[dusk="added-to-queue-button"]')
-                ->waitForTextIn('[dusk="added-to-queue-button"]', 'ADDED TO QUEUE')
-                ->waitFor('[dusk="added-to-queue-snackbar"]', 15)
-                ->assertVisible('[dusk="added-to-queue-snackbar"]')
-                ->waitFor('[dusk="play-album-button"]', 20)
-                ->assertVisible('[dusk="play-album-button"]')
-                ->waitForTextIn('[dusk="play-album-button"]', 'PLAY ALBUM')
-                ->click('[dusk="play-album-button"]');
-        });
-    }
-
-    /**
      * Authenticated contributor: save a track from the track page, confirm in library, then remove it.
      *
      * @throws Throwable
      */
-    public function test_journey_library_save_track_and_remove(): void
+    public function test_journey_03_library_save_track_and_remove(): void
     {
         $user = $this->getUserFactory()->contributor(['password' => 'secret']);
 
@@ -173,7 +175,7 @@ class CriticalUserJourneyUxTest extends DuskTestCase
      *
      * @throws Throwable
      */
-    public function test_journey_moderator_home_to_draft_lyrics(): void
+    public function test_journey_04_moderator_home_to_draft_lyrics(): void
     {
         $user = $this->getUserFactory()->moderator(['password' => 'secret']);
 
