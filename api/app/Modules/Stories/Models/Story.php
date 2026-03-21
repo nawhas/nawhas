@@ -23,6 +23,18 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Str;
 use Ramsey\Uuid\Uuid;
 
+/**
+ * @property string $id
+ * @property string $slug
+ * @property string $title
+ * @property string|null $excerpt
+ * @property string|null $body
+ * @property string|null $hero_image_url
+ * @property \Carbon\Carbon|null $display_date
+ * @property \Carbon\Carbon|null $published_at
+ * @property \Carbon\Carbon|null $created_at
+ * @property \Carbon\Carbon|null $updated_at
+ */
 class Story extends Model implements TimestampedEntity
 {
     use HasTimestamps;

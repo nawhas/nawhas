@@ -15,7 +15,7 @@ use App\Modules\Stories\Events\Stories\StorySlugChanged;
 use App\Modules\Stories\Events\Stories\StoryTitleChanged;
 use App\Modules\Stories\Events\Stories\StoryUnpublished;
 use App\Modules\Stories\Models\Story;
-use Carbon\CarbonImmutable;
+use Carbon\Carbon;
 use Spatie\EventSourcing\EventHandlers\Projectors\Projector;
 
 class StoriesProjector extends Projector
@@ -23,18 +23,20 @@ class StoriesProjector extends Projector
     public function onStoryCreated(StoryCreated $event): void
     {
         $data = collect($event->attributes);
-        $story = new Story();
-        $story->id = $event->id;
-        $story->slug = (string) $data->get('slug');
-        $story->title = (string) $data->get('title');
-        $story->excerpt = $data->get('excerpt');
-        $story->body = $data->get('body');
-        $story->hero_image_url = $data->get('hero_image_url');
-        $story->display_date = $data->get('display_date');
+        $data->put('id', $event->id);
+
         $publishedAt = $data->get('published_at');
-        $story->published_at = $publishedAt !== null
-            ? CarbonImmutable::parse((string) $publishedAt)
-            : null;
+        if ($publishedAt !== null) {
+            $data->put('published_at', Carbon::parse((string) $publishedAt));
+        }
+
+        $displayDate = $data->get('display_date');
+        if ($displayDate !== null && $displayDate !== '') {
+            $data->put('display_date', Carbon::parse((string) $displayDate)->startOfDay());
+        }
+
+        $story = new Story($data->all());
+
         $story->saveOrFail();
     }
 
@@ -76,14 +78,16 @@ class StoriesProjector extends Projector
     public function onStoryDisplayDateChanged(StoryDisplayDateChanged $event): void
     {
         $story = Story::retrieve($event->id);
-        $story->display_date = $event->displayDate;
+        $story->display_date = $event->displayDate !== null
+            ? Carbon::parse($event->displayDate)->startOfDay()
+            : null;
         $story->saveOrFail();
     }
 
     public function onStoryPublished(StoryPublished $event): void
     {
         $story = Story::retrieve($event->id);
-        $story->published_at = CarbonImmutable::parse($event->publishedAt);
+        $story->published_at = Carbon::parse($event->publishedAt);
         $story->saveOrFail();
     }
 
