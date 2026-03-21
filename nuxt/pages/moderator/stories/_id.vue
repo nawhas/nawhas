@@ -62,6 +62,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
+import { MetaInfo } from 'vue-meta';
 import type { UpdateStoryPayload } from '@/api/stories';
 import { Story } from '@/entities/story';
 import { showToast } from '@/events/toaster';
@@ -115,9 +116,10 @@ export default Vue.extend({
       confirmDelete: false,
     };
   },
-  head() {
+  head(): MetaInfo {
+    const { story } = this.$data as Data;
     return {
-      title: this.story ? `Edit: ${this.story.title}` : 'Edit story',
+      title: story ? `Edit: ${story.title}` : 'Edit story',
     };
   },
   async fetch() {
