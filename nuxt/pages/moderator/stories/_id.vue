@@ -20,7 +20,13 @@
       <v-form @submit.prevent="onSubmit">
         <v-text-field v-model="form.title" label="Title" required outlined />
         <v-text-field v-model="form.slug" label="Slug" outlined />
-        <v-text-field v-model="form.display_date" label="Display date (YYYY-MM-DD)" outlined />
+        <v-text-field
+          v-model="form.display_date"
+          label="Display date"
+          type="date"
+          outlined
+          dusk="moderator-stories__display-date"
+        />
         <v-file-input
           v-model="form.heroImageFile"
           label="Hero image (upload)"
@@ -82,6 +88,7 @@ import { MetaInfo } from 'vue-meta';
 import type { UpdateStoryPayload } from '@/api/stories';
 import { Story } from '@/entities/story';
 import { showToast } from '@/events/toaster';
+import { localIsoDate } from '@/utils/date';
 
 interface Form {
   title: string;
@@ -110,7 +117,7 @@ function storyToForm(story: Story): Form {
     body: story.body || '',
     hero_image_url: story.heroImageUrl || '',
     heroImageFile: null,
-    display_date: story.displayDate || '',
+    display_date: story.displayDate || localIsoDate(),
     published: Boolean(story.publishedAt),
   };
 }

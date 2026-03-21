@@ -17,7 +17,13 @@
         persistent-hint
         outlined
       />
-      <v-text-field v-model="form.display_date" label="Display date (YYYY-MM-DD)" outlined />
+      <v-text-field
+        v-model="form.display_date"
+        label="Display date"
+        type="date"
+        outlined
+        dusk="moderator-stories__display-date"
+      />
       <v-file-input
         v-model="form.heroImageFile"
         label="Hero image (upload)"
@@ -54,6 +60,7 @@
 import Vue from 'vue';
 import type { StoreStoryPayload } from '@/api/stories';
 import { showToast } from '@/events/toaster';
+import { localIsoDate } from '@/utils/date';
 
 interface Form {
   title: string;
@@ -79,7 +86,7 @@ function emptyForm(): Form {
     body: '',
     hero_image_url: '',
     heroImageFile: null,
-    display_date: '',
+    display_date: localIsoDate(),
     published: false,
   };
 }
