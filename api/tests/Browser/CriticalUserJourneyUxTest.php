@@ -103,18 +103,26 @@ class CriticalUserJourneyUxTest extends DuskTestCase
 
         $this->browse(function (Browser $browser) use ($reciter, $albumPage) {
             $browser->visit(new ReciterProfile($reciter->slug))
-                ->waitFor('@title', 15)
-                ->assertSeeIn('@title', $reciter->name)
-                ->waitFor('@album-title-link', 15)
-                ->click('@album-title-link')
+                ->waitFor('[dusk="reciter-profile__title"]', 15)
+                ->assertSeeIn('[dusk="reciter-profile__title"]', $reciter->name)
+                ->waitFor('[dusk="album-title-link"]', 15)
+                ->click('[dusk="album-title-link"]')
                 ->waitForLocation($albumPage->url(), 20)
-                ->on($albumPage)
-                ->assertPlayButtonVisible()
-                ->clickPlayAlbumButton()
-                ->assertAddToQueueButtonVisible()
-                ->clickAddToQueueButton()
-                ->assertAddedToQueueButtonVisible()
-                ->assertAddedToQueueSnackbarVisible();
+                ->assertPathIs($albumPage->url())
+                ->waitFor('[dusk="track-list"]', 20)
+                ->waitFor('[dusk="play-album-button"]', 20)
+                ->assertVisible('[dusk="play-album-button"]')
+                ->waitForTextIn('[dusk="play-album-button"]', 'PLAY ALBUM')
+                ->click('[dusk="play-album-button"]')
+                ->waitFor('[dusk="add-to-queue-button"]', 25)
+                ->assertVisible('[dusk="add-to-queue-button"]')
+                ->waitForTextIn('[dusk="add-to-queue-button"]', 'ADD TO QUEUE')
+                ->click('[dusk="add-to-queue-button"]')
+                ->waitFor('[dusk="added-to-queue-button"]', 25)
+                ->assertVisible('[dusk="added-to-queue-button"]')
+                ->waitForTextIn('[dusk="added-to-queue-button"]', 'ADDED TO QUEUE')
+                ->waitFor('[dusk="added-to-queue-snackbar"]', 15)
+                ->assertVisible('[dusk="added-to-queue-snackbar"]');
         });
     }
 
