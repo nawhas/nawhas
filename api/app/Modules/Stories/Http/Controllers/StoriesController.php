@@ -14,6 +14,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\ValidationException;
 
 class StoriesController extends Controller
 {
@@ -92,6 +93,21 @@ class StoriesController extends Controller
                 $story->unpublish();
             }
         }
+
+        return $this->respondWithItem($story->fresh());
+    }
+
+    public function uploadHero(Story $story, Request $request): JsonResponse
+    {
+        $this->authorize('update', $story);
+
+        if (! $request->file('hero_image')) {
+            throw ValidationException::withMessages(['hero_image' => 'A hero image file is required.']);
+        }
+
+        $path = $request->file('hero_image')->storePublicly("stories/{$story->slug}");
+
+        $story->changeHeroImageUrl($path);
 
         return $this->respondWithItem($story->fresh());
     }

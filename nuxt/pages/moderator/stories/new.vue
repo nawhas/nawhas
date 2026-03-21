@@ -18,7 +18,23 @@
         outlined
       />
       <v-text-field v-model="form.display_date" label="Display date (YYYY-MM-DD)" outlined />
-      <v-text-field v-model="form.hero_image_url" label="Hero image URL" outlined />
+      <v-file-input
+        v-model="form.heroImageFile"
+        label="Hero image (upload)"
+        placeholder="Upload a hero image"
+        prepend-icon="mdi-image"
+        outlined
+        accept="image/*"
+        :show-size="1000"
+        clearable
+      />
+      <v-text-field
+        v-model="form.hero_image_url"
+        label="Or hero image URL (external)"
+        hint="Optional if you upload a file instead"
+        persistent-hint
+        outlined
+      />
       <v-textarea v-model="form.excerpt" label="Excerpt (plain text)" outlined rows="3" />
       <v-textarea v-model="form.body" label="Body" outlined rows="12" />
       <v-switch v-model="form.published" label="Published" color="primary" />
@@ -45,6 +61,7 @@ interface Form {
   excerpt: string;
   body: string;
   hero_image_url: string;
+  heroImageFile: File | null;
   display_date: string;
   published: boolean;
 }
@@ -61,6 +78,7 @@ function emptyForm(): Form {
     excerpt: '',
     body: '',
     hero_image_url: '',
+    heroImageFile: null,
     display_date: '',
     published: false,
   };
@@ -83,7 +101,7 @@ export default Vue.extend({
         title: this.form.title.trim(),
         excerpt: this.form.excerpt || null,
         body: this.form.body || null,
-        hero_image_url: this.form.hero_image_url || null,
+        hero_image_url: this.form.heroImageFile ? null : (this.form.hero_image_url || null),
         display_date: this.form.display_date || null,
         published: this.form.published,
       };
@@ -101,6 +119,9 @@ export default Vue.extend({
       this.saving = true;
       try {
         const story = await this.$api.stories.store(this.payload());
+        if (this.form.heroImageFile) {
+          await this.$api.stories.uploadHeroImage(story.id, this.form.heroImageFile);
+        }
         showToast({ text: 'Story created', type: 'success' });
         await this.$router.replace({
           name: 'moderator.stories.edit',

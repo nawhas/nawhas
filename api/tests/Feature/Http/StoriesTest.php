@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Tests\Feature\Http;
 
 use App\Modules\Stories\Models\Story;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Tests\Feature\Http\Responses\PaginatedCollectionResponse;
 
 class StoriesTest extends HttpTestCase
@@ -269,5 +271,81 @@ class StoriesTest extends HttpTestCase
             ->assertSuccessful()
             ->assertJsonPath('data.0.slug', 'pub-slug')
             ->assertJsonPath('data.1.slug', 'draft-slug');
+    }
+
+    /**
+     * @test
+     */
+    public function moderator_can_upload_story_hero_image(): void
+    {
+        Storage::fake();
+
+        $story = Story::create([
+            'title' => 'Hero upload',
+            'slug' => 'hero-upload-slug',
+            'published' => false,
+        ]);
+
+        $file = UploadedFile::fake()->create('hero.jpg', 50, 'image/jpeg');
+
+        $response = $this->asModerator()->post(
+            sprintf('v1/stories/%s/hero', $story->id),
+            ['hero_image' => $file],
+            ['Accept' => 'application/json']
+        );
+
+        $response->assertSuccessful();
+
+        $path = $story->fresh()->hero_image_url;
+        $this->assertNotNull($path);
+        $this->assertStringStartsWith('stories/hero-upload-slug/', $path);
+        Storage::assertExists($path);
+        $this->assertIsString($response->json('heroImageUrl'));
+    }
+
+    /**
+     * @test
+     */
+    public function guests_cannot_upload_story_hero_image(): void
+    {
+        Storage::fake();
+
+        $story = Story::create([
+            'title' => 'Nope',
+            'slug' => 'nope-hero',
+            'published' => true,
+        ]);
+
+        $file = UploadedFile::fake()->create('x.jpg', 50, 'image/jpeg');
+
+        $this->post(
+            sprintf('v1/stories/%s/hero', $story->id),
+            ['hero_image' => $file],
+            ['Accept' => 'application/json']
+        )->assertUnauthorized();
+    }
+
+    /**
+     * @test
+     */
+    public function contributors_cannot_upload_story_hero_image(): void
+    {
+        Storage::fake();
+
+        $story = Story::create([
+            'title' => 'Contrib',
+            'slug' => 'contrib-hero',
+            'published' => true,
+        ]);
+
+        $file = UploadedFile::fake()->create('x.jpg', 50, 'image/jpeg');
+
+        $this->asContributor()
+            ->post(
+                sprintf('v1/stories/%s/hero', $story->id),
+                ['hero_image' => $file],
+                ['Accept' => 'application/json']
+            )
+            ->assertForbidden();
     }
 }

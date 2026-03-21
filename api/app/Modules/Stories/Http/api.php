@@ -18,6 +18,7 @@ Route::prefix('v1')->middleware(CacheResponse::withTags(CacheTags::STORIES))->gr
             ClearResponseCache::withTags(CacheTags::STORIES),
         ])->group(function () {
             Route::post('/', [StoriesController::class, 'store']);
+            Route::post('/{story}/hero', [StoriesController::class, 'uploadHero']);
             Route::patch('/{story}', [StoriesController::class, 'update']);
             Route::delete('/{story}', [StoriesController::class, 'destroy']);
         });

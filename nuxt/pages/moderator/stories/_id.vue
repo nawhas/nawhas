@@ -21,7 +21,23 @@
         <v-text-field v-model="form.title" label="Title" required outlined />
         <v-text-field v-model="form.slug" label="Slug" outlined />
         <v-text-field v-model="form.display_date" label="Display date (YYYY-MM-DD)" outlined />
-        <v-text-field v-model="form.hero_image_url" label="Hero image URL" outlined />
+        <v-file-input
+          v-model="form.heroImageFile"
+          label="Hero image (upload)"
+          placeholder="Replace hero with an uploaded image"
+          prepend-icon="mdi-image"
+          outlined
+          accept="image/*"
+          :show-size="1000"
+          clearable
+        />
+        <v-text-field
+          v-model="form.hero_image_url"
+          label="Or hero image URL (external)"
+          hint="Used when no new file is uploaded"
+          persistent-hint
+          outlined
+        />
         <v-textarea v-model="form.excerpt" label="Excerpt (plain text)" outlined rows="3" />
         <v-textarea v-model="form.body" label="Body" outlined rows="12" />
         <v-switch v-model="form.published" label="Published" color="primary" />
@@ -73,6 +89,7 @@ interface Form {
   excerpt: string;
   body: string;
   hero_image_url: string;
+  heroImageFile: File | null;
   display_date: string;
   published: boolean;
 }
@@ -92,6 +109,7 @@ function storyToForm(story: Story): Form {
     excerpt: story.excerpt || '',
     body: story.body || '',
     hero_image_url: story.heroImageUrl || '',
+    heroImageFile: null,
     display_date: story.displayDate || '',
     published: Boolean(story.publishedAt),
   };
@@ -108,6 +126,7 @@ export default Vue.extend({
         excerpt: '',
         body: '',
         hero_image_url: '',
+        heroImageFile: null,
         display_date: '',
         published: false,
       },
@@ -146,13 +165,18 @@ export default Vue.extend({
           slug: this.form.slug.trim() || null,
           excerpt: this.form.excerpt || null,
           body: this.form.body || null,
-          hero_image_url: this.form.hero_image_url || null,
           display_date: this.form.display_date || null,
         };
+        if (!this.form.heroImageFile) {
+          payload.hero_image_url = this.form.hero_image_url || null;
+        }
         if (this.form.published !== wasPublished) {
           payload.published = this.form.published;
         }
-        const updated = await this.$api.stories.update(this.story.id, payload);
+        let updated = await this.$api.stories.update(this.story.id, payload);
+        if (this.form.heroImageFile) {
+          updated = await this.$api.stories.uploadHeroImage(this.story.id, this.form.heroImageFile);
+        }
         this.story = updated;
         this.form = storyToForm(updated);
         showToast({ text: 'Story saved', type: 'success' });

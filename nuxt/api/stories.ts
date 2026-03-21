@@ -53,4 +53,16 @@ export class StoriesApi {
   async destroy(id: string): Promise<void> {
     await this.axios.delete(`v1/stories/${encodeURIComponent(id)}`);
   }
+
+  /** Multipart upload; stores on the public disk like reciter avatar / album artwork. */
+  async uploadHeroImage(id: string, file: File): Promise<Story> {
+    const formData = new FormData();
+    formData.append('hero_image', file);
+
+    return await this.axios.$post<Story>(`v1/stories/${encodeURIComponent(id)}/hero`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+  }
 }
