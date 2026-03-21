@@ -1,60 +1,66 @@
 <template>
-  <auth-dialog :loading="loading" :error="error" @submit="submit">
-    <template slot="title">
-      Sign Up
-    </template>
-    <template slot="message">
-      <p class="message-line">
-        Create an account on Nawhas.com to
-        <br>
-        create collections, edit write-ups, and more.
-      </p>
-      <p class="message-line">
-        Already have an account?
-        <a class="link" href="#" @click.prevent="switchToLoginDialog">Log in.</a>
-      </p>
-    </template>
-    <v-text-field
-      v-model="form.name"
-      outlined
-      autofocus
-      label="Name"
-      :error-messages="invalid.name"
-    />
-    <v-text-field
-      v-model="form.email"
-      outlined
-      label="Email"
-      type="email"
-      :error-messages="invalid.email"
-    />
-    <v-text-field
-      v-model="form.password"
-      outlined
-      label="Password"
-      type="password"
-      :error-messages="invalid.password"
-    />
-    <div class="actions">
-      <v-spacer />
-      <v-btn text @click="close">
-        Cancel
-      </v-btn>
-      <v-btn
-        type="submit"
-        elevation="0"
-        color="primary"
-        :loading="loading"
-        :disabled="disabled"
-      >
-        Sign up
-      </v-btn>
-    </div>
-    <template slot="social">
-      <social-login-button type="register" provider="google" />
-      <social-login-button type="register" provider="facebook" />
-    </template>
-  </auth-dialog>
+  <div dusk="user-menu__register-dialog">
+    <auth-dialog :loading="loading" :error="error" @submit="submit">
+      <template slot="title">
+        Sign Up
+      </template>
+      <template slot="message">
+        <p class="message-line">
+          Create an account on Nawhas.com to
+          <br>
+          create collections, edit write-ups, and more.
+        </p>
+        <p class="message-line">
+          Already have an account?
+          <a class="link" href="#" @click.prevent="switchToLoginDialog">Log in.</a>
+        </p>
+      </template>
+      <v-text-field
+        id="register-form-name"
+        v-model="form.name"
+        outlined
+        autofocus
+        label="Name"
+        :error-messages="invalid.name"
+      />
+      <v-text-field
+        id="register-form-email"
+        v-model="form.email"
+        outlined
+        label="Email"
+        type="email"
+        :error-messages="invalid.email"
+      />
+      <v-text-field
+        id="register-form-password"
+        v-model="form.password"
+        outlined
+        label="Password"
+        type="password"
+        :error-messages="invalid.password"
+      />
+      <div class="actions">
+        <v-spacer />
+        <v-btn text @click="close">
+          Cancel
+        </v-btn>
+        <v-btn
+          type="submit"
+          dusk="register-form__submit"
+          elevation="0"
+          color="primary"
+          :loading="loading"
+          :disabled="disabled"
+        >
+          Sign up
+        </v-btn>
+      </div>
+      <template slot="social">
+        <social-login-button type="register" provider="google" />
+        <social-login-button type="register" provider="facebook" />
+      </template>
+    </auth-dialog>
+  </div>
 </template>
 
 <script lang="ts">

@@ -1,57 +1,62 @@
 <template>
-  <auth-dialog :loading="loading" :error="error" @submit="submit">
-    <template slot="title">
-      Log In
-    </template>
-    <template slot="message">
-      <p class="message-line">
-        <strong>Welcome back!</strong> To continue, log into your account.<br>
-      </p>
-      <p class="message-line">
-        Don't have an account yet?
-        <a class="link" href="#" @click.prevent="switchToRegisterDialog">Sign up.</a>
-      </p>
-    </template>
-    <v-text-field
-      v-model="form.email"
-      outlined
-      autofocus
-      label="Email"
-      type="email"
-      :error-messages="invalid.email"
-    />
-    <v-text-field
-      v-model="form.password"
-      outlined
-      label="Password"
-      type="password"
-      :error-messages="invalid.password"
-    />
-    <div class="actions">
-      <div class="forgot-password">
-        <a class="link body-2" href="#" @click.prevent="switchToResetPasswordRequestDialog">
-          Forgot password?
-        </a>
-      </div>
-      <v-spacer />
-      <v-btn text @click="close">
-        Cancel
-      </v-btn>
-      <v-btn
-        type="submit"
-        elevation="0"
-        color="primary"
-        :loading="loading"
-        :disabled="disabled"
-      >
+  <div dusk="user-menu__login-dialog">
+    <auth-dialog :loading="loading" :error="error" @submit="submit">
+      <template slot="title">
         Log In
-      </v-btn>
-    </div>
-    <template slot="social">
-      <social-login-button type="login" provider="google" />
-      <social-login-button type="login" provider="facebook" />
-    </template>
-  </auth-dialog>
+      </template>
+      <template slot="message">
+        <p class="message-line">
+          <strong>Welcome back!</strong> To continue, log into your account.<br>
+        </p>
+        <p class="message-line">
+          Don't have an account yet?
+          <a class="link" href="#" dusk="login-form__sign-up" @click.prevent="switchToRegisterDialog">Sign up.</a>
+        </p>
+      </template>
+      <v-text-field
+        id="login-form-email"
+        v-model="form.email"
+        outlined
+        autofocus
+        label="Email"
+        type="email"
+        :error-messages="invalid.email"
+      />
+      <v-text-field
+        id="login-form-password"
+        v-model="form.password"
+        outlined
+        label="Password"
+        type="password"
+        :error-messages="invalid.password"
+      />
+      <div class="actions">
+        <div class="forgot-password">
+          <a class="link body-2" href="#" dusk="login-form__forgot-password" @click.prevent="switchToResetPasswordRequestDialog">
+            Forgot password?
+          </a>
+        </div>
+        <v-spacer />
+        <v-btn text @click="close">
+          Cancel
+        </v-btn>
+        <v-btn
+          type="submit"
+          dusk="login-form__submit"
+          elevation="0"
+          color="primary"
+          :loading="loading"
+          :disabled="disabled"
+        >
+          Log In
+        </v-btn>
+      </div>
+      <template slot="social">
+        <social-login-button type="login" provider="google" />
+        <social-login-button type="login" provider="facebook" />
+      </template>
+    </auth-dialog>
+  </div>
 </template>
 
 <script lang="ts">

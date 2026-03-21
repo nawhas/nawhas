@@ -14,7 +14,7 @@
       <div class="auth-dialog__message">
         <slot name="message" />
       </div>
-      <v-form @submit.prevent="$emit('submit')">
+      <v-form novalidate @submit.prevent="$emit('submit')">
         <v-alert v-if="error" type="error" outlined class="mb-6">
           {{ error }}
         </v-alert>

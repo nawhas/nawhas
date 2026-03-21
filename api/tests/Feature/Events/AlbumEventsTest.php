@@ -101,7 +101,8 @@ class AlbumEventsTest extends EventsTestCase
     public function it_can_replay_album_year_changed_event(): void
     {
         $album = $this->getAlbumFactory()->create($this->reciter);
-        $year = static::faker()->year;
+        $current = (int) $album->year;
+        $year = (string) ($current >= 2050 ? $current - 1 : $current + 1);
 
         $this->assertNotEquals($album->year, $year);
 

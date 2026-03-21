@@ -1,6 +1,6 @@
 <template>
-  <v-card class="bug-report-form" :loading="loading">
-    <v-form @submit.prevent="submit">
+  <v-card class="bug-report-form" dusk="bug-report-form" :loading="loading">
+    <v-form novalidate @submit.prevent="submit">
       <v-card-title>
         <h2 class="card-title">
           Report an Issue
@@ -20,6 +20,7 @@
           :items="types"
         />
         <v-text-field
+          id="bug-report-summary"
           v-model="summary"
           outlined
           label="Summary"
@@ -37,6 +38,7 @@
           In case we need to contact you for further information, please provide your email address. This is optional.
         </p>
         <v-text-field
+          id="bug-report-email"
           v-model="email"
           outlined
           label="Email (optional)"
@@ -48,7 +50,7 @@
           Cancel
         </v-btn>
         <v-spacer />
-        <v-btn type="submit" text color="primary" :loading="loading">
+        <v-btn type="submit" dusk="bug-report-form__submit" text color="primary" :loading="loading">
           Submit
         </v-btn>
       </v-card-actions>
