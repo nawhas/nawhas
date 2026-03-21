@@ -35,6 +35,13 @@
     </v-container>
 
     <v-container class="app__section">
+      <h5 class="section__title">
+        Latest Stories
+      </h5>
+      <story-card-grid />
+    </v-container>
+
+    <v-container class="app__section">
       <div class="section__title mt-6">
         <div>
           <v-icon>favorite</v-icon> Recently Saved Nawhas
@@ -116,6 +123,7 @@ import { Track } from '@/entities/track';
 import { ReciterIncludes } from '@/api/reciters';
 import { TrackIncludes } from '@/api/tracks';
 import SavedTracksEmptyState from '@/components/library/SavedTracksEmptyState.vue';
+import StoryCardGrid from '@/components/stories/StoryCardGrid.vue';
 
 const POPULAR_ENTITIES_LIMIT = 6;
 
@@ -128,6 +136,7 @@ interface Data {
 
 export default Vue.extend({
   components: {
+    StoryCardGrid,
     SavedTracksEmptyState,
     TrackList,
     HeroBanner,

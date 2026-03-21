@@ -12,4 +12,5 @@ export type RootState = {
   library: LibraryState,
   player: PlayerState,
   preferences: PreferencesState,
+  stories: import('@/store/stories').StoriesState,
 };
