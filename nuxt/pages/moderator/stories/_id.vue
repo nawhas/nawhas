@@ -20,13 +20,14 @@
       <v-form @submit.prevent="onSubmit">
         <v-text-field v-model="form.title" label="Title" required outlined />
         <v-text-field v-model="form.slug" label="Slug" outlined />
-        <v-text-field
-          v-model="form.display_date"
-          label="Display date"
-          type="date"
-          outlined
-          dusk="moderator-stories__display-date"
-        />
+        <div dusk="moderator-stories__display-date">
+          <v-text-field
+            v-model="form.display_date"
+            label="Display date"
+            type="date"
+            outlined
+          />
+        </div>
         <v-file-input
           v-model="form.heroImageFile"
           label="Hero image (upload)"

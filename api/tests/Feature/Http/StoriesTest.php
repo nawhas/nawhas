@@ -348,4 +348,84 @@ class StoriesTest extends HttpTestCase
             )
             ->assertForbidden();
     }
+
+    /**
+     * @test
+     */
+    public function moderator_can_create_story_with_display_date(): void
+    {
+        $this->asModerator()
+            ->url(self::ROUTE_INDEX)
+            ->post([
+                'title' => 'Dated story',
+                'slug' => 'dated-story',
+                'display_date' => '2022-11-03',
+                'published' => false,
+            ])
+            ->assertSuccessful()
+            ->assertJsonPath('displayDate', '2022-11-03');
+
+        /** @var Story $row */
+        $row = Story::query()->where('slug', 'dated-story')->firstOrFail();
+        $this->assertSame('2022-11-03', $row->display_date->format('Y-m-d'));
+    }
+
+    /**
+     * @test
+     */
+    public function moderator_cannot_patch_story_with_invalid_display_date(): void
+    {
+        $story = Story::create([
+            'title' => 'Patch date',
+            'slug' => 'patch-date',
+            'published' => false,
+        ]);
+
+        $this->asModerator()
+            ->url(self::ROUTE_SHOW, $story->id)
+            ->patch(['display_date' => 'not-a-date'])
+            ->assertUnprocessable()
+            ->assertJsonValidationErrors(['display_date']);
+    }
+
+    /**
+     * @test
+     */
+    public function moderator_hero_upload_without_file_is_unprocessable(): void
+    {
+        $story = Story::create([
+            'title' => 'No file',
+            'slug' => 'no-file-hero',
+            'published' => false,
+        ]);
+
+        $this->asModerator()
+            ->post(
+                sprintf('v1/stories/%s/hero', $story->id),
+                [],
+                ['Accept' => 'application/json']
+            )
+            ->assertUnprocessable()
+            ->assertJsonValidationErrors(['hero_image']);
+    }
+
+    /**
+     * @test
+     */
+    public function guests_see_external_hero_url_unchanged_on_published_story(): void
+    {
+        $url = 'https://cdn.example.test/stories/hero.jpg';
+        Story::create([
+            'title' => 'Hero ext',
+            'slug' => 'hero-ext',
+            'body' => 'B',
+            'hero_image_url' => $url,
+            'published' => true,
+        ]);
+
+        $this->url(self::ROUTE_SHOW, 'hero-ext')
+            ->get()
+            ->assertSuccessful()
+            ->assertJsonPath('heroImageUrl', $url);
+    }
 }

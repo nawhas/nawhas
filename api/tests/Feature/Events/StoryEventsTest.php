@@ -170,6 +170,31 @@ class StoryEventsTest extends EventsTestCase
      * @test
      */
     #[CoversEvent('story.created')]
+    #[CoversEvent('story.changed.hero_image')]
+    public function it_can_replay_story_hero_image_changed_event_with_storage_path(): void
+    {
+        $id = uuid();
+        $this->event('story.created', $this->newStoryPayload($id));
+        $this->replay();
+        $story = Story::find($id);
+        $this->assertNotNull($story);
+
+        $path = 'stories/upload-slug/AbCdEf123.jpg';
+        $this->event('story.changed.hero_image', [
+            'id' => $story->id,
+            'heroImageUrl' => $path,
+        ]);
+
+        $this->replay();
+
+        $story->refresh();
+        $this->assertSame($path, $story->hero_image_url);
+    }
+
+    /**
+     * @test
+     */
+    #[CoversEvent('story.created')]
     #[CoversEvent('story.changed.display_date')]
     public function it_can_replay_story_display_date_changed_event(): void
     {

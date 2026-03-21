@@ -63,4 +63,24 @@ class LatestStoriesTest extends DuskTestCase
                 ->assertSeeIn('[dusk="moderator-stories-new__title"]', 'New story');
         });
     }
+
+    /**
+     * @throws Throwable
+     */
+    public function test_moderator_new_story_form_has_display_date_picker(): void
+    {
+        $user = $this->getUserFactory()->moderator(['password' => 'secret']);
+
+        $this->browse(function (Browser $browser) use ($user) {
+            $this->loginViaUi($browser, $user, 'secret');
+            $browser->visit('/moderator/stories/new')
+                ->waitFor('[dusk="moderator-stories__display-date"]', 20);
+
+            $root = '[dusk="moderator-stories__display-date"]';
+            $inputSel = "{$root} input";
+            $browser->assertPresent($inputSel);
+            $value = $browser->attribute($inputSel, 'value');
+            $this->assertMatchesRegularExpression('/^\d{4}-\d{2}-\d{2}$/', (string) $value);
+        });
+    }
 }
