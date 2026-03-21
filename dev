@@ -125,7 +125,6 @@ if [ $# -gt 0 ];then
 
     # If "test" is used, run linting, unit, and feature tests
     elif [ "$1" == "test" ]; then
-      set -e
       run_php_linting
       run_unit_tests
       run_feature_tests

@@ -41,6 +41,32 @@ class StoriesTest extends HttpTestCase
     /**
      * @test
      */
+    public function contributors_only_see_published_stories_in_index(): void
+    {
+        Story::create([
+            'title' => 'Draft',
+            'slug' => 'contrib-draft',
+            'published' => false,
+        ]);
+        Story::create([
+            'title' => 'Live',
+            'slug' => 'contrib-live',
+            'published' => true,
+        ]);
+
+        $response = $this->asContributor()
+            ->url(self::ROUTE_INDEX)
+            ->get();
+
+        PaginatedCollectionResponse::from($response)
+            ->assertSuccessful()
+            ->assertTotal(1);
+        $response->assertJsonPath('data.0.slug', 'contrib-live');
+    }
+
+    /**
+     * @test
+     */
     public function guests_get_404_for_unpublished_story_by_slug(): void
     {
         $story = Story::create([
@@ -71,6 +97,24 @@ class StoriesTest extends HttpTestCase
         $response->assertSuccessful()
             ->assertJsonPath('slug', 'visible-slug')
             ->assertJsonPath('title', 'Visible');
+    }
+
+    /**
+     * @test
+     */
+    public function moderator_can_fetch_unpublished_story_by_uuid(): void
+    {
+        $story = Story::create([
+            'title' => 'UUID draft',
+            'slug' => 'uuid-draft',
+            'published' => false,
+        ]);
+
+        $this->asModerator()
+            ->url(self::ROUTE_SHOW, $story->id)
+            ->get()
+            ->assertSuccessful()
+            ->assertJsonPath('slug', 'uuid-draft');
     }
 
     /**
