@@ -3,16 +3,184 @@
 namespace Tests\Browser;
 
 use App\Modules\Lyrics\Documents\Format;
+use App\Modules\Authentication\Models\User;
+use App\Modules\Lyrics\Models\Track;
+use App\Modules\Albums\Models\Album;
+use App\Modules\Reciters\Models\Reciter;
 use Laravel\Dusk\Browser;
 use Tests\DuskTestCase;
 use Throwable;
 
 class ResponsiveViewportCoverageTest extends DuskTestCase
 {
+    private const VIEWPORTS = [
+        'desktop' => [1440, 900],
+        'tablet' => [1024, 768],
+        'mobile' => [375, 812],
+    ];
+
     /**
      * @throws Throwable
      */
-    public function test_critical_pages_render_across_responsive_viewports(): void
+    public function test_home_page_responsive(): void
+    {
+        $this->assertRouteResponsive('/', 'Trending This Month');
+    }
+
+    /** @throws Throwable */
+    public function test_library_landing_page_responsive(): void
+    {
+        $this->assertRouteResponsive('/library', 'Welcome to your library');
+    }
+
+    /** @throws Throwable */
+    public function test_about_page_responsive(): void
+    {
+        $this->assertRouteResponsive('/about', 'The Journey');
+    }
+
+    /** @throws Throwable */
+    public function test_reciters_page_responsive(): void
+    {
+        $this->assertRouteResponsive('/reciters', 'Reciters');
+    }
+
+    /** @throws Throwable */
+    public function test_reciter_profile_page_responsive(): void
+    {
+        $fixtures = $this->createFixtures();
+        $this->assertRouteResponsive("/reciters/{$fixtures['reciter']->slug}", $fixtures['reciter']->name);
+    }
+
+    /** @throws Throwable */
+    public function test_album_page_responsive(): void
+    {
+        $fixtures = $this->createFixtures();
+        $this->assertRouteResponsive(
+            "/reciters/{$fixtures['reciter']->slug}/albums/{$fixtures['album']->year}",
+            $fixtures['album']->title
+        );
+    }
+
+    /** @throws Throwable */
+    public function test_track_page_responsive(): void
+    {
+        $fixtures = $this->createFixtures();
+        $path = "/reciters/{$fixtures['reciter']->slug}/albums/{$fixtures['album']->year}/tracks/{$fixtures['track']->slug}";
+        $this->browse(function (Browser $browser) use ($path, $fixtures) {
+            foreach (self::VIEWPORTS as $label => [$width, $height]) {
+                $browser->resize($width, $height)
+                    ->loginAs($fixtures['contributor'])
+                    ->visit($path)
+                    ->waitForText($fixtures['track']->title, 10)
+                    ->assertPresent('.bar__actions--overflow [dusk="edit-draft-lyrics-button"]')
+                    ->assertPresent('[dusk="lyrics-card"]');
+
+                $this->assertNoHorizontalOverflow($browser, $label, $path);
+            }
+        });
+    }
+
+    /** @throws Throwable */
+    public function test_print_lyrics_page_responsive(): void
+    {
+        $fixtures = $this->createFixtures();
+        $this->assertRouteResponsive(
+            "/print/{$fixtures['reciter']->slug}/{$fixtures['album']->year}/{$fixtures['track']->slug}",
+            $fixtures['track']->title
+        );
+    }
+
+    /** @throws Throwable */
+    public function test_library_home_page_responsive_for_contributor(): void
+    {
+        $fixtures = $this->createFixtures();
+        $this->browse(function (Browser $browser) use ($fixtures) {
+            foreach (self::VIEWPORTS as $label => [$width, $height]) {
+                $browser->resize($width, $height)
+                    ->loginAs($fixtures['contributor'])
+                    ->visit('/library/home')
+                    ->waitForText('Recently Saved Nawhas', 10)
+                    ->assertSee('Recently Saved Nawhas');
+
+                $this->assertNoHorizontalOverflow($browser, $label, '/library/home');
+            }
+        });
+    }
+
+    /** @throws Throwable */
+    public function test_library_tracks_page_responsive_for_contributor(): void
+    {
+        $fixtures = $this->createFixtures();
+        $this->browse(function (Browser $browser) use ($fixtures) {
+            foreach (self::VIEWPORTS as $label => [$width, $height]) {
+                $browser->resize($width, $height)
+                    ->loginAs($fixtures['contributor'])
+                    ->visit('/library/tracks')
+                    ->waitForText('Saved Nawhas', 10)
+                    ->assertSee('Saved Nawhas')
+                    ->assertSee($fixtures['track']->title);
+
+                $this->assertNoHorizontalOverflow($browser, $label, '/library/tracks');
+            }
+        });
+    }
+
+    /** @throws Throwable */
+    public function test_draft_lyrics_page_responsive_for_moderator(): void
+    {
+        $fixtures = $this->createFixtures();
+        $this->browse(function (Browser $browser) use ($fixtures) {
+            foreach (self::VIEWPORTS as $label => [$width, $height]) {
+                $browser->resize($width, $height)
+                    ->loginAs($fixtures['moderator'])
+                    ->visit('/moderator/drafts/lyrics')
+                    ->waitForText('Draft Lyrics', 10)
+                    ->assertSee('Draft Lyrics');
+
+                $this->assertNoHorizontalOverflow($browser, $label, '/moderator/drafts/lyrics');
+            }
+        });
+    }
+
+    /** @throws Throwable */
+    public function test_revisions_page_responsive_for_moderator(): void
+    {
+        $fixtures = $this->createFixtures();
+        $this->browse(function (Browser $browser) use ($fixtures) {
+            foreach (self::VIEWPORTS as $label => [$width, $height]) {
+                $browser->resize($width, $height)
+                    ->loginAs($fixtures['moderator'])
+                    ->visit('/moderator/revisions')
+                    ->waitForText('Revision History', 10)
+                    ->assertSee('Revision History');
+
+                $this->assertNoHorizontalOverflow($browser, $label, '/moderator/revisions');
+            }
+        });
+    }
+
+    /**
+     * @throws Throwable
+     */
+    private function assertRouteResponsive(string $path, string $expectedText): void
+    {
+        $this->browse(function (Browser $browser) use ($path, $expectedText) {
+            foreach (self::VIEWPORTS as $label => [$width, $height]) {
+                $browser->resize($width, $height)
+                    ->visit($path)
+                    ->waitForText($expectedText, 10)
+                    ->assertSee($expectedText);
+
+                $this->assertNoHorizontalOverflow($browser, $label, $path);
+            }
+        });
+    }
+
+    /**
+     * @return array{contributor: User, moderator: User, reciter: Reciter, album: Album, track: Track}
+     */
+    private function createFixtures(): array
     {
         $contributor = $this->getUserFactory()->contributor(['password' => 'secret']);
         $moderator = $this->getUserFactory()->moderator(['password' => 'secret']);
@@ -34,72 +202,13 @@ class ResponsiveViewportCoverageTest extends DuskTestCase
 
         $contributor->savedTracks()->attach($track->id, ['created_at' => now()]);
 
-        $viewports = [
-            'desktop' => [1440, 900],
-            'tablet' => [1024, 768],
-            'mobile' => [375, 812],
+        return [
+            'contributor' => $contributor,
+            'moderator' => $moderator,
+            'reciter' => $reciter,
+            'album' => $album,
+            'track' => $track,
         ];
-
-        $publicPages = [
-            '/' => 'Trending This Month',
-            '/library' => 'Welcome to your library',
-            '/about' => 'The Journey',
-            '/reciters' => 'Reciters',
-            "/reciters/{$reciter->slug}" => $reciter->name,
-            "/reciters/{$reciter->slug}/albums/{$album->year}" => $album->title,
-            "/reciters/{$reciter->slug}/albums/{$album->year}/tracks/{$track->slug}" => $track->title,
-            "/print/{$reciter->slug}/{$album->year}/{$track->slug}" => $track->title,
-        ];
-
-        $this->browse(function (Browser $browser) use ($viewports, $publicPages, $contributor, $moderator, $track) {
-            foreach ($viewports as $label => [$width, $height]) {
-                $browser->resize($width, $height);
-
-                foreach ($publicPages as $path => $expectedText) {
-                    $browser->visit($path)
-                        ->waitForText($expectedText, 10)
-                        ->assertSee($expectedText);
-
-                    $this->assertNoHorizontalOverflow($browser, $label, $path);
-                }
-
-                $browser->logout();
-                $this->loginViaUi($browser, $contributor, 'secret');
-
-                $browser->visit('/library/home')
-                    ->waitForText('Recently Saved Nawhas', 10)
-                    ->assertSee('Recently Saved Nawhas');
-                $this->assertNoHorizontalOverflow($browser, $label, '/library/home');
-
-                $browser->visit('/library/tracks')
-                    ->waitForText('Saved Nawhas', 10)
-                    ->assertSee('Saved Nawhas')
-                    ->assertSee($track->title);
-                $this->assertNoHorizontalOverflow($browser, $label, '/library/tracks');
-
-                $trackPath = "/reciters/{$track->reciter->slug}/albums/{$track->album->year}/tracks/{$track->slug}";
-                $browser->visit($trackPath)
-                    ->waitForText($track->title, 10)
-                    ->assertPresent('.bar__actions--overflow [dusk="edit-draft-lyrics-button"]')
-                    ->assertPresent('[dusk="lyrics-card"]');
-                $this->assertNoHorizontalOverflow($browser, $label, $trackPath);
-
-                $browser->logout();
-                $this->loginViaUi($browser, $moderator, 'secret');
-
-                $browser->visit('/moderator/drafts/lyrics')
-                    ->waitForText('Draft Lyrics', 10)
-                    ->assertSee('Draft Lyrics');
-                $this->assertNoHorizontalOverflow($browser, $label, '/moderator/drafts/lyrics');
-
-                $browser->visit('/moderator/revisions')
-                    ->waitForText('Revision History', 10)
-                    ->assertSee('Revision History');
-                $this->assertNoHorizontalOverflow($browser, $label, '/moderator/revisions');
-
-                $browser->logout();
-            }
-        });
     }
 
     private function assertNoHorizontalOverflow(Browser $browser, string $viewportLabel, string $path): void
