@@ -119,7 +119,7 @@ class Track extends Page
     {
         $browser->waitFor('@playButton')
             ->assertVisible('@playButton')
-            ->assertSee('PLAY');
+            ->waitForTextIn('@playButton', 'PLAY');
     }
 
     /**
@@ -132,7 +132,7 @@ class Track extends Page
     {
         $browser->waitFor('@stopButton')
             ->assertVisible('@stopButton')
-            ->assertSee('STOP');
+            ->waitForTextIn('@stopButton', 'STOP');
     }
 
     /**
@@ -145,7 +145,7 @@ class Track extends Page
     {
         $browser->waitFor('@addToQueueButton')
             ->assertVisible('@addToQueueButton')
-            ->assertSee('ADD TO QUEUE');
+            ->waitForTextIn('@addToQueueButton', 'ADD TO QUEUE');
     }
 
     /**
@@ -158,7 +158,7 @@ class Track extends Page
     {
         $browser->waitFor('@addedToQueueButton')
             ->assertVisible('@addedToQueueButton')
-            ->assertSee('ADDED TO QUEUE');
+            ->waitForTextIn('@addedToQueueButton', 'ADDED TO QUEUE');
     }
 
     /**

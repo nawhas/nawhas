@@ -94,7 +94,7 @@ class Album extends Page
     {
         $browser->waitFor('@playAlbumButton')
             ->assertVisible('@playAlbumButton')
-            ->assertSee('PLAY ALBUM');
+            ->waitForTextIn('@playAlbumButton', 'PLAY ALBUM');
     }
 
     /**
@@ -107,7 +107,7 @@ class Album extends Page
     {
         $browser->waitFor('@addToQueueButton')
             ->assertVisible('@addToQueueButton')
-            ->assertSee('ADD TO QUEUE');
+            ->waitForTextIn('@addToQueueButton', 'ADD TO QUEUE');
     }
 
     /**
@@ -120,7 +120,7 @@ class Album extends Page
     {
         $browser->waitFor('@addedToQueueButton')
             ->assertVisible('@addedToQueueButton')
-            ->assertSee('ADDED TO QUEUE');
+            ->waitForTextIn('@addedToQueueButton', 'ADDED TO QUEUE');
     }
 
     /**
