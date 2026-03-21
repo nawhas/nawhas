@@ -9,7 +9,11 @@
       <h2 dusk="moderator-stories__heading">
         Stories
       </h2>
-      <v-btn color="primary" :to="{ name: 'moderator.stories.new' }">
+      <v-btn
+        color="primary"
+        dusk="moderator-stories__new"
+        :to="{ name: 'moderator.stories.new' }"
+      >
         New story
       </v-btn>
     </div>

@@ -5,7 +5,7 @@
 
 <template>
   <v-container class="app__section mt-4 story-editor">
-    <h2 class="story-editor__title">
+    <h2 class="story-editor__title" dusk="moderator-stories-new__title">
       New story
     </h2>
     <v-form @submit.prevent="onSubmit">

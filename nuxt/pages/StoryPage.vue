@@ -15,7 +15,7 @@
       <h5 v-if="story.displayDate" class="overline">
         {{ story.displayDate | date }}
       </h5>
-      <h1 class="display-1 mb-4">
+      <h1 class="display-1 mb-4" dusk="story-detail__title">
         {{ story.title }}
       </h1>
       <v-img

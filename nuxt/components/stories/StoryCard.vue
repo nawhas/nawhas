@@ -1,5 +1,5 @@
 <template>
-  <v-card class="story" :to="route">
+  <v-card class="story" :to="route" :dusk="'story-card--' + story.slug">
     <v-img v-if="story.heroImageUrl" :src="story.heroImageUrl" height="200px" />
     <v-card-text class="text--primary">
       <h5 v-if="story.displayDate" class="overline">

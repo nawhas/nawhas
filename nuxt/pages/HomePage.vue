@@ -34,12 +34,17 @@
       </template>
     </v-container>
 
-    <v-container v-if="homeStories && homeStories.length > 0" class="app__section">
-      <h5 class="section__title">
-        Latest Stories
-      </h5>
-      <story-card-grid :stories="homeStories" />
-    </v-container>
+    <div
+      v-if="homeStories && homeStories.length > 0"
+      dusk="home-latest-stories"
+    >
+      <v-container class="app__section">
+        <h5 class="section__title">
+          Latest Stories
+        </h5>
+        <story-card-grid :stories="homeStories" />
+      </v-container>
+    </div>
 
     <v-container class="app__section">
       <div class="section__title mt-6">
