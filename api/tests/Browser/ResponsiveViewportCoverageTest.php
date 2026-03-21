@@ -4,9 +4,9 @@ namespace Tests\Browser;
 
 use App\Modules\Lyrics\Documents\Format;
 use App\Modules\Authentication\Models\User;
-use App\Modules\Lyrics\Models\Track;
-use App\Modules\Albums\Models\Album;
-use App\Modules\Reciters\Models\Reciter;
+use App\Modules\Library\Models\Album;
+use App\Modules\Library\Models\Reciter;
+use App\Modules\Library\Models\Track;
 use Laravel\Dusk\Browser;
 use Tests\DuskTestCase;
 use Throwable;
@@ -68,9 +68,11 @@ class ResponsiveViewportCoverageTest extends DuskTestCase
         $fixtures = $this->createFixtures();
         $path = "/reciters/{$fixtures['reciter']->slug}/albums/{$fixtures['album']->year}/tracks/{$fixtures['track']->slug}";
         $this->browse(function (Browser $browser) use ($path, $fixtures) {
+            $browser->logout();
+            $this->loginViaUi($browser, $fixtures['contributor'], 'secret');
+
             foreach (self::VIEWPORTS as $label => [$width, $height]) {
                 $browser->resize($width, $height)
-                    ->loginAs($fixtures['contributor'])
                     ->visit($path)
                     ->waitForText($fixtures['track']->title, 10)
                     ->assertPresent('.bar__actions--overflow [dusk="edit-draft-lyrics-button"]')
@@ -96,9 +98,11 @@ class ResponsiveViewportCoverageTest extends DuskTestCase
     {
         $fixtures = $this->createFixtures();
         $this->browse(function (Browser $browser) use ($fixtures) {
+            $browser->logout();
+            $this->loginViaUi($browser, $fixtures['contributor'], 'secret');
+
             foreach (self::VIEWPORTS as $label => [$width, $height]) {
                 $browser->resize($width, $height)
-                    ->loginAs($fixtures['contributor'])
                     ->visit('/library/home')
                     ->waitForText('Recently Saved Nawhas', 10)
                     ->assertSee('Recently Saved Nawhas');
@@ -113,9 +117,11 @@ class ResponsiveViewportCoverageTest extends DuskTestCase
     {
         $fixtures = $this->createFixtures();
         $this->browse(function (Browser $browser) use ($fixtures) {
+            $browser->logout();
+            $this->loginViaUi($browser, $fixtures['contributor'], 'secret');
+
             foreach (self::VIEWPORTS as $label => [$width, $height]) {
                 $browser->resize($width, $height)
-                    ->loginAs($fixtures['contributor'])
                     ->visit('/library/tracks')
                     ->waitForText('Saved Nawhas', 10)
                     ->assertSee('Saved Nawhas')
@@ -131,9 +137,11 @@ class ResponsiveViewportCoverageTest extends DuskTestCase
     {
         $fixtures = $this->createFixtures();
         $this->browse(function (Browser $browser) use ($fixtures) {
+            $browser->logout();
+            $this->loginViaUi($browser, $fixtures['moderator'], 'secret');
+
             foreach (self::VIEWPORTS as $label => [$width, $height]) {
                 $browser->resize($width, $height)
-                    ->loginAs($fixtures['moderator'])
                     ->visit('/moderator/drafts/lyrics')
                     ->waitForText('Draft Lyrics', 10)
                     ->assertSee('Draft Lyrics');
@@ -148,9 +156,11 @@ class ResponsiveViewportCoverageTest extends DuskTestCase
     {
         $fixtures = $this->createFixtures();
         $this->browse(function (Browser $browser) use ($fixtures) {
+            $browser->logout();
+            $this->loginViaUi($browser, $fixtures['moderator'], 'secret');
+
             foreach (self::VIEWPORTS as $label => [$width, $height]) {
                 $browser->resize($width, $height)
-                    ->loginAs($fixtures['moderator'])
                     ->visit('/moderator/revisions')
                     ->waitForText('Revision History', 10)
                     ->assertSee('Revision History');
