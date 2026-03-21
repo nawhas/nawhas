@@ -1,7 +1,12 @@
 export interface Story {
-  date: string;
-  image: string;
+  id: string;
   slug: string;
   title: string;
-  body: string;
+  body: string | null;
+  excerpt: string | null;
+  heroImageUrl: string | null;
+  displayDate: string | null;
+  publishedAt?: string | null;
+  createdAt?: string | null;
+  updatedAt?: string | null;
 }

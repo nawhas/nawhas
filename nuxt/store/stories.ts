@@ -1,14 +1,19 @@
-import { GetterTree } from 'vuex';
+import { GetterTree, MutationTree } from 'vuex';
 import { Story } from '@/entities/story';
-import { stories as storyList } from '@/data/stories';
 
 export interface StoriesState {
   stories: Array<Story>;
 }
 
 const state = (): StoriesState => ({
-  stories: storyList,
+  stories: [],
 });
+
+const mutations: MutationTree<StoriesState> = {
+  setStories(st, stories: Array<Story>) {
+    st.stories = stories;
+  },
+};
 
 const getters: GetterTree<StoriesState, Record<string, unknown>> = {
   stories(st): Array<Story> {
@@ -20,5 +25,6 @@ const getters: GetterTree<StoriesState, Record<string, unknown>> = {
 export default {
   namespaced: true,
   state,
+  mutations,
   getters,
 };

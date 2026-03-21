@@ -1,14 +1,14 @@
 <template>
   <v-card class="story" :to="route">
-    <v-img :src="story.image" height="200px" />
+    <v-img v-if="story.heroImageUrl" :src="story.heroImageUrl" height="200px" />
     <v-card-text class="text--primary">
-      <h5 class="overline">
-        {{ story.date | date }}
+      <h5 v-if="story.displayDate" class="overline">
+        {{ story.displayDate | date }}
       </h5>
       <h3 class="title">
         {{ story.title }}
       </h3>
-      <p class="body" v-html="story.body" />
+      <div v-if="teaserHtml" class="body" v-html="teaserHtml" />
     </v-card-text>
     <v-card-actions class="actions">
       <v-btn text color="primary">
@@ -31,10 +31,18 @@ export default class StoryCard extends Vue {
     return {
       name: 'stories.show',
       params: {
-        date: this.story.date,
+        date: this.story.displayDate || 'unknown',
         story: this.story.slug,
       },
     };
+  }
+
+  get teaserHtml(): string {
+    if (this.story.excerpt) {
+      return this.story.excerpt;
+    }
+    const body = this.story.body || '';
+    return body.length > 280 ? `${body.slice(0, 280)}…` : body;
   }
 }
 </script>

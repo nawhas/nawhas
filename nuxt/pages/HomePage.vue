@@ -34,11 +34,11 @@
       </template>
     </v-container>
 
-    <v-container class="app__section">
+    <v-container v-if="homeStories && homeStories.length > 0" class="app__section">
       <h5 class="section__title">
         Latest Stories
       </h5>
-      <story-card-grid />
+      <story-card-grid :stories="homeStories" />
     </v-container>
 
     <v-container class="app__section">
@@ -119,6 +119,7 @@ import TrackCardSkeleton from '@/components/loaders/TrackCardSkeleton.vue';
 import TrackList from '@/components/tracks/TrackList.vue';
 import GlobalSearch from '@/components/search/GlobalSearch.vue';
 import { Reciter } from '@/entities/reciter';
+import { Story } from '@/entities/story';
 import { Track } from '@/entities/track';
 import { ReciterIncludes } from '@/api/reciters';
 import { TrackIncludes } from '@/api/tracks';
@@ -132,6 +133,7 @@ interface Data {
   tracks: Array<Track> | null;
   savedTracks: Array<Track> | null;
   savedTracksLoading: boolean;
+  homeStories: Array<Story>;
 }
 
 export default Vue.extend({
@@ -153,6 +155,7 @@ export default Vue.extend({
     tracks: null,
     savedTracks: null,
     savedTracksLoading: false,
+    homeStories: [],
   }),
 
   async fetch() {
@@ -169,6 +172,14 @@ export default Vue.extend({
     ]);
     this.reciters = reciters.data;
     this.tracks = tracks.data;
+
+    try {
+      const storiesResponse = await this.$api.stories.index({ pagination: { limit: 9 } });
+      this.homeStories = storiesResponse.data;
+      this.$store.commit('stories/setStories', storiesResponse.data);
+    } catch {
+      this.homeStories = [];
+    }
   },
 
   computed: {
