@@ -44,9 +44,8 @@ class CriticalUserJourneyUxTest extends DuskTestCase
         ]);
 
         $trackPath = (new TrackPage($reciter->slug, $album->year, $track->slug))->url();
-        $trackPage = new TrackPage($reciter->slug, $album->year, $track->slug);
 
-        $this->browse(function (Browser $browser) use ($reciter, $track, $trackPath, $trackPage) {
+        $this->browse(function (Browser $browser) use ($reciter, $track, $trackPath) {
             $browser->visit('/')
                 ->on(new Home)
                 ->within('@naLinks', static fn (Browser $nav) => $nav->clickLink('Browse'))
@@ -63,13 +62,18 @@ class CriticalUserJourneyUxTest extends DuskTestCase
                 ->clickLink($track->title)
                 ->waitForLocation($trackPath, 20)
                 ->assertPathIs($trackPath)
-                ->waitFor('[dusk="track-title"]', 30);
-
-            $trackPage->assertPlayButtonVisible($browser);
-            $trackPage->clickPlayButton($browser);
-            $trackPage->assertStopButtonVisible($browser);
-            $trackPage->clickStopButton($browser);
-            $trackPage->assertPlayButtonVisible($browser);
+                ->waitFor('[dusk="track-title"]', 30)
+                ->waitFor('[dusk="play-button"]', 20)
+                ->assertVisible('[dusk="play-button"]')
+                ->waitForTextIn('[dusk="play-button"]', 'PLAY')
+                ->click('[dusk="play-button"]')
+                ->waitFor('[dusk="stop-button"]', 20)
+                ->assertVisible('[dusk="stop-button"]')
+                ->waitForTextIn('[dusk="stop-button"]', 'STOP')
+                ->click('[dusk="stop-button"]')
+                ->waitFor('[dusk="play-button"]', 20)
+                ->assertVisible('[dusk="play-button"]')
+                ->waitForTextIn('[dusk="play-button"]', 'PLAY');
         });
     }
 
