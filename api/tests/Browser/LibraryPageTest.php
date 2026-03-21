@@ -20,6 +20,11 @@ class LibraryPageTest extends DuskTestCase
             $libraryPage = new Library();
             $browser->logout()->visit($libraryPage);
             $libraryPage->verifyPageWhenUnauthenticated($browser);
+            
+            // Test interaction: clicking Get Started should open auth dialog
+            $libraryPage->clickGetStartedButton($browser);
+            $browser->waitFor('.auth-dialog')
+                ->assertSeeIn('.auth-dialog', 'Sign Up');
         });
     }
 }

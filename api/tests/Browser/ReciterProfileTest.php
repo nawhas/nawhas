@@ -35,7 +35,11 @@ class ReciterProfileTest extends DuskTestCase
                 ->assertSeeIn('@title', $reciter->name)
                 ->assertSee('Top Nawhas')
                 ->assertSee($album->title)
-                ->assertSee($album->year);
+                ->assertSee($album->year)
+                // Test interaction: click album link and verify navigation
+                ->click('@album-title-link')
+                ->waitForLocation("/reciters/{$reciter->slug}/albums/{$album->year}")
+                ->assertPathIs("/reciters/{$reciter->slug}/albums/{$album->year}");
         });
     }
 }

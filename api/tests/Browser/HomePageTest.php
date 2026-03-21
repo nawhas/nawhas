@@ -17,7 +17,12 @@ class HomePageTest extends DuskTestCase
     {
         $this->browse(function (Browser $browser) {
             $browser->visit('/')
-                ->on(new Home);
+                ->on(new Home)
+                // Test interaction: search input focuses and shows results container
+                ->click('input[placeholder="Search Nawhas.com"]')
+                ->type('input[placeholder="Search Nawhas.com"]', 'Nadeem')
+                ->waitForText('Showing results for “Nadeem”')
+                ->assertSee('Showing results for “Nadeem”');
         });
     }
 }

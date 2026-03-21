@@ -119,7 +119,20 @@ class Track extends Page
     {
         $browser->waitFor('@playButton')
             ->assertVisible('@playButton')
-            ->assertSee('PLAY');
+            ->waitForTextIn('@playButton', 'PLAY');
+    }
+
+    /**
+     * Assert that the stop button is visible.
+     *
+     * @param Browser $browser
+     * @return void
+     */
+    public function assertStopButtonVisible(Browser $browser): void
+    {
+        $browser->waitFor('@stopButton')
+            ->assertVisible('@stopButton')
+            ->waitForTextIn('@stopButton', 'STOP');
     }
 
     /**
@@ -132,7 +145,32 @@ class Track extends Page
     {
         $browser->waitFor('@addToQueueButton')
             ->assertVisible('@addToQueueButton')
-            ->assertSee('ADD TO QUEUE');
+            ->waitForTextIn('@addToQueueButton', 'ADD TO QUEUE');
+    }
+
+    /**
+     * Assert that the added to queue button is visible.
+     *
+     * @param Browser $browser
+     * @return void
+     */
+    public function assertAddedToQueueButtonVisible(Browser $browser): void
+    {
+        $browser->waitFor('@addedToQueueButton')
+            ->assertVisible('@addedToQueueButton')
+            ->waitForTextIn('@addedToQueueButton', 'ADDED TO QUEUE');
+    }
+
+    /**
+     * Assert that the added to queue snackbar is visible.
+     *
+     * @param Browser $browser
+     * @return void
+     */
+    public function assertAddedToQueueSnackbarVisible(Browser $browser): void
+    {
+        $browser->waitFor('@addedToQueueSnackbar')
+            ->assertVisible('@addedToQueueSnackbar');
     }
 
     /**
@@ -145,6 +183,18 @@ class Track extends Page
     {
         $browser->waitFor('@playButton')
             ->click('@playButton');
+    }
+
+    /**
+     * Click the stop button.
+     *
+     * @param Browser $browser
+     * @return void
+     */
+    public function clickStopButton(Browser $browser): void
+    {
+        $browser->waitFor('@stopButton')
+            ->click('@stopButton');
     }
 
     /**

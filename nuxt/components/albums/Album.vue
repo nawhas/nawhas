@@ -10,7 +10,7 @@
         <lazy-image ref="artwork" crossorigin :src="image" :alt="album.title" />
       </v-avatar>
       <div class="album__details" :style="{ color: textColor }">
-        <nuxt-link :to="link" class="album__title">
+        <nuxt-link :to="link" class="album__title" dusk="album-title-link">
           <h5>{{ album.title }}</h5>
         </nuxt-link>
         <h6 class="album__release-date">

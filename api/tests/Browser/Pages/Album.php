@@ -94,7 +94,7 @@ class Album extends Page
     {
         $browser->waitFor('@playAlbumButton')
             ->assertVisible('@playAlbumButton')
-            ->assertSee('PLAY ALBUM');
+            ->waitForTextIn('@playAlbumButton', 'PLAY ALBUM');
     }
 
     /**
@@ -107,7 +107,32 @@ class Album extends Page
     {
         $browser->waitFor('@addToQueueButton')
             ->assertVisible('@addToQueueButton')
-            ->assertSee('ADD TO QUEUE');
+            ->waitForTextIn('@addToQueueButton', 'ADD TO QUEUE');
+    }
+
+    /**
+     * Assert that the album page shows the added to queue button.
+     *
+     * @param Browser $browser
+     * @return void
+     */
+    public function assertAddedToQueueButtonVisible(Browser $browser): void
+    {
+        $browser->waitFor('@addedToQueueButton')
+            ->assertVisible('@addedToQueueButton')
+            ->waitForTextIn('@addedToQueueButton', 'ADDED TO QUEUE');
+    }
+
+    /**
+     * Assert that the added to queue snackbar is visible.
+     *
+     * @param Browser $browser
+     * @return void
+     */
+    public function assertAddedToQueueSnackbarVisible(Browser $browser): void
+    {
+        $browser->waitFor('@addedToQueueSnackbar')
+            ->assertVisible('@addedToQueueSnackbar');
     }
 
     /**
@@ -188,6 +213,8 @@ class Album extends Page
             '@trackList' => '[dusk="track-list"]',
             '@playAlbumButton' => '[dusk="play-album-button"]',
             '@addToQueueButton' => '[dusk="add-to-queue-button"]',
+            '@addedToQueueButton' => '[dusk="added-to-queue-button"]',
+            '@addedToQueueSnackbar' => '[dusk="added-to-queue-snackbar"]',
             '@trackItems' => '[dusk="track-list"] .v-list-item',
         ];
     }

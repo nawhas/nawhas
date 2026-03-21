@@ -39,6 +39,7 @@ class ReciterProfile extends Page
         return [
             '@title' => '[dusk="reciter-profile__title"]',
             '@albums-section' => '#albums-section',
+            '@album-title-link' => '[dusk="album-title-link"]',
         ];
     }
 }
