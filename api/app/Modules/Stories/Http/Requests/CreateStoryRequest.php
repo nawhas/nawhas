@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace App\Modules\Stories\Http\Requests;
 
+use App\Modules\Stories\Models\Story;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Str;
+use Illuminate\Validation\Validator;
 
 class CreateStoryRequest extends FormRequest
 {
@@ -24,6 +27,23 @@ class CreateStoryRequest extends FormRequest
             'display_date' => ['nullable', 'date_format:Y-m-d'],
             'published' => ['sometimes', 'boolean'],
         ];
+    }
+
+    public function withValidator(Validator $validator): void
+    {
+        $validator->after(function (Validator $validator): void {
+            $title = (string) $this->input('title', '');
+            $slugInput = $this->input('slug');
+            $effective = ($slugInput !== null && $slugInput !== '')
+                ? Str::slug((string) $slugInput)
+                : Str::slug($title);
+            if ($effective === '') {
+                return;
+            }
+            if (Story::query()->where('slug', $effective)->exists()) {
+                $validator->errors()->add('slug', 'A story with this slug already exists.');
+            }
+        });
     }
 
     /**

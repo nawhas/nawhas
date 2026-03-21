@@ -25,6 +25,12 @@
         contain
         class="mb-6"
       />
+      <p
+        v-if="story.excerpt"
+        class="story-page__excerpt body-1 text--secondary mb-4"
+      >
+        {{ story.excerpt }}
+      </p>
       <div class="story-page__body body-1">
         {{ story.body }}
       </div>
@@ -77,6 +83,7 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" scoped>
+.story-page__excerpt,
 .story-page__body {
   white-space: pre-line;
 }

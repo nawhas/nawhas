@@ -19,7 +19,7 @@
       />
       <v-text-field v-model="form.display_date" label="Display date (YYYY-MM-DD)" outlined />
       <v-text-field v-model="form.hero_image_url" label="Hero image URL" outlined />
-      <v-textarea v-model="form.excerpt" label="Excerpt (HTML allowed)" outlined rows="3" />
+      <v-textarea v-model="form.excerpt" label="Excerpt (plain text)" outlined rows="3" />
       <v-textarea v-model="form.body" label="Body" outlined rows="12" />
       <v-switch v-model="form.published" label="Published" color="primary" />
       <div class="story-editor__actions">

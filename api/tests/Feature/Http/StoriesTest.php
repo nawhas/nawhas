@@ -138,4 +138,92 @@ class StoriesTest extends HttpTestCase
             ->post(['title' => 'X'])
             ->assertUnauthorized();
     }
+
+    /**
+     * @test
+     */
+    public function moderator_cannot_create_story_with_duplicate_slug(): void
+    {
+        Story::create([
+            'title' => 'Existing',
+            'slug' => 'taken-slug',
+            'published' => false,
+        ]);
+
+        $this->asModerator()
+            ->url(self::ROUTE_INDEX)
+            ->post([
+                'title' => 'Another',
+                'slug' => 'taken-slug',
+            ])
+            ->assertUnprocessable()
+            ->assertJsonValidationErrors(['slug']);
+    }
+
+    /**
+     * @test
+     */
+    public function moderator_cannot_create_story_when_title_slugs_to_existing_slug(): void
+    {
+        Story::create([
+            'title' => 'Hello World',
+            'slug' => 'hello-world',
+            'published' => false,
+        ]);
+
+        $this->asModerator()
+            ->url(self::ROUTE_INDEX)
+            ->post([
+                'title' => 'Hello World',
+            ])
+            ->assertUnprocessable()
+            ->assertJsonValidationErrors(['slug']);
+    }
+
+    /**
+     * @test
+     */
+    public function moderator_cannot_update_story_to_another_stories_slug(): void
+    {
+        Story::create([
+            'title' => 'First',
+            'slug' => 'first-slug',
+            'published' => false,
+        ]);
+        $second = Story::create([
+            'title' => 'Second',
+            'slug' => 'second-slug',
+            'published' => false,
+        ]);
+
+        $this->asModerator()
+            ->url(self::ROUTE_SHOW, $second->id)
+            ->patch(['slug' => 'first-slug'])
+            ->assertUnprocessable()
+            ->assertJsonValidationErrors(['slug']);
+    }
+
+    /**
+     * @test
+     */
+    public function moderator_index_lists_published_stories_before_drafts(): void
+    {
+        Story::create([
+            'title' => 'Draft',
+            'slug' => 'draft-slug',
+            'published' => false,
+        ]);
+        Story::create([
+            'title' => 'Published',
+            'slug' => 'pub-slug',
+            'published' => true,
+        ]);
+
+        $this->asModerator()
+            ->url(self::ROUTE_INDEX)
+            ->get()
+            ->assertSuccessful()
+            ->assertJsonPath('data.0.slug', 'pub-slug')
+            ->assertJsonPath('data.1.slug', 'draft-slug');
+    }
 }

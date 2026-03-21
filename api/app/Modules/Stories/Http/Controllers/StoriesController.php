@@ -25,7 +25,7 @@ class StoriesController extends Controller
     public function index(Request $request): JsonResponse
     {
         $query = Story::query()
-            ->orderByDesc('published_at')
+            ->orderByRaw('published_at DESC NULLS LAST')
             ->orderByDesc('updated_at');
 
         $user = Auth::user();
