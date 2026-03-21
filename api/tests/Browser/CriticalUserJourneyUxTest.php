@@ -44,8 +44,9 @@ class CriticalUserJourneyUxTest extends DuskTestCase
         ]);
 
         $trackPath = (new TrackPage($reciter->slug, $album->year, $track->slug))->url();
+        $trackPage = new TrackPage($reciter->slug, $album->year, $track->slug);
 
-        $this->browse(function (Browser $browser) use ($reciter, $track, $trackPath) {
+        $this->browse(function (Browser $browser) use ($reciter, $track, $trackPath, $trackPage) {
             $browser->visit('/')
                 ->on(new Home)
                 ->within('@naLinks', static fn (Browser $nav) => $nav->clickLink('Browse'))
@@ -62,12 +63,13 @@ class CriticalUserJourneyUxTest extends DuskTestCase
                 ->clickLink($track->title)
                 ->waitForLocation($trackPath, 20)
                 ->assertPathIs($trackPath)
-                ->waitFor('@trackTitle', 15)
-                ->assertPlayButtonVisible()
-                ->clickPlayButton()
-                ->assertStopButtonVisible()
-                ->clickStopButton()
-                ->assertPlayButtonVisible();
+                ->waitFor('[dusk="track-title"]', 30);
+
+            $trackPage->assertPlayButtonVisible($browser);
+            $trackPage->clickPlayButton($browser);
+            $trackPage->assertStopButtonVisible($browser);
+            $trackPage->clickStopButton($browser);
+            $trackPage->assertPlayButtonVisible($browser);
         });
     }
 
