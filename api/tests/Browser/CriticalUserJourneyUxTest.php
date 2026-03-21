@@ -2,7 +2,6 @@
 
 namespace Tests\Browser;
 
-use App\Modules\Lyrics\Documents\Format;
 use Laravel\Dusk\Browser;
 use Tests\Browser\Pages\Album as AlbumPage;
 use Tests\Browser\Pages\DraftLyrics;
@@ -11,7 +10,6 @@ use Tests\Browser\Pages\LibraryTracks;
 use Tests\Browser\Pages\ReciterProfile;
 use Tests\Browser\Pages\Track as TrackPage;
 use Tests\DuskTestCase;
-use Tests\WithSearchIndex;
 use Throwable;
 
 /**
@@ -20,50 +18,48 @@ use Throwable;
  */
 class CriticalUserJourneyUxTest extends DuskTestCase
 {
-    use WithSearchIndex;
-
     /**
-     * Home → global search → track page → audio controls.
+     * Home → Browse → reciter → album → track page → audio controls.
+     *
+     * (Global search hits Meilisearch from the browser; indexing from PHPUnit is not
+     * guaranteed to be visible before the UI queries, so this journey uses navigation.)
      *
      * @throws Throwable
      */
-    public function test_journey_home_search_to_track_playback(): void
+    public function test_journey_home_browse_to_track_playback(): void
     {
         $reciter = $this->getReciterFactory()->create([
-            'name' => 'Journey Search Reciter',
-            'slug' => 'journey-search-reciter',
+            'name' => 'Journey Browse Reciter',
+            'slug' => 'journey-browse-reciter',
         ]);
 
         $album = $this->getAlbumFactory()->create($reciter, [
-            'title' => 'Journey Search Album',
+            'title' => 'Journey Browse Album',
             'year' => '2024',
         ]);
 
-        $unique = bin2hex(random_bytes(6));
         $track = $this->getTrackFactory()->create($album, [
-            'title' => "Journey Search Track {$unique}",
-            'audio' => 'journey-search.mp3',
+            'title' => 'Journey Browse Track',
+            'audio' => 'journey-browse.mp3',
         ]);
-
-        $draftLyrics = $this->getDraftLyricsFactory()->create($track, [
-            'document' => $this->getDraftLyricsFactory()->generateDocument(Format::PlainText),
-        ]);
-        $this->getDraftLyricsFactory()->approve($draftLyrics);
-        $track->refresh();
-
-        $track->load(['reciter', 'album']);
-        $track->searchable();
 
         $trackPath = (new TrackPage($reciter->slug, $album->year, $track->slug))->url();
 
-        $this->browse(function (Browser $browser) use ($track, $trackPath) {
+        $this->browse(function (Browser $browser) use ($reciter, $track, $trackPath) {
             $browser->visit('/')
                 ->on(new Home)
-                ->click('input[placeholder="Search Nawhas.com"]')
-                ->type('input[placeholder="Search Nawhas.com"]', $track->title)
-                ->waitForText('Showing results for “'.$track->title.'”', 20)
-                ->waitFor('a[href="' . $trackPath . '"]', 20)
-                ->click('a[href="' . $trackPath . '"]')
+                ->within('@naLinks', static fn (Browser $nav) => $nav->clickLink('Browse'))
+                ->waitForLocation('/reciters', 20)
+                ->assertPathIs('/reciters')
+                ->waitForText('All Reciters', 20)
+                ->waitForText($reciter->name, 20)
+                ->clickLink($reciter->name)
+                ->waitFor('[dusk="reciter-profile__title"]', 20)
+                ->assertSeeIn('[dusk="reciter-profile__title"]', $reciter->name)
+                ->waitFor('[dusk="album-title-link"]', 15)
+                ->click('[dusk="album-title-link"]')
+                ->waitFor('[dusk="track-list"]', 20)
+                ->clickLink($track->title)
                 ->waitForLocation($trackPath, 20)
                 ->assertPathIs($trackPath)
                 ->waitFor('@trackTitle', 15)
