@@ -3,6 +3,7 @@
 use App\Modules\Library\Events as Library;
 use App\Modules\Authentication\Events as Authentication;
 use App\Modules\Accounts\Events as Accounts;
+use App\Modules\Stories\Events\Stories as Stories;
 
 return [
 
@@ -119,6 +120,17 @@ return [
         'drafts.lyrics.changed' => Library\Drafts\Lyrics\DraftLyricsChanged::class,
         'drafts.lyrics.published' => Library\Drafts\Lyrics\DraftLyricsPublished::class,
         'drafts.lyrics.deleted' => Library\Drafts\Lyrics\DraftLyricsDeleted::class,
+        // Story Events
+        'story.created' => Stories\StoryCreated::class,
+        'story.changed.title' => Stories\StoryTitleChanged::class,
+        'story.changed.slug' => Stories\StorySlugChanged::class,
+        'story.changed.excerpt' => Stories\StoryExcerptChanged::class,
+        'story.changed.body' => Stories\StoryBodyChanged::class,
+        'story.changed.hero_image' => Stories\StoryHeroImageChanged::class,
+        'story.changed.display_date' => Stories\StoryDisplayDateChanged::class,
+        'story.published' => Stories\StoryPublished::class,
+        'story.unpublished' => Stories\StoryUnpublished::class,
+        'story.deleted' => Stories\StoryDeleted::class,
     ],
 
     /*

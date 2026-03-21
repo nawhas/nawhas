@@ -30,4 +30,9 @@ trait ModelFactories
     {
         return app(DraftLyricsFactory::class);
     }
+
+    protected function getStoryFactory(): StoryFactory
+    {
+        return app(StoryFactory::class);
+    }
 }

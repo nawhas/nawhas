@@ -85,6 +85,12 @@ const links = [
     exact: true,
     to: '/moderator/drafts/lyrics',
   },
+  {
+    icon: 'article',
+    title: 'Stories',
+    exact: true,
+    to: '/moderator/stories',
+  },
   // {
   //   icon: 'group',
   //   title: 'Users',

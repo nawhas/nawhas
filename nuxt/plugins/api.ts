@@ -7,6 +7,7 @@ import { FeaturesApi } from '@/api/features';
 import { LibraryApi } from '@/api/library';
 import { RevisionsApi } from '@/api/revisions';
 import { DraftLyricsApi } from '@/api/draftLyrics';
+import { StoriesApi } from '@/api/stories';
 
 export interface InjectedApiPlugin {
   reciters: RecitersApi;
@@ -17,6 +18,7 @@ export interface InjectedApiPlugin {
   library: LibraryApi;
   revisions: RevisionsApi;
   draftLyrics: DraftLyricsApi;
+  stories: StoriesApi;
 }
 
 const ApiPlugin: Plugin = ({ $axios }, inject) => {
@@ -29,6 +31,7 @@ const ApiPlugin: Plugin = ({ $axios }, inject) => {
     library: new LibraryApi($axios),
     revisions: new RevisionsApi($axios),
     draftLyrics: new DraftLyricsApi($axios),
+    stories: new StoriesApi($axios),
   };
 
   inject('api', api);

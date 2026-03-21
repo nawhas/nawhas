@@ -52,6 +52,7 @@ class Home extends Page
     {
         return [
             '@naLinks' => '.nav__buttons',
+            '@home-latest-stories' => '[dusk="home-latest-stories"]',
         ];
     }
 }
