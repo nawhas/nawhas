@@ -9,7 +9,7 @@
       </p>
       <p class="message-line">
         Don't have an account yet?
-        <a class="link" href="#" @click.prevent="switchToRegisterDialog">Sign up.</a>
+        <a class="link" href="#" dusk="login-form__sign-up" @click.prevent="switchToRegisterDialog">Sign up.</a>
       </p>
     </template>
     <v-text-field
@@ -29,7 +29,7 @@
     />
     <div class="actions">
       <div class="forgot-password">
-        <a class="link body-2" href="#" @click.prevent="switchToResetPasswordRequestDialog">
+        <a class="link body-2" href="#" dusk="login-form__forgot-password" @click.prevent="switchToResetPasswordRequestDialog">
           Forgot password?
         </a>
       </div>

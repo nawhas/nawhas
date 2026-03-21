@@ -129,7 +129,7 @@
                   </v-list-item-title>
                 </v-list-item-content>
               </v-list-item>
-              <v-list-item @click="showBugReport">
+              <v-list-item dusk="user-menu__report-issue" @click="showBugReport">
                 <v-list-item-content>
                   <v-list-item-title class="user-menu__action">
                     <v-icon>report</v-icon> <div class="user-menu__action__text">
