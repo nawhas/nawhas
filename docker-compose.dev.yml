@@ -39,3 +39,8 @@ services:
       - BUILD_AXIOS_DEBUG=
       - CHOKIDAR_USEPOLLING=true
       - SERVER_API_BASE_URL=http://nginx:80
+  selenium:
+    ports:
+      - '4444:4444'
+    environment:
+      - SE_VNC_NO_PASSWORD=true

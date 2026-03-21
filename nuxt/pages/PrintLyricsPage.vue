@@ -7,10 +7,10 @@
   <div>
     <div class="print__header">
       <div class="print__header__title">
-        <div class="print__header__title--track--name">
+        <div class="print__header__title--track--name" dusk="print-lyrics__title">
           {{ track.title }}
         </div>
-        <div class="print__header__title--track--meta">
+        <div class="print__header__title--track--meta" dusk="print-lyrics__meta">
           {{ track.reciter.name }} - {{ track.year }}
         </div>
       </div>

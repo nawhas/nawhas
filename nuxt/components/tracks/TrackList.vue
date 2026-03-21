@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-list v-if="tracks" class="pa-0">
+    <v-list v-if="tracks" class="pa-0" dusk="track-list">
       <v-list-item
         v-for="(track, index) in tracks"
         :key="index"

@@ -11,7 +11,7 @@
           <lazy-image v-if="track && album" crossorigin :src="image" :alt="album.name" />
         </v-avatar>
         <div class="hero__text">
-          <h4 class="hero__title">
+          <h4 class="hero__title" dusk="track-title">
             <template v-if="track">
               {{ track.title }}
             </template>
@@ -25,11 +25,12 @@
                 class="meta__line"
                 :to="getReciterUri(reciter)"
                 exact
+                dusk="reciter-name"
               >
                 <span class="meta__line__text">{{ reciter.name }}</span>
               </router-link>
               <br>
-              <router-link class="meta__line" :to="getAlbumUri(album, reciter)" exact>
+              <router-link class="meta__line" :to="getAlbumUri(album, reciter)" exact dusk="album-info">
                 <span class="meta__line__text">{{ album.year }} &bull; {{ album.title }}</span>
               </router-link>
             </template>
@@ -49,6 +50,7 @@
                 :text="showExpandedButtonText"
                 :icon="!showExpandedButtonText"
                 :color="textColor"
+                dusk="play-button"
                 @click="playAlbum"
               >
                 <v-icon :left="showExpandedButtonText">
@@ -61,6 +63,7 @@
                 :text="showExpandedButtonText"
                 :icon="!showExpandedButtonText"
                 :color="textColor"
+                dusk="stop-button"
                 @click="stopPlaying"
               >
                 <v-icon :left="showExpandedButtonText">
@@ -73,6 +76,7 @@
                 :text="showExpandedButtonText"
                 :icon="!showExpandedButtonText"
                 :color="textColor"
+                dusk="add-to-queue-button"
                 @click="addToQueue"
               >
                 <v-icon :left="showExpandedButtonText">
@@ -85,6 +89,7 @@
                 :text="showExpandedButtonText"
                 :icon="!showExpandedButtonText"
                 :color="textColor"
+                dusk="added-to-queue-button"
               >
                 <v-icon
                   color="green"
@@ -119,10 +124,10 @@
     <v-container class="app__section">
       <v-row>
         <v-col cols="12" md="8">
-          <lyrics-card :track="track" />
+          <lyrics-card :track="track" dusk="lyrics-card" />
         </v-col>
         <v-col cols="12" md="4">
-          <v-card v-if="video" class="card card--video">
+          <v-card v-if="video" class="card card--video" dusk="video-player">
             <v-card-title
               class="card__title subtitle-1"
             >
@@ -176,7 +181,7 @@
       </v-row>
     </v-container>
 
-    <v-snackbar v-model="addedToQueueSnackbar" right>
+    <v-snackbar v-model="addedToQueueSnackbar" right dusk="added-to-queue-snackbar">
       <v-icon color="white">
         playlist_add_check
       </v-icon>Added to Queue

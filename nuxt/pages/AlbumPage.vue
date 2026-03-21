@@ -53,6 +53,7 @@
                 v-if="tracks"
                 text
                 :color="textColor"
+                dusk="play-album-button"
                 @click="playAlbum"
               >
                 <v-icon left>
@@ -64,6 +65,7 @@
                 v-if="!addedToQueueSnackbar && tracks"
                 text
                 :color="textColor"
+                dusk="add-to-queue-button"
                 @click="addToQueue"
               >
                 <v-icon left>
@@ -75,6 +77,7 @@
                 v-if="addedToQueueSnackbar"
                 text
                 :color="textColor"
+                dusk="added-to-queue-button"
               >
                 <v-icon color="green" left>
                   done
@@ -99,7 +102,7 @@
       </div>
       <track-list :tracks="tracks" numbered />
     </v-container>
-    <v-snackbar v-model="addedToQueueSnackbar" right>
+    <v-snackbar v-model="addedToQueueSnackbar" right dusk="added-to-queue-snackbar">
       <v-icon color="white">
         playlist_add_check
       </v-icon>
