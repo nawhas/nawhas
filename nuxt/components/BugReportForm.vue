@@ -1,5 +1,5 @@
 <template>
-  <v-card class="bug-report-form" :loading="loading">
+  <v-card class="bug-report-form" dusk="bug-report-form" :loading="loading">
     <v-form novalidate @submit.prevent="submit">
       <v-card-title>
         <h2 class="card-title">
@@ -50,7 +50,7 @@
           Cancel
         </v-btn>
         <v-spacer />
-        <v-btn type="submit" text color="primary" :loading="loading">
+        <v-btn type="submit" dusk="bug-report-form__submit" text color="primary" :loading="loading">
           Submit
         </v-btn>
       </v-card-actions>

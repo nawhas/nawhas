@@ -1,51 +1,55 @@
 <template>
-  <auth-dialog :loading="loading" :error="error" @submit="submit">
-    <template slot="title">
-      Reset Password
-    </template>
-    <template slot="message">
-      <p class="message-line">
-        Let's get you back into your account. Enter the email address you used when creating your account.
-      </p>
-    </template>
+  <div dusk="user-menu__password-reset-request-dialog">
+    <auth-dialog :loading="loading" :error="error" @submit="submit">
+      <template slot="title">
+        Reset Password
+      </template>
+      <template slot="message">
+        <p class="message-line">
+          Let's get you back into your account. Enter the email address you used when creating your account.
+        </p>
+      </template>
 
-    <div v-if="success">
-      <v-alert type="success" outlined>
-        If we have an account matching your email address, we'll send you an email with instructions on
-        how to reset your password. Keep an eye on your inbox!
-      </v-alert>
-      <div class="text-center">
-        <v-btn color="primary" @click="close">
-          Close
-        </v-btn>
+      <div v-if="success">
+        <v-alert type="success" outlined>
+          If we have an account matching your email address, we'll send you an email with instructions on
+          how to reset your password. Keep an eye on your inbox!
+        </v-alert>
+        <div class="text-center">
+          <v-btn color="primary" @click="close">
+            Close
+          </v-btn>
+        </div>
       </div>
-    </div>
-    <div v-else>
-      <v-text-field
-        v-model="form.email"
-        outlined
-        autofocus
-        label="Email"
-        type="email"
-        :error-messages="invalid.email"
-      />
-      <div class="actions">
-        <v-spacer />
-        <v-btn text @click="close">
-          Cancel
-        </v-btn>
-        <v-btn
-          type="submit"
-          elevation="0"
-          color="primary"
-          :loading="loading"
-          :disabled="disabled"
-        >
-          Submit
-        </v-btn>
+      <div v-else>
+        <v-text-field
+          id="reset-request-form-email"
+          v-model="form.email"
+          outlined
+          autofocus
+          label="Email"
+          type="email"
+          :error-messages="invalid.email"
+        />
+        <div class="actions">
+          <v-spacer />
+          <v-btn text @click="close">
+            Cancel
+          </v-btn>
+          <v-btn
+            type="submit"
+            dusk="reset-request-form__submit"
+            elevation="0"
+            color="primary"
+            :loading="loading"
+            :disabled="disabled"
+          >
+            Submit
+          </v-btn>
+        </div>
       </div>
-    </div>
-  </auth-dialog>
+    </auth-dialog>
+  </div>
 </template>
 
 <script lang="ts">

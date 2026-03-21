@@ -5,10 +5,17 @@ namespace Tests\Browser;
 use Laravel\Dusk\Browser;
 use Tests\DuskTestCase;
 
+/**
+ * Field and dialog locators are defined on the Nuxt components (id / dusk), not invented here.
+ *
+ * @see nuxt/components/auth/LoginForm.vue
+ * @see nuxt/components/auth/RegisterForm.vue
+ * @see nuxt/components/auth/RequestPasswordResetForm.vue
+ * @see nuxt/components/navigation/UserMenu.vue
+ * @see nuxt/components/BugReportForm.vue
+ */
 class FormValidationUxTest extends DuskTestCase
 {
-    private const ACTIVE_AUTH_DIALOG = '.v-dialog--active .auth-dialog';
-
     private function openLoginDialog(Browser $browser): void
     {
         $browser->visit('/')
@@ -16,7 +23,7 @@ class FormValidationUxTest extends DuskTestCase
             ->click('@user-menu__avatar')
             ->waitFor('@user-menu__login-button')
             ->click('@user-menu__login-button')
-            ->waitFor(self::ACTIVE_AUTH_DIALOG)
+            ->waitFor('@user-menu__login-dialog')
             ->assertSee('Welcome back!');
     }
 
@@ -27,15 +34,13 @@ class FormValidationUxTest extends DuskTestCase
     {
         $this->browse(function (Browser $browser) {
             $this->openLoginDialog($browser);
-            $browser->assertPresent(self::ACTIVE_AUTH_DIALOG . ' button[type=submit][disabled]')
-                ->within(self::ACTIVE_AUTH_DIALOG, function (Browser $dialog) {
-                    $dialog->type('input[type=email]', 'guest@nawhas.test');
-                })
-                ->assertPresent(self::ACTIVE_AUTH_DIALOG . ' button[type=submit][disabled]')
-                ->within(self::ACTIVE_AUTH_DIALOG, function (Browser $dialog) {
-                    $dialog->type('input[type=password]', 'secret123');
-                })
-                ->assertNotPresent(self::ACTIVE_AUTH_DIALOG . ' button[type=submit][disabled]');
+            $browser->within('@user-menu__login-dialog', function (Browser $dialog) {
+                $dialog->assertDisabled('@login-form__submit')
+                    ->type('#login-form-email', 'guest@nawhas.test')
+                    ->assertDisabled('@login-form__submit')
+                    ->type('#login-form-password', 'secret123')
+                    ->assertEnabled('@login-form__submit');
+            });
         });
     }
 
@@ -46,10 +51,10 @@ class FormValidationUxTest extends DuskTestCase
     {
         $this->browse(function (Browser $browser) {
             $this->openLoginDialog($browser);
-            $browser->within(self::ACTIVE_AUTH_DIALOG, function (Browser $dialog) {
-                $dialog->type('input[type=email]', 'not-an-email')
-                    ->type('input[type=password]', 'password123')
-                    ->press('button[type=submit]');
+            $browser->within('@user-menu__login-dialog', function (Browser $dialog) {
+                $dialog->type('#login-form-email', 'not-an-email')
+                    ->type('#login-form-password', 'password123')
+                    ->press('@login-form__submit');
             })
                 ->waitForText('The email must be a valid email address.', 10);
         });
@@ -67,15 +72,16 @@ class FormValidationUxTest extends DuskTestCase
 
         $this->browse(function (Browser $browser) {
             $this->openLoginDialog($browser);
-            $browser->within(self::ACTIVE_AUTH_DIALOG, function (Browser $dialog) {
+            $browser->within('@user-menu__login-dialog', function (Browser $dialog) {
                 $dialog->click('@login-form__sign-up');
             })
+                ->waitFor('@user-menu__register-dialog')
                 ->waitForText('Create an account on Nawhas.com', 10)
-                ->within(self::ACTIVE_AUTH_DIALOG, function (Browser $dialog) {
-                    $dialog->type('input[type=text]', 'New Signup User')
-                        ->type('input[type=email]', 'taken@nawhas.test')
-                        ->type('input[type=password]', 'new-password-123')
-                        ->press('button[type=submit]');
+                ->within('@user-menu__register-dialog', function (Browser $dialog) {
+                    $dialog->type('#register-form-name', 'New Signup User')
+                        ->type('#register-form-email', 'taken@nawhas.test')
+                        ->type('#register-form-password', 'new-password-123')
+                        ->press('@register-form__submit');
                 })
                 ->waitForText('The email has already been taken.', 10);
         });
@@ -88,13 +94,14 @@ class FormValidationUxTest extends DuskTestCase
     {
         $this->browse(function (Browser $browser) {
             $this->openLoginDialog($browser);
-            $browser->within(self::ACTIVE_AUTH_DIALOG, function (Browser $dialog) {
+            $browser->within('@user-menu__login-dialog', function (Browser $dialog) {
                 $dialog->click('@login-form__forgot-password');
             })
+                ->waitFor('@user-menu__password-reset-request-dialog')
                 ->waitForText("Let's get you back into your account.", 10)
-                ->within(self::ACTIVE_AUTH_DIALOG, function (Browser $dialog) {
-                    $dialog->type('input[type=email]', 'nope')
-                        ->press('button[type=submit]');
+                ->within('@user-menu__password-reset-request-dialog', function (Browser $dialog) {
+                    $dialog->type('#reset-request-form-email', 'nope')
+                        ->press('@reset-request-form__submit');
                 })
                 ->waitForText('The email must be a valid email address.', 10);
         });
@@ -111,12 +118,12 @@ class FormValidationUxTest extends DuskTestCase
                 ->click('@user-menu__avatar')
                 ->waitForText('Report an issue', 10)
                 ->click('@user-menu__report-issue')
-                ->waitFor('.bug-report-form')
-                ->press('.bug-report-form button[type=submit]')
+                ->waitFor('@bug-report-form')
+                ->press('@bug-report-form__submit')
                 ->waitForText('The summary field is required.', 10)
-                ->type('input#bug-report-summary', 'Something is wrong on this page')
-                ->type('input#bug-report-email', 'not-valid-email')
-                ->press('.bug-report-form button[type=submit]')
+                ->type('#bug-report-summary', 'Something is wrong on this page')
+                ->type('#bug-report-email', 'not-valid-email')
+                ->press('@bug-report-form__submit')
                 ->waitForText('The email must be a valid email address.', 10);
         });
     }
