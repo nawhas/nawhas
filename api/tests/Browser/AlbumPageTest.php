@@ -68,7 +68,13 @@ class AlbumPageTest extends DuskTestCase
 
             $browser->visit($page)
                 ->assertPlayButtonVisible()
+                ->clickPlayAlbumButton()
+                // The global player should show up, but we'll test that elsewhere.
+                // Test the add to queue button interaction
                 ->assertAddToQueueButtonVisible()
+                ->clickAddToQueueButton()
+                ->assertAddedToQueueButtonVisible()
+                ->assertAddedToQueueSnackbarVisible()
                 ->assertTrackCount(1);
         });
     }

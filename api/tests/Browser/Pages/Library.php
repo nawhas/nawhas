@@ -57,4 +57,16 @@ class Library extends Page
         $browser->waitFor('@libraryButton')->assertButtonEnabled('@libraryButton');
         $browser->waitFor('@libraryButtonText')->assertSeeIn('@libraryButtonText', 'GET STARTED');
     }
+
+    /**
+     * Click the get started button.
+     *
+     * @param Browser $browser
+     * @return void
+     */
+    public function clickGetStartedButton(Browser $browser): void
+    {
+        $browser->waitFor('@libraryButton')
+            ->click('@libraryButton');
+    }
 }

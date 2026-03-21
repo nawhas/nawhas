@@ -75,8 +75,9 @@ class TrackPageTest extends DuskTestCase
             $browser->visit($page)
                 ->assertPlayButtonVisible()
                 ->clickPlayButton()
-                // Add assertions for player state if needed
-                ->assertSee('STOP');
+                ->assertStopButtonVisible()
+                ->clickStopButton()
+                ->assertPlayButtonVisible();
         });
     }
 
@@ -108,8 +109,8 @@ class TrackPageTest extends DuskTestCase
             $browser->visit($page)
                 ->assertAddToQueueButtonVisible()
                 ->clickAddToQueueButton()
-                // Add assertions for queue state if needed
-                ->assertSee('ADDED TO QUEUE');
+                ->assertAddedToQueueButtonVisible()
+                ->assertAddedToQueueSnackbarVisible();
         });
     }
 
