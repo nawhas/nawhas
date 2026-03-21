@@ -19,13 +19,13 @@ class StoriesTest extends HttpTestCase
      */
     public function guests_only_see_published_stories_in_index(): void
     {
-        Story::create([
+        $this->getStoryFactory()->create([
             'title' => 'Draft only',
             'slug' => 'draft-only',
             'body' => 'Hidden',
             'published' => false,
         ]);
-        Story::create([
+        $this->getStoryFactory()->create([
             'title' => 'Public',
             'slug' => 'public-one',
             'body' => 'Hello',
@@ -45,12 +45,12 @@ class StoriesTest extends HttpTestCase
      */
     public function contributors_only_see_published_stories_in_index(): void
     {
-        Story::create([
+        $this->getStoryFactory()->create([
             'title' => 'Draft',
             'slug' => 'contrib-draft',
             'published' => false,
         ]);
-        Story::create([
+        $this->getStoryFactory()->create([
             'title' => 'Live',
             'slug' => 'contrib-live',
             'published' => true,
@@ -71,7 +71,7 @@ class StoriesTest extends HttpTestCase
      */
     public function guests_get_404_for_unpublished_story_by_slug(): void
     {
-        $story = Story::create([
+        $story = $this->getStoryFactory()->create([
             'title' => 'Draft',
             'slug' => 'secret-draft',
             'published' => false,
@@ -87,7 +87,7 @@ class StoriesTest extends HttpTestCase
      */
     public function guests_can_fetch_published_story_by_slug(): void
     {
-        $story = Story::create([
+        $story = $this->getStoryFactory()->create([
             'title' => 'Visible',
             'slug' => 'visible-slug',
             'body' => 'Body text',
@@ -106,7 +106,7 @@ class StoriesTest extends HttpTestCase
      */
     public function moderator_can_fetch_unpublished_story_by_uuid(): void
     {
-        $story = Story::create([
+        $story = $this->getStoryFactory()->create([
             'title' => 'UUID draft',
             'slug' => 'uuid-draft',
             'published' => false,
@@ -124,7 +124,7 @@ class StoriesTest extends HttpTestCase
      */
     public function moderators_see_drafts_in_index(): void
     {
-        Story::create([
+        $this->getStoryFactory()->create([
             'title' => 'Draft',
             'slug' => 'mod-draft',
             'published' => false,
@@ -190,7 +190,7 @@ class StoriesTest extends HttpTestCase
      */
     public function moderator_cannot_create_story_with_duplicate_slug(): void
     {
-        Story::create([
+        $this->getStoryFactory()->create([
             'title' => 'Existing',
             'slug' => 'taken-slug',
             'published' => false,
@@ -211,7 +211,7 @@ class StoriesTest extends HttpTestCase
      */
     public function moderator_cannot_create_story_when_title_slugs_to_existing_slug(): void
     {
-        Story::create([
+        $this->getStoryFactory()->create([
             'title' => 'Hello World',
             'slug' => 'hello-world',
             'published' => false,
@@ -231,12 +231,12 @@ class StoriesTest extends HttpTestCase
      */
     public function moderator_cannot_update_story_to_another_stories_slug(): void
     {
-        Story::create([
+        $this->getStoryFactory()->create([
             'title' => 'First',
             'slug' => 'first-slug',
             'published' => false,
         ]);
-        $second = Story::create([
+        $second = $this->getStoryFactory()->create([
             'title' => 'Second',
             'slug' => 'second-slug',
             'published' => false,
@@ -254,12 +254,12 @@ class StoriesTest extends HttpTestCase
      */
     public function moderator_index_lists_published_stories_before_drafts(): void
     {
-        Story::create([
+        $this->getStoryFactory()->create([
             'title' => 'Draft',
             'slug' => 'draft-slug',
             'published' => false,
         ]);
-        Story::create([
+        $this->getStoryFactory()->create([
             'title' => 'Published',
             'slug' => 'pub-slug',
             'published' => true,
@@ -280,7 +280,7 @@ class StoriesTest extends HttpTestCase
     {
         Storage::fake();
 
-        $story = Story::create([
+        $story = $this->getStoryFactory()->create([
             'title' => 'Hero upload',
             'slug' => 'hero-upload-slug',
             'published' => false,
@@ -310,7 +310,7 @@ class StoriesTest extends HttpTestCase
     {
         Storage::fake();
 
-        $story = Story::create([
+        $story = $this->getStoryFactory()->create([
             'title' => 'Nope',
             'slug' => 'nope-hero',
             'published' => true,
@@ -332,7 +332,7 @@ class StoriesTest extends HttpTestCase
     {
         Storage::fake();
 
-        $story = Story::create([
+        $story = $this->getStoryFactory()->create([
             'title' => 'Contrib',
             'slug' => 'contrib-hero',
             'published' => true,
@@ -375,7 +375,7 @@ class StoriesTest extends HttpTestCase
      */
     public function moderator_cannot_patch_story_with_invalid_display_date(): void
     {
-        $story = Story::create([
+        $story = $this->getStoryFactory()->create([
             'title' => 'Patch date',
             'slug' => 'patch-date',
             'published' => false,
@@ -393,7 +393,7 @@ class StoriesTest extends HttpTestCase
      */
     public function moderator_hero_upload_without_file_is_unprocessable(): void
     {
-        $story = Story::create([
+        $story = $this->getStoryFactory()->create([
             'title' => 'No file',
             'slug' => 'no-file-hero',
             'published' => false,
@@ -415,7 +415,7 @@ class StoriesTest extends HttpTestCase
     public function guests_see_external_hero_url_unchanged_on_published_story(): void
     {
         $url = 'https://cdn.example.test/stories/hero.jpg';
-        Story::create([
+        $this->getStoryFactory()->create([
             'title' => 'Hero ext',
             'slug' => 'hero-ext',
             'body' => 'B',

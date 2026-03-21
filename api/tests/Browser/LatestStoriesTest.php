@@ -2,7 +2,6 @@
 
 namespace Tests\Browser;
 
-use App\Modules\Stories\Models\Story;
 use Illuminate\Support\Facades\Cache;
 use Laravel\Dusk\Browser;
 use Tests\Browser\Pages\Home;
@@ -17,7 +16,7 @@ class LatestStoriesTest extends DuskTestCase
      */
     public function test_home_shows_latest_stories_and_opens_story_detail(): void
     {
-        Story::create([
+        $this->getStoryFactory()->create([
             'title' => 'Dusk Fixture Nawha Story',
             'slug' => 'dusk-fixture-nawha-story',
             'body' => 'Fixture body content for browser test.',
@@ -44,7 +43,7 @@ class LatestStoriesTest extends DuskTestCase
      */
     public function test_moderator_stories_list_and_new_story_form(): void
     {
-        Story::create([
+        $this->getStoryFactory()->create([
             'title' => 'Moderator List Fixture',
             'slug' => 'moderator-list-fixture',
             'published' => false,
