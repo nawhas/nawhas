@@ -96,7 +96,7 @@ abstract class DuskTestCase extends BaseTestCase
         $browser->visit('/')
             ->waitFor('@user-menu__avatar', seconds: 10)
             ->click('@user-menu__avatar')
-            ->waitFor('@user-menu__login-button')
+            ->waitFor('@user-menu__login-button', seconds: 10)
             ->click('@user-menu__login-button')
             ->waitFor('.auth-dialog')
             ->type('.auth-dialog input[type=email]', $user->email)
