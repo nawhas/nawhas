@@ -51,7 +51,9 @@ Every requirement is expressed as a **user story** with **acceptance criteria**.
 > **Edge cases & notes** — clarifications, boundary conditions, and exclusions.
 
 Story IDs are stable, prefixed per spec (e.g. `CAT-3`, `PLAY-7`). Reference them
-in issues, commits, and tests so behavior is traceable to the spec.
+in issues, commits, and tests so behavior is traceable to the spec. To keep IDs
+stable, a story inserted between two existing ones takes a letter suffix
+(e.g. `CAT-8b`) rather than forcing a renumber.
 
 ## Conventions
 

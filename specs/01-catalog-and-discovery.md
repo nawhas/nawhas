@@ -142,13 +142,23 @@ Prerequisites: [00 — Foundation](./00-foundation.md).
 > - **Given** a track carries several values for the same key, **then** it appears
 >   under each of those values.
 
+> **CAT-8b — As a visitor, I want to browse the tag taxonomy, so that I can discover material along a dimension (e.g. by language) without already knowing a value.**
+>
+> **Acceptance criteria**
+> - **Given** tags exist, **then** I can browse the available tag **keys** (e.g.
+>   `language`, `occasion`).
+> - **When** I open a key, **then** I see its values and how much material each has,
+>   and selecting a value lists the matching tracks (per CAT-8).
+> - **Edge cases** — A key or value with no tracks is not surfaced to visitors.
+
 > **CAT-9 — As a visitor, I want curated collections by topic, so that I can find material appropriate to a theme or occasion.**
 >
 > **Acceptance criteria**
 > - **Given** topics exist, **then** I can browse the available topics.
 > - **When** I open a topic, **then** I see its curated collection of tracks with a
 >   title and description, which I can play and page through.
-> - **Edge cases** — A topic with no tracks is not surfaced to visitors.
+> - **Edge cases** — A topic with no tracks is not surfaced **to visitors**;
+>   moderators still see it so they can curate it (see [06 — Contributions & Moderation](./06-contributions-and-moderation.md), CON-13).
 
 ### Popularity & ranking
 

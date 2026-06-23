@@ -72,11 +72,13 @@ Prerequisites: [00 — Foundation](./00-foundation.md).
 > - **Then** I can update my profile details and avatar.
 > - **Then** I can change my password (with current-password confirmation).
 
-> **AUTH-6 — As a user, I want my appearance preference remembered, so that the site looks the way I like every visit.**
+> **AUTH-6 — As a visitor, I want my appearance preference remembered, so that the site looks the way I like every visit.**
 >
 > **Acceptance criteria**
 > - **Given** I choose light or dark appearance, **then** the choice persists across
 >   visits on that device.
+> - **Given** I am signed in, **then** the choice travels with my account across
+>   devices.
 > - **Given** I have set no preference, **then** a sensible default applies.
 
 > **AUTH-7 — As a contributor, I want a public profile, so that my accepted contributions are attributed and discoverable.**
@@ -101,3 +103,15 @@ Prerequisites: [00 — Foundation](./00-foundation.md).
 >   email.
 > - **When** I submit, **then** I receive confirmation that it was received.
 > - **Given** I provide no email, **then** I can still submit anonymously.
+
+> **ACC-REPORT — As any user, I want to report a specific piece of content as problematic, so that moderators and administrators can act on it.**
+>
+> **Acceptance criteria**
+> - **Given** a track, reciter, album, story, or public playlist, **then** I can
+>   report it, choose a reason, and optionally add details.
+> - **When** I submit a report, **then** I receive confirmation, and the report —
+>   with a reference to the exact content — reaches the oversight surface (see
+>   [09 — Administration](./09-administration.md), ADM-6).
+> - **Given** I am not signed in, **then** I can still submit a report.
+> - **Edge cases** — Reporting does not change the content's visibility; only a
+>   moderator's or administrator's action does.

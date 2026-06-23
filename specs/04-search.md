@@ -66,10 +66,16 @@ matching works internally — only what the user must experience:
 > - **Given** a query, **then** matching **reciters**, **albums**, and **tracks** are
 >   returned, visually distinguished by type.
 > - **Given** a result, **when** I select it, **then** I navigate to its detail page.
-> - **Then** tracks match on title, reciter name, album, release date, and lyrics
->   content; reciters match on name; albums match on title and reciter.
+> - **Then** tracks match on title, reciter name, album, release date, tags, recorded
+>   aliases (see SRCH-9), and lyrics content; reciters match on name and aliases;
+>   albums match on title and reciter.
+> - **Given** a track has lyrics in multiple renderings, **then** lyrics matching
+>   spans **all** of them — source, transliteration, and translations.
 > - **Given** a multi-word query (e.g. `nadeem sarwar karbala`), **then** all terms
 >   narrow the results together, regardless of the order I type them.
+> - **Notes** — Matching a tag's value here surfaces the **tracks** that carry it; a
+>   matching tag or topic may *also* appear as its own result leading to its full
+>   collection (see SRCH-10).
 
 ### Forgiving, transliteration-aware matching
 
@@ -185,3 +191,12 @@ matching works internally — only what the user must experience:
 > - **Given** a public playlist whose title or contents match my query, **then** it
 >   appears in results and links to the playlist (see [05 — Library & Playlists](./05-library-and-playlists.md)).
 > - **Given** a private playlist, **then** it never appears in anyone else's results.
+
+> **SRCH-13 — As a visitor, I want to find published stories through search, so that I can locate editorial content by title or topic.**
+>
+> **Acceptance criteria**
+> - **Given** a query that matches a published story's title or body, **then** the
+>   story appears in results and links to it (see [07 — Stories](./07-stories.md)).
+> - **Given** a story that is an unpublished draft, **then** it never appears in
+>   anyone's results except where moderator story management already exposes it.
+> - **Then** the transliteration tolerance of SRCH-3 applies to story search too.

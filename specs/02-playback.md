@@ -18,7 +18,7 @@ Prerequisites: [00 — Foundation](./00-foundation.md).
 > **Acceptance criteria**
 > - **Given** any track, **when** I activate play, **then** audio begins and a
 >   persistent player appears showing the current track's title, reciter(s),
->   release year, and artwork.
+>   release date, and artwork.
 > - **When** I activate pause, **then** audio stops and my position is retained.
 > - **When** audio cannot be loaded, **then** I see a clear error and the player
 >   does not appear stuck in a loading state.
@@ -99,9 +99,10 @@ Prerequisites: [00 — Foundation](./00-foundation.md).
 
 ### Listening counts toward popularity
 
-> **PLAY-10 — As the product, I want real listening to inform popularity, so that rankings reflect genuine engagement.**
+> **PLAY-10 — As a visitor, I want the tracks I play to count toward popularity, so that the library's rankings reflect genuine listening.**
 >
 > **Acceptance criteria**
 > - **Given** a track is played, **then** that listening contributes to the track's
 >   and reciter's popularity signals used elsewhere (see [01 — Catalog & Discovery](./01-catalog-and-discovery.md), CAT-10).
-> - This happens for visitors and signed-in users alike and requires no user action.
+> - **Given** I am a visitor or a signed-in user, **then** my listening counts the
+>   same way and requires no action on my part.

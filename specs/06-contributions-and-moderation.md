@@ -14,7 +14,9 @@ lifecycle* and §6.2 *Editing safety*.
 - **Contributors propose; moderators decide.** A contributor's catalog change does
   not go live until a moderator approves it.
 - **Moderators may also act directly.** Moderators (and admins) can edit the live
-  catalog without a queue step, taking effect immediately.
+  catalog without a queue step, taking effect immediately. They may still *choose*
+  to submit a proposal instead (e.g. to invite a second opinion); the contributor
+  stories below are available to every signed-in user, including moderators.
 - **Everything that goes live is recorded** with who, what, when, and a before/after
   view.
 - **Editing is safe under concurrency** via visible locks.
@@ -50,6 +52,28 @@ collections are curated by moderators directly.
 >   for review, without altering the live item.
 > - **Then** I can see a before/after comparison of my own proposal.
 
+> **CON-2b — As a contributor, I want to set or change a track's album membership and its order within an album, so that standalone singles and album tracks are organized correctly over time.**
+>
+> **Acceptance criteria**
+> - **Given** a track, **then** I can propose placing it in an album, removing it from
+>   its album (making it a standalone single), or moving it to a different album.
+> - **Given** a track within an album, **then** I can propose its position in the
+>   album's track order.
+> - **When** I submit, **then** the change is queued for review like any other
+>   proposal and does not alter the live catalog until approved.
+> - **Edge cases** — Removing a track from its album never deletes the track; it
+>   becomes a standalone single (see [01 — Catalog & Discovery](./01-catalog-and-discovery.md), CAT-7).
+
+> **CON-2c — As a contributor, I want to change which reciters a track credits, so that collaborations and corrections are represented accurately.**
+>
+> **Acceptance criteria**
+> - **Given** a track, **then** I can propose adding or removing crediting reciters
+>   (a track may credit more than one — see CAT-6).
+> - **When** I submit, **then** the change is queued for review and does not alter the
+>   live track until approved.
+> - **Edge cases** — A track must always credit **at least one** reciter; a proposal
+>   that would leave it with none is rejected at submission.
+
 ### Contributing lyrics
 
 > **CON-3 — As a contributor, I want to add or correct a track's lyrics, so that people can read along accurately.**
@@ -80,6 +104,10 @@ collections are curated by moderators directly.
 >   single proposal, with a before/after comparison per rendering.
 > - **Edge cases** — I may contribute a single rendering (e.g. only a transliteration);
 >   I need not provide all three.
+> - **Edge cases** — When I change the shared recitation structure (add, remove, or
+>   reorder lines/stanzas), any existing timestamps and translation alignments that
+>   are affected are flagged for re-checking rather than silently breaking (see CON-4,
+>   and the display fallback in [03 — Lyrics](./03-lyrics.md), LYR-3).
 
 > **CON-4 — As a contributor, I want to add timing to lyrics, so that they can highlight in time with the audio.**
 >
@@ -173,6 +201,10 @@ collections are curated by moderators directly.
 > - **Given** deleting would orphan dependent content (e.g. deleting an album that
 >   has tracks), **then** I am warned and the dependent content's fate is made
 >   explicit (e.g. its tracks become standalone rather than silently disappearing).
+> - **Given** I delete a **reciter** who credits tracks, **then** I am warned;
+>   tracks crediting other reciters keep those credits, and any track that would be
+>   left with **no** reciter is surfaced so I can reassign or delete it explicitly
+>   rather than leaving it uncredited.
 
 > **CON-12 — As a moderator, I want to publish and delete contributed lyrics, so that I control what readers see.**
 >
@@ -180,6 +212,12 @@ collections are curated by moderators directly.
 > - **Given** proposed lyrics, **when** I publish them, **then** they replace the live
 >   lyrics and the change is recorded.
 > - **When** I delete a lyrics proposal, **then** it is removed from the queue.
+> - **Given** live lyrics with multiple renderings, **then** I can delete or replace
+>   an **individual** rendering (e.g. remove an inaccurate translation) while keeping
+>   the others, and the change is recorded in history.
+> - **Edge cases** — Deleting the source or transliteration does not remove the
+>   shared recitation structure relied on by other renderings and by timing; if the
+>   last remaining rendering is deleted, the track simply has no lyrics (per LYR-1).
 
 ### Tags, topics & collections
 

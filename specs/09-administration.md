@@ -37,6 +37,9 @@ Prerequisites: [00 — Foundation](./00-foundation.md), especially §3 *User typ
 > - **When** I restore it, **then** the user regains their prior access.
 > - **Given** an account is suspended, **then** its public attribution and any
 >   already-published contributions remain intact unless separately removed.
+> - **Given** the suspended account holds editing locks or has pending proposals,
+>   **then** its locks are released so others are not blocked (see [06 — Contributions & Moderation](./06-contributions-and-moderation.md), CON-5/CON-9),
+>   and its pending proposals remain reviewable in the queue.
 
 ---
 
@@ -66,9 +69,11 @@ Prerequisites: [00 — Foundation](./00-foundation.md), especially §3 *User typ
 > **ADM-6 — As an administrator, I want to review feedback and reports, so that I can act on problems users raise.**
 >
 > **Acceptance criteria**
-> - **Given** feedback and reports submitted by users (see [08 — Accounts & Authentication](./08-accounts-and-authentication.md), ACC-FEEDBACK),
->   **then** I can review them in one place.
-> - **Then** I can act on a report by reaching the relevant content or user.
+> - **Given** feedback (see [08 — Accounts & Authentication](./08-accounts-and-authentication.md), ACC-FEEDBACK) and content
+>   reports (ACC-REPORT) submitted by users, **then** I can review them in one place.
+> - **Then** each content report links to the exact content and its reporter (where
+>   not anonymous), so I can reach the relevant content or user.
+> - **Then** I can resolve or dismiss a report, and the outcome is recorded.
 
 > **ADM-7 — As an administrator, I want full visibility into change history, so that I can audit the catalog and the team.**
 >

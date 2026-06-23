@@ -16,8 +16,8 @@ a signed-in account; see [08 — Accounts & Authentication](./08-accounts-and-au
 >
 > **Acceptance criteria**
 > - **Given** I am not signed in and I open the library area, **then** I see an
->   explanation of what a library offers (favorites, playlists, collections) and a
->   clear call to get started.
+>   explanation of what an account offers (saving favorites and building playlists,
+>   and easy access to curated collections) and a clear call to get started.
 > - **When** I choose to get started, **then** I am guided to register or sign in.
 
 ### Favorites
@@ -82,10 +82,20 @@ a signed-in account; see [08 — Accounts & Authentication](./08-accounts-and-au
 > **Acceptance criteria**
 > - **Given** a public playlist link, **then** I can view its title, description,
 >   owner, and tracks, and play it — without signing in.
-> - **Given** I am signed in, **then** I can save any track from it to my own library
->   or copy it into a playlist of my own.
+> - **Given** I am signed in, **then** I can save any individual track from it to my
+>   library, or add any of its tracks to a playlist of my own.
 > - **Given** the playlist was made private or deleted, **then** I see a clear
 >   "not available" state.
+
+> **LIB-7b — As a signed-in user, I want to duplicate a public playlist into my own, so that I can start from someone else's curation and then make it mine.**
+>
+> **Acceptance criteria**
+> - **Given** a public playlist, **when** I duplicate it, **then** a private copy is
+>   created in my playlists containing the same tracks in the same order.
+> - **Given** I have duplicated it, **then** my copy is independent — later changes to
+>   the original do not affect mine, and mine does not affect the original.
+> - **Given** the original owner is not me, **then** my copy is attributed to me and I
+>   can rename, edit, and choose its visibility like any playlist I create.
 
 ### Collections vs. playlists
 

@@ -37,7 +37,7 @@ the history of every change is transparent.
 | **Tag** | A structured **key:value** label applied to tracks (e.g. `language:urdu`, `occasion:ashura`) for grouping and filtering. A track may carry many tags; multiple values for the same key are allowed. |
 | **Topic** | A curated theme used to assemble editorial collections of tracks (e.g. an occasion or a commemorated personality). |
 | **Story** | An editorial article or announcement (news, history, feature write-ups). |
-| **Library** | A user's personal saved collection — their favorited tracks. |
+| **Library** | A signed-in user's personal space: their favorited (saved) tracks, together with the playlists they create. Distinct from product-curated **collections**, which users can access and play but do not own. |
 | **Playlist** | A user-created, ordered list of tracks. Can be private or public. |
 | **Collection** | A curated grouping of tracks surfaced by the product (e.g. "by topic"), distinct from a user's personal playlist. |
 | **Contribution / Proposal** | A change to the catalog submitted for review (a new track, an edit to a reciter, new lyrics, etc.). |
@@ -102,6 +102,7 @@ restate the relevant rows as stories.
 | Browse, search, listen, read & print lyrics | ✓ | ✓ | ✓ | ✓ |
 | Read stories, view public profiles & public playlists | ✓ | ✓ | ✓ | ✓ |
 | Submit feedback | ✓ | ✓ | ✓ | ✓ |
+| Report content as problematic | ✓ | ✓ | ✓ | ✓ |
 | Save tracks to a personal library | — | ✓ | ✓ | ✓ |
 | Create & manage playlists | — | ✓ | ✓ | ✓ |
 | Propose catalog changes (queued for review) | — | ✓ | ✓ | ✓ |
@@ -173,7 +174,8 @@ it. Errors explain what went wrong and what to do next; they never fail silently
 
 ### 6.6 Feedback to everyone
 Any user can report a bug, request a feature, or send general feedback, with an
-optional contact address (see [08 — Accounts & Authentication](./08-accounts-and-authentication.md), `ACC` feedback story).
+optional contact address (see [08 — Accounts & Authentication](./08-accounts-and-authentication.md), `ACC-FEEDBACK`). Any user can also
+report specific content as problematic (see `ACC-REPORT`).
 
 ### 6.7 Feature toggles
 Certain capabilities (e.g. public registration, social sign-in) can be switched

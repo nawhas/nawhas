@@ -137,7 +137,7 @@ and aligns by line/stanza where it reasonably can.
 
 ### Preferences
 
-> **LYR-8 — As a user, I want my preferred rendering remembered, so that I don't re-select it on every track.**
+> **LYR-8 — As a visitor, I want my preferred rendering remembered, so that I don't re-select it on every track.**
 >
 > **Acceptance criteria**
 > - **Given** I choose a rendering preference (e.g. "prefer transliteration", or
@@ -146,6 +146,10 @@ and aligns by line/stanza where it reasonably can.
 > - **Given** a track lacks my preferred rendering, **then** it falls back to a
 >   sensible available rendering (per LYR-1) without error.
 > - **Given** I have set no preference, **then** the default ordering in LYR-1 applies.
+> - **Given** I am not signed in, **then** the preference persists on that device
+>   (mirroring appearance preference — see [08 — Accounts & Authentication](./08-accounts-and-authentication.md), AUTH-6).
+> - **Given** I am signed in, **then** the preference travels with my account across
+>   devices.
 
 ### Availability
 
