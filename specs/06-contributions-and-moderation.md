@@ -217,7 +217,7 @@ collections are curated by moderators directly.
 > - **Given** a direct moderator edit, **then** history attributes it to that
 >   moderator.
 
-> **CON-16 — As a moderator, I want to correct or reverse a prior change using history, so that mistakes are recoverable.**  *(Near-term)*
+> **CON-16 — As a moderator, I want to correct or reverse a prior change using history, so that mistakes are recoverable.**
 >
 > **Acceptance criteria**
 > - **Given** a past change, **then** I can see the prior state clearly enough to

@@ -51,7 +51,7 @@ Prerequisites: [00 — Foundation](./00-foundation.md), especially §3 *User typ
 >   hidden or disabled and attempts to use it are refused with an explanation.
 > - **When** I enable a capability, **then** it becomes available site-wide.
 
-> **ADM-5 — As an administrator, I want to manage site-wide presentation and announcements, so that I can communicate changes to everyone.**  *(Near-term)*
+> **ADM-5 — As an administrator, I want to manage site-wide presentation and announcements, so that I can communicate changes to everyone.**
 >
 > **Acceptance criteria**
 > - **Given** an announcement / "what's new" capability, **then** I can publish a

@@ -37,21 +37,21 @@ Prerequisites: [00 — Foundation](./00-foundation.md).
 > - **Given** a query that matches nothing, **then** a clear "no results" state is
 >   shown with suggestions to broaden the search.
 
-> **SRCH-4 — As a visitor, I want search to also reach tags and topics, so that thematic discovery is searchable too.**  *(Near-term)*
+> **SRCH-4 — As a visitor, I want search to also reach tags and topics, so that thematic discovery is searchable too.**
 >
 > **Acceptance criteria**
 > - **Given** a query that matches a tag (by key, value, or `key:value`) or a topic,
 >   **then** that tag/topic appears in results and leads to its collection of tracks
 >   (see [01 — Catalog & Discovery](./01-catalog-and-discovery.md)).
 
-> **SRCH-5 — As a visitor, I want a full results page for a query, so that I can review and page through many matches, not just a quick preview.**  *(Near-term)*
+> **SRCH-5 — As a visitor, I want a full results page for a query, so that I can review and page through many matches, not just a quick preview.**
 >
 > **Acceptance criteria**
 > - **Given** a query with many matches, **then** I can open a dedicated results
 >   view that lists all matches, grouped or filterable by type, and paged.
 > - **Then** I can play a track directly from results without first opening its page.
 
-> **SRCH-6 — As a visitor, I want public playlists to be discoverable, so that community-curated lists surface in search.**  *(Near-term)*
+> **SRCH-6 — As a visitor, I want public playlists to be discoverable, so that community-curated lists surface in search.**
 >
 > **Acceptance criteria**
 > - **Given** a public playlist whose title or contents match my query, **then** it

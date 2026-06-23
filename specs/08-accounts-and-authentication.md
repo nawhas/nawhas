@@ -79,7 +79,7 @@ Prerequisites: [00 — Foundation](./00-foundation.md).
 >   visits on that device.
 > - **Given** I have set no preference, **then** a sensible default applies.
 
-> **AUTH-7 — As a contributor, I want a public profile, so that my accepted contributions are attributed and discoverable.**  *(Near-term)*
+> **AUTH-7 — As a contributor, I want a public profile, so that my accepted contributions are attributed and discoverable.**
 >
 > **Acceptance criteria**
 > - **Given** I have accepted contributions, **then** I have a public profile showing
