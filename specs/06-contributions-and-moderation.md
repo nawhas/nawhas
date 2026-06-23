@@ -32,8 +32,9 @@ collections are curated by moderators directly.
 >
 > **Acceptance criteria**
 > - **Given** I am signed in, **then** I can start a proposal to add a reciter (name,
->   biography, avatar), an album (title, year, artwork, reciter), or a track (title,
->   crediting reciter(s), optional album, audio, optional video, tags, topics).
+>   biography, avatar), an album (title, artwork, reciter), or a track (title,
+>   crediting reciter(s), release date, optional album, audio, optional video,
+>   tags, topics).
 > - **When** I submit, **then** the proposal enters the review queue and is **not**
 >   visible in the live catalog.
 > - **Then** I can see my own pending proposals and their status.
@@ -161,12 +162,14 @@ collections are curated by moderators directly.
 > **CON-13 — As a moderator, I want to manage tags, topics, and curated collections, so that thematic discovery stays meaningful.**
 >
 > **Acceptance criteria**
-> - **Given** I am a moderator, **then** I can create, rename, and remove tags and
->   topics, and assign them to tracks.
-> - **Then** I can curate a topic's collection (which tracks it includes and their
->   order).
-> - **Given** a tag/topic is removed, **then** affected tracks lose only that
->   association, not their other data.
+> - **Given** I am a moderator, **then** I can manage the set of tag **keys** and
+>   their permitted **values**, and assign `key:value` tags to tracks.
+> - **Then** I can create, rename, and remove **topics**, and curate each topic's
+>   collection (which tracks it includes and their order).
+> - **Given** a tag value or topic is removed, **then** affected tracks lose only
+>   that association, not their other data.
+> - **Edge cases** — Renaming a tag key or value updates it everywhere it is applied;
+>   the same track may hold multiple values for one key.
 
 ---
 

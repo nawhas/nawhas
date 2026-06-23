@@ -29,11 +29,12 @@ the history of every change is transparent.
 
 | Term | Meaning |
 |------|---------|
-| **Nawha / Track** | A single recitation. The core unit of the library: it has a title, one or more reciters, audio, and optionally lyrics, a video, an album, tags, and topics. "Track" and "nawha" are used interchangeably. |
+| **Nawha / Track** | A single recitation. The core unit of the library: it has a title, one or more reciters, a **release date**, audio, and optionally lyrics, a video, an album, tags, and topics. "Track" and "nawha" are used interchangeably. |
 | **Reciter** | A performer who recites nawhas. Has a name, a description/biography, and an avatar image. A track may credit **more than one** reciter. |
-| **Album** | An optional, year-based collection of tracks by a reciter (e.g. a yearly release). Has a title, a year, and artwork. A track may belong to **one album or none** (a standalone single). |
+| **Album** | An optional, named collection of tracks by a reciter — a **legacy organizational grouping**, not a required release unit. Has a title and artwork. A track may belong to **one album or none** (a standalone single). Time-based grouping is driven by track **release dates**, not by albums. |
+| **Release date** | The date a track was released. The primary signal for ordering and grouping tracks chronologically (e.g. by year or period), independent of whether a track belongs to an album. |
 | **Lyrics** | The written text of a track. May be plain text or **time-synced** so lines highlight in time with the audio. Lines may carry **repeat counts**. |
-| **Tag** | A free-form label applied to tracks for grouping and filtering. |
+| **Tag** | A structured **key:value** label applied to tracks (e.g. `language:urdu`, `occasion:ashura`) for grouping and filtering. A track may carry many tags; multiple values for the same key are allowed. |
 | **Topic** | A curated theme used to assemble editorial collections of tracks (e.g. an occasion or a commemorated personality). |
 | **Story** | An editorial article or announcement (news, history, feature write-ups). |
 | **Library** | A user's personal saved collection — their favorited tracks. |

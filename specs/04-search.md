@@ -24,8 +24,8 @@ Prerequisites: [00 — Foundation](./00-foundation.md).
 > - **Given** a query, **then** matching **reciters**, **albums**, and **tracks** are
 >   returned, visually distinguished by type.
 > - **Given** a result, **when** I select it, **then** I navigate to its detail page.
-> - **Then** tracks match on title, reciter name, album, year, and lyrics content;
->   reciters match on name; albums match on title, year, and reciter.
+> - **Then** tracks match on title, reciter name, album, release date, and lyrics
+>   content; reciters match on name; albums match on title and reciter.
 
 > **SRCH-3 — As a visitor, I want results that are tolerant and relevant, so that I find things despite typos, partial words, or alternate spellings.**
 >
@@ -40,8 +40,9 @@ Prerequisites: [00 — Foundation](./00-foundation.md).
 > **SRCH-4 — As a visitor, I want search to also reach tags and topics, so that thematic discovery is searchable too.**  *(Near-term)*
 >
 > **Acceptance criteria**
-> - **Given** a query that matches a tag or topic, **then** that tag/topic appears in
->   results and leads to its collection of tracks (see [01 — Catalog & Discovery](./01-catalog-and-discovery.md)).
+> - **Given** a query that matches a tag (by key, value, or `key:value`) or a topic,
+>   **then** that tag/topic appears in results and leads to its collection of tracks
+>   (see [01 — Catalog & Discovery](./01-catalog-and-discovery.md)).
 
 > **SRCH-5 — As a visitor, I want a full results page for a query, so that I can review and page through many matches, not just a quick preview.**  *(Near-term)*
 >

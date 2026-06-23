@@ -14,10 +14,14 @@ Prerequisites: [00 — Foundation](./00-foundation.md).
 
 - **Reciter** — name, description/biography, avatar image, the albums and tracks
   attributed to them, and an indication of how prolific/popular they are.
-- **Album** — title, year, artwork, owning reciter, and its ordered tracks.
-- **Track (nawha)** — title; **one or more** crediting reciters; optional album;
-  audio; optional video; optional lyrics; tags; topics; and a popularity signal.
-- **Tag** — a label that groups tracks across reciters and albums.
+- **Album** — title, artwork, owning reciter, and its ordered tracks. An optional,
+  legacy grouping; it has no intrinsic year (chronology comes from the tracks'
+  release dates).
+- **Track (nawha)** — title; **one or more** crediting reciters; a **release
+  date**; optional album; audio; optional video; optional lyrics; tags; topics;
+  and a popularity signal.
+- **Tag** — a structured **key:value** label (e.g. `language:urdu`,
+  `occasion:ashura`) that groups and filters tracks across reciters and albums.
 - **Topic** — a curated theme that assembles a collection of tracks.
 
 ---
@@ -66,16 +70,18 @@ Prerequisites: [00 — Foundation](./00-foundation.md).
 
 ### Browsing albums
 
-> **CAT-4 — As a visitor, I want an album page, so that I can see and play a coherent release.**
+> **CAT-4 — As a visitor, I want an album page, so that I can see and play a grouped set of tracks.**
 >
 > **Acceptance criteria**
-> - **Given** an album page, **then** I see its artwork, title, owning reciter,
->   year, and track count.
-> - **Then** I see the album's tracks in order, each with its position and key
->   metadata.
+> - **Given** an album page, **then** I see its artwork, title, owning reciter, and
+>   track count.
+> - **Then** I see the album's tracks in order, each with its position, release
+>   date, and key metadata.
 > - **Then** I can **play the whole album** or **add the whole album to my queue**
 >   in one action (see [02 — Playback](./02-playback.md)).
 > - **When** I select a track, **then** I open its detail page.
+> - **Notes** — An album is an optional, legacy grouping; it carries no year of its
+>   own. Any chronology shown is derived from its tracks' release dates.
 
 ### Tracks
 
@@ -83,7 +89,7 @@ Prerequisites: [00 — Foundation](./00-foundation.md).
 >
 > **Acceptance criteria**
 > - **Given** a track page, **then** I see its title, crediting reciter(s),
->   album (if any), year, and artwork.
+>   album (if any), release date, and artwork.
 > - **Then** I have full playback controls for the track (see [02 — Playback](./02-playback.md)).
 > - **Then**, if lyrics exist, I see them, with an indication when they are
 >   time-synced (see [03 — Lyrics](./03-lyrics.md)).
@@ -111,14 +117,30 @@ Prerequisites: [00 — Foundation](./00-foundation.md).
 > - **Given** a reciter's profile, **then** standalone tracks are reachable
 >   alongside albums.
 
-### Tags & topics
-
-> **CAT-8 — As a visitor, I want tracks to carry tags, so that I can discover related material across reciters and albums.**
+> **CAT-7b — As a visitor, I want to browse a reciter's tracks by release date, so that chronology works regardless of albums.**
 >
 > **Acceptance criteria**
-> - **Given** a track with tags, **then** its tags are visible on the track page.
-> - **When** I select a tag, **then** I see a list of all tracks carrying that tag,
->   which I can play and page through.
+> - **Given** a reciter's profile, **then** I can view their tracks grouped or
+>   ordered by **release date** (e.g. by year or period), spanning both album tracks
+>   and standalone tracks.
+> - **Given** tracks share a release period, **then** they group together regardless
+>   of which album (if any) they belong to.
+> - **Edge cases** — A track with no known release date is grouped under an
+>   "undated" bucket rather than omitted.
+
+### Tags & topics
+
+> **CAT-8 — As a visitor, I want tracks to carry structured key:value tags, so that I can discover and filter related material precisely.**
+>
+> **Acceptance criteria**
+> - **Given** a track with tags, **then** its tags are visible on the track page as
+>   **key:value** pairs (e.g. `language:urdu`, `occasion:ashura`).
+> - **When** I select a tag value, **then** I see a list of all tracks carrying that
+>   exact key:value, which I can play and page through.
+> - **When** I select a tag **key**, **then** I can see the values available for that
+>   key and narrow to one.
+> - **Given** a track carries several values for the same key, **then** it appears
+>   under each of those values.
 
 > **CAT-9 — As a visitor, I want curated collections by topic, so that I can find material appropriate to a theme or occasion.**
 >

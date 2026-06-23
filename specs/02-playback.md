@@ -17,8 +17,8 @@ Prerequisites: [00 — Foundation](./00-foundation.md).
 >
 > **Acceptance criteria**
 > - **Given** any track, **when** I activate play, **then** audio begins and a
->   persistent player appears showing the current track's title, reciter(s), year,
->   and artwork.
+>   persistent player appears showing the current track's title, reciter(s),
+>   release year, and artwork.
 > - **When** I activate pause, **then** audio stops and my position is retained.
 > - **When** audio cannot be loaded, **then** I see a clear error and the player
 >   does not appear stuck in a loading state.

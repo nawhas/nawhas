@@ -34,7 +34,7 @@ considerations for downloadable audio must be settled first.
 
 - Personalized recommendations based on listening and library.
 - "More like this" from a track (by reciter, tag, topic, era).
-- Faceted browse/filter (by year, reciter, tag, topic, language) on listings and
+- Faceted browse/filter (by release date, reciter, tag key/value, topic) on listings and
   search.
 
 ## Community & social
