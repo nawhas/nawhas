@@ -161,6 +161,8 @@ collections are curated by moderators directly.
 >   **then** the change takes effect immediately in the live catalog.
 > - **Then** I can upload a reciter **avatar**, album **artwork**, and track **audio**,
 >   and set a track's **video**.
+> - **Then** I can record **alternate names, spellings, and aliases** for an entity
+>   to guarantee it is findable however people search (see [04 — Search](./04-search.md), SRCH-9).
 > - **Then** every such change is recorded in history attributed to me.
 
 > **CON-11 — As a moderator, I want to delete catalog items, so that I can remove erroneous or duplicate content.**
