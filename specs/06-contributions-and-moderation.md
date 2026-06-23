@@ -57,10 +57,29 @@ collections are curated by moderators directly.
 > **Acceptance criteria**
 > - **Given** a track, **then** I can open a lyrics editor pre-filled with the
 >   current lyrics (if any).
-> - **Then** I can edit lines, group them, and set **repeat counts**.
+> - **Then** I can edit lines, group them into stanzas, and set **repeat counts**.
 > - **When** I save, **then** my lyrics are submitted as a proposal for review; the
 >   live lyrics are unchanged until approved.
 > - **Edge cases** — I can save work-in-progress and return to it before submitting.
+
+> **CON-3b — As a contributor, I want to provide lyrics in multiple renderings, so that readers can choose the script or language that suits them.**
+>
+> **Acceptance criteria**
+> - **Given** the lyrics editor, **then** I can supply or edit any of: the **source**
+>   text in its native script (e.g. Urdu, right-to-left), a **transliteration** in
+>   Latin script, and one or more **translations** into other languages (each
+>   labeled with its language) — see [03 — Lyrics](./03-lyrics.md).
+> - **Given** I set the track's **primary language**, **then** the source and
+>   transliteration are understood to be that language and the translations are
+>   other languages.
+> - **Given** the source and transliteration share the recitation structure, **then**
+>   the editor keeps their lines/stanzas/repeats aligned line-for-line.
+> - **Given** I add a translation that doesn't align one-to-one, **then** I can align
+>   it at the stanza level.
+> - **When** I submit, **then** the renderings enter the review queue together as a
+>   single proposal, with a before/after comparison per rendering.
+> - **Edge cases** — I may contribute a single rendering (e.g. only a transliteration);
+>   I need not provide all three.
 
 > **CON-4 — As a contributor, I want to add timing to lyrics, so that they can highlight in time with the audio.**
 >
@@ -68,6 +87,9 @@ collections are curated by moderators directly.
 > - **Given** the lyrics editor, **then** I can set a **timestamp** for each line by
 >   listening to the track.
 > - **Then** I can preview the synced highlighting against playback before submitting.
+> - **Given** timing is set against the shared recitation structure, **then** it
+>   applies to the source and transliteration renderings alike (and, where aligned,
+>   to translations) — I do not time each rendering separately.
 > - **When** I submit, **then** the synced lyrics enter the review queue like any
 >   other lyrics proposal.
 

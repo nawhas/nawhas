@@ -45,10 +45,11 @@ considerations for downloadable audio must be settled first.
 
 ## Lyrics depth
 
-- First-class translation and transliteration as parallel renderings (a near-term
-  version is sketched in [03 — Lyrics](./03-lyrics.md), LYR-6).
 - Per-line annotations / footnotes for context.
 - Community suggestions on individual lyric lines.
+- Automatic transliteration or machine translation as a starting point for
+  contributors (the *presentation* of source, transliteration, and translations is
+  already committed in [03 — Lyrics](./03-lyrics.md)).
 
 ## Contributor experience
 

@@ -206,4 +206,6 @@ captured directionally in [10 — Roadmap](./10-roadmap.md):
 - Monetization, ads, or paid tiers.
 - Social networking between users beyond public profiles and public playlists
   (e.g. following, direct messaging, comments on tracks).
-- Automated transcription or translation of lyrics.
+- Automated (machine) transcription, transliteration, or translation of lyrics.
+  Human-authored source text, transliterations, and translations *are* in scope
+  (see [03 — Lyrics](./03-lyrics.md)).
