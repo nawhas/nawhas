@@ -191,11 +191,25 @@ technology. Listening continues uninterrupted while navigating between pages.
 ### 6.9 Stable, shareable locations
 Every reciter, album, track, story, public profile, and public playlist has a
 durable, shareable address. When an item is renamed or reorganized, previously
-shared links continue to resolve to the right place.
+shared links continue to resolve to the right place. Every such surface offers a
+**share** action, and a shared link renders a **rich preview** (title, image, and a
+short description) when posted to messaging and social apps and surfaced to search
+engines. Previews are sober and respectful (§6.10) and never expose private data
+(e.g. a private playlist or a user's library).
 
 ### 6.10 Respectful, sober presentation
 Given the devotional subject matter, the presentation is sober and respectful by
 default, free of intrusive or frivolous interruptions to listening and reading.
+
+### 6.11 Keeping users informed
+Users are told about events that affect them. Account and security events (e.g. a
+password reset) and moderation actions affecting a user (e.g. an account
+suspension — see [09 — Administration](./09-administration.md)) are communicated
+clearly, in-app and, where important, by email. Contribution outcomes are always
+visible to the contributor in-app (see [06 — Contributions & Moderation](./06-contributions-and-moderation.md), CON-6).
+Notifications are sober and non-intrusive (§6.10). Richer, optional notifications —
+proactive alerts when a proposal is reviewed, following reciters or contributors,
+and digests — are directional (see [10 — Roadmap](./10-roadmap.md)).
 
 ---
 
