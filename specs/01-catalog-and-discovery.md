@@ -37,7 +37,8 @@ Prerequisites: [00 — Foundation](./00-foundation.md).
 >   tracks, prominent/top reciters, featured stories, and a ranked list of the
 >   most popular nawhas.
 > - **When** I am signed in, **then** the home page additionally surfaces my
->   **recently saved** nawhas as a personalized shortcut.
+>   **recently saved** and **recently played** nawhas as personalized shortcuts (see
+>   [05 — Library & Playlists](./05-library-and-playlists.md), LIB-3c).
 > - **When** I select any surfaced reciter, album, track, or story, **then** I am
 >   taken to its detail page.
 > - **Edge cases** — With an empty or sparse library, each section degrades

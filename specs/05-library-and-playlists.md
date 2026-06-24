@@ -63,6 +63,20 @@ a signed-in account; see [08 — Accounts & Authentication](./08-accounts-and-au
 >   with no topic (or no tags) still appears, under an "Other" group rather than being
 >   hidden.
 
+> **LIB-3c — As a signed-in user, I want to see what I've recently played, so that I can quickly return to recitations I was listening to.**
+>
+> **Acceptance criteria**
+> - **Given** I am signed in and have played tracks, **then** my library shows a
+>   **recently played** list, most recent first, with each track's key metadata.
+> - **When** I select a track from it, **then** I can open or play it (and continue
+>   through the queue — see [02 — Playback](./02-playback.md), PLAY-4).
+> - **Then** I can **play all** my recently-played list as a queue.
+> - **Given** my recently-played history, **then** it travels with my account across
+>   devices.
+> - **Edge cases** — Re-playing a track moves it to the top rather than creating a
+>   duplicate. **Given** I have played nothing yet, **then** I see a neutral empty
+>   state.
+
 ### Playlists
 
 > **LIB-4 — As a signed-in user, I want to create playlists, so that I can group tracks for a purpose or mood.**
