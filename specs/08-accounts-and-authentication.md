@@ -44,12 +44,19 @@ Prerequisites: [00 — Foundation](./00-foundation.md).
 >
 > **Acceptance criteria**
 > - **Given** social sign-in is enabled, **then** I can choose to continue with a
->   supported provider and, on success, I am signed in.
+>   supported provider — at minimum **Google** and **Apple** — and, on success, I am
+>   signed in.
 > - **Given** it's my first time, **then** an account is created for me as a
->   **contributor**, using my provider profile (name, email, avatar).
+>   **contributor**, using the profile the provider shares (name, email, avatar), and
+>   the provider-supplied email counts as verified (see AUTH-1b).
 > - **Given** an account already exists for my email, **then** social sign-in signs
 >   me into that existing account rather than creating a duplicate.
-> - **Given** social sign-in is disabled, **then** the option is not shown.
+> - **Given** a provider shares limited profile information (e.g. Apple's private
+>   email relay, or a name supplied only on first sign-in), **then** my account is
+>   still created and I am prompted for anything essential that is missing, rather
+>   than failing.
+> - **Given** social sign-in — or an individual provider — is disabled by an
+>   administrator, **then** that option is not shown (see [09 — Administration](./09-administration.md), ADM-4).
 
 ---
 
