@@ -205,7 +205,10 @@ The following are explicitly **not** specced as committed behavior here. Some ar
 captured directionally in [10 — Roadmap](./10-roadmap.md):
 
 - Native mobile applications and offline playback.
-- Monetization, ads, or paid tiers.
+- Paid content tiers or advertising. (Community **sponsorship and donations** to
+  sustain the project are directional — see [10 — Roadmap](./10-roadmap.md) — but no
+  content or feature is ever gated behind payment, consistent with §6.1 *Open by
+  default*.)
 - Social networking between users beyond public profiles and public playlists
   (e.g. following, direct messaging, comments on tracks).
 - Automated (machine) transcription, transliteration, or translation of lyrics.

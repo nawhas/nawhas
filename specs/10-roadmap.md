@@ -34,6 +34,10 @@ considerations for downloadable audio must be settled first.
 
 - Personalized recommendations based on listening and library.
 - "More like this" from a track (by reciter, tag, topic, era).
+- Continuous discovery: when the play queue ends, automatically continue with
+  similar tracks drawn from the topics and reciters the listener has been playing.
+- Short-form exploration: a swipeable feed that plays a snippet of each nawha, so
+  listeners can sample and skip through the library quickly to discover new material.
 - Faceted browse/filter (by release date, reciter, tag key/value, topic) on listings and
   search.
 
@@ -42,6 +46,8 @@ considerations for downloadable audio must be settled first.
 - Following reciters or contributors and being notified of new material.
 - Reactions or comments on tracks and stories.
 - Collaborative playlists co-owned by multiple users.
+- Communities: groups that reciters and listeners can create and join to find one
+  another and coordinate (e.g. by locale or majlis).
 
 ## Lyrics depth
 
@@ -55,7 +61,9 @@ considerations for downloadable audio must be settled first.
 
 - Reputation and trust levels that unlock more autonomy (e.g. trusted contributors
   whose changes auto-publish).
-- Bulk contribution tools (e.g. uploading a whole album at once).
+- Bulk contribution tools — e.g. uploading a whole album at once, or importing an
+  existing lyrics collection (such as a Google Drive folder) with LLM-assisted
+  processing into structured, sectioned lyrics.
 - Notifications to contributors when their proposals are reviewed.
 
 ## Internationalization
@@ -63,6 +71,17 @@ considerations for downloadable audio must be settled first.
 - Full UI localization into multiple languages.
 - Locale-aware presentation of dates, numbers, and text direction beyond the
   lyrics-level support already specced.
+
+## Sustainability
+
+Ways to cover running costs (including AI-assisted features) without gating content,
+consistent with the open-by-default principle:
+
+- A single, clean "Sponsored by" card (e.g. on the home page) showcasing the
+  businesses and supporters from the community who fund the project.
+- Donations and optional supporter subscriptions (monthly or yearly) for individuals
+  who want to help sustain the site.
+- Transparency on how funds are used.
 
 ## Operational quality
 
