@@ -46,8 +46,10 @@ considerations for downloadable audio must be settled first.
 - Following reciters or contributors and being notified of new material.
 - Reactions or comments on tracks and stories.
 - Collaborative playlists co-owned by multiple users.
-- Communities: groups that reciters and listeners can create and join to find one
-  another and coordinate (e.g. by locale or majlis).
+- Communities: groups (a majlis, an azadari organization, a reciting party) with
+  their own page and membership, that publish the nawhas they will recite
+  (programmes/setlists), keep recordings of their recitations, and share events and
+  announcements. Explored in [future/communities.md](./future/communities.md).
 
 ## Lyrics depth
 
