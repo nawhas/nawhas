@@ -109,6 +109,23 @@ collections are curated by moderators directly.
 >   are affected are flagged for re-checking rather than silently breaking (see CON-4,
 >   and the display fallback in [03 — Lyrics](./03-lyrics.md), LYR-3).
 
+> **CON-3c — As a contributor, I want to organize lyrics into labelled sections, so that the refrain and verses are structured the way reciters expect.**
+>
+> **Acceptance criteria**
+> - **Given** the lyrics editor, **then** I can group stanzas into **sections** and
+>   assign each a role: **Asthayi** (refrain), **Sani**, **Antra** (auto-numbered),
+>   **Maqta**, or a **custom** label (see [03 — Lyrics](./03-lyrics.md)).
+> - **Given** the refrain (Asthayi), **then** I enter its text **once** and mark where
+>   it recurs between stanzas rather than retyping it.
+> - **Given** I label sections, **then** the labels apply to the shared recitation
+>   structure, so they hold across the source and transliteration renderings (see
+>   CON-3b).
+> - **When** I submit, **then** the sections enter the review queue as part of the
+>   lyrics proposal like any other lyrics change.
+> - **Edge cases** — Sectioning is **optional**: a nawha with no refrain or named
+>   structure can be left as plain stanzas. Antra numbering follows section order
+>   automatically, so reordering sections renumbers the Antras accordingly.
+
 > **CON-4 — As a contributor, I want to add timing to lyrics, so that they can highlight in time with the audio.**
 >
 > **Acceptance criteria**

@@ -22,6 +22,25 @@ as **lines**, optionally grouped into **stanzas**. A line may carry a **repeat
 count** ("×2", "×3"). This structure mirrors the recitation itself and is shared
 across every form below.
 
+**Sections (optional).** Stanzas may additionally be grouped into named
+**sections** that carry a **role**, reflecting how the recitation is built. The
+common roles are:
+
+| Role | Meaning |
+|---|---|
+| **Asthayi** | The recurring **refrain / chorus** (also known as *Mukhda* or *Tek*). It is written **once** and recurs between stanzas rather than being repeated in the text. |
+| **Sani** | The first stanza, immediately following the refrain. |
+| **Antra** | Each subsequent verse, **numbered** in order ("1st Antra", "2nd Antra", …). |
+| **Maqta** | An optional closing couplet. |
+
+Sectioning is **optional and flexible**: many nawhas have no named refrain at all
+(simple verse chains, regional and non-Urdu forms), in which case the lyrics are
+just stanzas with no roles. A track may also use a **custom** role label where none
+of the above fits. Like repeats and timing, sections live on the **shared
+recitation structure**, so they apply across the source and transliteration alike.
+Because the role labels vary by community, each user may rename them for their own
+view (see LYR-1d).
+
 **Renderings (the forms a user can read).** Each track has a **primary language**
 (e.g. Urdu) and one or more **renderings** of its lyrics:
 
@@ -59,6 +78,72 @@ and aligns by line/stanza where it reasonably can.
 >   transliteration, otherwise the source).
 > - **Given** a track without lyrics, **then** the page shows a neutral empty state
 >   (and, for contributors, an invitation to add them).
+
+### Sections & structure
+
+> **LYR-1b — As a visitor, I want a track's lyric sections labelled, so that I can tell the refrain from the verses and follow how the recitation is built.**
+>
+> **Acceptance criteria**
+> - **Given** a track whose lyrics are organized into sections, **then** each section
+>   is shown with its **role label** (e.g. "Asthayi", "Sani", "1st Antra", "Maqta").
+> - **Given** Antra verses, **then** they are numbered in order ("1st Antra",
+>   "2nd Antra", …).
+> - **Given** I switch rendering (source ↔ transliteration), **then** the section
+>   labels and grouping are preserved (they belong to the shared recitation
+>   structure).
+> - **Edge cases** — A track whose lyrics have no sections reads as plain stanzas
+>   with no labels (per LYR-1). A section with a **custom** role shows that label as
+>   given.
+
+> **LYR-1c — As a visitor, I want to choose how the recurring refrain (Asthayi) is shown, so that I can read it the way that suits me.**
+>
+> **Acceptance criteria**
+> - **Given** a track whose refrain (Asthayi) is written once and recurs between
+>   stanzas, **then** by default I see where it recurs marked clearly, without its
+>   full text repeated.
+> - **When** I choose to **expand** the refrain, **then** its full text is shown
+>   inline between each stanza.
+> - **When** I choose to **collapse** it, **then** only a short marker indicates
+>   where it recurs.
+> - **When** I choose to **hide** it, **then** the recurrence markers are omitted and
+>   only the first occurrence remains.
+> - **Given** I set this choice, **then** it is remembered for future tracks
+>   (mirroring the rendering preference — see LYR-8): not signed in, it persists on
+>   the device; signed in, it travels with my account.
+> - **Edge cases** — A track with no refrain offers no such control.
+
+> **LYR-1d — As a visitor, I want to rename the section roles to the terms my community uses, so that I see names that are correct for me.**
+>
+> **Acceptance criteria**
+> - **Given** the standard role labels (Asthayi, Sani, Antra, Maqta), **then** I can
+>   override any of them with my own preferred term.
+> - **Given** I set an override, **then** that term is shown in place of the default
+>   wherever the role label appears, across all tracks.
+> - **Given** I have set no override for a role, **then** its default label is shown.
+> - **Given** I am not signed in, **then** my overrides persist on that device;
+>   **given** I am signed in, **then** they travel with my account across devices
+>   (mirroring LYR-8 and [08 — Accounts & Authentication](./08-accounts-and-authentication.md), AUTH-6).
+> - **Edge cases** — Overrides change only how labels are displayed **to me**; they do
+>   not change the underlying content, other users' view, or search.
+
+> **LYR-1e — As a visitor, I want to jump between lyric sections while reading, so that I can move around quickly without scrolling — especially when reciting live.**
+>
+> **Acceptance criteria**
+> - **Given** a track with labelled sections, **then** the lyrics view shows a
+>   **section index** listing each section by its (possibly personalized — see LYR-1d)
+>   label ("Asthayi", "Sani", "1st Antra", …, "Maqta").
+> - **When** I select a section in the index, **then** the lyrics jump to it
+>   immediately.
+> - **Given** the refrain (Asthayi) recurs throughout, **then** I can return to it in
+>   **one action** from anywhere in the lyrics, regardless of my refrain-display
+>   choice (see LYR-1c).
+> - **Given** the section index, **then** the section I am currently reading is
+>   indicated; **given** synced lyrics are playing, **then** the indicated section
+>   follows the highlighted line (see LYR-3).
+> - **Given** a small screen, **then** the section index stays reachable (e.g. a
+>   compact control), so navigation works the same while reciting on a phone.
+> - **Edge cases** — A track with no labelled sections shows no section index and
+>   reads and scrolls as normal.
 
 ### Following in time
 
