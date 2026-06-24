@@ -192,11 +192,7 @@ matching works internally — only what the user must experience:
 >   appears in results and links to the playlist (see [05 — Library & Playlists](./05-library-and-playlists.md)).
 > - **Given** a private playlist, **then** it never appears in anyone else's results.
 
-> **SRCH-13 — As a visitor, I want to find published stories through search, so that I can locate editorial content by title or topic.**
->
-> **Acceptance criteria**
-> - **Given** a query that matches a published story's title or body, **then** the
->   story appears in results and links to it (see [07 — Stories](./07-stories.md)).
-> - **Given** a story that is an unpublished draft, **then** it never appears in
->   anyone's results except where moderator story management already exposes it.
-> - **Then** the transliteration tolerance of SRCH-3 applies to story search too.
+> **Out of scope — stories are not searchable.** Editorial stories (see
+> [07 — Stories](./07-stories.md)) are intentionally **not** returned by search.
+> They are surfaced through the home page and the stories surface, not through the
+> search experience.
