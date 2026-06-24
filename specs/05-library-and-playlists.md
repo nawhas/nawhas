@@ -45,6 +45,24 @@ a signed-in account; see [08 — Accounts & Authentication](./08-accounts-and-au
 > - **Given** I have saved nothing yet, **then** I see an empty state explaining how
 >   to add favorites.
 
+> **LIB-3b — As a signed-in user, I want to group and filter my saved tracks by topic and by tags, so that I can navigate my favorites by theme.**
+>
+> **Acceptance criteria**
+> - **Given** my saved tracks, **then** I can **group** them by **topic** (e.g.
+>   "Hazrat Abbas AS"), each group showing its track count and its saved tracks
+>   together (see [01 — Catalog & Discovery](./01-catalog-and-discovery.md), CAT-9).
+> - **Given** my saved tracks, **then** I can **filter** them by one or more
+>   **key:value tags** (e.g. `occasion:ashura`, `language:urdu`), narrowing to the
+>   saved tracks that carry them (see CAT-8).
+> - **Given** I combine grouping and filtering, **then** the groups reflect only the
+>   saved tracks matching the active filters.
+> - **When** I select a group, **then** I can **play all** of its tracks as a queue
+>   (see [02 — Playback](./02-playback.md), PLAY-5); **when** I select a track, **then** I open it.
+> - **Edge cases** — Grouping and filtering only ever reflect the topics and tags
+>   already on the catalog tracks; the user does not create their own. A saved track
+>   with no topic (or no tags) still appears, under an "Other" group rather than being
+>   hidden.
+
 ### Playlists
 
 > **LIB-4 — As a signed-in user, I want to create playlists, so that I can group tracks for a purpose or mood.**
