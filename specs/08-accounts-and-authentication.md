@@ -23,6 +23,23 @@ Prerequisites: [00 — Foundation](./00-foundation.md).
 >   registration entry point is unavailable and direct attempts are refused with an
 >   explanation (see [09 — Administration](./09-administration.md)).
 
+> **AUTH-1b — As a registered user, I want to verify my email address, so that my account is trusted and I can contribute.**
+>
+> **Acceptance criteria**
+> - **Given** I have registered, **then** I am sent a verification email with a
+>   confirmation link, and my account is immediately usable for consuming, saving,
+>   and building playlists.
+> - **Given** I have not yet verified, **when** I try to submit a catalog proposal
+>   (see [06 — Contributions & Moderation](./06-contributions-and-moderation.md), CON-1), **then** I am prompted to verify first and the
+>   proposal is not submitted until I do — refused with a clear explanation, never a
+>   silent failure.
+> - **When** I open a valid verification link, **then** my email is marked verified
+>   and I can contribute.
+> - **Given** the verification link is invalid or expired, **then** I see a clear
+>   message and can request a new one.
+> - **Edge cases** — Social sign-in (AUTH-2) supplies a provider-verified email, which
+>   counts as verified; such users need no separate verification step.
+
 > **AUTH-2 — As a visitor, I want to sign in with a social account, so that I can get started without creating a new password.**  *(Feature-toggled)*
 >
 > **Acceptance criteria**

@@ -42,7 +42,8 @@ collections are curated by moderators directly.
 > - **Then** I can see my own pending proposals and their status.
 > - **Edge cases** — Required fields are validated before submission; a track may be
 >   proposed with **no album** (a standalone single) and with **more than one**
->   reciter.
+>   reciter. Submitting a proposal requires a verified email (see
+>   [08 — Accounts & Authentication](./08-accounts-and-authentication.md), AUTH-1b).
 
 > **CON-2 — As a contributor, I want to propose edits to existing catalog items, so that I can correct or improve them.**
 >
