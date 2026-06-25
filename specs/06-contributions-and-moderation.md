@@ -115,7 +115,7 @@ collections are curated by moderators directly.
 > **Acceptance criteria**
 > - **Given** the lyrics editor, **then** I can group stanzas into **sections** and
 >   assign each a role: **Asthayi** (refrain), **Sani**, **Antra** (auto-numbered),
->   **Maqta**, or a **custom** label (see [03 — Lyrics](./03-lyrics.md)).
+>   **Dohra**, **Maqta**, or a **custom** label (see [03 — Lyrics](./03-lyrics.md)).
 > - **Given** the refrain (Asthayi), **then** I enter its text **once** and mark where
 >   it recurs between stanzas rather than retyping it.
 > - **Given** I label sections, **then** the labels apply to the shared recitation

@@ -31,13 +31,16 @@ common roles are:
 | **Asthayi** | The recurring **refrain / chorus** (also known as *Mukhda* or *Tek*). It is written **once** and recurs between stanzas rather than being repeated in the text. |
 | **Sani** | The first stanza, immediately following the refrain. |
 | **Antra** | Each subsequent verse, **numbered** in order ("1st Antra", "2nd Antra", …). |
+| **Dohra** | A couplet (or short set of mono-rhyme couplets) **recited** in a declamatory style rather than sung to the main tune, inserted between sung stanzas. A noha may contain more than one. |
 | **Maqta** | An optional closing couplet. |
 
 Sectioning is **optional and flexible**: many nawhas have no named refrain at all
 (simple verse chains, regional and non-Urdu forms), in which case the lyrics are
 just stanzas with no roles. A track may also use a **custom** role label where none
-of the above fits. Like repeats and timing, sections live on the **shared
-recitation structure**, so they apply across the source and transliteration alike.
+of the above fits. A **Dohra** is typically recited rather than sung, so it may stay
+plain (un-timed) even when the rest of the track is synced. Like repeats and timing,
+sections live on the **shared recitation structure**, so they apply across the source
+and transliteration alike.
 Because the role labels vary by community, each user may rename them for their own
 view (see LYR-1d).
 
