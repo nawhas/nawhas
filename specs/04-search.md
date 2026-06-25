@@ -56,8 +56,9 @@ matching works internally — only what the user must experience:
 > **Acceptance criteria**
 > - **Given** any page, **then** a search entry point is available (a bar on large
 >   screens, an accessible control on small screens).
-> - **When** I type a query, **then** results appear quickly and update as I refine
->   the query.
+> - **When** I type a query, **then** results appear quickly (within the
+>   responsiveness targets of [00 — Foundation](./00-foundation.md), §6.12) and update
+>   as I refine the query.
 > - **Then** I can dismiss search and return to where I was.
 
 > **SRCH-2 — As a visitor, I want search to cover reciters, albums, and tracks together, so that I find the right kind of result regardless of what I'm looking for.**
@@ -139,7 +140,8 @@ matching works internally — only what the user must experience:
 >
 > **Acceptance criteria**
 > - **Given** I have typed only a few characters, **then** the most likely reciters,
->   tracks, and albums are suggested, ranked by likelihood and popularity.
+>   tracks, and albums are suggested, ranked by likelihood and popularity, keeping up
+>   with my typing (within the type-ahead target of [00 — Foundation](./00-foundation.md), §6.12).
 > - **When** I select a suggestion, **then** I go straight to that entity, bypassing
 >   spelling entirely.
 > - **Given** my partial input is itself a variant spelling, **then** suggestions

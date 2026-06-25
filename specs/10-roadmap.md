@@ -17,7 +17,7 @@ profiles, social sign-in, and a powerful full search.
 
 Dedicated phone/tablet applications (beyond the responsive web experience), with
 platform-native navigation, background audio, lock-screen controls, and push
-notifications.
+notifications. Explored in [future/mobile-apps.md](./future/mobile-apps.md).
 
 *Why it matters:* much of the audience listens on phones; native apps unlock
 system-level audio integration and reliability.
@@ -25,7 +25,8 @@ system-level audio integration and reliability.
 ## Offline playback
 
 Letting signed-in users download tracks, albums, or playlists for listening
-without a connection, including offline access to synced lyrics.
+without a connection, including offline access to synced lyrics. Explored alongside
+native apps in [future/mobile-apps.md](./future/mobile-apps.md).
 
 *Dependencies:* native apps (above) are the natural home; rights/permission
 considerations for downloadable audio must be settled first.

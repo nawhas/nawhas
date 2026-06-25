@@ -169,8 +169,14 @@ supported by a feature spec, undo or correct prior changes.
 
 ### 6.5 Graceful states
 Every list and detail surface has defined **empty**, **loading**, and **error**
-states. Empty states explain what would appear and, where appropriate, how to add
-it. Errors explain what went wrong and what to do next; they never fail silently.
+states. This rule is **testable per surface** — a story that introduces a list or
+detail view inherits all of the following without restating them:
+- **Empty** — explains what would appear and, where appropriate, how to add it
+  (e.g. an invitation to contribute, for contributors).
+- **Loading** — shows progress rather than a frozen or blank screen, and never
+  appears stuck.
+- **Error** — explains what went wrong and what to do next, with a way to retry or
+  recover; it never fails silently.
 
 ### 6.6 Feedback to everyone
 Any user can report a bug, request a feature, or send general feedback, with an
@@ -190,12 +196,17 @@ technology. Listening continues uninterrupted while navigating between pages.
 
 ### 6.9 Stable, shareable locations
 Every reciter, album, track, story, public profile, and public playlist has a
-durable, shareable address. When an item is renamed or reorganized, previously
-shared links continue to resolve to the right place. Every such surface offers a
-**share** action, and a shared link renders a **rich preview** (title, image, and a
-short description) when posted to messaging and social apps and surfaced to search
-engines. Previews are sober and respectful (§6.10) and never expose private data
-(e.g. a private playlist or a user's library).
+durable, shareable address. This rule is **testable per surface**; each shareable
+surface satisfies all of the following:
+- **Durable address** — the item has a stable, shareable URL.
+- **Resilient to change** — when the item is renamed or reorganized, previously
+  shared links continue to resolve to the right place (see [01 — Catalog &
+  Discovery](./01-catalog-and-discovery.md), CAT-11 for the catalog case).
+- **Share action** — the surface offers an explicit **share** action.
+- **Rich preview** — a shared link renders a preview (title, image, and a short
+  description) when posted to messaging and social apps and surfaced to search
+  engines. Previews are sober and respectful (§6.10) and **never expose private
+  data** (e.g. a private playlist or a user's library).
 
 ### 6.10 Respectful, sober presentation
 Given the devotional subject matter, the presentation is sober and respectful by
@@ -205,11 +216,31 @@ default, free of intrusive or frivolous interruptions to listening and reading.
 Users are told about events that affect them. Account and security events (e.g. a
 password reset) and moderation actions affecting a user (e.g. an account
 suspension — see [09 — Administration](./09-administration.md)) are communicated
-clearly, in-app and, where important, by email. Contribution outcomes are always
-visible to the contributor in-app (see [06 — Contributions & Moderation](./06-contributions-and-moderation.md), CON-6).
+clearly, in-app and, where important, by email. Signed-in users have an **in-app
+notifications surface** that collects the events affecting them, and they control
+which notifications they receive and by which channel (see [08 — Accounts &
+Authentication](./08-accounts-and-authentication.md), AUTH-10 and AUTH-11).
+Contribution outcomes are always visible to the contributor in-app (see [06 —
+Contributions & Moderation](./06-contributions-and-moderation.md), CON-6).
 Notifications are sober and non-intrusive (§6.10). Richer, optional notifications —
 proactive alerts when a proposal is reviewed, following reciters or contributors,
 and digests — are directional (see [10 — Roadmap](./10-roadmap.md)).
+
+### 6.12 Responsiveness
+"Fast" is part of the product's promise, so it is stated as **observable, testable
+targets** rather than left to interpretation. These are directional budgets under
+normal conditions (not worst-case guarantees), and they describe *what the user
+experiences*, not how it is achieved:
+- **Type-ahead suggestions** appear within roughly **150 ms** of a keystroke, so the
+  list keeps up with typing (see [04 — Search](./04-search.md), SRCH-7).
+- **Search results** for a query return within roughly **1 second** (SRCH-1).
+- **Navigations and detail pages** present meaningful content within roughly
+  **1 second**, showing a loading state (§6.5) rather than a blank screen if longer.
+- **Starting playback** of a track begins within roughly **2 seconds** of activation,
+  or surfaces a clear error (see [02 — Playback](./02-playback.md), PLAY-1).
+
+Surfaces should degrade gracefully when a target can't be met (show progress, never
+appear stuck), consistent with §6.5.
 
 ---
 

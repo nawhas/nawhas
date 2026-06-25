@@ -117,6 +117,74 @@ Prerequisites: [00 — Foundation](./00-foundation.md).
 
 ---
 
+## Stories — Account lifecycle
+
+> **AUTH-8 — As a signed-in user, I want to delete my account, so that I can leave the service and remove my personal data.**
+>
+> **Acceptance criteria**
+> - **Given** I am signed in, **then** I can request deletion of my account, and I
+>   must confirm an explicit, clearly-worded warning before it proceeds.
+> - **When** my account is deleted, **then** my private data — email, library
+>   (favorites), private playlists, recently-played history (see [05 — Library &
+>   Playlists](./05-library-and-playlists.md), LIB-3c), and preferences — is removed,
+>   and I am signed out.
+> - **Given** I have accepted contributions, **then** those published contributions
+>   and their history remain (the catalog is communal and attribution/accountability
+>   are retained per [00 — Foundation](./00-foundation.md), §6.3), but my authorship
+>   may be shown in a de-identified form; I am told this before I confirm.
+> - **Given** I own public playlists, **then** I am told what happens to them
+>   (removed, or retained de-identified) before I confirm, with no surprise.
+> - **Edge cases** — If I am the **last administrator**, deletion is refused or
+>   requires another admin first, mirroring role-removal protection (see [09 —
+>   Administration](./09-administration.md), ADM-2). A pending deletion can be
+>   cancelled before it completes.
+
+> **AUTH-9 — As a signed-in user, I want to export my personal data, so that I have a copy of what the service holds about me.**
+>
+> **Acceptance criteria**
+> - **Given** I am signed in, **then** I can request an export of my personal data:
+>   my profile, my library (favorites), my playlists, my recently-played history, my
+>   preferences, and a record of my contributions.
+> - **When** the export is ready, **then** I can download it in a portable,
+>   human-readable form, and I am notified (see AUTH-10) when it is available if it
+>   isn't produced immediately.
+> - **Given** the export, **then** it contains only **my own** data and never another
+>   user's private data.
+
+---
+
+## Stories — Notifications & communication
+
+> **AUTH-10 — As a signed-in user, I want an in-app notifications surface, so that I can see the events that affect me in one place.**
+>
+> **Acceptance criteria**
+> - **Given** I am signed in, **then** I have a notifications surface that collects the
+>   events affecting me: account and security events, moderation actions affecting my
+>   account (see [09 — Administration](./09-administration.md), ADM-3), and
+>   contribution outcomes (see [06 — Contributions & Moderation](./06-contributions-and-moderation.md), CON-6).
+> - **Given** unread notifications, **then** I see an unobtrusive indication of how
+>   many, consistent with the sober presentation rule ([00 — Foundation](./00-foundation.md), §6.10).
+> - **When** I open a notification, **then** I am taken to the relevant item (e.g. the
+>   reviewed proposal) and it is marked read; **then** I can mark all as read.
+> - **Given** I have no notifications, **then** I see a neutral empty state (§6.5).
+
+> **AUTH-11 — As a signed-in user, I want to control which notifications I receive and how, so that I'm informed without being overwhelmed.**
+>
+> **Acceptance criteria**
+> - **Given** my communication preferences, **then** I can choose, per notification
+>   type, whether I receive it **in-app** and/or by **email** (and, in a native app,
+>   by **push** — see [future/mobile-apps.md](./future/mobile-apps.md)).
+> - **Given** security- and account-critical messages (e.g. password reset,
+>   suspension), **then** they are always delivered and cannot be turned off, and this
+>   is made clear.
+> - **Given** any non-critical email, **then** it includes a working **unsubscribe**
+>   path, and unsubscribing is honored without requiring sign-in.
+> - **Given** I am not signed in, **then** preferences are not offered (there is no
+>   account to attach them to), but transactional emails I do receive still carry an
+>   unsubscribe path where applicable.
+
+---
+
 ## Stories — Feedback (everyone)
 
 > **ACC-FEEDBACK — As any user, I want to report a bug, request a feature, or send general feedback, so that I can help improve the product.**
