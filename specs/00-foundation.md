@@ -242,6 +242,16 @@ experiences*, not how it is achieved:
 Surfaces should degrade gracefully when a target can't be met (show progress, never
 appear stuck), consistent with §6.5.
 
+### 6.13 Abuse resistance
+Surfaces open to anonymous or unauthenticated input — feedback (see [08 — Accounts &
+Authentication](./08-accounts-and-authentication.md), ACC-FEEDBACK), content reports
+(ACC-REPORT), and similar — are protected against spam and automated abuse (e.g.
+rate-limiting and volume throttling), so a flood of low-quality or automated
+submissions cannot drown out genuine ones or overwhelm the oversight surface (see
+[09 — Administration](./09-administration.md), ADM-6). Protection is applied without
+blocking legitimate use; a user prevented by such a limit sees a clear explanation,
+never a silent failure (consistent with §6.5).
+
 ---
 
 ## 7. Out of scope (this version)

@@ -77,6 +77,20 @@ a signed-in account; see [08 — Accounts & Authentication](./08-accounts-and-au
 >   duplicate. **Given** I have played nothing yet, **then** I see a neutral empty
 >   state.
 
+> **LIB-3d — As a signed-in user, I want to clear or pause my recently-played history, so that I control what is recorded and shown.**
+>
+> **Acceptance criteria**
+> - **Given** my recently-played history (see LIB-3c), **then** I can remove an
+>   individual entry or clear the whole history.
+> - **When** I pause history, **then** newly played tracks are not added until I
+>   resume, and history is clearly shown as paused.
+> - **Given** I clear or pause my history, **then** the change applies across my
+>   devices (mirroring LIB-3c's cross-device sync); a cleared list shows its empty
+>   state.
+> - **Edge cases** — Clearing or pausing recently-played does **not** remove favorites
+>   or playlists, and does **not** affect popularity counting, which still reflects all
+>   listening (see [02 — Playback](./02-playback.md), PLAY-10).
+
 ### Playlists
 
 > **LIB-4 — As a signed-in user, I want to create playlists, so that I can group tracks for a purpose or mood.**

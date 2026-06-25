@@ -195,6 +195,8 @@ Prerequisites: [00 — Foundation](./00-foundation.md).
 >   email.
 > - **When** I submit, **then** I receive confirmation that it was received.
 > - **Given** I provide no email, **then** I can still submit anonymously.
+> - **Edge cases** — Anonymous and high-volume submissions are rate-limited to resist
+>   spam, without blocking legitimate use (see [00 — Foundation](./00-foundation.md), §6.13).
 
 > **ACC-REPORT — As any user, I want to report a specific piece of content as problematic, so that moderators and administrators can act on it.**
 >
@@ -206,4 +208,5 @@ Prerequisites: [00 — Foundation](./00-foundation.md).
 >   [09 — Administration](./09-administration.md), ADM-6).
 > - **Given** I am not signed in, **then** I can still submit a report.
 > - **Edge cases** — Reporting does not change the content's visibility; only a
->   moderator's or administrator's action does.
+>   moderator's or administrator's action does. Anonymous and high-volume reports are
+>   rate-limited to resist abuse (see [00 — Foundation](./00-foundation.md), §6.13).

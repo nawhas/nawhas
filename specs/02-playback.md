@@ -85,6 +85,44 @@ Prerequisites: [00 — Foundation](./00-foundation.md).
 > - **Given** the track's lyrics are time-synced, **then** the current line is
 >   highlighted in time with the audio (see [03 — Lyrics](./03-lyrics.md)).
 
+### Listening comfort
+
+> **PLAY-11 — As a visitor, I want a sleep timer, so that playback stops on its own when I listen as I fall asleep.**
+>
+> **Acceptance criteria**
+> - **Given** I am listening, **then** I can set a sleep timer for a chosen duration
+>   (e.g. 15 / 30 / 60 minutes) or "until the end of the current track".
+> - **Given** a timer is running, **then** I can see the time remaining and cancel or
+>   change it.
+> - **When** the timer elapses, **then** playback pauses (gently, per [00 — Foundation](./00-foundation.md), §6.10) and the timer clears.
+> - **Edge cases** — Setting a new timer replaces any existing one; the timer is
+>   available across screen sizes (compact and expanded player).
+
+> **PLAY-12 — As a visitor, I want to adjust playback speed, so that I can follow the recitation at a comfortable pace.**
+>
+> **Acceptance criteria**
+> - **Given** a playing track, **then** I can choose a playback speed (e.g. 0.75×–2×,
+>   default 1×), and the control shows the current speed.
+> - **When** I change speed, **then** audio adjusts without distorting pitch
+>   unnaturally, and synced-lyrics highlighting stays aligned (see [03 — Lyrics](./03-lyrics.md), LYR-3).
+> - **Given** I set a speed, **then** it persists for subsequent tracks: not signed
+>   in, it persists on the device; signed in, it travels with my account (mirroring
+>   the rendering preference — see [03 — Lyrics](./03-lyrics.md), LYR-8).
+> - **Edge cases** — The speed control is available on both the compact and expanded
+>   player (see PLAY-9).
+
+> **PLAY-13 — As a visitor, I want playback to resume where I left off, so that I can pick up a long recitation later without hunting for my place.**
+>
+> **Acceptance criteria**
+> - **Given** I stop partway through a track and return later, **then** I am offered
+>   to resume from my last position rather than restarting.
+> - **Given** I am signed in, **then** my last position travels with my account across
+>   devices (mirroring recently played — see [05 — Library & Playlists](./05-library-and-playlists.md), LIB-3c).
+> - **Given** I am not signed in, **then** my last position is retained on that device
+>   where possible.
+> - **Edge cases** — Finishing a track clears its resume point; this builds on the
+>   within-session position retention of PLAY-1.
+
 ### Adaptive presentation
 
 > **PLAY-9 — As a visitor on a phone, I want a player suited to a small screen, so that listening is comfortable on mobile.**

@@ -62,6 +62,19 @@ Prerequisites: [00 — Foundation](./00-foundation.md), especially §3 *User typ
 > - **Then** I control its content, validity window, and whether it is currently
 >   shown.
 
+> **ADM-5b — As an administrator, I want to manage informational and legal pages, so that the site can present about, privacy, terms, and contact information.**
+>
+> **Acceptance criteria**
+> - **Given** the informational-pages capability, **then** I can create and edit
+>   standalone pages (e.g. **About**, **Privacy Policy**, **Terms**, **Contact**) with a
+>   title, body, and durable address (see [00 — Foundation](./00-foundation.md), §6.9).
+> - **Given** a page is published, **then** it is publicly readable by everyone at its
+>   durable address and reachable from a consistent place (e.g. the site footer).
+> - **When** I unpublish a page, **then** it stops being publicly visible; **when** I
+>   delete one, **then** I must confirm, after which it is no longer accessible.
+> - **Edge cases** — These pages are informational only and never gate consumption
+>   (§6.1 *Open by default*).
+
 ---
 
 ## Stories — Oversight
